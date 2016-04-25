@@ -10,39 +10,39 @@ use Illuminate\Support\ServiceProvider;
  */
 class DoodleServiceProvider extends ServiceProvider
 {
-    
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-	    $this->app->singleton(DoodleService::class);
-    }
 
 	/**
-	 * Bootstrap the application services.
+	 * Register the application services.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		$this->app->singleton(DoodleService::class);
+	}
+
+	/**
+	 * Bootstrap the    pplication services.
 	 *
 	 * @param DoodleService $doodle
 	 */
-    public function boot(DoodleService $doodle)
-    {
-        // variables
-        $resources = realpath(__DIR__ . '/../../') . '/resources/';
+	public function boot(DoodleService $doodle)
+	{
+		// variables
+		$resources = realpath(__DIR__ . '/../../') . '/resources/';
 
-        // vendor folders
-        $this->loadViewsFrom($resources . 'views', 'doodle');
-        $this->mergeConfigFrom($resources . 'config/config.php', 'doodle');
+		// vendor folders
+		$this->loadViewsFrom($resources . 'views', 'doodle');
+		$this->mergeConfigFrom($resources . 'config/config.php', 'doodle');
 
-        // publishes
-        $this->publishes
-        ([
-            $resources . 'public' => public_path('vendor/doodle'),
-        ]);
+		// publishes
+		$this->publishes
+		([
+			$resources . 'public' => public_path('vendor/doodle'),
+		]);
 
-        // initialize class
-	    $doodle->init();
-    }
+		// initialize class
+		$doodle->init();
+	}
 
 }

@@ -10,8 +10,8 @@
 	'namespace'     => 'App\\Http\\Controllers\\doodles\\',
 
 	// public assets folder for doodle resources
-    'assets'        => '/vendor/doodle/',
+	'assets'        => '/vendor/doodle/',
 
 	// bootswatch theme name
-    'theme'         => 'cosmo',
+	'theme'         => 'cosmo',
 ];
