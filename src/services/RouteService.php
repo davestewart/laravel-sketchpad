@@ -16,8 +16,6 @@ use Route;
  * - determining the possible routes => Controllers from the doodles/ folder downwards
  * - matching any called routes to said controllers
  * - creating any wildcard routes if required
- *
- * @package davestewart\doodle\objects\file
  */
 class RouteService extends DoodleConfig
 {
@@ -30,7 +28,7 @@ class RouteService extends DoodleConfig
 		/**
 		 * The root controller namespace for doodle/ controllers
 		 *
-		 * @var
+		 * @var string
 		 */
 		public $namespace;
 
@@ -100,7 +98,7 @@ class RouteService extends DoodleConfig
 		 *
 		 * Determines the controller, method and parameters to call if there is a match
 		 *
-		 * @param   $route
+		 * @param   string  $route
 		 * @return  PathReference|ControllerReference|null
 		 */
 		public function getRoute($route)
@@ -165,7 +163,7 @@ class RouteService extends DoodleConfig
 		 *
 		 * Sets controllers and folders elements as they are found
 		 *
-		 * @param string $path  The base controller path-relative path to the folder
+		 * @param   string  $path   The doodle controllers path-relative path to the folder, i.e. "foo/bar/"
 		 */
 		protected function process($path = '')
 		{
@@ -180,14 +178,14 @@ class RouteService extends DoodleConfig
 			foreach ($files as $file)
 			{
 				// variables
-				$filepath = $root . $file;
+				$fullpath = $root . $file;
 
 				// parse
-				if(is_dir($filepath))
+				if(is_dir($fullpath))
 				{
 					$this->process($path . $file . '/');
 				}
-				else if(is_file($filepath) && preg_match('/Controller.php$/', $filepath))
+				else if(is_file($fullpath) && preg_match('/Controller.php$/', $fullpath))
 				{
 					$this->addController($path, $file);
 				}
@@ -195,21 +193,9 @@ class RouteService extends DoodleConfig
 		}
 
 		/**
-		 * Adds a new RouteReference obejct
-		 *
-		 * @param string        $route
-		 * @param PathReference $ref
-		 */
-		protected function addRoute($route, $ref)
-		{
-			$ref->route = $route;
-			$this->routes[$route] = $ref;
-		}
-
-		/**
 		 * Adds a folder to the internal routes array
 		 *
-		 * @param $path
+		 * @param   string  $path   The controller-root relative path to the folder
 		 */
 		protected function addFolder($path)
 		{
@@ -219,8 +205,8 @@ class RouteService extends DoodleConfig
 		/**
 		 * Adds a controllrt to the internal routes array
 		 *
-		 * @param $path
-		 * @param $file
+		 * @param   string  $path   The controller-root relative path to the controller's containing folder
+		 * @param   string  $file   The filename of the Controller
 		 */
 		protected function addController($path, $file)
 		{
@@ -232,6 +218,18 @@ class RouteService extends DoodleConfig
 
 			// set route
 			$this->addRoute($route, new ControllerReference($this->path . $path . $file, $controller));
+		}
+
+		/**
+		 * Adds a new RouteReference obejct
+		 *
+		 * @param   string          $route  The URI route to be registered, i.e. "foo/bar/"
+		 * @param   PathReference   $ref    A PathReference instance
+		 */
+		protected function addRoute($route, $ref)
+		{
+			$ref->route = $route;
+			$this->routes[$route] = $ref;
 		}
 
 
@@ -322,8 +320,8 @@ class RouteService extends DoodleConfig
 		/**
 		 * Utility function to return a folder path with a slash at the end
 		 *
-		 * @param $path
-		 * @return string
+		 * @param   string  $path   The path to cap with a "/"
+		 * @return  string
 		 */
 		protected function folder($path)
 		{
