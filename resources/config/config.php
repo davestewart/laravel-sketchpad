@@ -13,5 +13,5 @@
 	'assets'        => '/vendor/doodle/',
 
 	// bootswatch theme name
-	'theme'         => 'cosmo',
+	'theme'         => 'flatly',
 ];

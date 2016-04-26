@@ -15,9 +15,10 @@
 	<!-- bootstrap -->
 	<script src="{{ $assets }}lib/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="{{ $assets }}themes/{{ $theme }}.min.css">
+	<link rel="stylesheet" href="{{ $assets }}themes/base.min.css">
 
 	<!-- doodle -->
-	<link rel="stylesheet" href="{{ $assets }}doodle.min.css">
+	<link rel="stylesheet" href="{{ $assets }}doodle.css">
 	<script src="{{ $assets }}doodle.js"></script>
 
 	<!-- custom head -->
