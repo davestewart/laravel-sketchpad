@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 	<!-- meta -->
 	<meta charset="UTF-8">
 	<title>Doodle</title>
@@ -15,11 +16,14 @@
 	<!-- bootstrap -->
 	<script src="{{ $assets }}lib/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="{{ $assets }}themes/{{ $theme }}.min.css">
-	<link rel="stylesheet" href="{{ $assets }}themes/base.min.css">
+	<link rel="stylesheet" href="{{ $assets }}theme.css">
 
 	<!-- doodle -->
 	<link rel="stylesheet" href="{{ $assets }}doodle.css">
 	<script src="{{ $assets }}doodle.js"></script>
+
+	<!-- variables -->
+	<meta name="route" content="{{ $route }}">
 
 	<!-- custom head -->
 	@yield('head')

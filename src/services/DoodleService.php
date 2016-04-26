@@ -81,6 +81,7 @@ class DoodleService extends AbstractService
 		 */
 		public function getData($path, $controller = null)
 		{
+			$data['route']      = $this->route;
 			$data['theme']      = $this->config->theme;
 			$data['assets']     = $this->config->assets;
 			$data['routes']     = $this->router->routes;
