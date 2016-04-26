@@ -13,5 +13,17 @@ class RouteReference
 	{
 		$this->route = $route;
 	}
+	
+	public function getName()
+	{
+		$segments = explode('/', trim($this->route, '/'));
+		return array_pop($segments);
+	}
+
+	public function getDepth()
+	{
+		$segments = explode('/', trim($this->route, '/'));
+		return count($segments);
+	}
 
 }

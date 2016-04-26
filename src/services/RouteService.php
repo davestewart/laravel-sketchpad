@@ -1,9 +1,9 @@
 <?php namespace davestewart\doodle\services;
 
 use App;
-use davestewart\doodle\objects\DoodleConfig;
+use davestewart\doodle\objects\AbstractService;
 use davestewart\doodle\objects\route\ControllerReference;
-use davestewart\doodle\objects\route\PathReference;
+use davestewart\doodle\objects\route\FolderReference;
 use davestewart\doodle\traits\GetterTrait;
 use ReflectionMethod;
 use Route;
@@ -17,7 +17,7 @@ use Route;
  * - matching any called routes to said controllers
  * - creating any wildcard routes if required
  */
-class RouteService extends DoodleConfig
+class RouteService extends AbstractService
 {
 	
 	use GetterTrait;
@@ -36,7 +36,7 @@ class RouteService extends DoodleConfig
 		 * An array of 'route' => RouteReference instances, representing all found
 		 * folders / controllers from the doodles/ controller folder down
 		 *
-		 * @var PathReference[]
+		 * @var FolderReference[]
 		 */
 		public $routes;
 
@@ -67,7 +67,7 @@ class RouteService extends DoodleConfig
 
 			// process
 			$this->process();
-			ksort($this->routes);
+			//ksort($this->routes);
 		}
 
 
@@ -99,7 +99,7 @@ class RouteService extends DoodleConfig
 		 * Determines the controller, method and parameters to call if there is a match
 		 *
 		 * @param   string  $route
-		 * @return  PathReference|ControllerReference|null
+		 * @return  FolderReference|ControllerReference|null
 		 */
 		public function getRoute($route)
 		{
@@ -199,7 +199,7 @@ class RouteService extends DoodleConfig
 		 */
 		protected function addFolder($path)
 		{
-			$this->addRoute($this->route . $path, new PathReference($this->path . $path));
+			$this->addRoute($this->route . $path, new FolderReference($this->path . $path));
 		}
 
 		/**
@@ -223,8 +223,8 @@ class RouteService extends DoodleConfig
 		/**
 		 * Adds a new RouteReference obejct
 		 *
-		 * @param   string          $route  The URI route to be registered, i.e. "foo/bar/"
-		 * @param   PathReference   $ref    A PathReference instance
+		 * @param   string          $route The URI route to be registered, i.e. "foo/bar/"
+		 * @param   FolderReference $ref   A PathReference instance
 		 */
 		protected function addRoute($route, $ref)
 		{

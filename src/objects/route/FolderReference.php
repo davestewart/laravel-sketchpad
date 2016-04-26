@@ -5,7 +5,7 @@
  *
  * @package davestewart\doodle\objects\route
  */
-class PathReference extends RouteReference
+class FolderReference extends RouteReference
 {
 	public $path;
 

@@ -5,7 +5,7 @@
  *
  * @package davestewart\doodle\objects\route
  */
-class ControllerReference extends PathReference
+class ControllerReference extends RouteReference
 {
 	public $class;
 
@@ -13,10 +13,15 @@ class ControllerReference extends PathReference
 
 	public $params;
 
+	public $folder;
+
+	public $path;
+
 	public function __construct($path, $class = null)
 	{
-		parent::__construct($path);
-		$this->class = $class;
+		$this->path     = $path;
+		$this->class    = $class;
+		$this->folder   = preg_replace('/[^\/]+$/', '', $path);
 	}
 
 }
