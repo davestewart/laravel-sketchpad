@@ -52,7 +52,7 @@ class Controller extends File implements JsonSerializable
 			return new self($file);
 		}
 
-		public function __construct($path, $process = false)
+		public function __construct($path, $process = true)
 		{
 			// parent
 			parent::__construct($path);
@@ -102,16 +102,17 @@ class Controller extends File implements JsonSerializable
 		{
 			// base
 			$data               = (object) [];
+			$data->type         = 'controller';
+			$data->name         = $this->label;
+			$data->label        = $this->label;
 
 			// data
 			if($simple)
 			{
-				$data->name         = $this->classpath;
 				$data->methods      = array_map(function($method) { return $method->name; }, $this->methods);;
 			}
 			else
 			{
-				$data->type         = 'controller';
 				$data->route        = $this->route;
 				$data->label        = $this->label;
 				$data->comment      = $this->comment;

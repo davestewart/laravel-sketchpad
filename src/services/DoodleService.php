@@ -1,12 +1,12 @@
 <?php namespace davestewart\doodle\services;
 
 use App;
+use davestewart\doodle\objects\AbstractService;
 use davestewart\doodle\objects\DoodleConfig;
-use davestewart\doodle\objects\file\File;
 use davestewart\doodle\objects\file\Folder;
 use davestewart\doodle\objects\reflection\Controller;
 use davestewart\doodle\objects\route\ControllerReference;
-use davestewart\doodle\objects\route\PathReference;
+use davestewart\doodle\objects\route\FolderReference;
 use Illuminate\Support\Facades\Input;
 use ReflectionMethod;
 use Route;
@@ -17,14 +17,14 @@ use Route;
  *
  * @package davestewart\doodle\services
  */
-class DoodleService extends DoodleConfig
+class DoodleService extends AbstractService
 {
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// PROPERTIES
 
 		/**
-		 * @var
+		 * @var DoodleConfig
 		 */
 		protected $config;
 
@@ -33,7 +33,7 @@ class DoodleService extends DoodleConfig
 		 * 
 		 * @var RouteService
 		 */
-		protected $routes;
+		protected $router;
 	
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -42,53 +42,58 @@ class DoodleService extends DoodleConfig
 		public function init()
 		{
 			// config
-			$config         = (object) config('doodle');
+			$config         = new DoodleConfig();
 			$this->path     = base_path($config->path);
 			$this->route    = $config->route;
 			$this->config   = $config;
-			
+
+			// determine remaining controller routes
+			$this->router   = new RouteService($this->route, $this->path, $config->namespace);
 
 			// routing
-			$namespace      = 'davestewart\doodle\controllers';
 			$parameters     =
 			[
-				'namespace'     => $namespace,
+				'namespace'     => 'davestewart\doodle\controllers',
 				'middleware'    => 'web',
 			];
-			
+
 			// add main doodle routes
 			Route::group($parameters, function ($router) use ($config)
 			{
-				Route::get  ($config->route, 'DoodleController@index');
 				Route::post ($config->route, 'DoodleController@create');
 				Route::match(['GET', 'POST'], $config->route . '{params?}', 'DoodleController@call')->where('params', '.*');
 			});
 
-			// determine remaining controller routes
-			$this->routes = new RouteService($this->route, $this->path, $config->namespace);
-
-			//dd($this);
+			// debug
+			//dd($this->router->routes);
 		}
 
 
 	// -----------------------------------------------------------------------------------------------------------------
-	// METHODS
+	// ACCESSORS
 
-		public function data($path)
+		/**
+		 * Gets the core data for the main doodle view
+		 *
+		 * @param      $path
+		 * @param null $controller
+		 * @return array
+		 */
+		public function getData($path, $controller = null)
 		{
-			$variables          = $this->variables();
-			$variables['data']  = $this->getFolder($path);
-			return $variables;
-		}
-
-		public function variables()
-		{
-			$config = (array) $this->config;
-			return $config;
+			$data['theme']      = $this->config->theme;
+			$data['assets']     = $this->config->assets;
+			$data['routes']     = $this->router->routes;
+			$data['folder']     = $this->getFolder($path);
+			if($controller)
+			{
+				$data['controller'] = $controller;
+			}
+			return $data;
 		}
 
 		/**
-		 * Gets the members for an object
+		 * Gets folder data (subfolders and controllers) for an absolute file path
 		 *
 		 * @param   string $path
 		 * @return  array
@@ -104,6 +109,12 @@ class DoodleService extends DoodleConfig
 						: null;
 		}
 
+		/**
+		 * Gets controller data for an absolute file path
+		 *
+		 * @param $path
+		 * @return Controller|null
+		 */
 		public function getController($path)
 		{
 			return file_exists($path)
@@ -111,25 +122,31 @@ class DoodleService extends DoodleConfig
 				: null;
 		}
 
-		public function create($path, $members, $options)
-		{
-
-		}
-
-		public function routeFromPath($path)
+		/**
+		 * Determines the route uri for an absolute file path
+		 *
+		 * @param $path
+		 * @return string
+		 */
+		public function getRouteFromPath($path)
 		{
 			$path   = str_replace($this->path, '', $path);
 			$path   = str_replace('Controller.php',  '', $path);
-			$path   = strtolower($path) . '/';
+			$path   = $this->folderize(strtolower($path));
 			return $this->route . $path;
 		}
 
-		public function call($uri)
+
+	// ------------------------------------------------------------------------------------------------
+	// ROUTING METHODS
+
+		public function call($uri = '')
 		{
 			// get variables
+			$nav    = Input::get('nav', 0);
 			$json   = Input::get('json', 0);
 			$base   = $this->route;
-			$ref    = $this->routes->getRoute($base . $uri);
+			$ref    = $this->router->getRoute($base . $uri);
 
 			// attempt to call controller
 			if($ref instanceof ControllerReference)
@@ -152,29 +169,59 @@ class DoodleService extends DoodleConfig
 					}
 	
 					// call and return the controller
-					return $this->routes->call($ref->class, $ref->method, $ref->params);
+					return $this->router->call($ref->class, $ref->method, $ref->params);
 				}
 				
 				// just controller				
-				$controller = $this->getController($ref->path);
-				return $json
-					? $controller
-					: view('doodle::nav.controller', compact('controller'));
+				$controller = $this->getController($ref->path)->process();
+				if($json)
+				{
+					return $controller;
+				}
+				else
+				{
+					$data = $this->getData($ref->folder, $controller);
+					$data['uri']        = $this->route . $uri . '/';
+					return view('doodle::content.index', $data);
+				}
 
 			}
 
 			// if folder, return the contents of that folder as json
-			if($ref instanceof PathReference)
+			if($ref instanceof FolderReference)
 			{
-				$data = $this->getFolder($ref->path);
-				return $json
-					? $data
-					: view('doodle::nav.folder', compact('data'));
+				if($nav || $json)
+				{
+					$data = $this->getFolder($ref->path);
+					return $json
+						? $data
+						: view('doodle::nav.folder', compact('data'));
+				}
+				else
+				{
+					$data   = $this->getData($ref->path);
+					$folder = $data['folder'];
+					$folder->process();
+					$data['controller'] = $folder->controllers[0];
+					$data['uri']        = $this->route . $uri . '/';
+
+					return view('doodle::content.index', $data);
+				}
 			}
 
 			// otherwise, there's nothing to call, so 404
 			$this->abort($uri, 'path');
 		}
+
+
+		public function create($path, $members, $options)
+		{
+
+		}
+
+
+	// ------------------------------------------------------------------------------------------------
+	// UTILITIES
 
 		protected function abort($uri, $type = '')
 		{

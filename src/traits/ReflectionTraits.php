@@ -67,7 +67,7 @@ trait ReflectionTraits
 				$label  = preg_replace('/^(.+)Controller$/', '$1', $label);
 				$label  = preg_replace('/_/', ' ', $label);
 				$label  = preg_replace('/([a-z])([A-Z])/', '$1 $2', $label);
-				$label  = ucfirst($label);
+				$label  = strtolower($label);
 			}
 			return $label;
 		}

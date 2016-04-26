@@ -30,12 +30,12 @@ class DoodleController extends Controller
 
 	public function index()
 	{
-		return view('doodle::content.index', $this->service->data(''));
+		return view('doodle::content.index', $this->service->getData(''));
 	}
 
 	public function view($path)
 	{
-		return view('doodle::content.index', $this->service->data($path));
+		return view('doodle::content.index', $this->service->getData($path));
 	}
 
 	public function get($path = '')
@@ -48,10 +48,11 @@ class DoodleController extends Controller
 		return Response::json($this->service->getFolder($path, true));
 	}
 
-	public function call($path)
+	public function call($path = '')
 	{
 		return $this->service->call($path);
 	}
+	
 
 	public function create(Request $request)
 	{

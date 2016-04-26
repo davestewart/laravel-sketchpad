@@ -87,6 +87,7 @@ class Parameter extends Tag implements JsonSerializable
 			$data           = (object) [];
 			$data->name     = $this->name;
 			$data->value    = $this->value;
+			$data->optional = $this->optional;
 			return $data;
 		}
 

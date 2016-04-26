@@ -104,7 +104,7 @@ class RouteService extends AbstractService
 		public function getRoute($route)
 		{
 			// variables
-			$route   = $this->folder($route);
+			$route   = $this->folderize($route);
 
 			// debug
 			//pr($path, $this->routes);
@@ -168,7 +168,7 @@ class RouteService extends AbstractService
 		protected function process($path = '')
 		{
 			// variables
-			$root               = $this->folder($this->path . $path);
+			$root               = $this->folderize($this->path . $path);
 			$files              = array_diff(scandir($root), ['.', '..']);
 
 			// folders
@@ -313,20 +313,5 @@ class RouteService extends AbstractService
 			}
 		}
 	
-
-	// ------------------------------------------------------------------------------------------------
-	// UTILITIES
-
-		/**
-		 * Utility function to return a folder path with a slash at the end
-		 *
-		 * @param   string  $path   The path to cap with a "/"
-		 * @return  string
-		 */
-		protected function folder($path)
-		{
-			return rtrim($path, '/') . '/';
-		}
-
 
 }

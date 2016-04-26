@@ -8,18 +8,31 @@
 class DoodleConfig
 {
 
-	/**
-	 * The app-relative physical file path to the controllers folder
-	 *
-	 * @var
-	 */
-	public $path;
+	// -----------------------------------------------------------------------------------------------------------------
+	// PROPERTIES
 
-	/**
-	 * The root relative route to the doodles folder
-	 *
-	 * @var
-	 */
-	public $route;
+		public $route;
+		public $path;
+		public $namespace;
+		public $assets;
+		public $theme;
+
+
+	// -----------------------------------------------------------------------------------------------------------------
+	// INSTANTIATION
+
+		public function __construct()
+		{
+			$config = config('doodle');
+			foreach($config as $key => $value)
+			{
+				$this->$key = $value;
+			}
+		}
+
+
+	// -----------------------------------------------------------------------------------------------------------------
+	// METHODS
+
 
 }
