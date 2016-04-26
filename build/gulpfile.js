@@ -9,8 +9,6 @@
 		sourcemaps		= require('gulp-sourcemaps'),
 
 		// utilities
-		argv			= require('yargs').argv,
-		gulpif			= require('gulp-if'),
 		rename			= require('gulp-rename'),
 		concat			= require('gulp-concat');
 
@@ -44,17 +42,9 @@
 	{
 		return gulp
 			.src(src.css)
-
-			// source maps for local and staging
-			.pipe(gulpif(!argv.live, sourcemaps.init()))
-
-			// compress only when live
-			.pipe(sass(argv.live ? {outputStyle: 'compressed'} : null).on('error', sass.logError))
-
-			// source maps for local and staging
-			.pipe(gulpif(!argv.live, sourcemaps.write()))
-
-			// save
+			.pipe(sourcemaps.init())
+			.pipe(sass().on('error', sass.logError))
+			.pipe(sourcemaps.write())
 			.pipe(gulp.dest(trg.css));
 	}
 
@@ -62,51 +52,41 @@
 	{
 		return gulp
 			.src(src.js)
-
-			// source maps for local and staging
-			.pipe(gulpif(!argv.live, sourcemaps.init()))
-
-			// always concat + uglify, but mangle only on live
-			//.pipe(uglify({compress: true, mangle: argv.live}))
+			.pipe(sourcemaps.init())
+			.pipe(uglify({compress: true, mangle: false}))
 			.pipe(concat(files.js))
-
-			// source maps only if not live
-			.pipe(gulpif(!argv.live, sourcemaps.write()))
-
-			// save
-			//.pipe(rename({extname: '.min.js'}))
+			.pipe(sourcemaps.write())
 			.pipe(gulp.dest(trg.js));
-	}
-
-	function build()
-	{
-		gulp.start('styles', 'scripts');
-	}
-
-	function run()
-	{
-		build();
-		gulp.watch(src.css, ['styles']);
-		gulp.watch(src.js, ['scripts']);
 	}
 
 
 // ---------------------------------------------------------------------------------
 // tasks
 
-	gulp.task('styles', styles);
-
-	gulp.task('scripts', scripts);
-
 	/**
 	 * Build styles and scripts
 	 *
 	 * Call "gulp build --live" to mangle/compress and skip source maps
 	 */
-	gulp.task('build', build);
+	function build()
+	{
+		styles();
+		scripts();
+	}
 
 	/**
 	 * Monitor styles and scripts, and live-reload when saved
 	 */
-	gulp.task('default', run);
+	function watch()
+	{
+		build();
+		gulp.watch(src.css, ['styles']);
+		gulp.watch(src.js, ['scripts']);
+	}
+	
+
+	gulp.task('styles', styles);
+	gulp.task('scripts', scripts);
+	gulp.task('build', build);
+	gulp.task('default', watch);
 
