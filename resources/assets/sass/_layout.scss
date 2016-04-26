@@ -1,0 +1,43 @@
+#app{
+	padding: 20px;
+}
+
+#controllers,
+#methods{
+	height:100%;
+	border-right:1px solid #eee;
+}
+
+#nav .nav>li>a {
+
+	padding: 4px 9px;
+}
+
+pre{
+	border:none !important;
+}
+
+.container{
+	max-width: 1600px;
+}
+
+
+
+
+@media (min-width: 1200px){
+	.container {
+		width: 1570px !important;
+	}
+}
+
+.navbar{
+	z-index: 1000000;
+}
+
+html, body{
+	height: 100%;
+}
+
+html{
+	overflow:scroll;
+}

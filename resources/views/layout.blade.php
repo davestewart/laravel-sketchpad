@@ -34,10 +34,10 @@
 		document.write('<script src="//localhost:35729/livereload.js?snipver=1" type="text/javascript"><\/script>')
 	</script>
 	<script>
-		 window._onLiveReloadFileChanged = function(file)
-		 {
-		    Doodle.onFileChanged(file);
-		 }
+		window._onLiveReloadFileChanged = function(file)
+		{
+			window.Doodle && Doodle.onFileChanged(file);
+		}
 	</script>
 	@endif
 
