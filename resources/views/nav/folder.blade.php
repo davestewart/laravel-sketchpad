@@ -1,24 +1,17 @@
-<div class="breadcrumb">
-	@foreach($data->parents as $name => $route)
-		<a class="folder" href="/{{ $route }}">{{ $name }}</a> /
+<ul class="nav nav-pills nav-stacked">
+	@foreach($routes as $route => $reference)
+		@if($reference instanceof \davestewart\doodle\objects\route\ControllerReference)
+			<?php
+			$text   = str_replace('/', ' <span>&#9656;</span> ', str_replace('doodles/', '', trim($route, '/') ));
+			$active = $reference->route === $uri ? 'active' : '';
+			//pr($reference);
+			?>
+			<li class="{{ $active }}">
+				<a class="folder" href="/{{ $route }}">
+					<span>{!! $text !!}</span>
+					<!--<span class="badge badge-right">12</span>-->
+				</a>
+			</li>
+		@endif
 	@endforeach
-	<span>{{ $data->filename }}</span>
-</div>
-
-@if($data->folders)
-	<div class="folders">
-		<ul>
-			@foreach($data->folders as $folder)
-				<li><a class="folder" href="/{{ $folder->route }}">{{ $folder->filename }}</a></li>
-			@endforeach
-		</ul>
-	</div>
-@endif
-
-@if($data->controllers)
-<div class="controllers">
-	@foreach($data->controllers as $controller)
-		@include('doodle::nav.controller')
-	@endforeach
-</div>
-@endif
+</ul>
