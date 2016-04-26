@@ -43,16 +43,16 @@ class Folder extends File implements JsonSerializable
 		/**
 		 * Class constructor
 		 *
-		 * @param   string $filepath    The absolute path to the folder object
-		 * @param   bool   $recursive   An optional flag to recursively process child folders
+		 * @param   string $path      The absolute path to the folder object
+		 * @param   bool   $recursive An optional flag to recursively process child folders
 		 */
-		public function __construct($filepath, $recursive = false)
+		public function __construct($path, $recursive = false)
 		{
 			// parent
-			parent::__construct($filepath);
+			parent::__construct($path);
 
 			// properties
-			$this->filepath     = rtrim($this->filepath, '/') . '/';
+			$this->path         = rtrim($this->path, '/') . '/';
 			$this->folders      = [];
 			$this->controllers  = [];
 
@@ -70,13 +70,17 @@ class Folder extends File implements JsonSerializable
 		 */
 		public function process($recursive = false)
 		{
+			// reset
+			$this->folders      = [];
+			$this->controllers  = [];
+			
 			// variables
-			$files = array_diff(scandir($this->filepath), ['.', '..']);
+			$files = array_diff(scandir($this->path), ['.', '..']);
 
 			// loop
 			foreach ($files as $file)
 			{
-				$path = $this->filepath . $file;
+				$path = $this->path . $file;
 				if(is_dir($path))
 				{
 					$this->folders[] = new Folder($path, $recursive);
@@ -115,7 +119,7 @@ class Folder extends File implements JsonSerializable
 		{
 			$data               = (object) [];
 			$data->type         = 'folder';
-			$data->label        = $this->filename;
+			$data->name         = $this->name;
 			$data->route        = $this->route;
 			$data->parents      = $this->parents;
 			$data->folders      = $this->folders;

@@ -18,14 +18,14 @@ class File
 		 *
 		 * @var string
 		 */
-		public $filename;
+		public $name;
 
 		/**
 		 * The full path to the file
 		 *
 		 * @var string
 		 */
-		public $filepath;
+		public $path;
 
 		/**
 		 * The URL route to this filesystem object
@@ -41,15 +41,15 @@ class File
 		/**
 		 * Class constructor
 		 */
-		public function __construct($filepath)
+		public function __construct($path)
 		{
-			$segments       = explode('/', trim($filepath, '/'));
-			$this->filename = array_pop($segments);
-			$this->filepath = $filepath;
+			$segments       = explode('/', trim($path, '/'));
+			$this->name     = array_pop($segments);
+			$this->path     = $path;
 
 			/** @var DoodleService $doodle */
 			$doodle         = app(DoodleService::class);
-			$this->route    = $doodle->routeFromPath($filepath);
+			$this->route    = $doodle->getRouteFromPath($path);
 		}
 		
 	}

@@ -52,13 +52,13 @@ class Controller extends File implements JsonSerializable
 			return new self($file);
 		}
 
-		public function __construct($filepath)
+		public function __construct($path, $process = false)
 		{
 			// parent
-			parent::__construct($filepath);
+			parent::__construct($path);
 
 			// class
-			$class              = ucfirst(str_replace('/', '\\', str_replace('.php', '', str_replace(base_path() . '/', '', $filepath))));
+			$class              = ucfirst(str_replace('/', '\\', str_replace('.php', '', str_replace(base_path() . '/', '', $path))));
 			$this->ref          = new ReflectionClass($class);
 	
 			// properties
@@ -66,9 +66,13 @@ class Controller extends File implements JsonSerializable
 			$this->classpath    = $this->ref->getName();
 			$this->label        = $this->getLabel($this->classname);
 			$this->comment      = $this->getDocComment();
+			$this->methods      = [];
 
 			// methods
-			$this->process();
+			if($process)
+			{
+				$this->process();
+			}
 		}
 
 		public function process()
@@ -88,9 +92,10 @@ class Controller extends File implements JsonSerializable
 					$arr[] = new Method($method, $this->route);
 				}
 			}
+			$this->methods = $arr;
 
 			// return
-			$this->methods = $arr;
+			return $this;
 		}
 
 		public function toArray($simple = false)
