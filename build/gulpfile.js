@@ -7,7 +7,6 @@
 		sass			= require('gulp-sass'),
 		uglify			= require('gulp-uglify'),
 		sourcemaps		= require('gulp-sourcemaps'),
-		livereload		= require('gulp-livereload'),
 
 		// utilities
 		argv			= require('yargs').argv,
@@ -22,21 +21,26 @@
 	// paths
 	var src =
 	{
-		css: 'resources/assets/sass/**/*.scss',
-		js : 'resources/assets/js/**/*.js'
+		css: '../resources/assets/sass/**/*.scss',
+		js : '../resources/assets/js/**/*.js'
 	};
 
 	var trg =
 	{
-		css: 'public/assets/css/',
-		js : 'public/assets/js/'
+		css: '../public/',
+		js : '../public/'
+	};
+
+	var files =
+	{
+		js : 'doodle.js'
 	};
 
 
 // ---------------------------------------------------------------------------------
-// sub tasks
+// functions
 
-	gulp.task('styles', function ()
+	function styles()
 	{
 		return gulp
 			.src(src.css)
@@ -51,13 +55,10 @@
 			.pipe(gulpif(!argv.live, sourcemaps.write()))
 
 			// save
-			.pipe(gulp.dest(trg.css))
+			.pipe(gulp.dest(trg.css));
+	}
 
-			// livereload
-			.pipe(livereload());
-	});
-
-	gulp.task('scripts', function ()
+	function scripts()
 	{
 		return gulp
 			.src(src.js)
@@ -66,45 +67,46 @@
 			.pipe(gulpif(!argv.live, sourcemaps.init()))
 
 			// always concat + uglify, but mangle only on live
-			.pipe(uglify({compress: true, mangle: argv.live}))
-			.pipe(concat('all.js'))
+			//.pipe(uglify({compress: true, mangle: argv.live}))
+			.pipe(concat(files.js))
 
 			// source maps only if not live
 			.pipe(gulpif(!argv.live, sourcemaps.write()))
 
 			// save
-			.pipe(rename({extname: '.min.js'}))
-			.pipe(gulp.dest(trg.js))
+			//.pipe(rename({extname: '.min.js'}))
+			.pipe(gulp.dest(trg.js));
+	}
 
-			// livereload
-			.pipe(livereload());
-	});
+	function build()
+	{
+		gulp.start('styles', 'scripts');
+	}
+
+	function run()
+	{
+		build();
+		gulp.watch(src.css, ['styles']);
+		gulp.watch(src.js, ['scripts']);
+	}
 
 
 // ---------------------------------------------------------------------------------
-// main tasks
+// tasks
+
+	gulp.task('styles', styles);
+
+	gulp.task('scripts', scripts);
 
 	/**
 	 * Build styles and scripts
 	 *
 	 * Call "gulp build --live" to mangle/compress and skip source maps
 	 */
-	gulp.task('build', function ()
-	{
-		gulp.start('styles', 'scripts');
-	});
+	gulp.task('build', build);
 
 	/**
 	 * Monitor styles and scripts, and live-reload when saved
 	 */
-	gulp.task('default', function ()
-	{
-		// live-reload
-		livereload({start: true});
-		livereload.listen();
-
-		// watch
-		gulp.watch(src.css, ['styles']);
-		gulp.watch(src.js, ['scripts']);
-	});
+	gulp.task('default', run);
 
