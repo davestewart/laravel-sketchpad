@@ -1,6 +1,6 @@
 <?php namespace davestewart\sketchpad\controllers;
 
-use davestewart\sketchpad\services\SketchpadService;
+use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Input;
@@ -14,29 +14,32 @@ class SketchpadController extends Controller
 {
 	
 	/**
-	 * @var SketchpadService
+	 * Sketchpad service
+	 *
+	 * @var Sketchpad
 	 */
-	protected $service;
+	protected $sketchpad;
 
 	/**
 	 * SketchpadController constructor.
 	 *
-	 * @param SketchpadService $service
+	 * @param Sketchpad $sketchpad
 	 */
-	public function __construct(SketchpadService $service)
+	public function __construct(Sketchpad $sketchpad)
 	{
-		$this->service = $service;
+		$this->sketchpad = $sketchpad;
 	}
 
 	public function command($type, $data = null)
 	{
-		$data = $this->service->getVariables();
+		$data = $this->sketchpad->getVariables();
+
 		return view('sketchpad::pages.' . $type, $data);
 	}
 
 	public function call($path = '')
 	{
-		return $this->service->call($path);
+		return $this->sketchpad->call($path);
 	}
 
 	public function create(Request $request)
@@ -46,7 +49,8 @@ class SketchpadController extends Controller
 		$path       = $input['path'];
 		$members    = $input['members'];
 		$options    = $input['options'];
-		$this->service->create($path, $name, $members, $options);
+
+		$this->sketchpad->create($path, $name, $members, $options);
 	}
 
 
@@ -54,22 +58,22 @@ class SketchpadController extends Controller
 
 	public function index()
 	{
-		return view('sketchpad::content.index', $this->service->getData(''));
+		return view('sketchpad::content.index', $this->sketchpad->getData(''));
 	}
 
 	public function view($path)
 	{
-		return view('sketchpad::content.index', $this->service->getData($path));
+		return view('sketchpad::content.index', $this->sketchpad->getData($path));
 	}
 
 	public function get($path = '')
 	{
-		return Response::json($this->service->getFolder($path));
+		return Response::json($this->sketchpad->getFolder($path));
 	}
 
 	public function all($path = '')
 	{
-		return Response::json($this->service->getFolder($path, true));
+		return Response::json($this->sketchpad->getFolder($path, true));
 	}
 
 

@@ -1,6 +1,6 @@
 <?php namespace davestewart\sketchpad\objects\file;
+
 use davestewart\sketchpad\objects\reflection\Controller;
-use davestewart\sketchpad\services\SketchpadService;
 use JsonSerializable;
 
 /**

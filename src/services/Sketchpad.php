@@ -13,11 +13,11 @@ use Route;
 
 
 /**
- * Class SketchpadService
+ * Class Sketchpad
  *
  * @package davestewart\sketchpad\services
  */
-class SketchpadService extends AbstractService
+class Sketchpad extends AbstractService
 {
 
 	// -----------------------------------------------------------------------------------------------------------------

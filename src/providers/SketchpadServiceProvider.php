@@ -1,6 +1,6 @@
 <?php namespace davestewart\sketchpad\providers;
 
-use davestewart\sketchpad\services\SketchpadService;
+use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -18,15 +18,15 @@ class SketchpadServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->app->singleton(SketchpadService::class);
+		$this->app->singleton(Sketchpad::class);
 	}
 
 	/**
 	 * Bootstrap the    pplication services.
 	 *
-	 * @param SketchpadService $sketchpad
+	 * @param Sketchpad $sketchpad
 	 */
-	public function boot(SketchpadService $sketchpad)
+	public function boot(Sketchpad $sketchpad)
 	{
 		// variables
 		$resources = realpath(__DIR__ . '/../../') . '/resources/';

@@ -1,8 +1,6 @@
 <?php namespace davestewart\sketchpad\objects\reflection;
 
 use davestewart\sketchpad\objects\file\File;
-
-use davestewart\sketchpad\services\SketchpadService;
 use JsonSerializable;
 use ReflectionClass;
 use ReflectionMethod;
