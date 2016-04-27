@@ -31,7 +31,7 @@ class Sketchpad extends AbstractService
 		/**
 		 * The service that determines available routes, and matches routes to controllers when one is called
 		 * 
-		 * @var RouteService
+		 * @var Router
 		 */
 		protected $router;
 	
@@ -48,7 +48,7 @@ class Sketchpad extends AbstractService
 			$this->config   = $config;
 
 			// determine remaining controller routes
-			$this->router   = new RouteService($this->route, $this->path, $config->namespace);
+			$this->router   = new Router($this->route, $this->path, $config->namespace);
 
 			// routing
 			$parameters     =

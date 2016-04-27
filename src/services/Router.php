@@ -9,7 +9,7 @@ use ReflectionMethod;
 use Route;
 
 /**
- * RouteService
+ * Router
  *
  * Responsible for:
  *
@@ -17,7 +17,7 @@ use Route;
  * - matching any called routes to said controllers
  * - creating any wildcard routes if required
  */
-class RouteService extends AbstractService
+class Router extends AbstractService
 {
 	
 	use GetterTrait;
@@ -45,9 +45,9 @@ class RouteService extends AbstractService
 	// INSTANTIATION
 
 		/**
-		 * RouteService constructor.
+		 * Router constructor.
 		 *
-		 * Sets up the RouteService with the values it needs determine or match routes
+		 * Sets up the Router with the values it needs determine or match routes
 		 *
 		 * Parameters are all from the Sketchpad config file
 		 *
@@ -261,7 +261,7 @@ class RouteService extends AbstractService
 			// routing
 			Route::match($verbs, rtrim($route, '/') . '/{method}/{params?}', function($method, $params = null) use ($controller)
 			{
-				RouteService::call($controller, $method, $params);
+				Router::call($controller, $method, $params);
 
 			})->where('params', '.*');
 		}
