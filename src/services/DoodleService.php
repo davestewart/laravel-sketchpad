@@ -60,7 +60,8 @@ class DoodleService extends AbstractService
 			// add main doodle routes
 			Route::group($parameters, function ($router) use ($config)
 			{
-				Route::post ($config->route, 'DoodleController@create');
+				Route::post ($config->route . ':create', 'DoodleController@create');
+				Route::get($config->route . ':{command}/{data?}', 'DoodleController@command')->where('data', '.*');
 				Route::match(['GET', 'POST'], $config->route . '{params?}', 'DoodleController@call')->where('params', '.*');
 			});
 
@@ -72,6 +73,15 @@ class DoodleService extends AbstractService
 	// -----------------------------------------------------------------------------------------------------------------
 	// ACCESSORS
 
+		public function getVariables()
+		{
+			$data['route']      = $this->route;
+			$data['theme']      = $this->config->theme;
+			$data['assets']     = $this->config->assets;
+			$data['routes']     = $this->router->routes;
+			return $data;
+		}
+
 		/**
 		 * Gets the core data for the main doodle view
 		 *
@@ -81,10 +91,7 @@ class DoodleService extends AbstractService
 		 */
 		public function getData($path, $controller = null)
 		{
-			$data['route']      = $this->route;
-			$data['theme']      = $this->config->theme;
-			$data['assets']     = $this->config->assets;
-			$data['routes']     = $this->router->routes;
+			$data = $this->getVariables();
 			$data['folder']     = $this->getFolder($path);
 			if($controller)
 			{
@@ -144,7 +151,7 @@ class DoodleService extends AbstractService
 		public function call($uri = '')
 		{
 			// get variables
-			$nav    = Input::get('nav', 0);
+			$html   = Input::get('html', 0);
 			$json   = Input::get('json', 0);
 			$base   = $this->route;
 			$ref    = $this->router->getRoute($base . $uri);
@@ -179,6 +186,11 @@ class DoodleService extends AbstractService
 				{
 					return $controller;
 				}
+				if($html)
+				{
+					$data = ['controller' => $controller];
+					return view('doodle::nav.methods', $data);
+				}
 				else
 				{
 					$data = $this->getData($ref->folder, $controller);
@@ -191,12 +203,12 @@ class DoodleService extends AbstractService
 			// if folder, return the contents of that folder as json
 			if($ref instanceof FolderReference)
 			{
-				if($nav || $json)
+				if($html || $json)
 				{
 					$data = $this->getFolder($ref->path);
 					return $json
 						? $data
-						: view('doodle::nav.folder', compact('data'));
+						: view('doodle::html.folder', compact('data'));
 				}
 				else
 				{

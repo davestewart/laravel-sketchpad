@@ -28,6 +28,30 @@ class DoodleController extends Controller
 		$this->service = $service;
 	}
 
+	public function command($type, $data = null)
+	{
+		$data = $this->service->getVariables();
+		return view('doodle::pages.' . $type, $data);
+	}
+
+	public function call($path = '')
+	{
+		return $this->service->call($path);
+	}
+
+	public function create(Request $request)
+	{
+		$input      = $request->all();
+		$name       = $input['name'];
+		$path       = $input['path'];
+		$members    = $input['members'];
+		$options    = $input['options'];
+		$this->service->create($path, $name, $members, $options);
+	}
+
+
+
+
 	public function index()
 	{
 		return view('doodle::content.index', $this->service->getData(''));
@@ -48,20 +72,6 @@ class DoodleController extends Controller
 		return Response::json($this->service->getFolder($path, true));
 	}
 
-	public function call($path = '')
-	{
-		return $this->service->call($path);
-	}
-	
-
-	public function create(Request $request)
-	{
-		$input      = $request->all();
-		$path       = $input['path'];
-		$members    = $input['members'];
-		$options    = $input['options'];
-		$this->service->create($path, $members, $options);
-	}
 
 
 }

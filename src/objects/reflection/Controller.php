@@ -105,6 +105,7 @@ class Controller extends File implements JsonSerializable
 			$data->type         = 'controller';
 			$data->name         = $this->label;
 			$data->label        = $this->label;
+			$data->class        = $this->classname;
 
 			// data
 			if($simple)
