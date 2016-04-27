@@ -4,6 +4,7 @@
 	// variables
 
 		// elements
+		var $body;
 		var $nav;
 		var $controllers;
 		var $methods;
@@ -23,21 +24,36 @@
 	// ------------------------------------------------------------------------------------------------
 	// functions
 
-		function Server(route)
+		function Server()
 		{
-
-			this.load = function (path, callback, data)
+			var route = $('meta[name="route"]').attr('content');
+			
+			this.json = function (url, callback)
 			{
-				$.getJSON(route + path, data, callback);
+				$.getJSON(url + '?json=1', callback);
+			};
+
+			this.html = function (url, callback)
+			{
+				$.get(url + '?html=1', callback);
 			};
 
 			this.run = function (url, callback)
 			{
-				$.get(url + '?run=1');
-				
-				$.get(route + path, data, callback);
+				$.get(url, callback);
 			};
+			
+		}
 
+		function setTitle(title, comment)
+		{
+			comment = comment === null
+						? '&elipsis;'
+						: comment === ''
+							? '&nbsp;'
+							: comment;
+			$info.find('h1').text(title);
+			$info.find('p').html(comment);
 		}
 
 		function updateList(element)
@@ -58,14 +74,34 @@
 
 		function updateMethods(data)
 		{
-			// loop over data and build methods
+			$(controller.methods).each(function(i, e){
+				console.log(e);
+			});
 		}
 
 	
 	// ------------------------------------------------------------------------------------------------
 	// handlers
 
-		function onRouteClick(event)
+		function onCommandClick(event)
+		{
+			// event
+			event.preventDefault();
+
+			// variables
+			var $link 	= $(this);
+			var title 	= $link.attr('title');
+			var url 	= $link.attr('href');
+
+			// load
+			server.html(url, function(html)
+			{
+				setTitle(title, '');
+				$result.html(html);
+			});
+		}
+
+		function onControllerClick(event)
 		{
 			// event
 			event.preventDefault();
@@ -73,11 +109,21 @@
 			// variables
 			var $link   = updateList(this);
 			var url     = $link.attr('href');
+			var name	= $link.data('name');
 
 			// load
-			server.load(':load/' + url, function(data)
+			server.json(url, function(data)
 			{
+				controller = data;
+				//updateMethods();
+			});
 
+			// load
+			server.html(url, function(html)
+			{
+				setTitle(controller.class, controller.comment.intro);
+				$result.empty();
+				$methods.html(html);
 			});
 
 		}
@@ -91,6 +137,7 @@
 			}
 			event.preventDefault();
 
+
 			// variables
 			var $link   	= updateList(this);
 			var url     	= $link.attr('href');
@@ -98,16 +145,16 @@
 			// update output
 			var index   	= $link.parent().index();
 			var method  	= controller.methods[index];
+			var title		= $link.text();
 			var comment 	= method.comment.intro;
+
+			// history
+			//router.navigate(url);
 
 			// load code
 			server.run(url, function(html)
 			{
-				// update UI
-				$info.find('h1').text($link.text());
-				$info.find('p').text(comment);
-
-				// update output
+				setTitle(title, comment);
 				$result.html(html);
 			});
 		}
@@ -121,11 +168,6 @@
 	// ------------------------------------------------------------------------------------------------
 	// setup
 
-		function setupServer()
-		{
-			server = new Server(window.route);
-		}
-
 		function setupRouter()
 		{
 			// clear and reset history
@@ -135,9 +177,15 @@
 			}
 
 			// routing
-			var router = new Router();
-			router.route('/*path', function(path)
+			router = new Router();
+			router.route('*path', function(path)
 			{
+				var $a = $nav.find('a[href="' +path+ '"]');
+				console.log($a);
+				if($a.length)
+				{
+					updateList($a);
+				}
 				console.log(arguments);
 				//$('#target').attr('src', '/' + window.location.hash.substr(1));
 				//$('#target').attr('src', path);
@@ -147,13 +195,18 @@
 
 		function setupNav()
 		{
-			$nav.on('click', 'a.route', onRouteClick);
-			$nav.on('click', 'a.method', onMethodClick);
+			$nav
+				.on('click', 'a.controller', onControllerClick)
+				.on('click', 'a.method', onMethodClick);
+			$body
+				.on('click', 'a.command', onCommandClick);
 		}
 
+	
 		function onReady()
 		{
 			// elements
+			$body        	= $('body');
 			$nav        	= $('#nav');
 			$controllers	= $('#controllers');
 			$methods    	= $('#methods');
@@ -161,12 +214,11 @@
 			$info       	= $('#info');
 
 			// data
-			controller		= null;
-			server			= window.remote || 'doodles/';
+			controller		= JSON.parse($('#controller').text());
+			server			= new Server();
 
 			// start
 			//setupRouter();
-			setupServer();
 			setupNav();
 		}
 		
