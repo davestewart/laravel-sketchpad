@@ -10,7 +10,7 @@
 
 			<div class="row">
 
-				<div id="nav" class="col-md-4" style="margin-top:100px;">
+				<div id="nav" class="col-md-4">
 
 					<div style="">
 
@@ -33,7 +33,7 @@
 
 					<section id="info">
 						<h1>Sketchpad</h1>
-						<p>&nbsp;</p>
+						<p class="info">&nbsp;</p>
 					</section>
 
 					<section id="result">
@@ -54,7 +54,9 @@
 
 	</div>
 
+	<!--
 	<a data-toggle="modal" href="http://fiddle.jshell.net/bHmRB/51/show/" data-target="#myModal">Click me !</a>
+	-->
 
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

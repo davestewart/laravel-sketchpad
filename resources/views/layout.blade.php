@@ -28,7 +28,7 @@
 	@yield('head')
 
 </head>
-<body>
+<body data-mode="home">
 
 	@yield('content')
 
