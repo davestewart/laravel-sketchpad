@@ -38,7 +38,8 @@ form {
   form textarea {
     max-width: 100%; }
   form .help-block {
-    font-size: 0.8em; }
+    font-size: 0.8em;
+    padding-left: 4px; }
 
 #controllers,
 #methods {

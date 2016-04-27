@@ -1,4 +1,4 @@
-<p>Creating a new controller will allow you to add methods and begin testing code within the Sketchpad interface.</p>
+<p>Create a new controller to begin testing code with Sketchpad.</p>
 
 <form class="form-horizontal">
 	<fieldset>
