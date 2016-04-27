@@ -42,9 +42,9 @@
 	{
 		return gulp
 			.src(src.css)
-			.pipe(sourcemaps.init())
+			//.pipe(sourcemaps.init())
 			.pipe(sass().on('error', sass.logError))
-			.pipe(sourcemaps.write())
+			//.pipe(sourcemaps.write())
 			.pipe(gulp.dest(trg.css));
 	}
 
@@ -52,10 +52,10 @@
 	{
 		return gulp
 			.src(src.js)
-			.pipe(sourcemaps.init())
-			.pipe(uglify({compress: true, mangle: false}))
+			//.pipe(sourcemaps.init())
+			//.pipe(uglify({compress: true, mangle: false}))
 			.pipe(concat(files.js))
-			.pipe(sourcemaps.write())
+			//.pipe(sourcemaps.write())
 			.pipe(gulp.dest(trg.js));
 	}
 
