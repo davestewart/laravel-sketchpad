@@ -4,10 +4,10 @@
 	'route'         => 'sketchpad/',
 
 	// physical path to sketchpad controllers folder
-	'path'          => 'app/Http/Controllers/sketchpad/',
+	'path'          => 'app/Http/Controllers/Sketchpad/',
 
 	// namespace to sketchpad controllers
-	'namespace'     => 'App\\Http\\Controllers\\sketchpad\\',
+	'namespace'     => 'App\\Http\\Controllers\\Sketchpad\\',
 
 	// public assets folder for sketchpad resources
 	'assets'        => '/vendor/sketchpad/',

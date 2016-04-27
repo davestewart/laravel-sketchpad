@@ -22,12 +22,12 @@
 
 
 	// ------------------------------------------------------------------------------------------------
-	// functions
+	// objects
 
 		function Server()
 		{
 			var route = $('meta[name="route"]').attr('content');
-			
+
 			this.json = function (url, callback)
 			{
 				$.getJSON(url + '?json=1', callback);
@@ -42,7 +42,18 @@
 			{
 				$.get(url, callback);
 			};
-			
+
+		}
+
+
+	// ------------------------------------------------------------------------------------------------
+	// functions
+
+		function setMode(mode)
+		{
+			$body.attr('data-mode', mode);
+			console.log(mode);
+
 		}
 
 		function setTitle(title, comment)
@@ -53,7 +64,7 @@
 							? '&nbsp;'
 							: comment;
 			$info.find('h1').text(title);
-			$info.find('p').html(comment);
+			$info.find('.info').html(comment);
 		}
 
 		function updateList(element)
@@ -96,6 +107,7 @@
 			// load
 			server.html(url, function(html)
 			{
+				setMode('help');
 				setTitle(title, '');
 				$result.html(html);
 			});
@@ -121,6 +133,7 @@
 			// load
 			server.html(url, function(html)
 			{
+				setMode('code');
 				setTitle(controller.class, controller.comment.intro);
 				$result.empty();
 				$methods.html(html);
