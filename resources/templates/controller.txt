@@ -1,0 +1,13 @@
+<?php %namespace%;
+
+import %parentpath%;
+
+/**
+ * Controller
+ */
+class %classname% extends %parentname%
+{
+
+%methods%
+
+}
