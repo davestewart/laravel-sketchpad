@@ -1,6 +1,6 @@
-<?php namespace davestewart\doodle\objects\reflection;
+<?php namespace davestewart\sketchpad\objects\reflection;
 
-use davestewart\doodle\traits\ReflectionTraits;
+use davestewart\sketchpad\traits\ReflectionTraits;
 use JsonSerializable;
 
 /**

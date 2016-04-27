@@ -1,7 +1,7 @@
-<?php namespace davestewart\doodle\objects\reflection;
+<?php namespace davestewart\sketchpad\objects\reflection;
 
 /**
- * Doodle Parameter
+ * Sketchpad Parameter
  * 
  * Represents a method parameter
  */

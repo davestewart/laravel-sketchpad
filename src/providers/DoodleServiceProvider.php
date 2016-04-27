@@ -1,14 +1,14 @@
-<?php namespace davestewart\doodle\providers;
+<?php namespace davestewart\sketchpad\providers;
 
-use davestewart\doodle\services\DoodleService;
+use davestewart\sketchpad\services\SketchpadService;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * DoodleServiceProvider
+ * SketchpadServiceProvider
  *
- * Sets up the doodle package
+ * Sets up the sketchpad package
  */
-class DoodleServiceProvider extends ServiceProvider
+class SketchpadServiceProvider extends ServiceProvider
 {
 
 	/**
@@ -18,31 +18,31 @@ class DoodleServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->app->singleton(DoodleService::class);
+		$this->app->singleton(SketchpadService::class);
 	}
 
 	/**
 	 * Bootstrap the    pplication services.
 	 *
-	 * @param DoodleService $doodle
+	 * @param SketchpadService $sketchpad
 	 */
-	public function boot(DoodleService $doodle)
+	public function boot(SketchpadService $sketchpad)
 	{
 		// variables
 		$resources = realpath(__DIR__ . '/../../') . '/resources/';
 
 		// vendor folders
-		$this->loadViewsFrom($resources . 'views', 'doodle');
-		$this->mergeConfigFrom($resources . 'config/config.php', 'doodle');
+		$this->loadViewsFrom($resources . 'views', 'sketchpad');
+		$this->mergeConfigFrom($resources . 'config/config.php', 'sketchpad');
 
 		// publishes
 		$this->publishes
 		([
-			$resources . 'public' => public_path('vendor/doodle'),
+			$resources . 'public' => public_path('vendor/sketchpad'),
 		]);
 
 		// initialize class
-		$doodle->init();
+		$sketchpad->init();
 	}
 
 }

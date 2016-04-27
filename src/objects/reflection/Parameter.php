@@ -1,10 +1,10 @@
-<?php namespace davestewart\doodle\objects\reflection;
+<?php namespace davestewart\sketchpad\objects\reflection;
 
 use JsonSerializable;
 use ReflectionParameter;
 
 /**
- * Doodle Parameter
+ * Sketchpad Parameter
  * 
  * Represents a method parameter
  */

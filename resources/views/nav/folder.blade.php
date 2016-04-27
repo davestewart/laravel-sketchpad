@@ -1,8 +1,8 @@
 <ul class="nav nav-pills nav-stacked">
 	@foreach($routes as $route => $reference)
-		@if($reference instanceof \davestewart\doodle\objects\route\ControllerReference)
+		@if($reference instanceof \davestewart\sketchpad\objects\route\ControllerReference)
 			<?php
-			$text   = str_replace('/', ' <span class="divider">&#9656;</span> ', str_replace('doodles/', '', trim($route, '/') ));
+			$text   = str_replace('/', ' <span class="divider">&#9656;</span> ', str_replace('sketchpad/', '', trim($route, '/') ));
 			$active = $reference->route === $uri ? 'active' : '';
 			//pr($reference);
 			?>

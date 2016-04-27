@@ -1,10 +1,10 @@
-<?php namespace davestewart\doodle\services;
+<?php namespace davestewart\sketchpad\services;
 
 use App;
-use davestewart\doodle\objects\AbstractService;
-use davestewart\doodle\objects\route\ControllerReference;
-use davestewart\doodle\objects\route\FolderReference;
-use davestewart\doodle\traits\GetterTrait;
+use davestewart\sketchpad\objects\AbstractService;
+use davestewart\sketchpad\objects\route\ControllerReference;
+use davestewart\sketchpad\objects\route\FolderReference;
+use davestewart\sketchpad\traits\GetterTrait;
 use ReflectionMethod;
 use Route;
 
@@ -13,7 +13,7 @@ use Route;
  *
  * Responsible for:
  *
- * - determining the possible routes => Controllers from the doodles/ folder downwards
+ * - determining the possible routes => Controllers from the sketchpad/ folder downwards
  * - matching any called routes to said controllers
  * - creating any wildcard routes if required
  */
@@ -26,7 +26,7 @@ class RouteService extends AbstractService
 	// PROPERTIES
 
 		/**
-		 * The root controller namespace for doodle/ controllers
+		 * The root controller namespace for sketchpad/ controllers
 		 *
 		 * @var string
 		 */
@@ -34,7 +34,7 @@ class RouteService extends AbstractService
 
 		/**
 		 * An array of 'route' => RouteReference instances, representing all found
-		 * folders / controllers from the doodles/ controller folder down
+		 * folders / controllers from the sketchpad/ controller folder down
 		 *
 		 * @var FolderReference[]
 		 */
@@ -49,7 +49,7 @@ class RouteService extends AbstractService
 		 *
 		 * Sets up the RouteService with the values it needs determine or match routes
 		 *
-		 * Parameters are all from the Doodle config file
+		 * Parameters are all from the Sketchpad config file
 		 *
 		 * @param   string   $route         the base r
 		 * @param   string   $path
@@ -163,7 +163,7 @@ class RouteService extends AbstractService
 		 *
 		 * Sets controllers and folders elements as they are found
 		 *
-		 * @param   string  $path   The doodle controllers path-relative path to the folder, i.e. "foo/bar/"
+		 * @param   string  $path   The sketchpad controllers path-relative path to the folder, i.e. "foo/bar/"
 		 */
 		protected function process($path = '')
 		{

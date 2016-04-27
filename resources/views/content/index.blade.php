@@ -1,8 +1,8 @@
-@extends('doodle::layout')
+@extends('sketchpad::layout')
 
 @section('content')
 
-	@include('doodle::content.header')
+	@include('sketchpad::content.header')
 
 	<div id="app">
 
@@ -15,7 +15,7 @@
 					<div style="">
 
 						<div id="controllers" class="col-md-6">
-							@include('doodle::nav.folder')
+							@include('sketchpad::nav.folder')
 						</div>
 
 						@if(isset($controller))
@@ -37,7 +37,7 @@
 					</section>
 
 					<section id="result">
-						@include('doodle::pages.welcome')
+						@include('sketchpad::pages.welcome')
 					</section>
 
 				</div>

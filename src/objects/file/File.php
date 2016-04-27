@@ -1,8 +1,9 @@
-<?php namespace davestewart\doodle\objects\file;
-use davestewart\doodle\services\DoodleService;
+<?php namespace davestewart\sketchpad\objects\file;
+
+use davestewart\sketchpad\services\SketchpadService;
 
 /**
- * Doodle File object
+ * Sketchpad File object
  * 
  * Base class that represents a filesystem object such as a folder or controller
  */
@@ -47,9 +48,9 @@ class File
 			$this->name     = array_pop($segments);
 			$this->path     = $path;
 
-			/** @var DoodleService $doodle */
-			$doodle         = app(DoodleService::class);
-			$this->route    = $doodle->getRouteFromPath($path);
+			/** @var SketchpadService $sketchpad */
+			$sketchpad      = app(SketchpadService::class);
+			$this->route    = $sketchpad->getRouteFromPath($path);
 		}
 		
 	}

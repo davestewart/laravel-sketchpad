@@ -1,30 +1,30 @@
-<?php namespace davestewart\doodle\services;
+<?php namespace davestewart\sketchpad\services;
 
 use App;
-use davestewart\doodle\objects\AbstractService;
-use davestewart\doodle\objects\DoodleConfig;
-use davestewart\doodle\objects\file\Folder;
-use davestewart\doodle\objects\reflection\Controller;
-use davestewart\doodle\objects\route\ControllerReference;
-use davestewart\doodle\objects\route\FolderReference;
+use davestewart\sketchpad\objects\AbstractService;
+use davestewart\sketchpad\objects\SketchpadConfig;
+use davestewart\sketchpad\objects\file\Folder;
+use davestewart\sketchpad\objects\reflection\Controller;
+use davestewart\sketchpad\objects\route\ControllerReference;
+use davestewart\sketchpad\objects\route\FolderReference;
 use Illuminate\Support\Facades\Input;
 use ReflectionMethod;
 use Route;
 
 
 /**
- * Class DoodleService
+ * Class SketchpadService
  *
- * @package davestewart\doodle\services
+ * @package davestewart\sketchpad\services
  */
-class DoodleService extends AbstractService
+class SketchpadService extends AbstractService
 {
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// PROPERTIES
 
 		/**
-		 * @var DoodleConfig
+		 * @var SketchpadConfig
 		 */
 		protected $config;
 
@@ -42,7 +42,7 @@ class DoodleService extends AbstractService
 		public function init()
 		{
 			// config
-			$config         = new DoodleConfig();
+			$config         = new SketchpadConfig();
 			$this->path     = base_path($config->path);
 			$this->route    = $config->route;
 			$this->config   = $config;
@@ -53,16 +53,16 @@ class DoodleService extends AbstractService
 			// routing
 			$parameters     =
 			[
-				'namespace'     => 'davestewart\doodle\controllers',
+				'namespace'     => 'davestewart\sketchpad\controllers',
 				'middleware'    => 'web',
 			];
 
-			// add main doodle routes
+			// add main sketchpad routes
 			Route::group($parameters, function ($router) use ($config)
 			{
-				Route::post ($config->route . ':create', 'DoodleController@create');
-				Route::get($config->route . ':{command}/{data?}', 'DoodleController@command')->where('data', '.*');
-				Route::match(['GET', 'POST'], $config->route . '{params?}', 'DoodleController@call')->where('params', '.*');
+				Route::post ($config->route . ':create', 'SketchpadController@create');
+				Route::get($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
+				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
 			});
 
 			// debug
@@ -83,7 +83,7 @@ class DoodleService extends AbstractService
 		}
 
 		/**
-		 * Gets the core data for the main doodle view
+		 * Gets the core data for the main sketchpad view
 		 *
 		 * @param      $path
 		 * @param null $controller
@@ -171,8 +171,8 @@ class DoodleService extends AbstractService
 					{
 						if($e instanceof \ReflectionException)
 						{
-							$doodle = str_replace($base, '', $ref->route) . $ref->method . '/';
-							$this->abort($doodle, 'method');
+							$sketchpad = str_replace($base, '', $ref->route) . $ref->method . '/';
+							$this->abort($sketchpad, 'method');
 						}
 					}
 	
@@ -189,13 +189,13 @@ class DoodleService extends AbstractService
 				if($html)
 				{
 					$data = ['controller' => $controller];
-					return view('doodle::nav.methods', $data);
+					return view('sketchpad::nav.methods', $data);
 				}
 				else
 				{
 					$data = $this->getData($ref->folder, $controller);
 					$data['uri']        = $this->route . $uri . '/';
-					return view('doodle::content.index', $data);
+					return view('sketchpad::content.index', $data);
 				}
 
 			}
@@ -208,7 +208,7 @@ class DoodleService extends AbstractService
 					$data = $this->getFolder($ref->path);
 					return $json
 						? $data
-						: view('doodle::html.folder', compact('data'));
+						: view('sketchpad::html.folder', compact('data'));
 				}
 				else
 				{
@@ -218,7 +218,7 @@ class DoodleService extends AbstractService
 					$data['controller'] = $folder->controllers[0];
 					$data['uri']        = $this->route . $uri . '/';
 
-					return view('doodle::content.index', $data);
+					return view('sketchpad::content.index', $data);
 				}
 			}
 
@@ -238,7 +238,7 @@ class DoodleService extends AbstractService
 
 		protected function abort($uri, $type = '')
 		{
-			App::abort(404, "The requested Doodle $type '$uri' does not exist");
+			App::abort(404, "The requested Sketchpad $type '$uri' does not exist");
 		}
 
 

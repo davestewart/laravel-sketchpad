@@ -1,8 +1,8 @@
-<?php namespace davestewart\doodle\objects\reflection;
+<?php namespace davestewart\sketchpad\objects\reflection;
 
-use davestewart\doodle\objects\file\File;
+use davestewart\sketchpad\objects\file\File;
 
-use davestewart\doodle\services\DoodleService;
+use davestewart\sketchpad\services\SketchpadService;
 use JsonSerializable;
 use ReflectionClass;
 use ReflectionMethod;
@@ -10,12 +10,12 @@ use ReflectionMethod;
 /**
  * Class ControllerObject
  *
- * @package davestewart\doodle\helpers
+ * @package davestewart\sketchpad\helpers
  */
 class Controller extends File implements JsonSerializable
 {
 	
-	use \davestewart\doodle\traits\ReflectionTraits;
+	use \davestewart\sketchpad\traits\ReflectionTraits;
 	
 	// -----------------------------------------------------------------------------------------------------------------
 	// PROPERTIES

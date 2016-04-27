@@ -1,10 +1,10 @@
-<?php namespace davestewart\doodle\objects\file;
-use davestewart\doodle\objects\reflection\Controller;
-use davestewart\doodle\services\DoodleService;
+<?php namespace davestewart\sketchpad\objects\file;
+use davestewart\sketchpad\objects\reflection\Controller;
+use davestewart\sketchpad\services\SketchpadService;
 use JsonSerializable;
 
 /**
- * Doodle Folder
+ * Sketchpad Folder
  * 
  * Represents a controller folder, storing subfolders, controllers
  */

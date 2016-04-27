@@ -1,6 +1,6 @@
-<?php namespace davestewart\doodle\controllers;
+<?php namespace davestewart\sketchpad\controllers;
 
-use davestewart\doodle\services\DoodleService;
+use davestewart\sketchpad\services\SketchpadService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Input;
@@ -10,20 +10,20 @@ use Response;
  * Class TestController
  * @package app\Http\Controllers\test
  */
-class DoodleController extends Controller
+class SketchpadController extends Controller
 {
 	
 	/**
-	 * @var DoodleService
+	 * @var SketchpadService
 	 */
 	protected $service;
 
 	/**
-	 * DoodleController constructor.
+	 * SketchpadController constructor.
 	 *
-	 * @param DoodleService $service
+	 * @param SketchpadService $service
 	 */
-	public function __construct(DoodleService $service)
+	public function __construct(SketchpadService $service)
 	{
 		$this->service = $service;
 	}
@@ -31,7 +31,7 @@ class DoodleController extends Controller
 	public function command($type, $data = null)
 	{
 		$data = $this->service->getVariables();
-		return view('doodle::pages.' . $type, $data);
+		return view('sketchpad::pages.' . $type, $data);
 	}
 
 	public function call($path = '')
@@ -54,12 +54,12 @@ class DoodleController extends Controller
 
 	public function index()
 	{
-		return view('doodle::content.index', $this->service->getData(''));
+		return view('sketchpad::content.index', $this->service->getData(''));
 	}
 
 	public function view($path)
 	{
-		return view('doodle::content.index', $this->service->getData($path));
+		return view('sketchpad::content.index', $this->service->getData($path));
 	}
 
 	public function get($path = '')

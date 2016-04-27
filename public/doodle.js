@@ -12,7 +12,7 @@
 		var $info;
 
 		// objects
-		var doodle = window.Doodle = {};
+		var sketchpad = window.Sketchpad = {};
 		var server;
 		var router;
 
@@ -159,7 +159,7 @@
 			});
 		}
 
-		doodle.onFileChanged = function(file)
+		sketchpad.onFileChanged = function(file)
 		{
 			console.log('file changed:', file);
 		};
@@ -173,7 +173,7 @@
 			// clear and reset history
 			if(History.getCurrentIndex() !== 0)
 			{
-				window.location.replace('/doodles/');
+				window.location.replace('/sketchpad/');
 			}
 
 			// routing

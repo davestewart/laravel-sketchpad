@@ -4,7 +4,7 @@
 
 	<!-- meta -->
 	<meta charset="UTF-8">
-	<title>Doodle</title>
+	<title>Sketchpad</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
@@ -17,9 +17,9 @@
 	<script src="{{ $assets }}lib/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="{{ $assets }}themes/{{ $theme }}.min.css">
 
-	<!-- doodle -->
-	<link rel="stylesheet" href="{{ $assets }}doodle.css">
-	<script src="{{ $assets }}doodle.js"></script>
+	<!-- sketchpad -->
+	<link rel="stylesheet" href="{{ $assets }}sketchpad.css">
+	<script src="{{ $assets }}sketchpad.js"></script>
 
 	<!-- variables -->
 	<meta name="route" content="{{ $route }}">
@@ -39,7 +39,7 @@
 	<script>
 		window._onLiveReloadFileChanged = function(file)
 		{
-			window.Doodle && Doodle.onFileChanged(file);
+			window.Sketchpad && Sketchpad.onFileChanged(file);
 		}
 	</script>
 	@endif

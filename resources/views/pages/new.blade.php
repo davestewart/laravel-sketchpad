@@ -14,7 +14,7 @@
 			<div class="">
 				<select class="form-control" name="path">
 					@foreach($routes as $route)
-						@if($route instanceof \davestewart\doodle\objects\route\FolderReference)
+						@if($route instanceof \davestewart\sketchpad\objects\route\FolderReference)
 					<option value="{{ $route->route }}">{{ $route->route }}</option>
 						@endif
 					@endforeach
