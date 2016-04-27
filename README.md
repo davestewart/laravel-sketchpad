@@ -11,3 +11,7 @@ It shows the controllers and methods from your `Controllers/sketchpad/` folder, 
 You can navigate to, and run any controller method, even modify parameter values, all from a friendly UI.
 
 Install the gulp plugin to see updates to your code, live!
+
+## More info
+
+For installation and usage instructions, see the [GitHub wiki](https://github.com/davestewart/laravel-sketchpad/wiki).
