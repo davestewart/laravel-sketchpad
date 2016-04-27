@@ -16,7 +16,6 @@
 	<!-- bootstrap -->
 	<script src="{{ $assets }}lib/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="{{ $assets }}themes/{{ $theme }}.min.css">
-	<link rel="stylesheet" href="{{ $assets }}theme.css">
 
 	<!-- doodle -->
 	<link rel="stylesheet" href="{{ $assets }}doodle.css">

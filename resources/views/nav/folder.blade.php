@@ -2,13 +2,16 @@
 	@foreach($routes as $route => $reference)
 		@if($reference instanceof \davestewart\doodle\objects\route\ControllerReference)
 			<?php
-			$text   = str_replace('/', ' <span>&#9656;</span> ', str_replace('doodles/', '', trim($route, '/') ));
+			$text   = str_replace('/', ' <span class="divider">&#9656;</span> ', str_replace('doodles/', '', trim($route, '/') ));
 			$active = $reference->route === $uri ? 'active' : '';
 			//pr($reference);
 			?>
 			<li class="{{ $active }}">
-				<a class="folder" href="/{{ $route }}">
-					<span>{!! $text !!}</span>
+				<a
+					class="controller"
+					data-name="{{ $reference->class }}"
+					href="/{{ $route }}">
+					{!! $text !!}
 					<!--<span class="badge badge-right">12</span>-->
 				</a>
 			</li>

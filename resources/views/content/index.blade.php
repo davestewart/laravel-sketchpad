@@ -14,22 +14,13 @@
 
 					<div style="">
 
-						<!--
-						<ul class="breadcrumb">
-							@foreach($folder->parents as $name => $route)
-								<li><a class="folder" href="/{{ $route }}">{{ $name }}</a></li>
-							@endforeach
-							<li class="active">{{ $folder->name }}</li>
-						</ul>
-						-->
-
 						<div id="controllers" class="col-md-6">
 							@include('doodle::nav.folder')
 						</div>
 
 						@if(isset($controller))
 							<div id="methods" class="col-md-6">
-								@include('doodle::nav.methods')
+
 							</div>
 						@endif
 
@@ -41,12 +32,12 @@
 				<div class="col-md-8">
 
 					<section id="info">
-						<h1>Title</h1>
-						<p>Comment</p>
+						<h1>Sketchpad</h1>
+						<p>&nbsp;</p>
 					</section>
 
 					<section id="result">
-						<iframe id="frame" name="frame" src="" frameborder="0"></iframe>
+						@include('doodle::pages.welcome')
 					</section>
 
 				</div>
@@ -54,6 +45,37 @@
 
 		</div>
 
+
+		<script id="controller" type="text/plain">
+			@if(isset($controller))
+				{!! str_replace('\\', '\\\\', json_encode($controller, JSON_UNESCAPED_SLASHES)) !!}
+			@endif
+		</script>
+
 	</div>
+
+	<a data-toggle="modal" href="http://fiddle.jshell.net/bHmRB/51/show/" data-target="#myModal">Click me !</a>
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" style="width:500px;">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Modal tfhgfghfgh</h4>
+
+				</div>
+				<div class="modal-body"><div class="te"></div></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
 
 @endsection

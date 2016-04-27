@@ -4,9 +4,9 @@
 			<a
 				class="method"
 				title="{{ $method->label }}"
-				data-link="{{ $method->route }}"
 				href="/{{ $method->route }}"
 			>{{ $method->name }}()</a>
+			<p>{{ $method->comment->intro }}</p>
 		</li>
 	@endforeach
 </ul>

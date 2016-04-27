@@ -1,43 +1,124 @@
-#app{
-	padding: 20px;
-}
+// ------------------------------------------------------------------------------------------------
+// MAIN
+// ------------------------------------------------------------------------------------------------
 
-#controllers,
-#methods{
-	height:100%;
-	border-right:1px solid #eee;
-}
+    html{
 
-#nav .nav>li>a {
-
-	padding: 4px 9px;
-}
-
-pre{
-	border:none !important;
-}
-
-.container{
-	max-width: 1600px;
-}
-
-
-
-
-@media (min-width: 1200px){
-	.container {
-		width: 1570px !important;
 	}
-}
 
-.navbar{
-	z-index: 1000000;
-}
+	html,
+	body{
+		height: 100%;
+		width:100%;
+	}
 
-html, body{
-	height: 100%;
-}
+	body{
+		padding-top:60px;
+		overflow-y:scroll;
+	}
 
-html{
-	overflow:scroll;
+	body.modal-open .navbar-fixed-top{
+		margin-right: 15px;
+	}
+
+	.container{
+		max-width: 1600px;
+	}
+
+	@media (min-width: 1200px){
+		.container {
+			width: 1570px !important;
+		}
+	}
+
+
+
+// ------------------------------------------------------------------------------------------------
+// BOOTSTRAP
+// ------------------------------------------------------------------------------------------------
+
+
+	#nav .nav > li {
+
+		a{
+			padding: 4px 9px;
+		}
+
+		p{
+			padding-left: 9px;
+			font-size: 0.8em;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			color:#ccc;
+			font-style: normal;
+		}
+	}
+
+	.modal{
+		z-index: 100000000;
+
+	}
+
+	.modal-dialog {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		margin: 0;
+	}
+
+	.modal-content {
+		margin: 0 auto;
+	}
+
+	form{
+		width:70%;
+		padding:0 15px;
+
+		label{
+			padding:4px;
+		}
+
+		textarea{
+			max-width: 100%;
+		}
+	}
+
+// ------------------------------------------------------------------------------------------------
+// APPLICATION
+// ------------------------------------------------------------------------------------------------
+
+    #app{
+		padding: 20px;
+	}
+
+    #controllers,
+	#methods{
+		height:100%;
+		border-right:1px solid #eee;
+	}
+
+	pre{
+		border:none !important;
+	}
+
+	h1{
+		font-size:60px;
+	}
+
+	a.controller span.divider{
+
+		display: inline-block;
+		padding:0 3px;
+		color:#CCC;
+
+		li.active &{
+			opacity: 0.3;
+		}
+	}
+
+
+pre.sf-dump{
+	z-index: 0 !important;
 }
