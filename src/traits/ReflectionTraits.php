@@ -1,13 +1,13 @@
-<?php namespace davestewart\doodle\traits;
+<?php namespace davestewart\sketchpad\traits;
 
-use davestewart\doodle\objects\reflection\Comment;
+use davestewart\sketchpad\objects\reflection\Comment;
 use ReflectionClass;
 use ReflectionMethod;
 
 /**
  * Class ReflectionTraits
  *
- * @package davestewart\doodle\traits
+ * @package davestewart\sketchpad\traits
  */
 trait ReflectionTraits
 {

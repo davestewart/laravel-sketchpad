@@ -31,7 +31,7 @@
 
 	var files =
 	{
-		js : 'doodle.js'
+		js : 'sketchpad.js'
 	};
 
 

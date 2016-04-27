@@ -1,9 +1,9 @@
 {
-	"name": "davestewart/doodle",
+	"name": "davestewart/sketchpad",
 	"type": "library",
 	"description": "Browser-based tool to manage development of arbitrary test code",
 	"keywords": ["testing", "php", "tinker"],
-	"homepage": "https://github.com/davestewart/laravel-doodle",
+	"homepage": "https://github.com/davestewart/laravel-sketchpad",
 	"licence": "MIT",
 	"authors": [
 		{
@@ -17,8 +17,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"davestewart\\doodle\\": "src"
-		},
-		"files":["src/Libraries/Utils.php"]
+			"davestewart\\sketchpad\\": "src"
+		}
 	}
 }

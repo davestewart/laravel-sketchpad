@@ -1,8 +1,8 @@
-@extends('doodle::layout')
+@extends('sketchpad::layout')
 
 @section('content')
 
-	@include('doodle::content.header')
+	@include('sketchpad::content.header')
 
 	<div id="app">
 
@@ -10,12 +10,12 @@
 
 			<div class="row">
 
-				<div id="nav" class="col-md-4" style="margin-top:100px;">
+				<div id="nav" class="col-md-4">
 
 					<div style="">
 
 						<div id="controllers" class="col-md-6">
-							@include('doodle::nav.folder')
+							@include('sketchpad::nav.folder')
 						</div>
 
 						@if(isset($controller))
@@ -33,11 +33,11 @@
 
 					<section id="info">
 						<h1>Sketchpad</h1>
-						<p>&nbsp;</p>
+						<p class="info">&nbsp;</p>
 					</section>
 
 					<section id="result">
-						@include('doodle::pages.welcome')
+						@include('sketchpad::pages.welcome')
 					</section>
 
 				</div>
@@ -54,7 +54,9 @@
 
 	</div>
 
+	<!--
 	<a data-toggle="modal" href="http://fiddle.jshell.net/bHmRB/51/show/" data-target="#myModal">Click me !</a>
+	-->
 
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

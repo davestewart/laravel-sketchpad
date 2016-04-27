@@ -1,11 +1,11 @@
-<?php namespace davestewart\doodle\objects;
+<?php namespace davestewart\sketchpad\objects;
 
 /**
- * Class DoodleConfig
+ * Class SketchpadConfig
  *
- * @package davestewart\doodle\objects
+ * @package davestewart\sketchpad\objects
  */
-class DoodleConfig
+class SketchpadConfig
 {
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ class DoodleConfig
 
 		public function __construct()
 		{
-			$config = config('doodle');
+			$config = config('sketchpad');
 			foreach($config as $key => $value)
 			{
 				$this->$key = $value;

@@ -1,9 +1,9 @@
-<?php namespace davestewart\doodle\traits;
+<?php namespace davestewart\sketchpad\traits;
 
 /**
  * Class GetterTrait
  *
- * @package davestewart\doodle\traits
+ * @package davestewart\sketchpad\traits
  */
 trait GetterTrait
 {

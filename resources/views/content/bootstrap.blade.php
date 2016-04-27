@@ -1,4 +1,4 @@
-@extends('doodle::layout')
+@extends('sketchpad::layout')
 
 @section('content')
 

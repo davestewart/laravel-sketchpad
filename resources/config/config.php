@@ -1,16 +1,16 @@
 <?php return
 [
-	// doodles route
-	'route'         => 'doodles/',
+	// sketchpad route
+	'route'         => 'sketchpad/',
 
-	// physical path to doodles controllers folder
-	'path'          => 'app/Http/Controllers/doodles/',
+	// physical path to sketchpad controllers folder
+	'path'          => 'app/Http/Controllers/Sketchpad/',
 
-	// namespace to doodles controllers
-	'namespace'     => 'App\\Http\\Controllers\\doodles\\',
+	// namespace to sketchpad controllers
+	'namespace'     => 'App\\Http\\Controllers\\Sketchpad\\',
 
-	// public assets folder for doodle resources
-	'assets'        => '/vendor/doodle/',
+	// public assets folder for sketchpad resources
+	'assets'        => '/vendor/sketchpad/',
 
 	// bootswatch theme name
 	'theme'         => 'flatly',

@@ -1,9 +1,9 @@
-<?php namespace davestewart\doodle\objects\route;
+<?php namespace davestewart\sketchpad\objects\route;
 
 /**
  * Class PathReference
  *
- * @package davestewart\doodle\objects\route
+ * @package davestewart\sketchpad\objects\route
  */
 class ControllerReference extends RouteReference
 {

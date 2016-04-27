@@ -1,9 +1,9 @@
-<?php namespace davestewart\doodle\objects;
+<?php namespace davestewart\sketchpad\objects;
 
 /**
- * Class DoodleConfig
+ * Class SketchpadConfig
  *
- * @package davestewart\doodle\objects
+ * @package davestewart\sketchpad\objects
  */
 class AbstractService
 {
@@ -16,7 +16,7 @@ class AbstractService
 	public $path;
 
 	/**
-	 * The root relative route to the doodles folder
+	 * The root relative route to the sketchpad folder
 	 *
 	 * @var
 	 */
