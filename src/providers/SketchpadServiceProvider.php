@@ -29,16 +29,19 @@ class SketchpadServiceProvider extends ServiceProvider
 	public function boot(Sketchpad $sketchpad)
 	{
 		// variables
-		$resources = realpath(__DIR__ . '/../../') . '/resources/';
+		$root       = realpath(__DIR__ . '/../../') . '/';
+		$resources  = $root . 'resources/';
+		$config     = $resources . 'config/config.php';
 
 		// vendor folders
 		$this->loadViewsFrom($resources . 'views', 'sketchpad');
-		$this->mergeConfigFrom($resources . 'config/config.php', 'sketchpad');
+		$this->mergeConfigFrom($config, 'sketchpad');
 
 		// publishes
 		$this->publishes
 		([
-			$resources . 'public' => public_path('vendor/sketchpad'),
+			$config => config_path('sketchpad.php'),
+			$root . 'public' => public_path('vendor/sketchpad'),
 		]);
 
 		// initialize class
