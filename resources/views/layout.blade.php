@@ -11,7 +11,7 @@
 	<!-- libs -->
 	<script src="{{ $assets }}lib/vue.js"></script>
 	<script src="{{ $assets }}lib/router.min.js"></script>
-	<script src="{{ $assets }}lib/jquery-1.12.3.js"></script>
+	<script src="{{ $assets }}lib/jquery-1.12.3.min.js"></script>
 
 	<!-- json view -->
 	<link  href="{{ $assets }}lib/jsonview/jquery.jsonview.min.css" rel="stylesheet">
