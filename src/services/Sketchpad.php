@@ -179,12 +179,12 @@ class Sketchpad extends AbstractService
 					// call and return the controller
 					return $this->router->call($ref->class, $ref->method, $ref->params);
 				}
-				
-				// just controller				
+
+				// just controller
 				$controller = $this->getController($ref->path)->process();
 				if($json)
 				{
-					return $controller;
+					return json_encode($controller);
 				}
 				if($html)
 				{

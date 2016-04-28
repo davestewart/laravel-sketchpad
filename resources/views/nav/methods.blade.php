@@ -5,8 +5,10 @@
 				class="method"
 				title="{{ $method->label }}"
 				href="/{{ $method->route }}"
-			>{{ $method->name }}()</a>
+			>{{ $method->label }}</a>
+			@if($method->comment->intro)
 			<p>{{ $method->comment->intro }}</p>
+			@endif
 		</li>
 	@endforeach
 </ul>

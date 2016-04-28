@@ -36,7 +36,7 @@
 						<p class="info">&nbsp;</p>
 					</section>
 
-					<section id="result">
+					<section id="output">
 						@include('sketchpad::pages.welcome')
 					</section>
 
@@ -48,7 +48,7 @@
 
 		<script id="controller" type="text/plain">
 			@if(isset($controller))
-				{!! str_replace('\\', '\\\\', json_encode($controller, JSON_UNESCAPED_SLASHES)) !!}
+				{!! json_encode($controller, JSON_UNESCAPED_SLASHES) !!}
 			@endif
 		</script>
 

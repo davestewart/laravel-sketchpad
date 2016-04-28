@@ -13,6 +13,10 @@
 	<script src="{{ $assets }}lib/router.min.js"></script>
 	<script src="{{ $assets }}lib/jquery-1.12.3.js"></script>
 
+	<!-- json view -->
+	<link  href="{{ $assets }}lib/jsonview/jquery.jsonview.min.css" rel="stylesheet">
+	<script src="{{ $assets }}lib/jsonview/jquery.jsonview.min.js"></script>
+
 	<!-- bootstrap -->
 	<link  href="{{ $assets }}fonts/lato/lato.css" rel="stylesheet">
 	<link  href="{{ $assets }}lib/bootstrap/bootstrap.min.css" rel="stylesheet">
