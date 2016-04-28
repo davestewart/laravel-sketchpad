@@ -12,6 +12,6 @@
 	// public assets folder for sketchpad resources
 	'assets'        => '/vendor/sketchpad/',
 
-	// bootswatch theme name
-	'theme'         => 'flatly',
+	// any middleware you want to run on sketchpad routes
+	'middleware'    => null,
 ];

@@ -8,7 +8,7 @@
 		var $nav;
 		var $controllers;
 		var $methods;
-		var $result;
+		var $output;
 		var $info;
 
 		// objects
@@ -19,6 +19,7 @@
 		// data
 		var controller;
 		var method;
+		var lastMethod;
 
 
 	// ------------------------------------------------------------------------------------------------
@@ -30,7 +31,7 @@
 
 			this.json = function (url, callback)
 			{
-				$.getJSON(url + '?json=1', callback);
+				$.getJSON(url + '?json=1', null, callback);
 			};
 
 			this.html = function (url, callback)
@@ -38,9 +39,18 @@
 				$.get(url + '?html=1', callback);
 			};
 
-			this.run = function (url, callback)
+			this.run = function (url, success, fail)
 			{
-				$.get(url, callback);
+				// set loading
+				$output.addClass('loading');
+
+				// make the call
+				$
+					.get(url, success)
+					.fail(fail)
+					.always(function(){
+						$output.removeClass('loading');
+					});
 			};
 
 		}
@@ -67,6 +77,23 @@
 			$info.find('.info').html(comment);
 		}
 
+		function setFormat(format)
+		{
+			$output.attr('data-format', format);
+		}
+
+		function loadIframe(xhr)
+		{
+			var text	= xhr.responseText;
+			var type	= xhr.getResponseHeader('Content-Type');
+			//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
+			var src		= 'data:' + type + ',' + encodeURIComponent(text);
+			var $iframe = $('<iframe class="error" frameborder="0">');
+
+			$output.empty().append($iframe);
+			$iframe.attr('src', src);
+		}
+
 		function updateList(element)
 		{
 			var $element = $(element);
@@ -90,6 +117,11 @@
 			});
 		}
 
+		window.setIframeHeight = function(height)
+		{
+			$output.find('iframe').height(height);
+		};
+
 	
 	// ------------------------------------------------------------------------------------------------
 	// handlers
@@ -109,7 +141,7 @@
 			{
 				setMode('help');
 				setTitle(title, '');
-				$result.html(html);
+				$output.html(html);
 			});
 		}
 
@@ -127,16 +159,16 @@
 			server.json(url, function(data)
 			{
 				controller = data;
+				console.log(controller);
 				//updateMethods();
-			});
 
-			// load
-			server.html(url, function(html)
-			{
-				setMode('code');
-				setTitle(controller.class, controller.comment.intro);
-				$result.empty();
-				$methods.html(html);
+				server.html(url, function(html)
+				{
+					setMode('code');
+					setTitle(controller.class, controller.comment.intro);
+					$output.empty();
+					$methods.html(html);
+				});
 			});
 
 		}
@@ -150,7 +182,6 @@
 			}
 			event.preventDefault();
 
-
 			// variables
 			var $link   	= updateList(this);
 			var url     	= $link.attr('href');
@@ -160,15 +191,43 @@
 			var method  	= controller.methods[index];
 			var title		= $link.text();
 			var comment 	= method.comment.intro;
+			var format		= method.comment.tags.format || null;
 
 			// history
 			//router.navigate(url);
 
+			setTitle(title, comment);
+
 			// load code
-			server.run(url, function(html)
+			server.run(url, function(data, status, xhr)
 			{
-				setTitle(title, comment);
-				$result.html(html);
+				//console.log([status, xhr.getAllResponseHeaders(), xhr]);
+
+				setFormat(format);
+
+				if(format == 'html')
+				{
+					loadIframe(xhr);
+					return;
+				}
+
+				var contentType = xhr.getResponseHeader('Content-Type');
+				//console.log(contentType);
+
+				if(contentType === 'application/json')
+				{
+					setFormat('json');
+					$($output).JSONView(data);
+					return;
+				}
+
+
+				$output.html(data);
+
+			}, function(xhr, status, message)
+			{
+				setFormat('error');
+				loadIframe(xhr);
 			});
 		}
 
@@ -223,16 +282,20 @@
 			$nav        	= $('#nav');
 			$controllers	= $('#controllers');
 			$methods    	= $('#methods');
-			$result     	= $('#result');
+			$output     	= $('#output');
 			$info       	= $('#info');
 
 			// data
-			controller		= JSON.parse($('#controller').text());
-			server			= new Server();
+			var json		= $.trim($('#controller').text());
+			if(json)
+			{
+				controller		= JSON.parse(json);
+				server			= new Server();
 
-			// start
-			//setupRouter();
-			setupNav();
+				// start
+				//setupRouter();
+				setupNav();
+			}
 		}
 		
 	
