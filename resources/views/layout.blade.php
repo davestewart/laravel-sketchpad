@@ -14,11 +14,12 @@
 	<script src="{{ $assets }}lib/jquery-1.12.3.js"></script>
 
 	<!-- bootstrap -->
-	<script src="{{ $assets }}lib/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="{{ $assets }}themes/{{ $theme }}.min.css">
+	<link  href="{{ $assets }}fonts/lato/lato.css" rel="stylesheet">
+	<link  href="{{ $assets }}lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+	<script src="{{ $assets }}lib/bootstrap/bootstrap.min.js"></script>
 
 	<!-- sketchpad -->
-	<link rel="stylesheet" href="{{ $assets }}sketchpad.css">
+	<link  href="{{ $assets }}sketchpad.css" rel="stylesheet">
 	<script src="{{ $assets }}sketchpad.js"></script>
 
 	<!-- variables -->
