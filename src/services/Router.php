@@ -66,7 +66,11 @@ class Router extends AbstractService
 			$this->routes       = [];
 
 			// process
-			$this->process();
+			if(file_exists($path) && is_dir($path))
+			{
+				$this->process();
+			}
+
 			//ksort($this->routes);
 		}
 

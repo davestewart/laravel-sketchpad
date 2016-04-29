@@ -54,12 +54,13 @@ class Sketchpad extends AbstractService
 			$parameters     =
 			[
 				'namespace'     => 'davestewart\sketchpad\controllers',
-				'middleware'    => 'web',
+				'middleware'    => $config->middleware,
 			];
 
 			// add main sketchpad routes
 			Route::group($parameters, function ($router) use ($config)
 			{
+				Route::post ($config->route . ':setup', 'SketchpadController@setup');
 				Route::post ($config->route . ':create', 'SketchpadController@create');
 				Route::get($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
 				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
@@ -175,7 +176,7 @@ class Sketchpad extends AbstractService
 							$this->abort($sketchpad, 'method');
 						}
 					}
-	
+
 					// call and return the controller
 					return $this->router->call($ref->class, $ref->method, $ref->params);
 				}
@@ -224,12 +225,6 @@ class Sketchpad extends AbstractService
 
 			// otherwise, there's nothing to call, so 404
 			$this->abort($uri, 'path');
-		}
-
-
-		public function create($path, $members, $options)
-		{
-
 		}
 
 

@@ -16,6 +16,7 @@ class SketchpadConfig
 		public $namespace;
 		public $assets;
 		public $theme;
+		public $middleware;
 
 
 	// -----------------------------------------------------------------------------------------------------------------
