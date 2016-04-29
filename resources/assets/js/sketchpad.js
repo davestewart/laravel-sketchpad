@@ -15,6 +15,7 @@
 		var sketchpad = window.Sketchpad = {};
 		var server;
 		var router;
+		var reloader;
 
 		// data
 		var controller;
@@ -54,6 +55,42 @@
 			};
 
 		}
+
+		/**
+		 * Live reloader
+		 * 
+		 * @see https://github.com/hiddentao/gulp-server-livereload/
+		 */
+		function LiveReloader(window)
+		{
+			// proxy original livereload function
+			this.onFileChanged = window._onLiveReloadFileChanged;
+			
+			/**
+			 * The proxied callback
+			 * @param {Object} file 	An object with path, name and ext properties
+			 */
+			window._onLiveReloadFileChanged = function(file)
+			{
+				// debug
+				// console.log('file changed:', file);
+
+				// intercept controller updates
+				if(/Controller\.php/.test(file.path))
+				{
+					// TODO refactor this horrid hack ASAP!
+					$(activeContoller).trigger('click');
+					return false;
+				}
+				else
+				{
+					this.onFileChanged(file);
+				}
+
+			}.bind(this)
+		}
+
+
 
 
 	// ------------------------------------------------------------------------------------------------
@@ -150,6 +187,8 @@
 			// event
 			event.preventDefault();
 
+			activeContoller = event.target;
+
 			// variables
 			var $link   = updateList(this);
 			var url     = $link.attr('href');
@@ -231,12 +270,6 @@
 			});
 		}
 
-		sketchpad.onFileChanged = function(file)
-		{
-			console.log('file changed:', file);
-		};
-
-
 	// ------------------------------------------------------------------------------------------------
 	// setup
 
@@ -295,6 +328,12 @@
 				// start
 				//setupRouter();
 				setupNav();
+			}
+
+			// livereload
+			if(window._onLiveReloadFileChanged instanceof Function)
+			{
+				reloader = new LiveReloader(window);
 			}
 		}
 		
