@@ -39,7 +39,8 @@
   font: normal 11px/1.2em Monaco, Consolas, "Courier New", monospace;
   background-color: #fff;
   word-wrap: normal;
-  white-space: pre; }
+  white-space: pre;
+  z-index: 0; }
 
 #output pre {
   border: none !important; }
