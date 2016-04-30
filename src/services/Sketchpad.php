@@ -142,7 +142,7 @@ class Sketchpad extends AbstractService
 			$path   = str_replace($this->path, '', $path);
 			$path   = str_replace('Controller.php',  '', $path);
 			$path   = $this->folderize(strtolower($path));
-			return $this->route . $path;
+			return '/' . $this->route . $path;
 		}
 
 
