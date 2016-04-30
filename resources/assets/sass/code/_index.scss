@@ -1,0 +1,37 @@
+// ------------------------------------------------------------------------------------------------
+// code
+// ------------------------------------------------------------------------------------------------
+
+#output {
+
+	& pre.sf-dump,
+	& .jsonview {
+
+		position: relative;
+		display: block;
+		padding: 5px;
+
+		font: normal 11px/1.2em Monaco, Consolas, "Courier New", monospace; // Menlo
+		background-color: #fff;
+		//color: #222;
+
+		word-wrap: normal;
+		white-space: pre;
+		z-index:0;
+	}
+
+	pre{
+		border:none !important;
+	}
+
+	&[data-format="text"]{
+		white-space: pre;
+		font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace;
+	}
+
+	@import "json";
+	@import "php";
+
+
+}
+

@@ -25,8 +25,8 @@
 
 	var trg =
 	{
-		css: '../public/',
-		js : '../public/'
+		css: '../publish/assets/',
+		js : '../publish/assets/'
 	};
 
 	var files =

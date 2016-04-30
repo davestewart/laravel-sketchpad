@@ -1,0 +1,76 @@
+// ------------------------------------------------------------------------------------------------
+// php
+// ------------------------------------------------------------------------------------------------
+
+pre.sf-dump {
+
+	span {
+		display: inline;
+	}
+
+	abbr {
+		text-decoration: none;
+		border: none;
+		cursor: help;
+	}
+
+	a {
+		text-decoration: none;
+		cursor: pointer;
+		border: 0;
+		outline: none;
+	}
+
+	.sf-dump-compact {
+		display: none;
+	}
+
+	.sf-dump-num {
+		color: #a71d5d
+	}
+
+	.sf-dump-const {
+		color: #795da3
+	}
+
+	.sf-dump-str {
+		color: #df5000
+	}
+
+	.sf-dump-cchr {
+		color: #222
+	}
+
+	.sf-dump-note {
+		color: #a71d5d
+	}
+
+	.sf-dump-ref {
+		color: #a0a0a0
+	}
+
+	.sf-dump-public {
+		color: #795da3
+	}
+
+	.sf-dump-protected {
+		color: #795da3
+	}
+
+	.sf-dump-private {
+		color: #795da3
+	}
+
+	.sf-dump-meta {
+		color: #b729d9
+	}
+
+	.sf-dump-key {
+		color: #df5000
+	}
+
+	.sf-dump-index {
+		color: #a71d5d
+	}
+
+}

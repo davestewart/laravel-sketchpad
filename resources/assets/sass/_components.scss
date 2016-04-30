@@ -1,0 +1,113 @@
+// ------------------------------------------------------------------------------------------------
+// layout
+// ------------------------------------------------------------------------------------------------
+
+	#setup{
+		width:600px;
+	}
+
+	#nav{
+
+	}
+
+	#output {
+		body[data-mode="home"] &,
+		body[data-mode="help"] &{
+			max-width: 700px;
+		}
+	}
+
+	#controllers,
+	#methods{
+		height:100%;
+		border-right:1px solid #eee;
+	}
+
+
+
+// ------------------------------------------------------------------------------------------------
+// formatting
+// ------------------------------------------------------------------------------------------------
+
+
+	#nav{
+
+		// position
+		margin-top: 113px;
+
+		// state
+		transition: opacity 0.3s;
+
+		body[data-mode="help"] &{
+			opacity: 0.2;
+		}
+
+		body[data-mode="help"] &:hover{
+			opacity:1;
+		}
+
+		// list elements
+		.nav > li {
+
+			a {
+				padding: 4px 9px;
+			}
+
+			p {
+				padding-left: 9px;
+				font-size: 0.8em;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				color: #ccc;
+				font-style: normal;
+			}
+		}
+
+		a.controller span.divider{
+
+			display: inline-block;
+			padding:0 3px;
+			color:#CCC;
+
+			li.active &{
+				opacity: 0.3;
+			}
+		}
+
+
+	}
+
+	#info{
+
+		.info{
+			/*
+			padding: 3px 10px;
+			margin: 0 0 10px;
+			border-left: 5px solid #ecf0f1;
+			*/
+
+			padding: 3px 0px;
+			//margin: 0 0 10px;
+			//border-left: 5px solid #ecf0f1;
+		}
+
+		.info:empty{
+			visibility: hidden;
+		}
+	}
+
+	#output{
+
+		iframe.error {
+			width:100%;
+			height:2000px;
+			outline:1px solid #DDD;
+		}
+
+		transition: opacity 0.2s;
+
+		&.loading{
+			opacity: 0;
+		}
+	}

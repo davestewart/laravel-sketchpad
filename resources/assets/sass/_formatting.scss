@@ -1,0 +1,104 @@
+// ------------------------------------------------------------------------------------------------
+// global
+// ------------------------------------------------------------------------------------------------
+
+	html,
+	body{
+		height: 100%;
+		width:100%;
+		color:#666;
+	}
+
+	body{
+		padding-top:100px;
+		overflow-y:scroll;
+		padding-bottom:100px;
+	}
+
+	body.modal-open .navbar-fixed-top{
+		margin-right: 15px;
+	}
+
+
+
+// ------------------------------------------------------------------------------------------------
+// elements
+// ------------------------------------------------------------------------------------------------
+
+	// headings
+
+		h1, h2, h3, h4, h5, h6{
+			color:#2c3e50;
+		}
+
+
+		h1:first-child,
+		h2:first-child,
+		h3:first-child,
+		h4:first-child{
+			margin-top:0;
+		}
+
+		h3:not(:first-child),
+		h4:not(:first-child){
+			margin-top:1.5em;
+		}
+
+		h1{
+			font-size:60px;
+		}
+
+
+	// code
+
+		code{
+			font-size: 0.8em;
+		}
+
+		.error{
+
+		}
+
+
+// ------------------------------------------------------------------------------------------------
+// forms
+// ------------------------------------------------------------------------------------------------
+
+	.form-container{
+		//width:70%;
+	}
+
+	form{
+
+		padding:0px;
+
+		label{
+			padding:4px;
+		}
+
+		textarea{
+			max-width: 100%;
+		}
+
+		.help-block{
+			font-size:0.8em;
+			padding-left:4px;
+		}
+
+		.form-group-submit{
+
+			margin-top: 30px;
+			margin-bottom:0;
+
+			/*
+			button{
+				float: right;
+			};
+			*/
+		}
+
+		&.form-horizontal .control-label{
+			padding-top:0;
+		}
+
+	}

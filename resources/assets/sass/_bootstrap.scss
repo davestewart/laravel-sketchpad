@@ -1,0 +1,50 @@
+// ------------------------------------------------------------------------------------------------
+// BOOTSTRAP
+// ------------------------------------------------------------------------------------------------
+
+	.modal{
+		z-index: 100000000;
+	}
+
+	.modal-dialog {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		margin: 0;
+	}
+
+	.modal-content {
+		margin: 0 auto;
+	}
+
+	.sketchpad-container {
+
+		max-width: 1570px;
+
+		padding-left: 15px;
+		padding-right: 15px;
+		margin-left: auto;
+		margin-right: auto;
+
+		#nav{
+			// max-width: 600px;
+		}
+	}
+
+	@media (min-width: 1600px){
+		.container {
+			width: 1570px;
+		}
+	}
+
+// debug
+/*
+	.container{
+		outline:1px solid green;
+	}
+
+	.row > *{
+		outline:1px solid red;
+	}
+*/
