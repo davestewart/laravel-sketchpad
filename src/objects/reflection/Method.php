@@ -61,6 +61,7 @@ class Method implements JsonSerializable
 			// base
 			$data               = (object) [];
 			$data->name         = $this->name;
+			$data->label        = $this->label;
 			$data->route        = $this->route;
 			$data->signature    = $this->signature;
 
