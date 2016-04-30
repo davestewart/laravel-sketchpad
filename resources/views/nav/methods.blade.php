@@ -4,7 +4,7 @@
 			<a
 				class="method"
 				title="{{ $method->label }}"
-				href="/{{ $method->route }}"
+				href="{{ $method->route }}"
 			>{{ $method->label }}</a>
 			@if($method->comment->intro)
 			<p>{{ $method->comment->intro }}</p>

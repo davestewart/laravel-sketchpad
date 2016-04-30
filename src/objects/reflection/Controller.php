@@ -102,21 +102,12 @@ class Controller extends File implements JsonSerializable
 			$data               = (object) [];
 			$data->type         = 'controller';
 			$data->name         = $this->label;
-			$data->label        = $this->label;
+			$data->path         = $this->path;
 			$data->class        = $this->classname;
-
-			// data
-			if($simple)
-			{
-				$data->methods      = array_map(function($method) { return $method->name; }, $this->methods);;
-			}
-			else
-			{
-				$data->route        = $this->route;
-				$data->label        = $this->label;
-				$data->comment      = $this->comment;
-				$data->methods      = $this->methods;
-			}
+			$data->label        = $this->label;
+			$data->route        = $this->route;
+			$data->comment      = $this->comment;
+			$data->methods      = $this->methods;
 
 			// return
 			return $data;
