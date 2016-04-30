@@ -18,9 +18,16 @@
 		var reloader;
 
 		// data
+		var data;
 		var controller;
 		var method;
-		var lastMethod;
+
+		var active =
+		{
+			controller	:null,
+			method		:null,
+			route		:''
+		};
 
 
 	// ------------------------------------------------------------------------------------------------
@@ -78,8 +85,7 @@
 				// intercept controller updates
 				if(/Controller\.php/.test(file.path))
 				{
-					// TODO refactor this horrid hack ASAP!
-					$(activeContoller).trigger('click');
+					reloadController(file.path);
 					return false;
 				}
 				else
@@ -99,8 +105,6 @@
 		function setMode(mode)
 		{
 			$body.attr('data-mode', mode);
-			console.log(mode);
-
 		}
 
 		function setTitle(title, comment)
@@ -131,6 +135,11 @@
 			$iframe.attr('src', src);
 		}
 
+		window.setIframeHeight = function(height)
+		{
+			$output.find('iframe').height(height);
+		};
+
 		function updateList(element)
 		{
 			var $element = $(element);
@@ -142,98 +151,68 @@
 			return $element;
 		}
 
-		function updateRoutes(data)
-		{
-			// loop over data and build routes
-		}
 
-		function updateMethods(data)
-		{
-			$(controller.methods).each(function(i, e){
-				console.log(e);
-			});
-		}
-
-		window.setIframeHeight = function(height)
-		{
-			$output.find('iframe').height(height);
-		};
-
-	
 	// ------------------------------------------------------------------------------------------------
-	// handlers
+	// data functions
 
-		function onCommandClick(event)
+		function loadController(url)
 		{
-			// event
-			event.preventDefault();
-
-			// variables
-			var $link 	= $(this);
-			var title 	= $link.attr('title');
-			var url 	= $link.attr('href');
-
-			// load
-			server.html(url, function(html)
-			{
-				setMode('help');
-				setTitle(title, '');
-				$output.html(html);
-			});
-		}
-
-		function onControllerClick(event)
-		{
-			// event
-			event.preventDefault();
-
-			activeContoller = event.target;
-
-			// variables
-			var $link   = updateList(this);
-			var url     = $link.attr('href');
-			var name	= $link.data('name');
-
 			// load
 			server.json(url, function(data)
 			{
-				controller = data;
-				console.log(controller);
-				//updateMethods();
+				// update
+				controller 			= data;
+				active.controller	= controller;
 
+				// debug
+				console.log(controller);
+
+				// load already-defined view (need to replace this soon)
 				server.html(url, function(html)
 				{
+					// update UI
 					setMode('code');
 					setTitle(controller.class, controller.comment.intro);
 					$output.empty();
 					$methods.html(html);
+
+					// check to see if the new controller contains the active route
+					var methods 		= controller.methods.filter(function (e){ return active.method && e.route === active.method.route; });
+					if(methods.length)
+					{
+						active.method = methods[0];
+						loadMethod(active.method);
+
+						var $m = $methods.find('a[href="' +active.method.route+ '"]');
+
+						updateList($m.get(0));
+					}
+
 				});
 			});
-
 		}
 
-		function onMethodClick(event)
+		function reloadController(path)
 		{
-			// event
-			if(event.ctrlKey)
+			//var controllers = data.filter(function (e){ return active.controller && e.path === path; });
+			if(controller.path == path)
 			{
-				return;
+				loadController(controller.route);
 			}
-			event.preventDefault();
+		}
 
-			// variables
-			var $link   	= updateList(this);
-			var url     	= $link.attr('href');
-
+		function loadMethod(method)
+		{
 			// update output
-			var index   	= $link.parent().index();
-			var method  	= controller.methods[index];
-			var title		= $link.text();
+			var url     	= method.route;
+			var title		= method.label;
 			var comment 	= method.comment.intro;
 			var format		= method.comment.tags.format || null;
 
 			// history
 			//router.navigate(url);
+
+			active.method	= method;
 
 			setTitle(title, comment);
 
@@ -268,6 +247,56 @@
 				setFormat('error');
 				loadIframe(xhr);
 			});
+		}
+
+	
+	// ------------------------------------------------------------------------------------------------
+	// handlers
+
+		function onCommandClick(event)
+		{
+			// event
+			event.preventDefault();
+
+			// variables
+			var $link 	= $(this);
+			var title 	= $link.attr('title');
+			var url 	= $link.attr('href');
+
+			// load
+			server.html(url, function(html)
+			{
+				setMode('help');
+				setTitle(title, '');
+				$output.html(html);
+			});
+		}
+
+		function onControllerClick(event)
+		{
+			// event
+			event.preventDefault();
+
+			// variables
+			var $link   = updateList(this);
+			var url     = $link.attr('href');
+			loadController(url, 'url');
+		}
+
+		function onMethodClick(event)
+		{
+			// event
+			if(event.ctrlKey)
+			{
+				return;
+			}
+			event.preventDefault();
+
+			// variables
+			var $link   	= updateList(this);
+			var index   	= $link.parent().index();
+			var method  	= controller.methods[index];
+			loadMethod(method);
 		}
 
 	// ------------------------------------------------------------------------------------------------
