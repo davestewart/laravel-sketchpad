@@ -66,7 +66,7 @@ trait ReflectionTraits
 				$label  = $default ?: $this->ref->getName();
 				$label  = preg_replace('/^(.+)Controller$/', '$1', $label);
 				$label  = preg_replace('/_/', ' ', $label);
-				$label  = preg_replace('/([a-z])([A-Z])/', '$1 $2', $label);
+				$label  = preg_replace('/([a-z])([A-Z0-9])/', '$1 $2', $label);
 				$label  = strtolower($label);
 			}
 			return $label;
