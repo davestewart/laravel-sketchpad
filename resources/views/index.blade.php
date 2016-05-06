@@ -2,55 +2,13 @@
 
 @section('content')
 
-	@include('sketchpad::content.header')
+	@include('sketchpad::elements.header')
 
-	<div id="app">
+	@include('sketchpad::vue.app')
 
-		<div class="container">
-
-			<div class="row">
-
-				<div id="nav" class="col-md-4">
-
-					<div style="">
-
-						<div id="controllers" class="col-md-6">
-							@@include('sketchpad::nav.folder')
-						</div>
-
-						@if(isset($controller))
-							<div id="methods" class="col-md-6">
-
-							</div>
-						@endif
-
-
-					</div>
-
-				</div>
-
-				<div class="col-md-8">
-
-					<section id="info">
-						<h1>Sketchpad</h1>
-						<p class="info">&nbsp;</p>
-					</section>
-
-					<section id="output">
-						@include('sketchpad::pages.welcome')
-					</section>
-
-				</div>
-			</div>
-
-		</div>
-
-
-		<script id="data" type="text/plain">
-			{!! json_encode($data, JSON_UNESCAPED_SLASHES) !!}
-		</script>
-
-	</div>
+	<script id="data" type="text/plain">
+		{!! json_encode($data, JSON_UNESCAPED_SLASHES) !!}
+	</script>
 
 	<!--
 	<a data-toggle="modal" href="http://fiddle.jshell.net/bHmRB/51/show/" data-target="#myModal">Click me !</a>

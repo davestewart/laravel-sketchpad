@@ -24,7 +24,7 @@
 					<a class="command" href="/{{ $route }}:options/" title="Options">Options</a>
 				</li>
 				<li>
-					<a class="command" href="/{{ $route }}:help/" title="Help">Help</a>
+					<a target="_blank" href="http://github.com/davestewart/laravel-sketchpad/wiki" title="Help">Help</a>
 				</li>
 			</ul>
 

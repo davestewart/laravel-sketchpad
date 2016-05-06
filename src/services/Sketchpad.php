@@ -172,16 +172,20 @@ class Sketchpad extends AbstractService
 				{
 					$this->abort($uri, 'path');
 				}
+			
+				// get the vue template
 
 				// otherwise, build the index page
 				$data           = $this->getVariables();
+				$data['vue']    = file_get_contents(base_path('vendor/davestewart/sketchpad/resources/views/vue/app.vue'));
 				$data['data']   =
 				[
-					'uri'       => $this->route . $uri . '/',
-					'data'      => $router->getControllers(),
-				    'ref'       => $ref,
+					'route'         => $this->route . $uri . '/',
+					'controllers'   => $router->getControllers(),
+					'controller'    => (object) [],
+				    'ref'           => $ref,
 			    ];
-				return view('sketchpad::content.index', $data);
+				return view('sketchpad::index', $data);
 		}
 
 

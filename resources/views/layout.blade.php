@@ -24,7 +24,6 @@
 
 	<!-- sketchpad -->
 	<link  href="/{{ $assets }}sketchpad.css" rel="stylesheet">
-	<script src="/{{ $assets }}sketchpad.js"></script>
 
 	<!-- variables -->
 	<meta name="route" content="{{ $route }}">
@@ -36,6 +35,8 @@
 <body data-mode="home">
 
 	@yield('content')
+
+	<script src="/{{ $assets }}sketchpad.js"></script>
 
 	@if ( Config::get('app.debug') )
 	<script type="text/javascript">

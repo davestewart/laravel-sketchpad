@@ -116,12 +116,12 @@ class SketchpadController extends Controller
 
 		public function index()
 		{
-			return view('sketchpad::content.index', $this->sketchpad->getData(''));
+			return view('sketchpad::index', $this->sketchpad->getData(''));
 		}
 
 		public function view($path)
 		{
-			return view('sketchpad::content.index', $this->sketchpad->getData($path));
+			return view('sketchpad::index', $this->sketchpad->getData($path));
 		}
 	
 		public function get($path = '')
