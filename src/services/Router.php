@@ -4,8 +4,8 @@ use App;
 use davestewart\sketchpad\objects\AbstractService;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\objects\route\FolderReference;
+use davestewart\sketchpad\objects\scanners\Scanner;
 use davestewart\sketchpad\traits\GetterTrait;
-use ReflectionMethod;
 use Route;
 
 /**
@@ -16,6 +16,8 @@ use Route;
  * - determining the possible routes => Controllers from the sketchpad/ folder downwards
  * - matching any called routes to said controllers
  * - creating any wildcard routes if required
+ *
+ * @property Scanner $scanner
  */
 class Router extends AbstractService
 {
@@ -26,19 +28,9 @@ class Router extends AbstractService
 	// PROPERTIES
 
 		/**
-		 * The root controller namespace for sketchpad/ controllers
-		 *
-		 * @var string
+		 * @var Scanner
 		 */
-		public $namespace;
-
-		/**
-		 * An array of 'route' => RouteReference instances, representing all found
-		 * folders / controllers from the sketchpad/ controller folder down
-		 *
-		 * @var FolderReference[]
-		 */
-		public $routes;
+		protected $scanner;
 
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -53,48 +45,21 @@ class Router extends AbstractService
 		 *
 		 * @param   string   $route         the base r
 		 * @param   string   $path
-		 * @param   string   $namespace
 		 */
-		public function __construct($route, $path, $namespace)
+		public function __construct($route, $path)
 		{
-			// parameters
-			$this->route        = $route;
-			$this->path         = $path;
-			$this->namespace    = $namespace;
-
-			// properties
-			$this->routes       = [];
-
-			// process
-			if(file_exists($path) && is_dir($path))
-			{
-				$this->process();
-			}
-
-			//ksort($this->routes);
+			$this->scanner      = new Scanner($path, $route);
 		}
 
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// METHODS
-
-		/**
-		 * Sets the Laravel application routes for all the found controllers
-		 *
-		 * @return $this
-		 */
-		public function setRoutes()
+	
+		public function scan()
 		{
-			foreach ($this->routes as $route => $ref)
-			{
-				if($ref->type === 'controller')
-				{
-					$this->wildcard($route, $ref->controller);
-				}
-			}
-			return $this;
+			$this->scanner->start();
 		}
-
+	
 		/**
 		 * Reverse route lookup
 		 *
@@ -108,16 +73,17 @@ class Router extends AbstractService
 		public function getRoute($route)
 		{
 			// variables
-			$route   = $this->folderize($route);
+			$route      = $this->folderize($route);
+			$routes     = $this->scanner->getRoutes();
 
 			// debug
-			//pr($path, $this->routes);
+			//pr($route, $routes);
 
 			// first, attempt to find an exact match
 			// an exact match will either be a controller or a folder
-			if(isset($this->routes[$route]))
+			if(isset($routes[$route]))
 			{
-				return $this->routes[$route];
+				return $routes[$route];
 			}
 
 			// otherwise, the passed path will be at least a "controller/method" and possibly
@@ -126,19 +92,24 @@ class Router extends AbstractService
 			else
 			{
 				// variables
+				/** @var ControllerReference $ref */
 				$ref    = null;
 				$match  = '';
 
 				// loop over routes and grab matches
 				// the last full match will be the one that we want
-				foreach($this->routes as $key => $value)
+				foreach($routes as $key => $value)
 				{
+					//pr('KEY', $key, $value);
 					if(strpos($route, $key) === 0)
 					{
 						$match      = $key;
 						$ref        = $value;
 					}
 				}
+
+				// debug
+				//pr('REF', $ref);
 
 				// if we got a matching route, update the ref with method and params
 				if($ref)
@@ -150,6 +121,14 @@ class Router extends AbstractService
 					// properties
 					$ref->method    = array_shift($segments);
 					$ref->params    = $segments;
+
+					// finally check if we have a folder with methods; this indicates a 404
+					if($ref instanceof FolderReference && $ref->method)
+					{
+						return null;
+					}
+
+					// otherwise, return (controller) reference
 					return $ref;
 				}
 			}
@@ -158,82 +137,9 @@ class Router extends AbstractService
 			return null;
 		}
 
-
-	// -----------------------------------------------------------------------------------------------------------------
-	// PROCESSING METHODS
-
-		/**
-		 * Recursive path processing function
-		 *
-		 * Sets controllers and folders elements as they are found
-		 *
-		 * @param   string  $path   The sketchpad controllers path-relative path to the folder, i.e. "foo/bar/"
-		 */
-		protected function process($path = '')
+		public function getControllers()
 		{
-			// variables
-			$root               = $this->folderize($this->path . $path);
-			$files              = array_diff(scandir($root), ['.', '..']);
-
-			// folders
-			$this->addFolder($path);
-
-			// loop
-			foreach ($files as $file)
-			{
-				// variables
-				$fullpath = $root . $file;
-
-				// parse
-				if(is_dir($fullpath))
-				{
-					$this->process($path . $file . '/');
-				}
-				else if(is_file($fullpath) && preg_match('/Controller.php$/', $fullpath))
-				{
-					$this->addController($path, $file);
-				}
-			}
-		}
-
-		/**
-		 * Adds a folder to the internal routes array
-		 *
-		 * @param   string  $path   The controller-root relative path to the folder
-		 */
-		protected function addFolder($path)
-		{
-			$this->addRoute($this->route . $path, new FolderReference($this->path . $path));
-		}
-
-		/**
-		 * Adds a controllrt to the internal routes array
-		 *
-		 * @param   string  $path   The controller-root relative path to the controller's containing folder
-		 * @param   string  $file   The filename of the Controller
-		 */
-		protected function addController($path, $file)
-		{
-			// variables
-			$class      = preg_replace('/.php$/', '', $file);
-			$name       = preg_replace('/Controller$/', '', $class);
-			$route      = strtolower($this->route . $path . $name . '/');
-			$controller = $this->namespace . str_replace('/', '\\', $path) . $class;
-
-			// set route
-			$this->addRoute($route, new ControllerReference($this->path . $path . $file, $controller));
-		}
-
-		/**
-		 * Adds a new RouteReference obejct
-		 *
-		 * @param   string          $route The URI route to be registered, i.e. "foo/bar/"
-		 * @param   FolderReference $ref   A PathReference instance
-		 */
-		protected function addRoute($route, $ref)
-		{
-			$ref->route = $route;
-			$this->routes[$route] = $ref;
+			return $this->scanner->controllers;
 		}
 
 
@@ -270,52 +176,6 @@ class Router extends AbstractService
 			})->where('params', '.*');
 		}
 
-		/**
-		 * Calls a controller and methods, resolving any dependency injection
-		 *
-		 * @param   string      $controller     The FQ name of the controller
-		 * @param   string      $method         The name of the method
-		 * @param   array|null  $params         An optional arr ay of parameters
-		 * @return  mixed                       The result of the call
-		 */
-		public static function call($controller, $method, $params = null)
-		{
-			// method
-			$callable = $controller . '@' . $method;
 
-			// call
-			if($params)
-			{
-				// variables
-				$values     = is_array($params) ? $params : explode('/', $params);
-				$ref        = new ReflectionMethod($controller, $method);
-				$params     = $ref->getParameters();
-				$args       = [];
-
-				// map route segments to the method's parameters
-				foreach ($params as /** @var \ReflectionParameter */ $param)
-				{
-					// parse signature [match, optional, type, name, default]
-					preg_match('/<(required|optional)> (?:([\\\\a-z\d_]+) )?(?:\\$(\w+))(?: = (\S+))?/i', (string) $param, $matches);
-
-					// assign untyped segments
-					if($matches[2] == null)
-					{
-						$args[$matches[3]] = array_shift($values);
-					}
-				}
-
-				// append any remaining values
-				$values = array_merge($args, $values);
-
-				// call
-				return App::call($callable, $values);
-			}
-			else
-			{
-				return App::call($callable);
-			}
-		}
-	
 
 }

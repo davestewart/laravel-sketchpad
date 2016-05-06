@@ -15,7 +15,7 @@
 					<div style="">
 
 						<div id="controllers" class="col-md-6">
-							@include('sketchpad::nav.folder')
+							@@include('sketchpad::nav.folder')
 						</div>
 
 						@if(isset($controller))
@@ -46,10 +46,8 @@
 		</div>
 
 
-		<script id="controller" type="text/plain">
-			@if(isset($controller))
-				{!! json_encode($controller, JSON_UNESCAPED_SLASHES) !!}
-			@endif
+		<script id="data" type="text/plain">
+			{!! json_encode($data, JSON_UNESCAPED_SLASHES) !!}
 		</script>
 
 	</div>

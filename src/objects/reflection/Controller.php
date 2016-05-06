@@ -50,13 +50,14 @@ class Controller extends File implements JsonSerializable
 			return new self($file);
 		}
 
-		public function __construct($path, $process = true)
+		public function __construct($path, $route = '', $process = true)
 		{
 			// parent
-			parent::__construct($path);
+			parent::__construct($path, $route);
 
 			// class
-			$class              = ucfirst(str_replace('/', '\\', str_replace('.php', '', str_replace(base_path() . '/', '', $path))));
+			$class              = $this->getClassPath($path);
+			// ucfirst(str_replace('/', '\\', str_replace('.php', '', str_replace(base_path() . '/', '', $path))));
 			$this->ref          = new ReflectionClass($class);
 	
 			// properties
@@ -70,6 +71,17 @@ class Controller extends File implements JsonSerializable
 			if($process)
 			{
 				$this->process();
+			}
+		}
+
+		protected function getClassPath($path)
+		{
+			$file = file_get_contents($path);
+			preg_match('/namespace\s+([\w\\\\]+)/', $file, $namespace);
+			preg_match('/class\s+(\w+)/', $file, $class);
+			if($namespace && $class)
+			{
+				return $namespace[1] . '\\' . $class[1];
 			}
 		}
 
@@ -98,18 +110,17 @@ class Controller extends File implements JsonSerializable
 
 		public function toArray($simple = false)
 		{
-			// base
-			$data               = (object) [];
-			$data->type         = 'controller';
-			$data->name         = $this->label;
-			$data->path         = $this->path;
-			$data->class        = $this->classname;
-			$data->label        = $this->label;
-			$data->route        = $this->route;
-			$data->comment      = $this->comment;
-			$data->methods      = $this->methods;
-
-			// return
+			$data =
+			[
+				'type'      => 'controller',
+				'name'      => $this->name,
+				'path'      => $this->path,
+				'class'     => $this->classname,
+				'label'     => $this->label,
+				'route'     => $this->route,
+				'comment'   => $this->comment,
+				'methods'   => $this->methods,
+			];
 			return $data;
 		}
 

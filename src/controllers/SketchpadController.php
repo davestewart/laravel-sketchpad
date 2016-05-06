@@ -41,8 +41,8 @@ class SketchpadController extends Controller
 	
 	// ------------------------------------------------------------------------------------------------
 	// public methods
-	
-		public function command($type, $data = null)
+
+	public function command($type, $data = null)
 		{
 			$data = $this->sketchpad->getVariables();
 	
@@ -113,12 +113,12 @@ class SketchpadController extends Controller
 	
 	// ------------------------------------------------------------------------------------------------
 	// depreciated methods
-	
+
 		public function index()
 		{
 			return view('sketchpad::content.index', $this->sketchpad->getData(''));
 		}
-	
+
 		public function view($path)
 		{
 			return view('sketchpad::content.index', $this->sketchpad->getData($path));

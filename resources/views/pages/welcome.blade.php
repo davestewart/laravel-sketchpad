@@ -6,7 +6,7 @@
 
 <h3>What it does</h3>
 
-<p>It shows the controllers and methods from your <code>Controllers/{{ $route }}</code> folder, and allows you to run them without setting up routing, views, etc.</p>
+<p>It shows the controllers and methods from your <code>Controllers{{ $route }}</code> folder, and allows you to run them without setting up routing, views, etc.</p>
 
 <p>You can navigate to, and run any controller method, even modify parameter values, all from a friendly UI.</p>
 

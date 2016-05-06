@@ -1,7 +1,5 @@
 <?php namespace davestewart\sketchpad\objects\file;
 
-use davestewart\sketchpad\services\Sketchpad;
-
 /**
  * Sketchpad File object
  * 
@@ -41,13 +39,16 @@ class File
 
 		/**
 		 * Class constructor
+		 *
+		 * @param   string  $path
+		 * @param   string  $route
 		 */
-		public function __construct($path)
+		public function __construct($path, $route = '')
 		{
 			$segments       = explode('/', trim($path, '/'));
 			$this->name     = array_pop($segments);
 			$this->path     = $path;
-			$this->route    = app(Sketchpad::class)->getRouteFromPath($path);
+			$this->route    = $route;
 		}
 		
 	}
