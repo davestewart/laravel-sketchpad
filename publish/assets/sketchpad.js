@@ -24,15 +24,14 @@ var vue = new Vue({
 		
 		loadController:function(controller)
 		{
-			event.preventDefault();
 			this.route 		= controller.route;
 			this.controller	= controller;
 		},
 
 		loadMethod:function(method, element, $http)
 		{
-			event.preventDefault();
 			this.route 		= method.route;
+			this.method		= method;
 
 			var url = event.target.href.replace(/\/$/, '') + '?call=1';
 
@@ -42,9 +41,15 @@ var vue = new Vue({
 				return;
 			}
 
-			$.get(url, function(data){
-				$('#output').html(data);
-			});
+			$.get(url, function(data)
+			{
+				this.showResult(data);
+			}.bind(this));
+		},
+
+		showResult:function(data)
+		{
+			$('#output').html(data);
 		}
 	}
 

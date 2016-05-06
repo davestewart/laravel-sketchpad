@@ -4,7 +4,9 @@
 
 	@include('sketchpad::elements.header')
 
-	@include('sketchpad::vue.app')
+	<div class="container">
+		{!! $app !!}
+	</div>
 
 	<script id="data" type="text/plain">
 		{!! json_encode($data, JSON_UNESCAPED_SLASHES) !!}
