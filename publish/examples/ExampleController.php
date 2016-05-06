@@ -1,9 +1,9 @@
 <?php namespace App\Http\Controllers\Sketchpad;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 
 /**
- * An example controller to demonstrate some of Sketchpad's functionality 
+ * An example controller to demonstrate some of Sketchpad's functionality
  *
  * @package App\Http\Controllers
  */
@@ -12,10 +12,12 @@ class ExampleController extends Controller
 
 	/**
 	 * Simple "Hello World" example
+	 *
+	 * @param string $name
 	 */
-	public function helloWorld()
+	public function hello($name = 'world')
 	{
-		echo "Hello World";
+		echo "Hello $name!";
 	}
 
 	/**
@@ -28,12 +30,12 @@ class ExampleController extends Controller
 	public function formatJSON()
 	{
 		$data =
-			[
-				'number'    => 1,
-				'string'    => 'Sketchpad',
-				'array'     => [1, 2, 3],
-				'object'    => (object) ['a' => 1, 'b' => 2, 'c' => 3],
-			];
+		[
+			'number'    => 1,
+			'string'    => 'Sketchpad',
+			'array'     => [1, 2, 3],
+			'object'    => (object) ['a' => 1, 'b' => 2, 'c' => 3],
+		];
 		return $data;
 	}
 
