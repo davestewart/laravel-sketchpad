@@ -1,12 +1,69 @@
 
-var vue = new Vue({
+console.log(data.route);
+
+var vm = new Vue({
 
 	el:'#app',
 
-	data:JSON.parse($('#data').text()),
+	data:function(){
+		var data = JSON.parse($('#data').text());
+		data.controller = null;
+		data.method = null;
+		data._route = null;
+		data.loading = false;
+		return data;
+	},
+
+	init:function(){
+		console.log('>', this.data);
+	},
+
+	ready:function(){
+
+		// update app
+		this.updateRoute();
+
+		// history
+		History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+			var State = History.getState(); // Note: We are using History.getState() instead of event.state
+		});
+
+		window.onpopstate = this.popHistory;
+	},
+
+	computed:{
+
+		route:{
+			get:function () {
+				return this.$data._route;
+			},
+			set:function (route) {
+				this.setRoute(route);
+			}
+		}
+
+	},
 
 	methods:
 	{
+
+		getController:function (route) {
+			var arr = this.controllers.filter(function(e){
+				return route.indexOf(e.route) == 0;
+			});
+			return arr ? arr[0] : null;
+		},
+
+		getMethod:function (route, controller) {
+			controller = controller || this.controller;
+			if(controller)
+			{
+				var arr = controller.methods.filter(function(e){
+					return route.indexOf(e.route) == 0;
+				});
+				return arr ? arr[0] : null;
+			}
+		},
 
 		getLinkHtml:function(route)
 		{
@@ -19,32 +76,79 @@ var vue = new Vue({
 
 		isActive:function(route)
 		{
-			return this.route.indexOf(route) === 0;
+			var _route = String(this.$data._route);
+			return _route.indexOf(route) === 0;
 		},
-		
+
+		setRoute:function(route)
+		{
+			this.$data._route = route;
+			this.controller = this.getController(route);
+			var method = this.getMethod(route);
+			if(method)
+			{
+				this.runMethod(method)
+			}
+		},
+
+		updateRoute:function(event)
+		{
+			this.route = window.location.pathname;
+		},
+
+		popHistory:function(event)
+		{
+			var state = History.getStateById(event.state);
+			if(state)
+			{
+				document.title = state.title;
+			}
+			this.updateRoute();
+		},
+
 		loadController:function(controller)
 		{
-			this.route 		= controller.route;
-			this.controller	= controller;
+			History.pushState({controller:this.controller, method:null}, this.getTitle(controller.route), controller.route); // logs {state:3}, "State 3", "?state=3"
+			this.route = controller.route;
 		},
 
 		loadMethod:function(method, element, $http)
 		{
-			this.route 		= method.route;
-			this.method		= method;
-
-			var url = event.target.href.replace(/\/$/, '') + '?call=1';
-
 			if(event.metaKey || event.ctrlKey)
 			{
-				window.open(url);
-				return;
+				return window.open(this.getCallUrl(event.target.href));
 			}
+			History.pushState({controller:this.controller, method:method}, this.getTitle(method.route), method.route);
+			this.route = method.route;
+		},
 
+		runMethod:function(method)
+		{
+			var url = this.getCallUrl(location.origin + method.route);
+			var _this = this;
+			this.loading = true;
 			$.get(url, function(data)
 			{
-				this.showResult(data);
-			}.bind(this));
+				_this.loading = false;
+				_this.method = method;
+				_this.showResult(data);
+			});
+		},
+
+		getTitle:function(route)
+		{
+			return 'Sketchpad - ' + this.getRelativeRoute(route);
+		},
+
+		getRelativeRoute:function(route)
+		{
+			var base = $('meta[name="route"]').attr('content');
+			return route.substr(base.length);
+		},
+
+		getCallUrl:function(url)
+		{
+			return url.replace(/\/$/, '') + '?call=1';
 		},
 
 		showResult:function(data)

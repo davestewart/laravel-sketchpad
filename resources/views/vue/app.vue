@@ -1,3 +1,4 @@
+
 <div id="app" class="row">
 
 	<div id="nav" class="col-md-4">
@@ -8,7 +9,7 @@
 			<ul class="nav nav-pills nav-stacked">
 				<li
 					v-for="controller in controllers"
-					class="{{ isActive(controller.route) ? 'active' : ''}}"
+					:class="{ active:isActive(controller.route) }"
 					@click.prevent="loadController(controller)"
 					>
 					<a
@@ -24,7 +25,7 @@
 
 		<!-- methods -->
 		<div id="methods" class="col-md-6">
-			<ul class="nav nav-pills nav-stacked">
+			<ul v-if="controller" class="nav nav-pills nav-stacked">
 				<li
 					v-for="method in controller.methods"
 					class="{{ isActive(method.route) ? 'active' : ''}}"
@@ -48,12 +49,13 @@
 
 		<!-- info -->
 		<section id="info">
-			<h1>{{ method.label || 'Sketchpad' }}</h1>
-			<p class="info">{{ method.comment ? method.comment.intro : method.label}}</p>
+			<h1>{{ method && method.label || 'Sketchpad' }}</h1>
+			<p class="info" v-if="method">{{ method.comment ? method.comment.intro : method.label }}</p>
+
 		</section>
 
 		<!-- output -->
-		<section id="output">
+		<section id="output" :class="{loading:loading}">
 			<pre>@{{ $data | json }}</pre>
 		</section>
 

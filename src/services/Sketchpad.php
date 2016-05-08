@@ -111,7 +111,7 @@ class Sketchpad extends AbstractService
 				/** @var Router $router */
 				$router     = new Router($this->route, $this->path);
 
-				// scan
+				// if we're not calling, consider this a new page load, and re-scan
 				if( ! $call )
 				{
 					$router->scan();
@@ -138,10 +138,10 @@ class Sketchpad extends AbstractService
 			// process route
 
 				// attempt to call controller
-				if($ref instanceof ControllerReference)
+				if($call)
 				{
 					// controller has method
-					if($ref->method)
+					if($ref instanceof ControllerReference && $ref->method)
 					{
 						// test controller / method exists
 						try
@@ -158,32 +158,22 @@ class Sketchpad extends AbstractService
 						}
 
 						// call and return the controller
-						if($call)
-						{
-							return static::exec($ref->class, $ref->method, $ref->params);
-						}
-
+						return static::exec($ref->class, $ref->method, $ref->params);
 					}
 
-				}
-
-				// if we got here, and are expecting a call, it's a 404
-				if($call)
-				{
+					// if there's not a valid controller or method, it's a 404
 					$this->abort($uri, 'path');
 				}
-			
-				// get the vue template
 
-				// otherwise, build the index page
+				// build the index page
 				$data           = $this->getVariables();
 				$data['app']    = file_get_contents(base_path('vendor/davestewart/sketchpad/resources/views/vue/app.vue'));
 				$data['data']   =
 				[
-					'route'         => $this->route . $uri . '/',
+					//'route'         => $this->route . $uri . '/',
 					'controllers'   => $router->getControllers(),
-					'controller'    => (object) [],
-					'method'        => (object) [],
+					//'controller'    => (object) [],
+					//'method'        => (object) [],
 				    'ref'           => $ref,
 			    ];
 				return view('sketchpad::index', $data);
