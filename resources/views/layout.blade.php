@@ -11,6 +11,7 @@
 	<!-- libs -->
 	<script src="/{{ $assets }}lib/vue.js"></script>
 	<script src="/{{ $assets }}lib/jquery-1.12.3.min.js"></script>
+	<script src="/{{ $assets }}lib/jquery.sticky.js"></script>
 	<script src="/{{ $assets }}lib/history.js"></script>
 
 	<!-- json view -->

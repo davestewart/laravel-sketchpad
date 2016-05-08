@@ -3,44 +3,48 @@
 
 	<div id="nav" class="col-md-4">
 
-		<!-- controllers -->
-		<div id="controllers" class="col-md-6">
+		<div id="sticky">
 
-			<ul class="nav nav-pills nav-stacked">
-				<li
-					v-for="controller in controllers"
-					:class="{ active:isActive(controller.route) }"
-					@click.prevent="loadController(controller)"
-					>
-					<a
-						class="controller"
-						data-name="{{ controller.class }}"
-						href="{{ controller.route }}"
-						>
-						{{{ getLinkHtml(controller.route) }}}
-					</a>
-				</li>
-			</ul>
-		</div>
+			<!-- controllers -->
+			<div id="controllers" class="col-md-6">
 
-		<!-- methods -->
-		<div id="methods" class="col-md-6">
-			<ul v-if="controller" class="nav nav-pills nav-stacked">
-				<li
-					v-for="method in controller.methods"
-					class="{{ isActive(method.route) ? 'active' : ''}}"
-					@click.prevent="loadMethod(method, this)"
-					>
-					<a
-						class="method"
-						title="{{ method.label }}"
-						href="{{ method.route }}"
+				<ul class="nav nav-pills nav-stacked">
+					<li
+						v-for="controller in controllers"
+						:class="{ active:isActive(controller.route) }"
+						@click.prevent="loadController(controller)"
 						>
-						{{ method.label }}
-					</a>
-					<p v-if="method.comment.intro">{{ method.comment.intro }}</p>
-				</li>
-			</ul>
+						<a
+							class="controller"
+							data-name="{{ controller.class }}"
+							href="{{ controller.route }}"
+							>
+							{{{ getLinkHtml(controller.route) }}}
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<!-- methods -->
+			<div id="methods" class="col-md-6">
+				<ul v-if="controller" class="nav nav-pills nav-stacked">
+					<li
+						v-for="method in controller.methods"
+						class="{{ isActive(method.route) ? 'active' : ''}}"
+						@click.prevent="loadMethod(method, this)"
+						>
+						<a
+							class="method"
+							title="{{ method.label }}"
+							href="{{ method.route }}"
+							>
+							{{ method.label }}
+						</a>
+						<p v-if="method.comment.intro">{{ method.comment.intro }}</p>
+					</li>
+				</ul>
+			</div>
+
 		</div>
 
 	</div>
