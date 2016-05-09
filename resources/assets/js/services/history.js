@@ -1,6 +1,6 @@
-function UserHistory(nav)
+function UserHistory(app)
 {
-	this.nav = nav;
+	this.app = app;
 
 	// setup base route
 	this.base = $('meta[name="route"]').attr('content');
@@ -9,18 +9,11 @@ function UserHistory(nav)
 	window.onpopstate = this.onPopState.bind(this);
 
 	this.updateRoute();
-
-	// history - this isn't really needed
-	History.Adapter.bind(window,'statechange',function(){
-		var state = History.getState();
-		//console.log('state change:', state);
-	});
-
 }
 
 UserHistory.prototype =
 {
-	nav:null,
+	app:null,
 
 	base:'',
 
@@ -42,7 +35,7 @@ UserHistory.prototype =
 	// update app
 	updateRoute:function(event)
 	{
-		this.nav.route = window.location.pathname;
+		this.app.route = window.location.pathname;
 	},
 
 	getTitle:function(route)
@@ -52,7 +45,13 @@ UserHistory.prototype =
 
 	getRelativeRoute:function(route)
 	{
+		route = route || this.app.route;
 		return route.substr(this.base.length);
+	},
+
+	isHome:function()
+	{
+		return this.getRelativeRoute() == '';
 	}
 
 };

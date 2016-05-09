@@ -15,13 +15,24 @@ var vm =
 
 	ready:function()
 	{
-		$('#sticky').sticky({topSpacing:20});
-		//$('#params').sticky({topSpacing:20});
+		// data
+		this.$refs.navigation.controllers = this.controllers;
+
+		// history
+		this.history = new UserHistory(this);
+
+		// front page
+		if(this.history.isHome())
+		{
+			$('#welcome').appendTo('#output').show();
+		}
+
 	},
 
-	computed:{
-
-		route:{
+	computed:
+	{
+		route:
+		{
 			get:function ()
 			{
 				return this.$data._route;
@@ -34,19 +45,34 @@ var vm =
 
 	},
 
+	events:
+	{
+		onNavClick:function(route)
+		{
+			this.history.pushState(route);
+			this.setRoute(route);
+		},
+
+	},
+
 	methods:
 	{
+
 
 		// ------------------------------------------------------------------------------------------------
 		// route
 
 			setRoute:function(route)
 			{
+				// properties
 				this.$data._route 	= route;
-				this.controller 	= this.getController(route);
+				var controller 		= this.getController(route);
 				var method 			= this.getMethod(route);
 
-
+				// controller
+				this.controller = this.$refs.navigation.controller = controller;
+				
+				// take action
 				if(method)
 				{
 					this.$broadcast('loadMethod', method);
@@ -78,44 +104,6 @@ var vm =
 					});
 					return arr ? arr[0] : null;
 				}
-			},
-
-
-		// ------------------------------------------------------------------------------------------------
-		// handlers
-
-			onControllerClick:function(controller)
-			{
-				hist.pushState(controller.route);
-				this.route = controller.route;
-			},
-
-			onMethodClick:function(method, element, $http)
-			{
-				if(event.metaKey || event.ctrlKey)
-				{
-					return server.open(event.target.href);
-				}
-				hist.pushState(method.route);
-				this.route = method.route;
-			},
-
-
-		// ------------------------------------------------------------------------------------------------
-		// utilities
-
-			getLinkHtml:function(route)
-			{
-				return route
-					.replace('/sketchpad/', '')
-					.replace(/\/$/, '')
-					.split('/')
-					.join(' <span class="divider">&#9656;</span> ');
-			},
-
-			isActive:function(route)
-			{
-				return this.$data._route.indexOf(route) == 0;
 			}
 
 	}

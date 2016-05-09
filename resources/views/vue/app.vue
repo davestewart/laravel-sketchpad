@@ -1,9 +1,30 @@
 
 <div id="app" class="row">
 
-	<div id="nav" class="col-md-4">
+	<div class="col-md-4">
 
-		<div id="sticky">
+		<navigation v-ref:navigation>
+			Navigation
+		</navigation>
+
+	</div>
+
+	<div class="col-md-8">
+
+		<result v-ref:result>
+			Result
+		</result>
+
+	</div>
+
+</div>
+
+
+<template id="navigation-template">
+
+	<div id="nav">
+
+		<div class="sticky">
 
 			<!-- controllers -->
 			<div id="controllers" class="col-md-6">
@@ -49,15 +70,8 @@
 
 	</div>
 
-	<div class="col-md-8">
+</template>
 
-		<result v-ref:result>
-			Result template
-		</result>
-
-	</div>
-
-</div>
 
 
 <template id="result-template">
@@ -80,6 +94,7 @@
 	<section id="output" :class="{loading:loading}" data-format="{{ format }}"></section>
 
 </template>
+
 
 
 <template id="params-template">

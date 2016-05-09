@@ -4,7 +4,6 @@ Vue.component('params', {
 	
 	props:['params'],
 
-
 	methods:
 	{
 
