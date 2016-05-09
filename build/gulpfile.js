@@ -2,45 +2,74 @@
 // libs
 
 	var gulp			= require('gulp'),
-
-		// tools
 		sass			= require('gulp-sass'),
+		cssmin 			= require('gulp-cssmin'),
 		uglify			= require('gulp-uglify'),
-		sourcemaps		= require('gulp-sourcemaps'),
-
-		// utilities
 		rename			= require('gulp-rename'),
 		concat			= require('gulp-concat');
+		concatCss		= require('gulp-concat-css'),
+		sourcemaps		= require('gulp-sourcemaps');
 
 
 // ---------------------------------------------------------------------------------
 // config
 
 	// paths
-	var jsFolder = '../resources/assets/js/';
-	var js =
+	var pubFolder      = '../publish/assets/';
+	var resFolder      = '../resources/assets/';
+	var libFolder      = '../resources/lib/';
+	var jsFolder       = resFolder + 'js/';
+
+	var app =
 	{
-		input:
+		css:
 		{
-			all 	:jsFolder + '**/*.js',
-			files 	:
+			input	: resFolder + 'sass/**/*.scss',
+			output	: pubFolder,
+		},
+		js:
+		{
+			watch:jsFolder + '**/*.js',
+			input:
 			[
 				jsFolder + '*/**/*.js',
 				jsFolder + 'main.js',
-			]
-		},
-		output:
-		{
-			folder	:'../publish/assets/',
-			file	:'sketchpad.js',
+			],
+			output:
+			{
+				file	:'sketchpad.js',
+				folder	:pubFolder,
+			}
 		}
-	};
+	}
 
-	var css =
+	var lib =
 	{
-		input	: '../resources/assets/sass/**/*.scss',
-		output	: '../publish/assets/',
-	};
+		css:
+		{
+			input	:libFolder + '**/*.css',
+			output	:
+			{
+				file	:'lib.min.css',
+				folder	:pubFolder
+			}
+		},
+		js:
+		{
+			watch:libFolder + '**/*.js',
+			input:
+			[
+				libFolder + 'jquery-*.js',
+				libFolder + 'vue.js',
+				libFolder + '**/*.js',
+			],
+			output:
+			{
+				file	:'lib.min.js',
+				folder	:pubFolder,
+			}
+		}
+	}
 
 
 // ---------------------------------------------------------------------------------
@@ -49,22 +78,37 @@
 	function styles()
 	{
 		return gulp
-			.src(css.input)
-			//.pipe(sourcemaps.init())
+			.src(app.css.input)
 			.pipe(sass().on('error', sass.logError))
-			//.pipe(sourcemaps.write())
-			.pipe(gulp.dest(css.output));
+			.pipe(gulp.dest(app.css.output));
 	}
 
 	function scripts()
 	{
 		return gulp
-			.src(js.input.files)
+			.src(app.js.input)
+			.pipe(concat(app.js.output.file))
+			.pipe(gulp.dest(app.js.output.folder));
+	}
+
+	function stylesLib()
+	{
+		return gulp
+			.src(lib.css.input)
+			.pipe(concatCss(lib.css.output.file))
+			.pipe(cssmin())
+			.pipe(gulp.dest(lib.css.output.folder));
+	}
+
+	function scriptsLib()
+	{
+		return gulp
+			.src(lib.js.input)
 			//.pipe(sourcemaps.init())
-			//.pipe(uglify({compress: true, mangle: false}))
-			.pipe(concat(js.output.file))
-			//.pipe(sourcemaps.write())
-			.pipe(gulp.dest(js.output.folder));
+			.pipe(uglify({compress:true}))
+			.pipe(concat(lib.js.output.file))
+			//.pipe(sourcemaps.write('.'))
+			.pipe(gulp.dest(lib.js.output.folder));
 	}
 
 
@@ -80,6 +124,8 @@
 	{
 		styles();
 		scripts();
+		stylesLib();
+		scriptsLib();
 	}
 
 	/**
@@ -88,13 +134,11 @@
 	function watch()
 	{
 		build();
-		gulp.watch(css.input, ['styles']);
-		gulp.watch(js.input.all, ['scripts']);
+		gulp.watch(app.css.input, [styles]);
+		gulp.watch(app.js.watch, [scripts]);
+		gulp.watch(lib.css.input, [stylesLib]);
+		gulp.watch(lib.js.watch, [scriptsLib]);
 	}
 	
-
-	gulp.task('styles', styles);
-	gulp.task('scripts', scripts);
-	gulp.task('build', build);
 	gulp.task('default', watch);
 

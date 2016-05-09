@@ -10,18 +10,36 @@ var vm =
 		data.controller = null;
 		data.method = null;
 		data._route = '';
+		data.modal = {};
 		return data;
 	},
 
 	ready:function()
 	{
-		$('#sticky').sticky({topSpacing:20});
-		//$('#params').sticky({topSpacing:20});
+		// data
+		this.$refs.navigation.controllers = this.controllers;
+
+		// history
+		this.history = new UserHistory(this);
+
+		// front page
+		if(this.history.isHome())
+		{
+			$('#welcome').appendTo('#output').show();
+		}
+		
+		// ui
+		$('#nav .sticky').sticky({topSpacing:20});
+		//$('#params .sticky').sticky({topSpacing:20});
+
+		// links
+		$('body').on('click', 'a', this.onLinkClick);
 	},
 
-	computed:{
-
-		route:{
+	computed:
+	{
+		route:
+		{
 			get:function ()
 			{
 				return this.$data._route;
@@ -34,19 +52,34 @@ var vm =
 
 	},
 
+	events:
+	{
+		onNavClick:function(route)
+		{
+			this.history.pushState(route);
+			this.setRoute(route);
+		}
+
+	},
+
 	methods:
 	{
+
 
 		// ------------------------------------------------------------------------------------------------
 		// route
 
 			setRoute:function(route)
 			{
+				// properties
 				this.$data._route 	= route;
-				this.controller 	= this.getController(route);
+				var controller 		= this.getController(route);
 				var method 			= this.getMethod(route);
 
-
+				// controller
+				this.controller = this.$refs.navigation.controller = controller;
+				
+				// take action
 				if(method)
 				{
 					this.$broadcast('loadMethod', method);
@@ -82,12 +115,74 @@ var vm =
 
 
 		// ------------------------------------------------------------------------------------------------
+		// pages
+
+			onLinkClick:function(event)
+			{
+				// variables
+				var url		= event.target.href;
+				var matches = url.match(/\/:(\w+)/);
+				if(matches)
+				{
+					event.preventDefault();
+					this.$refs.modal.load(url);
+				}
+			}
+
+	}
+
+};
+
+Vue.component('modal', {
+
+	template:'#modal-template',
+	
+	props:['title', 'body', 'save'],
+
+	methods:
+	{
+		load:function(url)
+		{
+
+			$.get(url, function (html)
+			{
+				var $body 	= $('<div>').append(html);
+				this.title 	= $body.find('h1').remove().text();
+				this.save	= $body.find('form').length;
+				this.body 	= $body.html();
+				this.show();
+			}.bind(this))
+		},
+
+		show:function()
+		{
+			console.log('show');
+			$('#modal').modal('show');
+		},
+
+		hide:function()
+		{
+			$('#modal').modal('hide');
+		}
+
+	}
+	
+});
+Vue.component('navigation', {
+
+	template:'#navigation-template',
+
+	props:['controllers', 'controller'],
+
+	methods:
+	{
+
+		// ------------------------------------------------------------------------------------------------
 		// handlers
 
 			onControllerClick:function(controller)
 			{
-				hist.pushState(controller.route);
-				this.route = controller.route;
+				this.$dispatch('onNavClick', controller.route);
 			},
 
 			onMethodClick:function(method, element, $http)
@@ -96,8 +191,7 @@ var vm =
 				{
 					return server.open(event.target.href);
 				}
-				hist.pushState(method.route);
-				this.route = method.route;
+				this.$dispatch('onNavClick', method.route);
 			},
 
 
@@ -115,44 +209,17 @@ var vm =
 
 			isActive:function(route)
 			{
-				return this.$data._route.indexOf(route) == 0;
+				return this.$parent.$data._route.indexOf(route) == 0;
 			}
 
 	}
 
-};
-
-Vue.component('navigation', {
-
-	template:'#navigation-template',
-
-	props:[],
-
-	events:{
-
-	},
-
-	data:function(){
-
-		return{
-			method:null,
-			params:null
-		}
-	},
-
-	methods:{
-
-	}
-
 });
-
-
 Vue.component('params', {
 	
 	template:'#params-template',
 	
 	props:['params'],
-
 
 	methods:
 	{
@@ -197,7 +264,7 @@ Vue.component('result', {
 	ready:function()
 	{
 		$output = $('#output');
-		//this.$watch('method.params', this.updateMethod, {deep:true});
+		//this.$watch('method.params', this.callMethod, {deep:true});
 	},
 
 	events:
@@ -215,12 +282,12 @@ Vue.component('result', {
 		{
 			this.method = method;
 			this.$refs.params.params = method.params;
-			this.updateMethod();
+			this.callMethod();
 		},
 
 		onParamChange:function()
 		{
-			this.updateMethod(true);
+			this.callMethod(true);
 		}
 
 	},
@@ -231,7 +298,7 @@ Vue.component('result', {
 		// ------------------------------------------------------------------------------------------------
 		// load methods
 
-			updateMethod:function(update)
+			callMethod:function(update)
 			{
 				// properties
 				var method = this.method;
@@ -321,9 +388,9 @@ Vue.component('result', {
 
 });
 
-function UserHistory(nav)
+function UserHistory(app)
 {
-	this.nav = nav;
+	this.app = app;
 
 	// setup base route
 	this.base = $('meta[name="route"]').attr('content');
@@ -332,18 +399,11 @@ function UserHistory(nav)
 	window.onpopstate = this.onPopState.bind(this);
 
 	this.updateRoute();
-
-	// history - this isn't really needed
-	History.Adapter.bind(window,'statechange',function(){
-		var state = History.getState();
-		//console.log('state change:', state);
-	});
-
 }
 
 UserHistory.prototype =
 {
-	nav:null,
+	app:null,
 
 	base:'',
 
@@ -365,7 +425,7 @@ UserHistory.prototype =
 	// update app
 	updateRoute:function(event)
 	{
-		this.nav.route = window.location.pathname;
+		this.app.route = window.location.pathname;
 	},
 
 	getTitle:function(route)
@@ -375,17 +435,26 @@ UserHistory.prototype =
 
 	getRelativeRoute:function(route)
 	{
+		route = route || this.app.route;
 		return route.substr(this.base.length);
+	},
+
+	isHome:function()
+	{
+		return this.getRelativeRoute() == '';
 	}
 
 };
 function Server()
 {
-
+	// setup base route
+	this.base = $('meta[name="route"]').attr('content');
 }
 
 Server.prototype =
 {
+
+	base:'',
 
 	call:function(route, onSuccess, onFail)
 	{
@@ -401,10 +470,16 @@ Server.prototype =
 	getCallUrl:function(url)
 	{
 		return url.replace(/\/$/, '') + '?call=1';
+	},
+
+	load:function(route, onSuccess)
+	{
+		var url = this.base + route;
+		console.log(url);
+		return $.get(url, onSuccess);
 	}
 
 };
 
-var vm 		= new Vue(vm);
 var server	= new Server();
-var hist	= new UserHistory(vm);
+var vm 		= new Vue(vm);

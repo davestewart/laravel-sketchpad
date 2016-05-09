@@ -1,15 +1,38 @@
 .modal {
-  z-index: 100000000; }
+  top: 0% !important;
+  transition: opacity 0.2s;
+  top: 0%; }
+  .modal .modal-dialog {
+    transition: none !important;
+    -webkit-transform: none !important;
+    transform: none !important; }
 
-.modal-dialog {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  margin: 0; }
+/*
+	.modal{
+		z-index: 100000000;
+	}
 
+	.modal-dialog {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		margin: 0;
+		margin-top:-10%;
+	}
+
+	*/
 .modal-content {
-  margin: 0 auto; }
+  margin: 0 auto;
+  width: 700px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); }
+  .modal-content .modal-title {
+    margin-top: 0 !important; }
+
+.modal-backdrop {
+  background-color: #FFF; }
+  .modal-backdrop.in {
+    opacity: 0.8; }
 
 .sketchpad-container {
   max-width: 1570px;
@@ -150,25 +173,34 @@ h1 {
 code {
   font-size: 0.8em; }
 
-form {
-  padding: 0px; }
-  form label {
-    padding: 4px; }
-  form textarea {
-    max-width: 100%; }
-  form .help-block {
-    font-size: 0.8em;
-    padding-left: 4px; }
-  form .form-group-submit {
-    margin-top: 30px;
-    margin-bottom: 0;
-    /*
+form label {
+  padding: 4px; }
+
+form textarea {
+  max-width: 100%; }
+
+form .help-block {
+  font-size: 0.8em;
+  padding-left: 4px; }
+
+form .form-group-submit {
+  margin-top: 30px;
+  margin-bottom: 0;
+  /*
 			button{
 				float: right;
 			};
 			*/ }
-  form.form-horizontal .control-label {
-    padding-top: 0; }
+
+form .form-group:last-child {
+  margin-bottom: 0; }
+
+.form-control {
+  background-color: rgba(220, 228, 236, 0.4);
+  border: none;
+  padding: 9px 10px;
+  font-size: inherit;
+  height: 40px; }
 
 #setup {
   width: 600px; }
@@ -177,6 +209,9 @@ form {
 #methods {
   height: 100%;
   border-right: 1px solid #eee; }
+
+#welcome {
+  display: none; }
 
 #nav {
   margin-top: 113px;
