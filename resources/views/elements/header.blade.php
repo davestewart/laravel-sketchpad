@@ -15,16 +15,18 @@
 
 			<ul class="nav navbar-nav">
 				<li>
-					<a class="command" href="{{ $route }}:new/" title="New Controller">New</a>
+					<a href="{{ $route }}:new" title="New Controller">New</a>
 				</li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
+				<!--
 				<li>
-					<a class="command" href="{{ $route }}:options/" title="Options">Options</a>
+					<a href="{{ $route }}:options" title="Options">Options</a>
 				</li>
+				-->
 				<li>
-					<a target="_blank" href="http://github.com/davestewart/laravel-sketchpad/wiki" title="Help">Help</a>
+					<a target="_blank" href="{{ $route }}:help" title="Help">Help</a>
 				</li>
 			</ul>
 

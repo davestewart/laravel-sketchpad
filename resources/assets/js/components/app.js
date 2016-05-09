@@ -10,6 +10,7 @@ var vm =
 		data.controller = null;
 		data.method = null;
 		data._route = '';
+		data.modal = {};
 		return data;
 	},
 
@@ -26,7 +27,13 @@ var vm =
 		{
 			$('#welcome').appendTo('#output').show();
 		}
+		
+		// ui
+		$('#nav .sticky').sticky({topSpacing:20});
+		//$('#params .sticky').sticky({topSpacing:20});
 
+		// links
+		$('body').on('click', 'a', this.onLinkClick);
 	},
 
 	computed:
@@ -51,7 +58,7 @@ var vm =
 		{
 			this.history.pushState(route);
 			this.setRoute(route);
-		},
+		}
 
 	},
 
@@ -103,6 +110,22 @@ var vm =
 						return route.indexOf(e.route) == 0;
 					});
 					return arr ? arr[0] : null;
+				}
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// pages
+
+			onLinkClick:function(event)
+			{
+				// variables
+				var url		= event.target.href;
+				var matches = url.match(/\/:(\w+)/);
+				if(matches)
+				{
+					event.preventDefault();
+					this.$refs.modal.load(url);
 				}
 			}
 

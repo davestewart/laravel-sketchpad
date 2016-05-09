@@ -4,6 +4,7 @@ use App;
 use davestewart\sketchpad\objects\AbstractService;
 use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\objects\route\ControllerReference;
+use davestewart\sketchpad\traits\GetterTrait;
 use Illuminate\Support\Facades\Input;
 use ReflectionMethod;
 use Route;
@@ -12,10 +13,13 @@ use Route;
 /**
  * Class Sketchpad
  *
- * @package davestewart\sketchpad\services
+ * @property Router $router
+ * @property SketchpadConfig $config
  */
 class Sketchpad extends AbstractService
 {
+
+	use GetterTrait;
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// PROPERTIES
@@ -36,7 +40,7 @@ class Sketchpad extends AbstractService
 	// -----------------------------------------------------------------------------------------------------------------
 	// INSTANTIATION
 	
-		public function init()
+		public function __construct()
 		{
 			// config
 			$config         = new SketchpadConfig();
@@ -54,11 +58,10 @@ class Sketchpad extends AbstractService
 			// pushState main sketchpad routes
 			Route::group($parameters, function ($router) use ($config)
 			{
-				//Route::get($config->route, 'SketchpadController@index');
-				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
 				Route::post ($config->route . ':setup', 'SketchpadController@setup');
 				Route::post ($config->route . ':create', 'SketchpadController@create');
 				Route::get($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
+				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
 			});
 
 			// debug
@@ -89,6 +92,16 @@ class Sketchpad extends AbstractService
 			];
 			return $data;
 		}
+	
+		public function init($scan = false)
+		{
+			$this->router = new Router($this->route, $this->path);
+			if($scan)
+			{
+				$this->router->scan();
+			}
+			return $this;
+		}
 
 
 	// ------------------------------------------------------------------------------------------------
@@ -100,6 +113,7 @@ class Sketchpad extends AbstractService
 			// ------------------------------------------------------------------------------------------------
 			// variables
 
+				$id         = Input::get('id', 0);
 				$call       = Input::get('call', 0);
 				$json       = Input::get('json', 0);
 				$base       = $this->route;
@@ -108,17 +122,11 @@ class Sketchpad extends AbstractService
 			// ------------------------------------------------------------------------------------------------
 			// router
 
-				/** @var Router $router */
-				$router     = new Router($this->route, $this->path);
-
 				// if we're not calling, consider this a new page load, and re-scan
-				if( ! $call )
-				{
-					$router->scan();
-				}
+				$this->init( ! $call );
 
 				/** @var ControllerReference $ref */
-				$ref        = $router->getRoute($base . $uri);
+				$ref        = $this->router->getRoute($base . $uri);
 
 
 			// ------------------------------------------------------------------------------------------------
@@ -126,6 +134,7 @@ class Sketchpad extends AbstractService
 
 				$debug =
 				[
+					'id'   => $id,
 					'call' => $call,
 					'json' => $json,
 					'base' => $base,
@@ -157,6 +166,9 @@ class Sketchpad extends AbstractService
 							}
 						}
 
+						// set the cookie
+						\Cookie::queue('id', $id);
+
 						// call and return the controller
 						return static::exec($ref->class, $ref->method, $ref->params);
 					}
@@ -170,11 +182,7 @@ class Sketchpad extends AbstractService
 				$data['app']    = file_get_contents(base_path('vendor/davestewart/sketchpad/resources/views/vue/app.vue'));
 				$data['data']   =
 				[
-					//'route'         => $this->route . $uri . '/',
-					'controllers'   => $router->getControllers(),
-					//'controller'    => (object) [],
-					//'method'        => (object) [],
-				    'ref'           => $ref,
+					'controllers'   => $this->router->getControllers(),
 			    ];
 				return view('sketchpad::index', $data);
 		}

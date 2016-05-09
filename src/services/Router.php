@@ -137,6 +137,16 @@ class Router extends AbstractService
 			return null;
 		}
 
+		public function getFolders()
+		{
+			return array_filter($this->scanner->routes, function($ref){ return $ref instanceof FolderReference; });
+		}
+
+		public function getRoutes()
+		{
+			return $this->scanner->routes;
+		}
+
 		public function getControllers()
 		{
 			return $this->scanner->controllers;

@@ -69,7 +69,7 @@
 
 	form{
 
-		padding:0px;
+		// padding:0 15px;
 
 		label{
 			padding:4px;
@@ -97,7 +97,20 @@
 		}
 
 		&.form-horizontal .control-label{
-			padding-top:0;
+			//padding-top:0;
+		}
+
+		.form-group:last-child{
+			margin-bottom: 0;
 		}
 
 	}
+
+	.form-control{
+		background-color:rgba(220,228,236,0.4);
+		border:none;
+		padding:9px 10px;
+		font-size: inherit;
+		height:40px;
+	}
+

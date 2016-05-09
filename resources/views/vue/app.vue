@@ -14,11 +14,33 @@
 		<result v-ref:result>
 			Result
 		</result>
-
 	</div>
+
+	<modal v-ref:modal></modal>
 
 </div>
 
+
+<template id="modal-template">
+
+	<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title">{{{ title }}}</h3>
+
+				</div>
+				<div class="modal-body">{{{ body }}}</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button v-if="save" type="button" class="btn btn-primary">OK</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</template>
 
 <template id="navigation-template">
 
@@ -100,21 +122,25 @@
 <template id="params-template">
 
 	<div id="params">
-		<nav v-if="params" class="navbar navbar-default">
-			<ul class="nav navbar-nav">
-				<li v-for="param in params">
-					<label>{{ param.name }}</label>
-					<input
-						type="{{ getType(param) }}"
-						v-model="params[$index].value"
-						value="{{ param.value }}"
-						@change="onParamChange"
-						lazy
-					>
-				</li>
-				<li v-if="params.length == 0"><span>No parameters</span></li>
-			</ul>
-		</nav>
+		<div class="sticky">
+
+			<nav v-if="params" class="navbar navbar-default">
+				<ul class="nav navbar-nav">
+					<li v-for="param in params">
+						<label>{{ param.name }}</label>
+						<input
+							type="{{ getType(param) }}"
+							v-model="params[$index].value"
+							value="{{ param.value }}"
+							@keyup="onParamChange | debounce 400"
+							@change="onParamChange"
+						>
+					</li>
+					<li v-if="params.length == 0"><span>No parameters</span></li>
+				</ul>
+			</nav>
+
+		</div>
 	</div>
 
 </template>

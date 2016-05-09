@@ -42,10 +42,10 @@ class SketchpadController extends Controller
 	// ------------------------------------------------------------------------------------------------
 	// public methods
 
-	public function command($type, $data = null)
+		public function command($type, $data = null)
 		{
 			$data = $this->sketchpad->getVariables();
-	
+			$data['folders'] = $this->sketchpad->init(true)->router->getFolders();
 			return view('sketchpad::pages.' . $type, $data);
 		}
 	

@@ -18,7 +18,7 @@ Vue.component('result', {
 	ready:function()
 	{
 		$output = $('#output');
-		//this.$watch('method.params', this.updateMethod, {deep:true});
+		//this.$watch('method.params', this.callMethod, {deep:true});
 	},
 
 	events:
@@ -36,12 +36,12 @@ Vue.component('result', {
 		{
 			this.method = method;
 			this.$refs.params.params = method.params;
-			this.updateMethod();
+			this.callMethod();
 		},
 
 		onParamChange:function()
 		{
-			this.updateMethod(true);
+			this.callMethod(true);
 		}
 
 	},
@@ -52,7 +52,7 @@ Vue.component('result', {
 		// ------------------------------------------------------------------------------------------------
 		// load methods
 
-			updateMethod:function(update)
+			callMethod:function(update)
 			{
 				// properties
 				var method = this.method;

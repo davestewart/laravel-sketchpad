@@ -4,11 +4,6 @@ Vue.component('navigation', {
 
 	props:['controllers', 'controller'],
 
-	ready:function()
-	{
-		$('#nav .sticky').sticky({topSpacing:20});
-	},
-
 	methods:
 	{
 
