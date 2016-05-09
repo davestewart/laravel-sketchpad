@@ -12,7 +12,7 @@
 					<li
 						v-for="controller in controllers"
 						:class="{ active:isActive(controller.route) }"
-						@click.prevent="loadController(controller)"
+						@click.prevent="onControllerClick(controller)"
 						>
 						<a
 							class="controller"
@@ -31,7 +31,7 @@
 					<li
 						v-for="method in controller.methods"
 						class="{{ isActive(method.route) ? 'active' : ''}}"
-						@click.prevent="loadMethod(method, this)"
+						@click.prevent="onMethodClick(method, this)"
 						>
 						<a
 							class="method"
@@ -51,18 +51,42 @@
 
 	<div class="col-md-8">
 
-		<!-- info -->
-		<section id="info">
-			<h1>{{ method && method.label || 'Sketchpad' }}</h1>
-			<p class="info" v-if="method">{{ method.comment ? method.comment.intro : method.label }}</p>
-
-		</section>
-
-		<!-- output -->
-		<section id="output" :class="{loading:loading}">
-			<pre>@{{ $data | json }}</pre>
-		</section>
+		<result v-ref:result>
+			Result template
+		</result>
 
 	</div>
 
 </div>
+
+
+<template id="result-template">
+
+	<!-- info -->
+	<section id="info">
+
+		<header>
+			<h1>{{ title }}</h1>
+			<p class="info">{{ info || '&nbsp;' }}</p>
+		</header>
+
+		<div id="params">
+			<nav class="navbar navbar-default">
+				<ul class="nav navbar-nav">
+					<li v-for="param in method.params">
+						<label>{{ param.name }}</label>
+						<input type="{{ getParamType(param) }}" v-model="method.params[$index].value" value="{{ param.value }}" lazy>
+					</li>
+					<li style="visibility: hidden"><label>No params</label><input type="text"></li>
+				</ul>
+			</nav>
+		</div>
+
+	</section>
+
+	<!-- output -->
+	<section id="output" :class="{loading:loading}" data-format="{{ format }}">
+
+	</section>
+
+</template>

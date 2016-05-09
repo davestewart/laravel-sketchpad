@@ -217,6 +217,31 @@ body[data-mode="help"] #output {
 #info .info:empty {
   visibility: hidden; }
 
+#info nav {
+  min-height: inherit;
+  padding: 4px; }
+  #info nav li {
+    padding: 2px 6px;
+    padding-right: 10px;
+    border-right: 1px dotted rgba(0, 0, 0, 0.1);
+    margin-right: 8px;
+    vertical-align: middle;
+    float: none;
+    display: inline-block; }
+    #info nav li:last-child {
+      border-right: none; }
+    #info nav li > * {
+      vertical-align: middle;
+      margin: 0; }
+  #info nav label:after {
+    content: ' : '; }
+  #info nav input {
+    border-radius: 3px;
+    border: none;
+    padding: 3px 6px; }
+  #info nav input:not([type="checkbox"]) {
+    width: 100px; }
+
 #output {
   transition: opacity 0.2s; }
   #output iframe.error {

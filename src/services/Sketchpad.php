@@ -51,7 +51,7 @@ class Sketchpad extends AbstractService
 				'middleware'    => $config->middleware,
 			];
 
-			// add main sketchpad routes
+			// pushState main sketchpad routes
 			Route::group($parameters, function ($router) use ($config)
 			{
 				//Route::get($config->route, 'SketchpadController@index');

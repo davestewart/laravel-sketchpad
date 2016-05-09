@@ -95,6 +95,44 @@
 		.info:empty{
 			visibility: hidden;
 		}
+
+		nav{
+			min-height: inherit;
+			padding:4px;
+
+			li{
+				padding:2px 6px;
+				padding-right:10px;
+				border-right:1px dotted rgba(0, 0, 0, 0.1);
+				margin-right:8px;
+
+				vertical-align: middle;
+				float: none;
+				display: inline-block;;
+
+				&:last-child{
+					border-right:none;
+				}
+
+				& > *{
+					vertical-align: middle;
+					margin:0;
+				}
+			}
+			label:after{
+				content:' : ';
+			}
+			input{
+				border-radius: 3px;
+				border:none;
+				padding:3px 6px;
+			}
+
+			input:not([type="checkbox"]){
+				width:100px;
+			}
+
+		}
 	}
 
 	#output{
@@ -110,4 +148,5 @@
 		&.loading{
 			opacity: 0;
 		}
+
 	}
