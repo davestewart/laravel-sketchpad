@@ -51,9 +51,8 @@ var vm =
 				{
 					this.$broadcast('loadMethod', method);
 					this.method = method;
-					//this.runMethod(method)
 				}
-				else
+				else if(this.controller)
 				{
 					this.$broadcast('loadController', this.controller);
 				}

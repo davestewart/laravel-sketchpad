@@ -70,23 +70,36 @@
 			<p class="info">{{ info || '&nbsp;' }}</p>
 		</header>
 
-		<div id="params">
-			<nav class="navbar navbar-default">
-				<ul class="nav navbar-nav">
-					<li v-for="param in method.params">
-						<label>{{ param.name }}</label>
-						<input type="{{ getParamType(param) }}" v-model="method.params[$index].value" value="{{ param.value }}" lazy>
-					</li>
-					<li style="visibility: hidden"><label>No params</label><input type="text"></li>
-				</ul>
-			</nav>
-		</div>
+		<!-- parameters -->
+		<params v-ref:params></params>
+
 
 	</section>
 
 	<!-- output -->
-	<section id="output" :class="{loading:loading}" data-format="{{ format }}">
+	<section id="output" :class="{loading:loading}" data-format="{{ format }}"></section>
 
-	</section>
+</template>
+
+
+<template id="params-template">
+
+	<div id="params">
+		<nav v-if="params" class="navbar navbar-default">
+			<ul class="nav navbar-nav">
+				<li v-for="param in params">
+					<label>{{ param.name }}</label>
+					<input
+						type="{{ getType(param) }}"
+						v-model="params[$index].value"
+						value="{{ param.value }}"
+						@change="onParamChange"
+						lazy
+					>
+				</li>
+				<li v-if="params.length == 0"><span>No parameters</span></li>
+			</ul>
+		</nav>
+	</div>
 
 </template>

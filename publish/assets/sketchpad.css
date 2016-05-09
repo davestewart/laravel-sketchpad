@@ -173,10 +173,6 @@ form {
 #setup {
   width: 600px; }
 
-body[data-mode="home"] #output,
-body[data-mode="help"] #output {
-  max-width: 700px; }
-
 #controllers,
 #methods {
   height: 100%;
@@ -218,7 +214,7 @@ body[data-mode="help"] #output {
   visibility: hidden; }
 
 #info nav {
-  min-height: inherit;
+  min-height: 39px;
   padding: 4px; }
   #info nav li {
     padding: 2px 6px;
@@ -235,6 +231,8 @@ body[data-mode="help"] #output {
       margin: 0; }
   #info nav label:after {
     content: ' : '; }
+  #info nav li span {
+    opacity: 0.2; }
   #info nav input {
     border-radius: 3px;
     border: none;

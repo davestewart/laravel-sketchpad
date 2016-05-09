@@ -13,7 +13,7 @@
 	#output {
 		body[data-mode="home"] &,
 		body[data-mode="help"] &{
-			max-width: 700px;
+			// max-width: 700px;
 		}
 	}
 
@@ -97,7 +97,7 @@
 		}
 
 		nav{
-			min-height: inherit;
+			min-height: 39px;
 			padding:4px;
 
 			li{
@@ -121,6 +121,9 @@
 			}
 			label:after{
 				content:' : ';
+			}
+			li span{
+				opacity: 0.2;
 			}
 			input{
 				border-radius: 3px;

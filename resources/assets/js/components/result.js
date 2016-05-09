@@ -7,17 +7,18 @@ Vue.component('result', {
 	data:function(){
 
 		return{
-			format	:'',
-			loading	:false,
-			title	:'Sketchpad',
-			info	:'',
-			method	:null,
+			format		:'',
+			loading		:false,
+			title		:'Sketchpad',
+			info		:'',
+			method		:null
 		}
 	},
 
 	ready:function()
 	{
 		$output = $('#output');
+		//this.$watch('method.params', this.updateMethod, {deep:true});
 	},
 
 	events:
@@ -26,14 +27,21 @@ Vue.component('result', {
 		loadController:function(controller)
 		{
 			this.method = null;
-			this.setTitle(controller.label, controller.methods.length + ' methods');
+			this.$refs.params.params = null;
+			this.setTitle(controller.label, controller.comment.intro || controller.methods.length + ' methods');
 			$output.empty();
 		},
 
 		loadMethod:function(method)
 		{
 			this.method = method;
+			this.$refs.params.params = method.params;
 			this.updateMethod();
+		},
+
+		onParamChange:function()
+		{
+			this.updateMethod(true);
 		}
 
 	},
@@ -42,21 +50,27 @@ Vue.component('result', {
 	{
 
 		// ------------------------------------------------------------------------------------------------
-		// events
+		// load methods
 
-			updateMethod:function()
+			updateMethod:function(update)
 			{
 				// properties
-				var method		= this.method;
-				//this.loading 	= true;
+				var method = this.method;
+				if( ! update )
+				{
+					this.loading = true;
+				}
 				this.setTitle(method.label, method.comment ? method.comment.intro : method.label);
 
 				// values
-				var values 	= this.method.params.map(function(e){ return e.value; });
+				var values 	= method.params.map(function(e){ return e.value; });
 				var url		= method.route + values.join('/');
 
+				// debug
+				this.lastUrl = url;
+				this.date = new Date();
+
 				// load
-				//$output.empty();
 				server
 					.call(url, this.onLoad, this.onFail)
 					.always(this.onComplete);
@@ -76,19 +90,6 @@ Vue.component('result', {
 
 		// ------------------------------------------------------------------------------------------------
 		// accessors
-
-			getParamType:function(param)
-			{
-				if(/^\d+(\.\d+)?$/.test(param.value))
-				{
-					return 'number';
-				}
-				if(/^true|false$/i.test(param.value))
-				{
-					return 'checkbox';
-				}
-				return 'text';
-			},
 
 			setTitle:function(title, info)
 			{
@@ -133,6 +134,7 @@ Vue.component('result', {
 
 			onComplete:function()
 			{
+				console.info('Ran "%s" in %d ms', this.lastUrl, new Date - this.date);
 				this.loading = false;
 			}
 
