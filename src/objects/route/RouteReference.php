@@ -8,10 +8,12 @@
 class RouteReference
 {
 	public $route;
+	public $type;
 
-	public function __construct($route)
+	public function __construct($type, $route)
 	{
-		$this->route = $route;
+		$this->type     = $type;
+		$this->route    = $route;
 	}
 	
 	public function getName()

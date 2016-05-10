@@ -13,15 +13,14 @@ class ControllerReference extends RouteReference
 
 	public $params;
 
-	public $folder;
-
 	public $path;
 
-	public function __construct($path, $class = null)
+	public function __construct($route, $path, $class = null)
 	{
+		parent::__construct('controller', $route);
 		$this->path     = $path;
 		$this->class    = $class;
-		$this->folder   = preg_replace('/[^\/]+$/', '', $path);
+		//$this->folder   = preg_replace('/[^\/]+$/', '', $path);
 	}
 
 }

@@ -41,11 +41,11 @@ class SketchpadController extends Controller
 	
 	// ------------------------------------------------------------------------------------------------
 	// public methods
-	
+
 		public function command($type, $data = null)
 		{
 			$data = $this->sketchpad->getVariables();
-	
+			$data['folders'] = $this->sketchpad->init(true)->router->getFolders();
 			return view('sketchpad::pages.' . $type, $data);
 		}
 	
@@ -113,15 +113,15 @@ class SketchpadController extends Controller
 	
 	// ------------------------------------------------------------------------------------------------
 	// depreciated methods
-	
+
 		public function index()
 		{
-			return view('sketchpad::content.index', $this->sketchpad->getData(''));
+			return view('sketchpad::index', $this->sketchpad->getData(''));
 		}
-	
+
 		public function view($path)
 		{
-			return view('sketchpad::content.index', $this->sketchpad->getData($path));
+			return view('sketchpad::index', $this->sketchpad->getData($path));
 		}
 	
 		public function get($path = '')

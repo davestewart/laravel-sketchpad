@@ -10,8 +10,9 @@
 
 	<!-- libs -->
 	<script src="/{{ $assets }}lib/vue.js"></script>
-	<script src="/{{ $assets }}lib/router.min.js"></script>
 	<script src="/{{ $assets }}lib/jquery-1.12.3.min.js"></script>
+	<script src="/{{ $assets }}lib/jquery.sticky.js"></script>
+	<script src="/{{ $assets }}lib/history.js"></script>
 
 	<!-- json view -->
 	<link  href="/{{ $assets }}lib/jsonview/jquery.jsonview.min.css" rel="stylesheet">
@@ -24,7 +25,6 @@
 
 	<!-- sketchpad -->
 	<link  href="/{{ $assets }}sketchpad.css" rel="stylesheet">
-	<script src="/{{ $assets }}sketchpad.js"></script>
 
 	<!-- variables -->
 	<meta name="route" content="{{ $route }}">
@@ -37,7 +37,9 @@
 
 	@yield('content')
 
-	@if ( Config::get('app.debug') )
+	<script src="/{{ $assets }}sketchpad.js"></script>
+
+	@if ( Config::get('app.debug') ) 
 	<script type="text/javascript">
 		document.write('<script src="//localhost:35729/livereload.js?snipver=1" type="text/javascript"><\/script>')
 	</script>

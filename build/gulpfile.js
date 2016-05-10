@@ -17,21 +17,29 @@
 // config
 
 	// paths
-	var src =
+	var jsFolder = '../resources/assets/js/';
+	var js =
 	{
-		css: '../resources/assets/sass/**/*.scss',
-		js : '../resources/assets/js/**/*.js'
+		input:
+		{
+			all 	:jsFolder + '**/*.js',
+			files 	:
+			[
+				jsFolder + '*/**/*.js',
+				jsFolder + 'main.js',
+			]
+		},
+		output:
+		{
+			folder	:'../publish/assets/',
+			file	:'sketchpad.js',
+		}
 	};
 
-	var trg =
+	var css =
 	{
-		css: '../publish/assets/',
-		js : '../publish/assets/'
-	};
-
-	var files =
-	{
-		js : 'sketchpad.js'
+		input	: '../resources/assets/sass/**/*.scss',
+		output	: '../publish/assets/',
 	};
 
 
@@ -41,22 +49,22 @@
 	function styles()
 	{
 		return gulp
-			.src(src.css)
+			.src(css.input)
 			//.pipe(sourcemaps.init())
 			.pipe(sass().on('error', sass.logError))
 			//.pipe(sourcemaps.write())
-			.pipe(gulp.dest(trg.css));
+			.pipe(gulp.dest(css.output));
 	}
 
 	function scripts()
 	{
 		return gulp
-			.src(src.js)
+			.src(js.input.files)
 			//.pipe(sourcemaps.init())
 			//.pipe(uglify({compress: true, mangle: false}))
-			.pipe(concat(files.js))
+			.pipe(concat(js.output.file))
 			//.pipe(sourcemaps.write())
-			.pipe(gulp.dest(trg.js));
+			.pipe(gulp.dest(js.output.folder));
 	}
 
 
@@ -80,8 +88,8 @@
 	function watch()
 	{
 		build();
-		gulp.watch(src.css, ['styles']);
-		gulp.watch(src.js, ['scripts']);
+		gulp.watch(css.input, ['styles']);
+		gulp.watch(js.input.all, ['scripts']);
 	}
 	
 

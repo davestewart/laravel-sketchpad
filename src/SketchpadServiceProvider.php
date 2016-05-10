@@ -81,7 +81,7 @@ class SketchpadServiceProvider extends ServiceProvider
 		// ------------------------------------------------------------------------------------------------
 		// initialize class
 
-			$sketchpad->init();
+			//$sketchpad->init();
 	}
 
 }
