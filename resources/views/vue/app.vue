@@ -133,7 +133,6 @@
 							v-model="params[$index].value"
 							value="{{ param.value }}"
 							@keyup="onParamChange | debounce 400"
-							@change="onParamChange"
 						>
 					</li>
 					<li v-if="params.length == 0"><span>No parameters</span></li>
