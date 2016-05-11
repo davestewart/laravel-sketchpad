@@ -5,31 +5,33 @@ var vm =
 
 	data:function()
 	{
-
+		// controllers
 		var data = JSON.parse($('#data').text());
+
+		// props
+		data._route = '';
 		data.controller = null;
 		data.method = null;
-		data._route = '';
 		data.modal = {};
+
+		// return
 		return data;
 	},
 
 	ready:function()
 	{
-		// data
-		this.$refs.navigation.controllers = this.controllers;
-
-		// history
-		this.history = new UserHistory(this);
+		// objects
+		this.server		= new Server();
+		this.history 	= new UserHistory(this);
 
 		// front page
 		if(this.history.isHome())
 		{
 			$('#welcome').appendTo('#output').show();
 		}
-		
+
 		// ui
-		$('#nav .sticky').sticky({topSpacing:20});
+		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
 		//$('#params .sticky').sticky({topSpacing:20});
 
 		// links
@@ -71,19 +73,19 @@ var vm =
 
 			setRoute:function(route)
 			{
+				// params
+				route 				= route.replace(/\/*$/, '/');
+
 				// properties
 				this.$data._route 	= route;
-				var controller 		= this.getController(route);
+				this.controller 	= this.getController(route);
 				var method 			= this.getMethod(route);
 
-				// controller
-				this.controller = this.$refs.navigation.controller = controller;
-				
 				// take action
 				if(method)
 				{
-					this.$broadcast('loadMethod', method);
 					this.method = method;
+					this.$broadcast('loadMethod', method);
 				}
 				else if(this.controller)
 				{
@@ -115,18 +117,57 @@ var vm =
 
 
 		// ------------------------------------------------------------------------------------------------
-		// pages
+		// dom event handlers
 
 			onLinkClick:function(event)
 			{
 				// variables
 				var url		= event.target.href;
-				var matches = url.match(/\/:(\w+)/);
+				var matches = url.match(/\/:(\w+)\/(\w+)/);
 				if(matches)
 				{
 					event.preventDefault();
 					this.$refs.modal.load(url);
 				}
+			},
+
+			onControllerReload:function(data)
+			{
+				if(data)
+				{
+					var filtered = this.controllers.filter(function(c){ return c.path == data.path; });
+					if(filtered.length)
+					{
+						var found = filtered[0];
+						var index = this.controllers.indexOf(found);
+						this.controllers.$set(index, data);
+					}
+					else
+					{
+						this.controllers.push(data);
+						this.controllers.sort(function(a, b){
+							if(a.path < b.path)
+							{
+								return -1;
+							}
+							if(a.path > b.path)
+							{
+								return 1;
+							}
+							return 0;
+						});
+					}
+					this.setRoute(this.route);
+				}
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// other
+
+			reloadController:function(file)
+			{
+				this.server.load(':load/' + file, this.onControllerReload);
 			}
 
 	}

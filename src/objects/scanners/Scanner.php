@@ -26,13 +26,6 @@ class Scanner extends AbstractScanner
 	// PROPERTIES
 
 		/**
-		 * The base route for sketchpad/ controllers
-		 *
-		 * @var string
-		 */
-		public $route;
-
-		/**
 		 * An array of 'route' => RouteReference instances, representing all found
 		 * folders / controllers from the sketchpad/ controller folder down
 		 *
@@ -47,6 +40,13 @@ class Scanner extends AbstractScanner
 		 * @var FolderReference[]
 		 */
 		public $controllers;
+
+		/**
+		 * The base route for sketchpad/ controllers
+		 *
+		 * @var string
+		 */
+		public $route;
 
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -121,6 +121,14 @@ class Scanner extends AbstractScanner
 			return $this;
 		}
 
+		public function makeController($abspath)
+		{
+			$relpath        = str_replace($this->path, '', $abspath);
+			$route          = strtolower($this->route . preg_replace('/Controller\.php$/', '', $relpath)) . '/';
+			return new Controller($abspath, $route);
+		}
+
+
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// METHODS
@@ -155,7 +163,7 @@ class Scanner extends AbstractScanner
 				}
 				else if($this->isController($abspath))
 				{
-					$this->addController($abspath, $path, $file);
+					$this->addController($abspath);
 				}
 			}
 		}
@@ -176,19 +184,15 @@ class Scanner extends AbstractScanner
 		 * Adds a controller to the internal routes array
 		 *
 		 * @param          $abspath
-		 * @param   string $path The controller-root relative path to the controller's containing folder
-		 * @param          $file
 		 */
-		protected function addController($abspath, $path, $file)
+		protected function addController($abspath)
 		{
-			$name           = preg_replace('/Controller.php$/', '', $file);
-			$route          = strtolower($this->route . $path . $name . '/');
-			$controller     = new Controller($abspath, $route);
-			$ref            = new ControllerReference($route, $controller->path, $controller->classpath);
+			$controller     = $this->makeController($abspath);
+			$ref            = new ControllerReference($controller->route, $controller->path, $controller->classpath);
 
 			// set route
 			$this->controllers[] = $controller;
-			$this->addRoute($route, $ref);
+			$this->addRoute($controller->route, $ref);
 		}
 
 		/**
@@ -202,6 +206,5 @@ class Scanner extends AbstractScanner
 			//$ref->route = $route;
 			$this->routes[$route] = $ref;
 		}
-
 
 }

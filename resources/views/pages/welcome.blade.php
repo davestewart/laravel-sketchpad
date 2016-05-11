@@ -13,4 +13,4 @@
 
 <h3>Next steps...</h3>
 
-<p>Navigate the menu on the left, or click <a title="New Controller" href="{{ $route }}:new">here</a> to add a new controller and methods.</p>
+<p>Navigate the menu on the left, or click <a title="New Controller" href="{{ $route }}:show/new">here</a> to add a new controller and methods.</p>

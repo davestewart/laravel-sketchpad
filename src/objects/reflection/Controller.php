@@ -49,7 +49,7 @@ class Controller extends File implements JsonSerializable
 			$file   = $ref->getFileName();
 			return new self($file);
 		}
-
+	
 		public function __construct($path, $route = '', $process = true)
 		{
 			// parent

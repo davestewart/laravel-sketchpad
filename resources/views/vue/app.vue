@@ -1,15 +1,15 @@
 
 <div id="app" class="row">
 
-	<div class="col-md-4">
+	<div class="col-xs-4">
 
-		<navigation v-ref:navigation>
+		<navigation v-ref:navigation :controllers="controllers" :controller="controller">
 			Navigation
 		</navigation>
 
 	</div>
 
-	<div class="col-md-8">
+	<div class="col-xs-8">
 
 		<result v-ref:result>
 			Result
@@ -21,27 +21,6 @@
 </div>
 
 
-<template id="modal-template">
-
-	<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h3 class="modal-title">{{{ title }}}</h3>
-
-				</div>
-				<div class="modal-body">{{{ body }}}</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button v-if="save" type="button" class="btn btn-primary">OK</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-</template>
-
 <template id="navigation-template">
 
 	<div id="nav">
@@ -49,7 +28,7 @@
 		<div class="sticky">
 
 			<!-- controllers -->
-			<div id="controllers" class="col-md-6">
+			<div id="controllers" class="col-xs-6">
 
 				<ul class="nav nav-pills nav-stacked">
 					<li
@@ -69,7 +48,7 @@
 			</div>
 
 			<!-- methods -->
-			<div id="methods" class="col-md-6">
+			<div id="methods" class="col-xs-6">
 				<ul v-if="controller" class="nav nav-pills nav-stacked">
 					<li
 						v-for="method in controller.methods"
@@ -98,22 +77,25 @@
 
 <template id="result-template">
 
-	<!-- info -->
-	<section id="info">
+	<div id="result" :class="{loading:loading, transition:transition}">
 
-		<header>
-			<h1>{{ title }}</h1>
-			<p class="info">{{ info || '&nbsp;' }}</p>
-		</header>
+		<!-- info -->
+		<section id="info">
 
-		<!-- parameters -->
-		<params v-ref:params></params>
+			<header>
+				<h1>{{ title }}</h1>
+				<p class="info">{{ info || '&nbsp;' }}</p>
+			</header>
 
+			<!-- parameters -->
+			<params v-ref:params></params>
 
-	</section>
+		</section>
 
-	<!-- output -->
-	<section id="output" :class="{loading:loading}" data-format="{{ format }}"></section>
+		<!-- output -->
+		<section id="output" data-format="{{ format }}"></section>
+
+	</div>
 
 </template>
 
@@ -125,15 +107,23 @@
 		<div class="sticky">
 
 			<nav v-if="params" class="navbar navbar-default">
+				<span class="loader"></span>
 				<ul class="nav navbar-nav">
 					<li v-for="param in params">
 						<label>{{ param.name }}</label>
 						<input
+							v-if="getType(param) == 'checkbox'"
 							type="{{ getType(param) }}"
 							v-model="params[$index].value"
 							value="{{ param.value }}"
-							@keyup="onParamChange | debounce 400"
-							@change="onParamChange"
+							@change="onParamChange | debounce 400"
+						>
+						<input
+							v-else
+							type="{{ getType(param) }}"
+							v-model="params[$index].value"
+							value="{{ param.value }}"
+							@input="onParamChange | debounce 400"
 						>
 					</li>
 					<li v-if="params.length == 0"><span>No parameters</span></li>
@@ -144,3 +134,26 @@
 	</div>
 
 </template>
+
+
+<template id="modal-template">
+
+	<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title">{{{ title }}}</h3>
+
+				</div>
+				<div class="modal-body">{{{ body }}}</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button v-if="save" type="button" class="btn btn-primary">OK</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</template>
+

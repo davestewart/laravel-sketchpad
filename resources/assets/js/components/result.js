@@ -9,6 +9,7 @@ Vue.component('result', {
 		return{
 			format		:'',
 			loading		:false,
+			transition	:false,
 			title		:'Sketchpad',
 			info		:'',
 			method		:null
@@ -34,14 +35,16 @@ Vue.component('result', {
 
 		loadMethod:function(method)
 		{
-			this.method = method;
+			this.loading 	= true;
+			this.transition = this.method && this.method.route !== method.route;
+			this.method 	= method;
 			this.$refs.params.params = method.params;
 			this.callMethod();
 		},
 
 		onParamChange:function()
 		{
-			this.callMethod(true);
+			this.callMethod();
 		}
 
 	},
@@ -56,10 +59,6 @@ Vue.component('result', {
 			{
 				// properties
 				var method = this.method;
-				if( ! update )
-				{
-					this.loading = true;
-				}
 				this.setTitle(method.label, method.comment ? method.comment.intro : method.label);
 
 				// values
@@ -71,7 +70,7 @@ Vue.component('result', {
 				this.date = new Date();
 
 				// load
-				server
+				this.$root.server
 					.call(url, this.onLoad, this.onFail)
 					.always(this.onComplete);
 			},
@@ -104,6 +103,8 @@ Vue.component('result', {
 			onLoad:function(data, status, xhr)
 			{
 				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
+				// properties
+				this.transition = false;
 
 				// format
 				var format 	= (this.format = this.method.comment.tags.format || null);
@@ -135,7 +136,7 @@ Vue.component('result', {
 			onComplete:function()
 			{
 				console.info('Ran "%s" in %d ms', this.lastUrl, new Date - this.date);
-				this.loading = false;
+				this.loading 	= this.$root.server.count != 0;
 			}
 
 	}

@@ -2,6 +2,7 @@
 
 use App;
 use davestewart\sketchpad\objects\AbstractService;
+use davestewart\sketchpad\objects\reflection\Controller;
 use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\traits\GetterTrait;
@@ -52,8 +53,9 @@ class Sketchpad extends AbstractService
 			$parameters     =
 			[
 				'namespace'     => 'davestewart\sketchpad\controllers',
-				'middleware'    => $config->middleware,
+				'middleware'    => null,
 			];
+
 
 			// pushState main sketchpad routes
 			Route::group($parameters, function ($router) use ($config)
@@ -102,6 +104,28 @@ class Sketchpad extends AbstractService
 			}
 			return $this;
 		}
+
+
+	// ------------------------------------------------------------------------------------------------
+	// JOBS
+
+		public function getPage($page)
+		{
+			$data               = $this->getVariables();
+			$data['folders']    = $this->init(true)->router->getFolders();
+			return view('sketchpad::pages.' . $page, $data);
+		}
+	
+		public function getController($path)
+		{
+			$this->init();
+			if(file_exists($path))
+			{
+				return $this->router->scanner->makeController($path);
+			}
+			return null;
+		}
+
 
 
 	// ------------------------------------------------------------------------------------------------
@@ -166,11 +190,21 @@ class Sketchpad extends AbstractService
 							}
 						}
 
-						// set the cookie
-						\Cookie::queue('id', $id);
+						require __DIR__ . '/utils.php';
 
-						// call and return the controller
-						return static::exec($ref->class, $ref->method, $ref->params);
+						header('X-Request-ID:' . Input::get('requestId', ''));
+
+						// get controller response
+						ob_start();
+						$response   = static::exec($ref->class, $ref->method, $ref->params);
+						$content    = ob_get_contents();
+						ob_end_clean();
+
+						// return response or any echoed content
+						return $response
+							? $response
+							: $content;
+
 					}
 
 					// if there's not a valid controller or method, it's a 404

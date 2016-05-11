@@ -5,31 +5,33 @@ var vm =
 
 	data:function()
 	{
-
+		// controllers
 		var data = JSON.parse($('#data').text());
+
+		// props
+		data._route = '';
 		data.controller = null;
 		data.method = null;
-		data._route = '';
 		data.modal = {};
+
+		// return
 		return data;
 	},
 
 	ready:function()
 	{
-		// data
-		this.$refs.navigation.controllers = this.controllers;
-
-		// history
-		this.history = new UserHistory(this);
+		// objects
+		this.server		= new Server();
+		this.history 	= new UserHistory(this);
 
 		// front page
 		if(this.history.isHome())
 		{
 			$('#welcome').appendTo('#output').show();
 		}
-		
+
 		// ui
-		$('#nav .sticky').sticky({topSpacing:20});
+		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
 		//$('#params .sticky').sticky({topSpacing:20});
 
 		// links
@@ -71,19 +73,19 @@ var vm =
 
 			setRoute:function(route)
 			{
+				// params
+				route 				= route.replace(/\/*$/, '/');
+
 				// properties
 				this.$data._route 	= route;
-				var controller 		= this.getController(route);
+				this.controller 	= this.getController(route);
 				var method 			= this.getMethod(route);
 
-				// controller
-				this.controller = this.$refs.navigation.controller = controller;
-				
 				// take action
 				if(method)
 				{
-					this.$broadcast('loadMethod', method);
 					this.method = method;
+					this.$broadcast('loadMethod', method);
 				}
 				else if(this.controller)
 				{
@@ -115,18 +117,57 @@ var vm =
 
 
 		// ------------------------------------------------------------------------------------------------
-		// pages
+		// dom event handlers
 
 			onLinkClick:function(event)
 			{
 				// variables
 				var url		= event.target.href;
-				var matches = url.match(/\/:(\w+)/);
+				var matches = url.match(/\/:(\w+)\/(\w+)/);
 				if(matches)
 				{
 					event.preventDefault();
 					this.$refs.modal.load(url);
 				}
+			},
+
+			onControllerReload:function(data)
+			{
+				if(data)
+				{
+					var filtered = this.controllers.filter(function(c){ return c.path == data.path; });
+					if(filtered.length)
+					{
+						var found = filtered[0];
+						var index = this.controllers.indexOf(found);
+						this.controllers.$set(index, data);
+					}
+					else
+					{
+						this.controllers.push(data);
+						this.controllers.sort(function(a, b){
+							if(a.path < b.path)
+							{
+								return -1;
+							}
+							if(a.path > b.path)
+							{
+								return 1;
+							}
+							return 0;
+						});
+					}
+					this.setRoute(this.route);
+				}
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// other
+
+			reloadController:function(file)
+			{
+				this.server.load(':load/' + file, this.onControllerReload);
 			}
 
 	}
@@ -185,11 +226,11 @@ Vue.component('navigation', {
 				this.$dispatch('onNavClick', controller.route);
 			},
 
-			onMethodClick:function(method, element, $http)
+			onMethodClick:function(method)
 			{
 				if(event.metaKey || event.ctrlKey)
 				{
-					return server.open(event.target.href);
+					return this.$root.server.open(event.target.href);
 				}
 				this.$dispatch('onNavClick', method.route);
 			},
@@ -255,6 +296,7 @@ Vue.component('result', {
 		return{
 			format		:'',
 			loading		:false,
+			transition	:false,
 			title		:'Sketchpad',
 			info		:'',
 			method		:null
@@ -280,14 +322,16 @@ Vue.component('result', {
 
 		loadMethod:function(method)
 		{
-			this.method = method;
+			this.loading 	= true;
+			this.transition = this.method && this.method.route !== method.route;
+			this.method 	= method;
 			this.$refs.params.params = method.params;
 			this.callMethod();
 		},
 
 		onParamChange:function()
 		{
-			this.callMethod(true);
+			this.callMethod();
 		}
 
 	},
@@ -302,10 +346,6 @@ Vue.component('result', {
 			{
 				// properties
 				var method = this.method;
-				if( ! update )
-				{
-					this.loading = true;
-				}
 				this.setTitle(method.label, method.comment ? method.comment.intro : method.label);
 
 				// values
@@ -317,7 +357,7 @@ Vue.component('result', {
 				this.date = new Date();
 
 				// load
-				server
+				this.$root.server
 					.call(url, this.onLoad, this.onFail)
 					.always(this.onComplete);
 			},
@@ -350,6 +390,8 @@ Vue.component('result', {
 			onLoad:function(data, status, xhr)
 			{
 				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
+				// properties
+				this.transition = false;
 
 				// format
 				var format 	= (this.format = this.method.comment.tags.format || null);
@@ -381,7 +423,7 @@ Vue.component('result', {
 			onComplete:function()
 			{
 				console.info('Ran "%s" in %d ms', this.lastUrl, new Date - this.date);
-				this.loading = false;
+				this.loading 	= this.$root.server.count != 0;
 			}
 
 	}
@@ -454,32 +496,123 @@ function Server()
 Server.prototype =
 {
 
-	base:'',
+		base:'',
 
-	call:function(route, onSuccess, onFail)
-	{
-		var url = this.getCallUrl(location.origin + route);
-		return $.get(url, onSuccess).fail(onFail);
-	},
-	
-	open:function(url)
-	{
-		window.open(server.getCallUrl(url));
-	},
+		requestId:0,
 
-	getCallUrl:function(url)
-	{
-		return url.replace(/\/$/, '') + '?call=1';
-	},
+		count:0,
 
-	load:function(route, onSuccess)
-	{
-		var url = this.base + route;
-		console.log(url);
-		return $.get(url, onSuccess);
-	}
+
+	// ------------------------------------------------------------------------------------------------
+	// methods
+
+		/**
+		 * Calls a sketchpad route and returns the result
+		 *
+		 * @param route			The full route, including the '/sketchpad/' portion
+		 * @param onSuccess
+		 * @param onFail
+		 * @returns {*}
+		 */
+		call:function(route, onSuccess, onFailure)
+		{
+			var url = location.origin + this.getCallUrl(route);
+			this.count++;
+			return $
+				.get(url)
+				.done(this.getSuccessCallback(onSuccess))
+				.fail(this.getFailureCallback(onFailure));
+		},
+
+		/**
+		 * Opens a sketchpad route in a new window
+		 *
+		 * @param url
+		 */
+		open:function(route)
+		{
+			window.open(this.getCallUrl(route));
+		},
+
+		/**
+		 * Requests information from the server
+		 *
+		 * @param route			The partial route, from '/sketchpad/' onwards
+		 * @param onSuccess
+		 * @returns {*}
+		 */
+		load:function(route, onSuccess)
+		{
+			var url = this.base + route;
+			return $.get(url, onSuccess);
+		},
+
+	// ------------------------------------------------------------------------------------------------
+	// utilities
+
+		isLastRequest:function(xhr)
+		{
+			this.count--;
+			return this.requestId == xhr.getResponseHeader('X-Request-ID');
+		},
+
+		getSuccessCallback:function(callback)
+		{
+			return function(data, status, xhr)
+			{
+				if(this.isLastRequest(xhr))
+				{
+					callback(data, status, xhr);
+				}
+			}.bind(this);
+		},
+
+		getFailureCallback:function(callback)
+		{
+			return function(xhr, status, message)
+			{
+				if(this.isLastRequest(xhr))
+				{
+					callback(xhr, status, message);
+				}
+			}.bind(this);
+		},
+
+		getCallUrl:function(url)
+		{
+			return url.replace(/\/$/, '') + '?call=1&requestId=' + (++this.requestId);
+		}
 
 };
 
-var server	= new Server();
-var vm 		= new Vue(vm);
+$(function(){
+
+	// ------------------------------------------------------------------------------------------------
+	// app
+	
+		var app = window.app = new Vue(vm);
+
+
+	// ------------------------------------------------------------------------------------------------
+	// livereload
+
+		// store original callback
+		window.__onLiveReloadFileChanged = window._onLiveReloadFileChanged;
+	
+		// proxy livereload function
+		window._onLiveReloadFileChanged = function(file)
+		{
+			// intercept controller updates
+			if (/Controller\.php/.test(file.path)) 
+			{
+				app.reloadController(file.path);
+				return false;
+			}
+			else 
+			{
+				window.__onLiveReloadFileChanged(file);
+			}
+		}
+
+});
+

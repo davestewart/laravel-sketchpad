@@ -11,7 +11,7 @@ Server.prototype =
 
 		requestId:0,
 
-		requestCount:0,
+		count:0,
 
 
 	// ------------------------------------------------------------------------------------------------
@@ -25,18 +25,14 @@ Server.prototype =
 		 * @param onFail
 		 * @returns {*}
 		 */
-		call:function(route, onSuccess, onFail)
+		call:function(route, onSuccess, onFailure)
 		{
 			var url = location.origin + this.getCallUrl(route);
+			this.count++;
 			return $
-				.get(url, function(data, status, xhr){
-					var requestId = xhr.getResponseHeader('X-Request-ID');
-					if(requestId == null || requestId == this.requestId)
-					{
-						onSuccess(data, status, xhr);
-					}
-				}.bind(this))
-				.fail(onFail);
+				.get(url)
+				.done(this.getSuccessCallback(onSuccess))
+				.fail(this.getFailureCallback(onFailure));
 		},
 
 		/**
@@ -64,6 +60,34 @@ Server.prototype =
 
 	// ------------------------------------------------------------------------------------------------
 	// utilities
+
+		isLastRequest:function(xhr)
+		{
+			this.count--;
+			return this.requestId == xhr.getResponseHeader('X-Request-ID');
+		},
+
+		getSuccessCallback:function(callback)
+		{
+			return function(data, status, xhr)
+			{
+				if(this.isLastRequest(xhr))
+				{
+					callback(data, status, xhr);
+				}
+			}.bind(this);
+		},
+
+		getFailureCallback:function(callback)
+		{
+			return function(xhr, status, message)
+			{
+				if(this.isLastRequest(xhr))
+				{
+					callback(xhr, status, message);
+				}
+			}.bind(this);
+		},
 
 		getCallUrl:function(url)
 		{
