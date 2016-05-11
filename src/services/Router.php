@@ -1,7 +1,6 @@
 <?php namespace davestewart\sketchpad\services;
 
 use App;
-use davestewart\sketchpad\objects\AbstractService;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\objects\route\FolderReference;
 use davestewart\sketchpad\objects\scanners\Scanner;
@@ -19,7 +18,7 @@ use Route;
  *
  * @property Scanner $scanner
  */
-class Router extends AbstractService
+class Router
 {
 	
 	use GetterTrait;
@@ -73,7 +72,7 @@ class Router extends AbstractService
 		public function getRoute($route)
 		{
 			// variables
-			$route      = $this->folderize($route);
+			$route      = $this->scanner->folderize($route);
 			$routes     = $this->scanner->getRoutes();
 
 			// debug

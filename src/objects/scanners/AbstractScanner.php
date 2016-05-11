@@ -11,6 +11,7 @@ class AbstractScanner
 	// -----------------------------------------------------------------------------------------------------------------
 	// PROPERTIES
 
+		
 		protected $path;
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -26,7 +27,7 @@ class AbstractScanner
 		 * @param   string $path The path to cap with a "/"
 		 * @return  string
 		 */
-		protected function folderize($path)
+		public function folderize($path)
 		{
 			return rtrim($path, '/') . '/';
 		}

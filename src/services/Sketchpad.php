@@ -3,6 +3,8 @@
 use App;
 use davestewart\sketchpad\objects\AbstractService;
 use davestewart\sketchpad\objects\reflection\Controller;
+use davestewart\sketchpad\objects\scanners\Finder;
+use davestewart\sketchpad\objects\scanners\Scanner;
 use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\traits\GetterTrait;
@@ -17,7 +19,7 @@ use Route;
  * @property Router $router
  * @property SketchpadConfig $config
  */
-class Sketchpad extends AbstractService
+class Sketchpad
 {
 
 	use GetterTrait;
@@ -44,70 +46,67 @@ class Sketchpad extends AbstractService
 		public function __construct()
 		{
 			// config
-			$config         = new SketchpadConfig();
-			$this->config   = $config;
-			$this->route    = '/' . trim($config->route, '/') . '/';
-			$this->path     = base_path($config->path);
+			$config             = new SketchpadConfig();
+			$this->config       = $config;
 
 			// routing
-			$parameters     =
+			$parameters         =
 			[
 				'namespace'     => 'davestewart\sketchpad\controllers',
-				'middleware'    => null,
+				'middleware'    => $config->middleware,
 			];
 
-
-			// pushState main sketchpad routes
+			// setup sketchpad routes
 			Route::group($parameters, function ($router) use ($config)
 			{
 				Route::post ($config->route . ':setup', 'SketchpadController@setup');
 				Route::post ($config->route . ':create', 'SketchpadController@create');
-				Route::get($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
+				Route::get  ($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
 				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
 			});
 
-			// debug
 			/*
+			dump($config);
+			// debug
 			$finder     = new Finder();
 			$finder->start();
 
+			pr($finder);
 			$scanner = new Scanner($finder->path . 'Sketchpad/');
-			$scanner
-				->start()
-				->save()
-				->load();
-			dd(\Session::get('sketchpad'));
+			$scanner->start();
+
 			*/
 		}
 
 
 	// -----------------------------------------------------------------------------------------------------------------
-	// ACCESSORS
+	// SETUP
+
+		public function init($scan = false)
+		{
+			$this->router = new Router($this->config->route, $this->config->path);
+			if($scan)
+			{
+				//pr($this->router);
+				$this->router->scan();
+				//pd($this->router);
+			}
+			return $this;
+		}
 
 		public function getVariables()
 		{
 			$data =
 			[
-				'route'     => $this->route,
-				'theme'     => $this->config->theme,
+				'route'     => $this->config->route,
 				'assets'    => $this->config->assets,
 			];
 			return $data;
 		}
 	
-		public function init($scan = false)
-		{
-			$this->router = new Router($this->route, $this->path);
-			if($scan)
-			{
-				$this->router->scan();
-			}
-			return $this;
-		}
-
 
 	// ------------------------------------------------------------------------------------------------
-	// JOBS
+	// TASKS
 
 		public function getPage($page)
 		{
@@ -127,100 +126,90 @@ class Sketchpad extends AbstractService
 		}
 
 
-
 	// ------------------------------------------------------------------------------------------------
 	// ROUTING METHODS
 
-		public function call($uri = '')
+		/**
+		 * Index route, shows the main Sketchpad UI
+		 *
+		 * @return \Illuminate\View\View
+		 */
+		public function index()
 		{
+			// set up the router and rescan to get all data
+			$this->init(true);
 
-			// ------------------------------------------------------------------------------------------------
-			// variables
+			// build the index page
+			$data           = $this->getVariables();
+			$data['app']    = file_get_contents(base_path('vendor/davestewart/sketchpad/resources/views/vue/app.vue'));
+			$data['data']   =
+			[
+				'controllers'   => $this->router->getControllers(),
+			];
 
-				$id         = Input::get('id', 0);
-				$call       = Input::get('call', 0);
-				$json       = Input::get('json', 0);
-				$base       = $this->route;
-
-
-			// ------------------------------------------------------------------------------------------------
-			// router
-
-				// if we're not calling, consider this a new page load, and re-scan
-				$this->init( ! $call );
-
-				/** @var ControllerReference $ref */
-				$ref        = $this->router->getRoute($base . $uri);
-
-
-			// ------------------------------------------------------------------------------------------------
-			// debug
-
-				$debug =
-				[
-					'id'   => $id,
-					'call' => $call,
-					'json' => $json,
-					'base' => $base,
-					'ref'  => $ref,
-				];
-				//pr($debug);
-
-
-			// ------------------------------------------------------------------------------------------------
-			// process route
-
-				// attempt to call controller
-				if($call)
-				{
-					// controller has method
-					if($ref instanceof ControllerReference && $ref->method)
-					{
-						// test controller / method exists
-						try
-						{
-							new ReflectionMethod($ref->class, $ref->method);
-						}
-						catch(\Exception $e)
-						{
-							if($e instanceof \ReflectionException)
-							{
-								$sketchpad = str_replace($base, '', $ref->route) . $ref->method . '/';
-								$this->abort($sketchpad, 'method');
-							}
-						}
-
-						require __DIR__ . '/utils.php';
-
-						header('X-Request-ID:' . Input::get('requestId', ''));
-
-						// get controller response
-						ob_start();
-						$response   = static::exec($ref->class, $ref->method, $ref->params);
-						$content    = ob_get_contents();
-						ob_end_clean();
-
-						// return response or any echoed content
-						return $response
-							? $response
-							: $content;
-
-					}
-
-					// if there's not a valid controller or method, it's a 404
-					$this->abort($uri, 'path');
-				}
-
-				// build the index page
-				$data           = $this->getVariables();
-				$data['app']    = file_get_contents(base_path('vendor/davestewart/sketchpad/resources/views/vue/app.vue'));
-				$data['data']   =
-				[
-					'controllers'   => $this->router->getControllers(),
-			    ];
-				return view('sketchpad::index', $data);
+			// return
+			return view('sketchpad::index', $data);
 		}
 
+		/**
+		 * Initial function that works out the controller, method and parameters to call from the URI string
+		 *
+		 * @param string $route
+		 * @return mixed|string
+		 */
+		public function call($route = '')
+		{
+			// set up the router, but don't scan
+			$this->init(1);
+
+			//pd($this->router);
+
+			/** @var ControllerReference $ref */
+			$ref = $this->router->getRoute($this->config->route . $route);
+
+			// controller has method
+			if($ref instanceof ControllerReference && $ref->method)
+			{
+				// test controller / method exists
+				try
+				{
+					new ReflectionMethod($ref->class, $ref->method);
+				}
+				catch(\Exception $e)
+				{
+					if($e instanceof \ReflectionException)
+					{
+						$sketchpad = str_replace($this->config->route, '', $ref->route) . $ref->method . '/';
+						$this->abort($sketchpad, 'method');
+					}
+				}
+
+				// setup headers for AJAX call matching
+				header('X-Request-ID:' . Input::get('requestId', ''));
+
+				// include utility methods for user
+				require __DIR__ . '/utils.php';
+
+				// get controller response
+				ob_start();
+				$response   = $this->exec($ref->class, $ref->method, $ref->params);
+				$content    = ob_get_contents();
+				ob_end_clean();
+
+				// return response or any echoed content
+				return $response
+					? $response
+					: $content;
+			}
+
+			// if there's not a valid controller or method, it's a 404
+			$this->abort($route, 'path');
+			return false;
+		}
+
+
+	// ------------------------------------------------------------------------------------------------
+	// UTILITIES
 
 		/**
 		 * Calls a controller and methods, resolving any dependency injection
@@ -230,7 +219,7 @@ class Sketchpad extends AbstractService
 		 * @param   array|null  $params         An optional arr ay of parameters
 		 * @return  mixed                       The result of the call
 		 */
-		public static function exec($controller, $method, $params = null)
+		public function exec($controller, $method, $params = null)
 		{
 			// method
 			$callable = $controller . '@' . $method;
@@ -268,9 +257,6 @@ class Sketchpad extends AbstractService
 				return App::call($callable);
 			}
 		}
-
-	// ------------------------------------------------------------------------------------------------
-	// UTILITIES
 
 		protected function abort($uri, $type = '')
 		{

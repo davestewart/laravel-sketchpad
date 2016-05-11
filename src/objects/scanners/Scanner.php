@@ -80,7 +80,26 @@ class Scanner extends AbstractScanner
 
 
 	// -----------------------------------------------------------------------------------------------------------------
-	// METHODS
+	// MAKING METHODS
+
+		/**
+		 * Make a controller instance from an absolute path
+		 *
+		 * The method works out the correct route and passes it in
+		 *
+		 * @param   string      $abspath        The absolute path to the controller
+		 * @return  Controller
+		 */
+		public function makeController($abspath)
+		{
+			$relpath        = substr($abspath, strlen($this->path));
+			$route          = strtolower($this->route . preg_replace('/Controller\.php$/', '', $relpath)) . '/';
+			return new Controller($abspath, $route);
+		}
+
+
+	// -----------------------------------------------------------------------------------------------------------------
+	// SCANNING METHODS
 
 		public function start()
 		{
@@ -121,17 +140,9 @@ class Scanner extends AbstractScanner
 			return $this;
 		}
 
-		public function makeController($abspath)
-		{
-			$relpath        = str_replace($this->path, '', $abspath);
-			$route          = strtolower($this->route . preg_replace('/Controller\.php$/', '', $relpath)) . '/';
-			return new Controller($abspath, $route);
-		}
-
-
 
 	// -----------------------------------------------------------------------------------------------------------------
-	// METHODS
+	// PROTECTED SCANNING METHODS
 
 		/**
 		 * Finds all controllers and folders Recursive path processing function

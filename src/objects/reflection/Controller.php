@@ -1,6 +1,7 @@
 <?php namespace davestewart\sketchpad\objects\reflection;
 
 use davestewart\sketchpad\objects\file\File;
+use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;
 use ReflectionClass;
 use ReflectionMethod;
@@ -10,7 +11,7 @@ use ReflectionMethod;
  *
  * @package davestewart\sketchpad\helpers
  */
-class Controller extends File implements JsonSerializable
+class Controller extends File implements Arrayable, JsonSerializable
 {
 	
 	use \davestewart\sketchpad\traits\ReflectionTraits;
@@ -108,7 +109,7 @@ class Controller extends File implements JsonSerializable
 			return $this;
 		}
 
-		public function toArray($simple = false)
+		public function toArray()
 		{
 			$data =
 			[
