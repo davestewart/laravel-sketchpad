@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\controllers;
 
+use davestewart\sketchpad\middleware\RequestId;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
@@ -8,8 +9,7 @@ use Illuminate\Support\Facades\Input;
 use Response;
 
 /**
- * Class TestController
- * @package app\Http\Controllers\test
+ * Class SketchpadController
  */
 class SketchpadController extends Controller
 {
@@ -40,61 +40,66 @@ class SketchpadController extends Controller
 	
 	
 	// ------------------------------------------------------------------------------------------------
-	// public methods
-	
-		public function command($type, $data = null)
-		{
-			$data = $this->sketchpad->getVariables();
-	
-			return view('sketchpad::pages.' . $type, $data);
-		}
-	
-		public function call($path = '')
+	// main entry point
+
+		/**
+		 * Main entry point for any non :command URIs
+		 *
+		 * Will trigger index or a controller/method call
+		 *
+		 * @param   Request     $request
+		 * @param   string      $path
+		 * @return  \Illuminate\View\View|mixed|string
+		 */
+		public function call(Request $request, $path = '')
 		{
 			// instantiate setup
 			$setup = new Setup();
 			
 			// return a view
-			return $setup->check()
-				? $this->sketchpad->call($path)
-				: $setup->view();
-		}
-
-		public function setup(Request $request)
-		{
-	
-			// config
-			$input          = $request->all();
-			$config         = config_path('sketchpad.php');
-			$contents       = file_exists($config)
-								? file_get_contents($config)
-								: file_get_contents(base_path('vendor/davestewart/sketchpad/publish/config/config.php'));
-
-			// helper function
-			$update = function ($name, $trim) use($input, & $contents)
+			if($setup->check())
 			{
-				$value      = $input[$name];
-				$value      = trim($value, '\\/');
-				$value      = trim($value, $trim) . $trim;
-				$contents   = preg_replace("/('$name'[^']+?)'([^']+?)'/", "$1'$value'", $contents);
-			};
-	
-			// massage input
-			$update('route', '/');
-			$update('path', '/');
-			$update('namespace', '\\');
-			$update('assets', '/');
-	
-			// update double-slashes
-			$contents       = str_replace('\\', '\\\\', $contents);
-	
-			// write the file
-			file_put_contents($config, $contents);
-
-			// run the next stage of setup
-			return redirect('/' .  $input['route']);
+				if(Input::get('call') || $request->isMethod('post'))
+				{
+					return $this->sketchpad->call($path);
+				}
+				return $this->sketchpad->index();
+			}
+			return $setup->view();
 		}
-	
+
+
+	// ------------------------------------------------------------------------------------------------
+	// main app methods
+
+		/**
+		 * Handles commands from the main UI
+		 *
+		 * @param   string      $type
+		 * @param   null        $data
+		 * @return  \Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+		 */
+		public function command($type, $data = null)
+		{
+			// shows an html page
+			if($type == 'show')
+			{
+				return $this->sketchpad->getPage($data);
+			}
+			
+			// loads controller data
+			if($type == 'load')
+			{
+				return response()->json($this->sketchpad->getController($data));
+			}
+		}
+
+		/**
+		 * Creates a new controller
+		 *
+		 * @method  POST
+		 * @param   Request     $request
+		 */
 		public function create(Request $request)
 		{
 			// get input
@@ -108,33 +113,31 @@ class SketchpadController extends Controller
 	
 			// create
 		}
-	
-	
+
 	
 	// ------------------------------------------------------------------------------------------------
-	// depreciated methods
-	
-		public function index()
-		{
-			return view('sketchpad::content.index', $this->sketchpad->getData(''));
-		}
-	
-		public function view($path)
-		{
-			return view('sketchpad::content.index', $this->sketchpad->getData($path));
-		}
-	
-		public function get($path = '')
-		{
-			return Response::json($this->sketchpad->getFolder($path));
-		}
-	
-		public function all($path = '')
-		{
-			return Response::json($this->sketchpad->getFolder($path, true));
-		}
-	
+	// setup methods
 
+		/**
+		 * Handles form data from the setup controller
+		 *
+		 * @method  POST
+		 * @param   Request     $request
+		 * @return  \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+		 */
+		public function setup(Request $request)
+		{
+			// instantiate setup
+			$setup  = new Setup();
+			$input  = $request->all();
+			$result = $setup->makeConfig($input);
+
+			// run the next stage of setup
+			return redirect('/' .  $input['route']);
+		}
+
+
+	
 
 }
 

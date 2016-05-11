@@ -1,15 +1,38 @@
 .modal {
-  z-index: 100000000; }
+  top: 0% !important;
+  transition: opacity 0.2s;
+  top: 0%; }
+  .modal .modal-dialog {
+    transition: none !important;
+    -webkit-transform: none !important;
+    transform: none !important; }
 
-.modal-dialog {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  margin: 0; }
+/*
+	.modal{
+		z-index: 100000000;
+	}
 
+	.modal-dialog {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		margin: 0;
+		margin-top:-10%;
+	}
+
+	*/
 .modal-content {
-  margin: 0 auto; }
+  margin: 0 auto;
+  width: 700px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); }
+  .modal-content .modal-title {
+    margin-top: 0 !important; }
+
+.modal-backdrop {
+  background-color: #FFF; }
+  .modal-backdrop.in {
+    opacity: 0.8; }
 
 .sketchpad-container {
   max-width: 1570px;
@@ -31,6 +54,10 @@
 		outline:1px solid red;
 	}
 */
+input:focus {
+  color: #cc0000;
+  outline: none; }
+
 #output pre.sf-dump,
 #output .jsonview {
   position: relative;
@@ -125,7 +152,6 @@ body {
   color: #666; }
 
 body {
-  padding-top: 100px;
   overflow-y: scroll;
   padding-bottom: 100px; }
 
@@ -151,37 +177,45 @@ h1 {
 code {
   font-size: 0.8em; }
 
-form {
-  padding: 0px; }
-  form label {
-    padding: 4px; }
-  form textarea {
-    max-width: 100%; }
-  form .help-block {
-    font-size: 0.8em;
-    padding-left: 4px; }
-  form .form-group-submit {
-    margin-top: 30px;
-    margin-bottom: 0;
-    /*
+form label {
+  padding: 4px; }
+
+form textarea {
+  max-width: 100%; }
+
+form .help-block {
+  font-size: 0.8em;
+  padding-left: 4px; }
+
+form .form-group-submit {
+  margin-top: 30px;
+  margin-bottom: 0;
+  /*
 			button{
 				float: right;
 			};
 			*/ }
-  form.form-horizontal .control-label {
-    padding-top: 0; }
+
+form .form-group:last-child {
+  margin-bottom: 0; }
+
+.form-control {
+  background-color: rgba(220, 228, 236, 0.4);
+  border: none;
+  padding: 9px 10px;
+  font-size: inherit;
+  height: 40px; }
 
 #setup {
   width: 600px; }
-
-body[data-mode="home"] #output,
-body[data-mode="help"] #output {
-  max-width: 700px; }
 
 #controllers,
 #methods {
   height: 100%;
   border-right: 1px solid #eee; }
+
+#welcome {
+  display: none; }
 
 #nav {
   margin-top: 113px;
@@ -191,7 +225,10 @@ body[data-mode="help"] #output {
   body[data-mode="help"] #nav:hover {
     opacity: 1; }
   #nav .nav > li a {
-    padding: 4px 9px; }
+    padding: 4px 9px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; }
   #nav .nav > li p {
     padding-left: 9px;
     font-size: 0.8em;
@@ -201,11 +238,14 @@ body[data-mode="help"] #output {
     color: #ccc;
     font-style: normal; }
   #nav a.controller span.divider {
+    position: relative;
     display: inline-block;
     padding: 0 3px;
     color: #CCC; }
     li.active #nav a.controller span.divider {
       opacity: 0.3; }
+  #nav a.method.error {
+    color: red; }
 
 #info .info {
   /*
@@ -218,11 +258,63 @@ body[data-mode="help"] #output {
 #info .info:empty {
   visibility: hidden; }
 
+#info nav {
+  min-height: 39px;
+  padding: 4px; }
+  #info nav li {
+    padding: 2px 6px;
+    padding-right: 10px;
+    border-right: 1px dotted rgba(0, 0, 0, 0.1);
+    margin-right: 8px;
+    vertical-align: middle;
+    float: none;
+    display: inline-block; }
+    #info nav li:last-child {
+      border-right: none; }
+    #info nav li > * {
+      vertical-align: middle;
+      margin: 0; }
+  #info nav label:after {
+    content: ' : '; }
+  #info nav li span {
+    opacity: 0.2; }
+  #info nav input {
+    border-radius: 3px;
+    border: none;
+    padding: 3px 6px; }
+  #info nav input:not([type="checkbox"]) {
+    width: 100px; }
+
+#params nav .loader {
+  position: absolute;
+  display: block;
+  width: 16px;
+  height: 16px;
+  right: 0;
+  margin: 8px 12px;
+  background-image: url("images/ajax-loader.gif");
+  background-repeat: no-repeat;
+  transition: opacity 0.1s;
+  opacity: 0; }
+  #result.loading #params nav .loader {
+    opacity: 1; }
+
 #output {
   transition: opacity 0.2s; }
   #output iframe.error {
     width: 100%;
     height: 2000px;
     outline: 1px solid #DDD; }
-  #output.loading {
+  #result.transition.loading #output {
     opacity: 0; }
+
+.table.debug th, .table.debug td {
+  font-size: 13px;
+  padding: 5px 8px; }
+
+.table.debug thead tr {
+  background: inherit; }
+
+.table.debug tbody th {
+  min-width: 100px;
+  color: #e74c3c; }

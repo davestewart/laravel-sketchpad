@@ -43,7 +43,7 @@ class Method implements JsonSerializable
 			// properties
 			$this->ref      = $method;
 			$this->name		= $method->name;
-			$this->route    = $route . $this->name . '/';
+			$this->route    = strtolower($route . $this->name . '/');
 			$this->label	= $this->getLabel();
 			$this->comment	= $this->getDocComment();
 
@@ -64,6 +64,7 @@ class Method implements JsonSerializable
 			$data->label        = $this->label;
 			$data->route        = $this->route;
 			$data->signature    = $this->signature;
+			$data->error        = 0;
 
 			// complex
 			if( ! $simple )

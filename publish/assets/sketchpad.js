@@ -1,375 +1,646 @@
-;(function($, window){
+var vm =
+{
 
-	// ------------------------------------------------------------------------------------------------
-	// variables
+	el:'#app',
 
-		// elements
-		var $body;
-		var $nav;
-		var $controllers;
-		var $methods;
-		var $output;
-		var $info;
+	data:function()
+	{
+		// controllers
+		var data = JSON.parse($('#data').text());
 
+		// props
+		data._route = '';
+		data.controller = null;
+		data.method = null;
+		data.modal = {};
+		data.options =
+		{
+			useLabels:true
+		};
+
+		// return
+		return data;
+	},
+
+	ready:function()
+	{
 		// objects
-		var sketchpad = window.Sketchpad = {};
-		var server;
-		var router;
-		var reloader;
+		this.server		= new Server();
+		this.history 	= new UserHistory(this);
 
-		// data
-		var data;
-		var controller;
-		var method;
-
-		var active =
+		// front page
+		if(this.history.isHome())
 		{
-			controller	:null,
-			method		:null,
-			route		:''
-		};
+			$('#welcome').appendTo('#output').show();
+		}
 
+		// ui
+		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
+		//$('#params .sticky').sticky({topSpacing:20});
 
-	// ------------------------------------------------------------------------------------------------
-	// objects
+		// links
+		$('body').on('click', 'a', this.onLinkClick);
+	},
 
-		function Server()
+	computed:
+	{
+		route:
 		{
-			var route = $('meta[name="route"]').attr('content');
-
-			this.json = function (url, callback)
+			get:function ()
 			{
-				$.getJSON(url + '?json=1', null, callback);
-			};
-
-			this.html = function (url, callback)
+				return this.$data._route;
+			},
+			set:function (route)
 			{
-				$.get(url + '?html=1', callback);
-			};
-
-			this.run = function (url, success, fail)
-			{
-				// set loading
-				$output.addClass('loading');
-
-				// make the call
-				$
-					.get(url, success)
-					.fail(fail)
-					.always(function(){
-						$output.removeClass('loading');
-					});
-			};
-
-		}
-
-		/**
-		 * Live reloader
-		 * 
-		 * @see https://github.com/hiddentao/gulp-server-livereload/
-		 */
-		function LiveReloader(window)
-		{
-			// proxy original livereload function
-			this.onFileChanged = window._onLiveReloadFileChanged;
-			
-			/**
-			 * The proxied callback
-			 * @param {Object} file 	An object with path, name and ext properties
-			 */
-			window._onLiveReloadFileChanged = function(file)
-			{
-				// debug
-				// console.log('file changed:', file);
-
-				// intercept controller updates
-				if(/Controller\.php/.test(file.path))
-				{
-					reloadController(file.path);
-					return false;
-				}
-				else
-				{
-					this.onFileChanged(file);
-				}
-
-			}.bind(this)
-		}
-
-
-
-
-	// ------------------------------------------------------------------------------------------------
-	// functions
-
-		function setMode(mode)
-		{
-			$body.attr('data-mode', mode);
-		}
-
-		function setTitle(title, comment)
-		{
-			comment = comment === null
-						? '&elipsis;'
-						: comment === ''
-							? '&nbsp;'
-							: comment;
-			$info.find('h1').text(title);
-			$info.find('.info').html(comment);
-		}
-
-		function setFormat(format)
-		{
-			$output.attr('data-format', format);
-		}
-
-		function loadIframe(xhr)
-		{
-			var text	= xhr.responseText;
-			var type	= xhr.getResponseHeader('Content-Type');
-			//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
-			var src		= 'data:' + type + ',' + encodeURIComponent(text);
-			var $iframe = $('<iframe class="error" frameborder="0">');
-
-			$output.empty().append($iframe);
-			$iframe.attr('src', src);
-		}
-
-		window.setIframeHeight = function(height)
-		{
-			$output.find('iframe').height(height);
-		};
-
-		function updateList(element)
-		{
-			var $element = $(element);
-			$element
-				.parent()
-				.addClass('active')
-				.siblings()
-				.removeClass('active');
-			return $element;
-		}
-
-
-	// ------------------------------------------------------------------------------------------------
-	// data functions
-
-		function loadController(url)
-		{
-			// load
-			server.json(url, function(data)
-			{
-				// update
-				controller 			= data;
-				active.controller	= controller;
-
-				// debug
-				console.log(controller);
-
-				// load already-defined view (need to replace this soon)
-				server.html(url, function(html)
-				{
-					// update UI
-					setMode('code');
-					setTitle(controller.class, controller.comment.intro);
-					$output.empty();
-					$methods.html(html);
-
-					// check to see if the new controller contains the active route
-					var methods 		= controller.methods.filter(function (e){ return active.method && e.route === active.method.route; });
-					if(methods.length)
-					{
-						active.method = methods[0];
-						loadMethod(active.method);
-
-						var $m = $methods.find('a[href="' +active.method.route+ '"]');
-
-						updateList($m.get(0));
-					}
-
-				});
-			});
-		}
-
-		function reloadController(path)
-		{
-			//var controllers = data.filter(function (e){ return active.controller && e.path === path; });
-			if(controller.path == path)
-			{
-				loadController(controller.route);
+				this.setRoute(route);
 			}
 		}
 
-		function loadMethod(method)
+	},
+
+	events:
+	{
+		onNavClick:function(route)
 		{
-			// update output
-			var url     	= method.route;
-			var title		= method.label;
-			var comment 	= method.comment.intro;
-			var format		= method.comment.tags.format || null;
+			this.history.pushState(route);
+			this.setRoute(route);
+		}
 
-			// history
-			//router.navigate(url);
+	},
 
-			active.method	= method;
+	methods:
+	{
 
-			setTitle(title, comment);
 
-			// load code
-			server.run(url, function(data, status, xhr)
+		// ------------------------------------------------------------------------------------------------
+		// route
+
+			setRoute:function(route)
 			{
-				//console.log([status, xhr.getAllResponseHeaders(), xhr]);
+				// params
+				route 				= route.replace(/\/*$/, '/');
 
-				setFormat(format);
+				// properties
+				this.$data._route 	= route;
+				this.controller 	= this.getController(route);
+				var method 			= this.getMethod(route);
 
+				// take action
+				if(method)
+				{
+					this.method = method;
+					this.$broadcast('loadMethod', method);
+				}
+				else if(this.controller)
+				{
+					this.$broadcast('loadController', this.controller);
+				}
+			},
+
+			getController:function (route)
+			{
+				var arr = this.controllers.filter(function(e)
+				{
+					return route.indexOf(e.route) == 0;
+				});
+				return arr ? arr[0] : null;
+			},
+
+			getMethod:function (route, controller)
+			{
+				controller = controller || this.controller || this.getController(route);
+				if(controller)
+				{
+					var arr = controller.methods.filter(function(e)
+					{
+						return route.indexOf(e.route) == 0;
+					});
+					return arr ? arr[0] : null;
+				}
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// dom event handlers
+
+			onLinkClick:function(event)
+			{
+				// variables
+				var url		= event.target.href;
+				var matches = url.match(/\/:(\w+)\/(\w+)/);
+				if(matches)
+				{
+					event.preventDefault();
+					this.$refs.modal.load(url);
+				}
+			},
+
+			onControllerReload:function(data)
+			{
+				if(data)
+				{
+					var filtered = this.controllers.filter(function(c){ return c.path.toLowerCase() == data.path.toLowerCase(); });
+					if(filtered.length)
+					{
+						var found = filtered[0];
+						var index = this.controllers.indexOf(found);
+						this.controllers.$set(index, data);
+					}
+					else
+					{
+						this.controllers.push(data);
+						this.controllers.sort(function(a, b){
+							if(a.path < b.path)
+							{
+								return -1;
+							}
+							if(a.path > b.path)
+							{
+								return 1;
+							}
+							return 0;
+						});
+					}
+					this.setRoute(this.route);
+				}
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// other
+
+			reloadController:function(file)
+			{
+				this.server.load(':load/' + file, this.onControllerReload);
+			}
+
+	}
+
+};
+
+Vue.component('modal', {
+
+	template:'#modal-template',
+	
+	props:['title', 'body', 'save'],
+
+	methods:
+	{
+		load:function(url)
+		{
+
+			$.get(url, function (html)
+			{
+				var $body 	= $('<div>').append(html);
+				this.title 	= $body.find('h1').remove().text();
+				this.save	= $body.find('form').length;
+				this.body 	= $body.html();
+				this.show();
+			}.bind(this))
+		},
+
+		show:function()
+		{
+			console.log('show');
+			$('#modal').modal('show');
+		},
+
+		hide:function()
+		{
+			$('#modal').modal('hide');
+		}
+
+	}
+	
+});
+Vue.component('navigation', {
+
+	template:'#navigation-template',
+
+	props:['controllers', 'controller'],
+
+	methods:
+	{
+
+		// ------------------------------------------------------------------------------------------------
+		// handlers
+
+			onControllerClick:function(controller)
+			{
+				this.$dispatch('onNavClick', controller.route);
+			},
+
+			onMethodClick:function(method)
+			{
+				if(event.metaKey || event.ctrlKey)
+				{
+					return this.$root.server.open(event.target.href);
+				}
+				this.$dispatch('onNavClick', method.route);
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// utilities
+
+			getLinkHtml:function(route)
+			{
+				return route
+					.replace('/sketchpad/', '')
+					.replace(/\/$/, '')
+					.split('/')
+					.join(' <span class="divider">&#9656;</span> ');
+			},
+
+			isActive:function(route)
+			{
+				return this.$parent.$data._route.indexOf(route) == 0;
+			}
+
+	}
+
+});
+Vue.component('params', {
+	
+	template:'#params-template',
+	
+	props:['params'],
+
+	methods:
+	{
+
+		getType:function(param)
+		{
+			if(/^-?(\d+|\d+\.\d+|\.\d+)([eE][-+]?\d+)?$/.test(param.value))
+			{
+				return 'number';
+			}
+			if(/^true|false$/i.test(param.value))
+			{
+				return 'checkbox';
+			}
+			return 'text';
+		},
+
+		onParamChange:function()
+		{
+			this.$dispatch('onParamChange');
+		}
+	}
+	
+});
+var $output;
+
+Vue.component('result', {
+
+	template:'#result-template',
+
+	data:function(){
+
+		return{
+			format		:'',
+			loading		:false,
+			transition	:false,
+			title		:'Sketchpad',
+			info		:'',
+			method		:null
+		}
+	},
+
+	/*
+	computed:
+	{
+		title:function()
+		{
+			return this.$root.options.useLabels ? this.method.label : this.method.name + '()';
+		},
+
+		comment:function()
+		{
+
+		}
+	},
+	*/
+
+	ready:function()
+	{
+		$output = $('#output');
+		//this.$watch('method.params', this.callMethod, {deep:true});
+	},
+
+	events:
+	{
+
+		loadController:function(controller)
+		{
+			this.method = null;
+			this.$refs.params.params = null;
+			this.setTitle(controller.label, controller.comment.intro || controller.methods.length + ' methods');
+			$output.empty();
+		},
+
+		loadMethod:function(method)
+		{
+			this.loading 	= true;
+			this.transition = this.method && this.method.route !== method.route;
+			this.method 	= method;
+			this.$refs.params.params = method.params;
+			this.callMethod();
+		},
+
+		onParamChange:function()
+		{
+			this.callMethod();
+		}
+
+	},
+
+	methods:
+	{
+
+		// ------------------------------------------------------------------------------------------------
+		// load methods
+
+			callMethod:function(update)
+			{
+				// properties
+				var method = this.method;
+				this.setTitle(this.$root.options.useLabels ? method.label : method.name + '()', method.comment ? method.comment.intro : method.label);
+
+				// values
+				var values 	= method.params.map(function(e){ return e.value; });
+				var url		= method.route + values.join('/');
+
+				// debug
+				this.lastUrl = url;
+				this.date = new Date();
+
+				// load
+				this.$root.server
+					.call(url, this.onLoad, this.onFail)
+					.always(this.onComplete);
+			},
+
+			loadIframe:function(xhr)
+			{
+				var text	= xhr.responseText;
+				var type	= xhr.getResponseHeader('Content-Type');
+				var src		= 'data:' + type + ',' + encodeURIComponent(text);
+				var $iframe = $('<iframe class="error" frameborder="0">');
+				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
+
+				$output.empty().append($iframe.attr('src', src));
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// accessors
+
+			setTitle:function(title, info)
+			{
+				this.title 	= title;
+				this.info	= info;
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// events
+
+			onLoad:function(data, status, xhr)
+			{
+				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
+				// properties
+				this.transition = false;
+				this.method.error = 0;
+
+				// format
+				var format 	= (this.format = this.method.comment.tags.format || null);
 				if(format == 'html')
 				{
-					loadIframe(xhr);
-					return;
+					return this.loadIframe(xhr);
 				}
 
+				// handle json response
 				var contentType = xhr.getResponseHeader('Content-Type');
-				//console.log(contentType);
-
 				if(contentType === 'application/json')
 				{
-					setFormat('json');
-					$($output).JSONView(data);
+					this.format = 'json';
+					$output.JSONView(data);
 					return;
 				}
 
-
+				// content
 				$output.html(data);
 
-			}, function(xhr, status, message)
+			},
+
+			onFail:function(xhr, status, message)
 			{
-				setFormat('error');
-				loadIframe(xhr);
-			});
-		}
+				this.format = 'error';
+				this.loadIframe(xhr);
+				this.method.error = 1;
+			},
 
-	
-	// ------------------------------------------------------------------------------------------------
-	// handlers
-
-		function onCommandClick(event)
-		{
-			// event
-			event.preventDefault();
-
-			// variables
-			var $link 	= $(this);
-			var title 	= $link.attr('title');
-			var url 	= $link.attr('href');
-
-			// load
-			server.html(url, function(html)
+			onComplete:function()
 			{
-				setMode('help');
-				setTitle(title, '');
-				$output.html(html);
-			});
-		}
-
-		function onControllerClick(event)
-		{
-			// event
-			event.preventDefault();
-
-			// variables
-			var $link   = updateList(this);
-			var url     = $link.attr('href');
-			loadController(url, 'url');
-		}
-
-		function onMethodClick(event)
-		{
-			// event
-			if(event.ctrlKey)
-			{
-				return;
-			}
-			event.preventDefault();
-
-			// variables
-			var $link   	= updateList(this);
-			var index   	= $link.parent().index();
-			var method  	= controller.methods[index];
-			loadMethod(method);
-		}
-
-	// ------------------------------------------------------------------------------------------------
-	// setup
-
-		function setupRouter()
-		{
-			// clear and reset history
-			if(History.getCurrentIndex() !== 0)
-			{
-				window.location.replace('/sketchpad/');
+				console.info('Ran "%s" in %d ms', this.lastUrl, new Date - this.date);
+				this.loading 	= this.$root.server.count != 0;
 			}
 
-			// routing
-			router = new Router();
-			router.route('*path', function(path)
+	}
+
+});
+
+function UserHistory(app)
+{
+	this.app = app;
+
+	// setup base route
+	this.base = $('meta[name="route"]').attr('content');
+
+	// fwd hndler
+	History.Adapter.bind(window,'statechange',function(){
+		console.log('push')
+		var State = History.getState();
+	});
+
+	// back handler
+	window.onpopstate = this.onPopState.bind(this);
+
+	this.updateRoute();
+}
+
+UserHistory.prototype =
+{
+	app:null,
+
+	base:'',
+
+	pushState:function(route)
+	{
+		History.pushState(null, this.getTitle(route), route);
+	},
+
+	onPopState:function(event)
+	{
+		console.log('pop')
+		var state = History.getStateById(event.state);
+		if(state)
+		{
+			document.title = state.title;
+		}
+		this.updateRoute();
+	},
+
+	// update app
+	updateRoute:function(event)
+	{
+		this.app.route = window.location.pathname;
+	},
+
+	getTitle:function(route)
+	{
+		return 'Sketchpad - ' + this.getRelativeRoute(route);
+	},
+
+	getRelativeRoute:function(route)
+	{
+		route = route || this.app.route;
+		return route.substr(this.base.length);
+	},
+
+	isHome:function()
+	{
+		return this.getRelativeRoute() == '';
+	}
+
+};
+function Server()
+{
+	// setup base route
+	this.base = $('meta[name="route"]').attr('content');
+}
+
+Server.prototype =
+{
+
+		base:'',
+
+		requestId:0,
+
+		count:0,
+
+
+	// ------------------------------------------------------------------------------------------------
+	// methods
+
+		/**
+		 * Calls a sketchpad route and returns the result
+		 *
+		 * @param route			The full route, including the '/sketchpad/' portion
+		 * @param onSuccess
+		 * @param onFail
+		 * @returns {*}
+		 */
+		call:function(route, onSuccess, onFailure)
+		{
+			var url = location.origin + this.getCallUrl(route);
+			this.count++;
+			return $
+				.get(url)
+				.done(this.getSuccessCallback(onSuccess))
+				.fail(this.getFailureCallback(onFailure));
+		},
+
+		/**
+		 * Opens a sketchpad route in a new window
+		 *
+		 * @param url
+		 */
+		open:function(route)
+		{
+			window.open(this.getCallUrl(route));
+		},
+
+		/**
+		 * Requests information from the server
+		 *
+		 * @param route			The partial route, from '/sketchpad/' onwards
+		 * @param onSuccess
+		 * @returns {*}
+		 */
+		load:function(route, onSuccess)
+		{
+			var url = this.base + route;
+			return $.get(url, onSuccess);
+		},
+
+	// ------------------------------------------------------------------------------------------------
+	// utilities
+
+		isLastRequest:function(xhr)
+		{
+			this.count--;
+			return this.requestId == xhr.getResponseHeader('X-Request-ID');
+		},
+
+		getSuccessCallback:function(callback)
+		{
+			return function(data, status, xhr)
 			{
-				var $a = $nav.find('a[href="' +path+ '"]');
-				console.log($a);
-				if($a.length)
+				if(this.isLastRequest(xhr))
 				{
-					updateList($a);
+					callback(data, status, xhr);
 				}
-				console.log(arguments);
-				//$('#target').attr('src', '/' + window.location.hash.substr(1));
-				//$('#target').attr('src', path);
-			});
-			router.start();
-		}
+			}.bind(this);
+		},
 
-		function setupNav()
+		getFailureCallback:function(callback)
 		{
-			$nav
-				.on('click', 'a.controller', onControllerClick)
-				.on('click', 'a.method', onMethodClick);
-			$body
-				.on('click', 'a.command', onCommandClick);
-		}
+			return function(xhr, status, message)
+			{
+				if(this.isLastRequest(xhr))
+				{
+					callback(xhr, status, message);
+				}
+			}.bind(this);
+		},
 
-	
-		function onReady()
+		getCallUrl:function(url)
 		{
-			// elements
-			$body        	= $('body');
-			$nav        	= $('#nav');
-			$controllers	= $('#controllers');
-			$methods    	= $('#methods');
-			$output     	= $('#output');
-			$info       	= $('#info');
-
-			// data
-			var json		= $.trim($('#controller').text());
-			if(json)
-			{
-				controller		= JSON.parse(json);
-				server			= new Server();
-
-				// start
-				//setupRouter();
-				setupNav();
-			}
-
-			// livereload
-			if(window._onLiveReloadFileChanged instanceof Function)
-			{
-				reloader = new LiveReloader(window);
-			}
+			return url.replace(/\/$/, '') + '?call=1&requestId=' + (++this.requestId);
 		}
-		
-	
+
+};
+
+$(function(){
+
 	// ------------------------------------------------------------------------------------------------
-	// start
-		
-		$(onReady);
+	// app
 	
-}(jQuery, window));
+		var app = window.app = new Vue(vm);
+
+
+	// ------------------------------------------------------------------------------------------------
+	// livereload
+
+		// store original callback
+		window.__onLiveReloadFileChanged = window._onLiveReloadFileChanged;
+	
+		// proxy livereload function
+		window._onLiveReloadFileChanged = function(file)
+		{
+			// intercept controller updates
+			if (/Controller\.php/.test(file.path)) 
+			{
+				app.reloadController(file.path);
+				return false;
+			}
+			else 
+			{
+				window.__onLiveReloadFileChanged(file);
+			}
+		}
+
+});
+

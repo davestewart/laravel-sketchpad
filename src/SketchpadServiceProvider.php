@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad;
 
+use davestewart\sketchpad\middleware\RequestId;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Support\ServiceProvider;
 
@@ -32,7 +33,7 @@ class SketchpadServiceProvider extends ServiceProvider
 	 *
 	 * @param Sketchpad $sketchpad
 	 */
-	public function boot(Sketchpad $sketchpad)
+	public function boot(Sketchpad $sketchpad, \Illuminate\Contracts\Http\Kernel $kernel, \Illuminate\Routing\Router $router)
 	{
 		// ------------------------------------------------------------------------------------------------
 		// variables
@@ -78,10 +79,6 @@ class SketchpadServiceProvider extends ServiceProvider
 			], 'examples');
 
 
-		// ------------------------------------------------------------------------------------------------
-		// initialize class
-
-			$sketchpad->init();
 	}
 
 }

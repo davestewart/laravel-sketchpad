@@ -2,6 +2,21 @@
 // BOOTSTRAP
 // ------------------------------------------------------------------------------------------------
 
+	// override stupid bootstrap modal animation
+	.modal{
+		top:0% !important;
+		transition: opacity 0.2s;
+		top:0%;
+
+		.modal-dialog{
+			transition: none !important;
+			-webkit-transform:none !important;
+			transform:none !important;
+
+		}
+	}
+
+/*
 	.modal{
 		z-index: 100000000;
 	}
@@ -12,24 +27,36 @@
 		display: flex;
 		align-items: center;
 		margin: 0;
+		margin-top:-10%;
 	}
+
+	*/
 
 	.modal-content {
 		margin: 0 auto;
+		width:700px;
+
+		box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+
+		.modal-title{
+			margin-top:0 !important;
+		}
+	}
+
+	.modal-backdrop{
+		background-color: #FFF;
+
+		&.in{
+			opacity: 0.8;
+		}
 	}
 
 	.sketchpad-container {
-
 		max-width: 1570px;
-
 		padding-left: 15px;
 		padding-right: 15px;
 		margin-left: auto;
 		margin-right: auto;
-
-		#nav{
-			// max-width: 600px;
-		}
 	}
 
 	@media (min-width: 1600px){
@@ -48,3 +75,8 @@
 		outline:1px solid red;
 	}
 */
+
+input:focus {
+	color: rgb(204, 0, 0);
+	outline: none;
+}

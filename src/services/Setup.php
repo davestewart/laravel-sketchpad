@@ -73,6 +73,40 @@ class Setup
 			return view('sketchpad::setup.pages.' . $this->view, array_merge($data, $vars));
 		}
 
+		public function makeConfig($input)
+		{
+
+			// config
+			$config         = config_path('sketchpad.php');
+			$contents       = file_exists($config)
+								? file_get_contents($config)
+								: file_get_contents(base_path('vendor/davestewart/sketchpad/publish/config/config.php'));
+
+			// helper function
+			$update = function ($name, $trim) use($input, & $contents)
+			{
+				$value      = $input[$name];
+				$value      = trim($value, '\\/');
+				$value      = trim($value, $trim) . $trim;
+				$contents   = preg_replace("/('$name'[^']+?)'([^']+?)'/", "$1'$value'", $contents);
+			};
+
+			// massage input
+			$update('route', '/');
+			$update('path', '/');
+			$update('namespace', '\\');
+			$update('assets', '/');
+
+			// update double-slashes
+			$contents       = str_replace('\\', '\\\\', $contents);
+
+			// write the file
+			file_put_contents($config, $contents);
+
+			// run the next stage of setup
+			return true;
+		}
+
 
 	// ------------------------------------------------------------------------------------------------
 	// utility methods

@@ -2,11 +2,12 @@
 
 use App;
 use davestewart\sketchpad\objects\AbstractService;
-use davestewart\sketchpad\objects\SketchpadConfig;
-use davestewart\sketchpad\objects\file\Folder;
 use davestewart\sketchpad\objects\reflection\Controller;
+use davestewart\sketchpad\objects\scanners\Finder;
+use davestewart\sketchpad\objects\scanners\Scanner;
+use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\objects\route\ControllerReference;
-use davestewart\sketchpad\objects\route\FolderReference;
+use davestewart\sketchpad\traits\GetterTrait;
 use Illuminate\Support\Facades\Input;
 use ReflectionMethod;
 use Route;
@@ -15,10 +16,13 @@ use Route;
 /**
  * Class Sketchpad
  *
- * @package davestewart\sketchpad\services
+ * @property Router $router
+ * @property SketchpadConfig $config
  */
-class Sketchpad extends AbstractService
+class Sketchpad
 {
+
+	use GetterTrait;
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// PROPERTIES
@@ -39,197 +43,220 @@ class Sketchpad extends AbstractService
 	// -----------------------------------------------------------------------------------------------------------------
 	// INSTANTIATION
 	
-		public function init()
+		public function __construct()
 		{
 			// config
-			$config         = new SketchpadConfig();
-			$this->path     = base_path($config->path);
-			$this->route    = $config->route;
-			$this->config   = $config;
-
-			// determine remaining controller routes
-			$this->router   = new Router($this->route, $this->path, $config->namespace);
+			$config             = new SketchpadConfig();
+			$this->config       = $config;
 
 			// routing
-			$parameters     =
+			$parameters         =
 			[
 				'namespace'     => 'davestewart\sketchpad\controllers',
 				'middleware'    => $config->middleware,
 			];
 
-			// add main sketchpad routes
+			// setup sketchpad routes
 			Route::group($parameters, function ($router) use ($config)
 			{
 				Route::post ($config->route . ':setup', 'SketchpadController@setup');
 				Route::post ($config->route . ':create', 'SketchpadController@create');
-				Route::get($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
+				Route::get  ($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
 				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
 			});
 
+			/*
+			dump($config);
 			// debug
-			//dd($this->router->routes);
+			$finder     = new Finder();
+			$finder->start();
+
+			pr($finder);
+			$scanner = new Scanner($finder->path . 'Sketchpad/');
+			$scanner->start();
+
+			*/
 		}
 
 
 	// -----------------------------------------------------------------------------------------------------------------
-	// ACCESSORS
+	// SETUP
+
+		public function init($scan = false)
+		{
+			$this->router = new Router($this->config->route, $this->config->path);
+			if($scan)
+			{
+				//pr($this->router);
+				$this->router->scan();
+				//pd($this->router);
+			}
+			return $this;
+		}
 
 		public function getVariables()
 		{
-			$data['route']      = $this->route;
-			$data['theme']      = $this->config->theme;
-			$data['assets']     = $this->config->assets;
-			$data['routes']     = $this->router->routes;
+			$data =
+			[
+				'route'     => $this->config->route,
+				'assets'    => $this->config->assets,
+			];
 			return $data;
 		}
+	
 
-		/**
-		 * Gets the core data for the main sketchpad view
-		 *
-		 * @param      $path
-		 * @param null $controller
-		 * @return array
-		 */
-		public function getData($path, $controller = null)
+	// ------------------------------------------------------------------------------------------------
+	// TASKS
+
+		public function getPage($page)
 		{
-			$data = $this->getVariables();
-			$data['folder']     = $this->getFolder($path);
-			if($controller)
-			{
-				$data['controller'] = $controller;
-			}
-			return $data;
+			$data               = $this->getVariables();
+			$data['folders']    = $this->init(true)->router->getFolders();
+			return view('sketchpad::pages.' . $page, $data);
 		}
-
-		/**
-		 * Gets folder data (subfolders and controllers) for an absolute file path
-		 *
-		 * @param   string $path
-		 * @return  array
-		 */
-		public function getFolder($path = '', $recursive = false)
-		{
-			if($path == '')
-			{
-				$path = $this->path;
-			}
-			return file_exists($path)
-						? new Folder($path, $recursive)
-						: null;
-		}
-
-		/**
-		 * Gets controller data for an absolute file path
-		 *
-		 * @param $path
-		 * @return Controller|null
-		 */
+	
 		public function getController($path)
 		{
-			return file_exists($path)
-				? new Controller($path)
-				: null;
-		}
-
-		/**
-		 * Determines the route uri for an absolute file path
-		 *
-		 * @param $path
-		 * @return string
-		 */
-		public function getRouteFromPath($path)
-		{
-			$path   = str_replace($this->path, '', $path);
-			$path   = str_replace('Controller.php',  '', $path);
-			$path   = $this->folderize(strtolower($path));
-			return '/' . $this->route . $path;
+			$this->init();
+			if(file_exists($path))
+			{
+				return $this->router->scanner->makeController($path);
+			}
+			return null;
 		}
 
 
 	// ------------------------------------------------------------------------------------------------
 	// ROUTING METHODS
 
-		public function call($uri = '')
+		/**
+		 * Index route, shows the main Sketchpad UI
+		 *
+		 * @return \Illuminate\View\View
+		 */
+		public function index()
 		{
-			// get variables
-			$html   = Input::get('html', 0);
-			$json   = Input::get('json', 0);
-			$base   = $this->route;
-			$ref    = $this->router->getRoute($base . $uri);
+			// set up the router and rescan to get all data
+			$this->init(true);
 
-			// attempt to call controller
-			if($ref instanceof ControllerReference)
+			// build the index page
+			$data           = $this->getVariables();
+			$data['app']    = file_get_contents(base_path('vendor/davestewart/sketchpad/resources/views/vue/app.vue'));
+			$data['data']   =
+			[
+				'controllers'   => $this->router->getControllers(),
+			];
+
+			// return
+			return view('sketchpad::index', $data);
+		}
+
+		/**
+		 * Initial function that works out the controller, method and parameters to call from the URI string
+		 *
+		 * @param string $route
+		 * @return mixed|string
+		 */
+		public function call($route = '')
+		{
+			// set up the router, but don't scan
+			$this->init(1);
+
+			//pd($this->router);
+
+			/** @var ControllerReference $ref */
+			$ref = $this->router->getRoute($this->config->route . $route);
+
+			// controller has method
+			if($ref instanceof ControllerReference && $ref->method)
 			{
-				// controller has method
-				if($ref->method)
+				// test controller / method exists
+				try
 				{
-					// test controller / method exists
-					try
+					new ReflectionMethod($ref->class, $ref->method);
+				}
+				catch(\Exception $e)
+				{
+					if($e instanceof \ReflectionException)
 					{
-						new ReflectionMethod($ref->class, $ref->method);
+						$sketchpad = str_replace($this->config->route, '', $ref->route) . $ref->method . '/';
+						$this->abort($sketchpad, 'method');
 					}
-					catch(\Exception $e)
-					{
-						if($e instanceof \ReflectionException)
-						{
-							$sketchpad = str_replace($base, '', $ref->route) . $ref->method . '/';
-							$this->abort($sketchpad, 'method');
-						}
-					}
-
-					// call and return the controller
-					return $this->router->call($ref->class, $ref->method, $ref->params);
 				}
 
-				// just controller
-				$controller = $this->getController($ref->path)->process();
-				if($json)
-				{
-					return json_encode($controller);
-				}
-				if($html)
-				{
-					$data = ['controller' => $controller];
-					return view('sketchpad::nav.methods', $data);
-				}
-				else
-				{
-					$data = $this->getData($ref->folder, $controller);
-					$data['uri']        = $this->route . $uri . '/';
-					return view('sketchpad::content.index', $data);
-				}
+				// setup headers for AJAX call matching
+				header('X-Request-ID:' . Input::get('requestId', ''));
 
+				// include utility methods for user
+				require __DIR__ . '/utils.php';
+
+				// get controller response
+				ob_start();
+				$response   = $this->exec($ref->class, $ref->method, $ref->params);
+				$content    = ob_get_contents();
+				ob_end_clean();
+
+				// return response or any echoed content
+				return $response
+					? $response
+					: $content;
 			}
 
-			// if folder, return the contents of that folder as json
-			if($ref instanceof FolderReference)
-			{
-				if($html || $json)
-				{
-					$data = $this->getFolder($ref->path);
-					return $json
-						? $data
-						: view('sketchpad::html.folder', compact('data'));
-				}
-				else
-				{
-					$data   = $this->getData($ref->path);
-					$folder = $data['folder'];
-					$folder->process();
-					$data['controller'] = $folder->controllers[0];
-					$data['uri']        = $this->route . $uri . '/';
-
-					return view('sketchpad::content.index', $data);
-				}
-			}
-
-			// otherwise, there's nothing to call, so 404
-			$this->abort($uri, 'path');
+			// if there's not a valid controller or method, it's a 404
+			$this->abort($route, 'path');
+			return false;
 		}
 
 
 	// ------------------------------------------------------------------------------------------------
 	// UTILITIES
+
+		/**
+		 * Calls a controller and methods, resolving any dependency injection
+		 *
+		 * @param   string      $controller     The FQ name of the controller
+		 * @param   string      $method         The name of the method
+		 * @param   array|null  $params         An optional arr ay of parameters
+		 * @return  mixed                       The result of the call
+		 */
+		public function exec($controller, $method, $params = null)
+		{
+			// method
+			$callable = $controller . '@' . $method;
+	
+			// call
+			if($params)
+			{
+				// variables
+				$values     = is_array($params) ? $params : explode('/', $params);
+				$ref        = new ReflectionMethod($controller, $method);
+				$params     = $ref->getParameters();
+				$args       = [];
+	
+				// map route segments to the method's parameters
+				foreach ($params as /** @var \ReflectionParameter */ $param)
+				{
+					// parse signature [match, optional, type, name, default]
+					preg_match('/<(required|optional)> (?:([\\\\a-z\d_]+) )?(?:\\$(\w+))(?: = (\S+))?/i', (string) $param, $matches);
+	
+					// assign untyped segments
+					if($matches[2] == null)
+					{
+						$args[$matches[3]] = array_shift($values);
+					}
+				}
+	
+				// append any remaining values
+				$values = array_merge($args, $values);
+	
+				// call
+				return App::call($callable, $values);
+			}
+			else
+			{
+				return App::call($callable);
+			}
+		}
 
 		protected function abort($uri, $type = '')
 		{
