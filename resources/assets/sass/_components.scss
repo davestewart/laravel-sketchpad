@@ -72,6 +72,8 @@
 
 		a.controller span.divider{
 
+			position: relative;
+
 			display: inline-block;
 			padding:0 3px;
 			color:#CCC;
@@ -79,6 +81,10 @@
 			li.active &{
 				opacity: 0.3;
 			}
+		}
+
+		a.method.error{
+			color:red;
 		}
 
 	}
@@ -152,7 +158,7 @@
 		margin:8px 12px;
 		background-image:url('images/ajax-loader.gif');
 		background-repeat: no-repeat;
-		transition: opacity 0.2s;
+		transition: opacity 0.1s;
 		opacity: 0;
 
 		#result.loading &{
@@ -172,6 +178,25 @@
 
 		#result.transition.loading & {
 			opacity: 0;
+		}
+
+	}
+
+
+	.table.debug{
+
+		th, td{
+			font-size: 13px;
+			padding:5px 8px;
+		}
+
+		thead tr {
+			background: inherit;
+		}
+
+		tbody th{
+			min-width: 100px;
+			color:#e74c3c;
 		}
 
 	}

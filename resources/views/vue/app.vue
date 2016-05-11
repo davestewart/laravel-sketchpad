@@ -56,11 +56,11 @@
 						@click.prevent="onMethodClick(method, this)"
 						>
 						<a
-							class="method"
+							:class="{method:1, error:method.error}"
 							title="{{ method.label }}"
 							href="{{ method.route }}"
 							>
-							{{ method.label }}
+							{{ $root.options.useLabels ? method.label : method.name + '()' }}
 						</a>
 						<p v-if="method.comment.intro">{{ method.comment.intro }}</p>
 					</li>

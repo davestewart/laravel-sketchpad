@@ -54,6 +54,10 @@
 		outline:1px solid red;
 	}
 */
+input:focus {
+  color: #cc0000;
+  outline: none; }
+
 #output pre.sf-dump,
 #output .jsonview {
   position: relative;
@@ -234,11 +238,14 @@ form .form-group:last-child {
     color: #ccc;
     font-style: normal; }
   #nav a.controller span.divider {
+    position: relative;
     display: inline-block;
     padding: 0 3px;
     color: #CCC; }
     li.active #nav a.controller span.divider {
       opacity: 0.3; }
+  #nav a.method.error {
+    color: red; }
 
 #info .info {
   /*
@@ -287,7 +294,7 @@ form .form-group:last-child {
   margin: 8px 12px;
   background-image: url("images/ajax-loader.gif");
   background-repeat: no-repeat;
-  transition: opacity 0.2s;
+  transition: opacity 0.1s;
   opacity: 0; }
   #result.loading #params nav .loader {
     opacity: 1; }
@@ -300,3 +307,14 @@ form .form-group:last-child {
     outline: 1px solid #DDD; }
   #result.transition.loading #output {
     opacity: 0; }
+
+.table.debug th, .table.debug td {
+  font-size: 13px;
+  padding: 5px 8px; }
+
+.table.debug thead tr {
+  background: inherit; }
+
+.table.debug tbody th {
+  min-width: 100px;
+  color: #e74c3c; }

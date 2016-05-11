@@ -16,6 +16,21 @@ Vue.component('result', {
 		}
 	},
 
+	/*
+	computed:
+	{
+		title:function()
+		{
+			return this.$root.options.useLabels ? this.method.label : this.method.name + '()';
+		},
+
+		comment:function()
+		{
+
+		}
+	},
+	*/
+
 	ready:function()
 	{
 		$output = $('#output');
@@ -59,7 +74,7 @@ Vue.component('result', {
 			{
 				// properties
 				var method = this.method;
-				this.setTitle(method.label, method.comment ? method.comment.intro : method.label);
+				this.setTitle(this.$root.options.useLabels ? method.label : method.name + '()', method.comment ? method.comment.intro : method.label);
 
 				// values
 				var values 	= method.params.map(function(e){ return e.value; });
@@ -105,6 +120,7 @@ Vue.component('result', {
 				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
 				// properties
 				this.transition = false;
+				this.method.error = 0;
 
 				// format
 				var format 	= (this.format = this.method.comment.tags.format || null);
@@ -131,6 +147,7 @@ Vue.component('result', {
 			{
 				this.format = 'error';
 				this.loadIframe(xhr);
+				this.method.error = 1;
 			},
 
 			onComplete:function()

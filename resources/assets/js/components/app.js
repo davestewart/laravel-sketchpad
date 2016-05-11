@@ -13,6 +13,10 @@ var vm =
 		data.controller = null;
 		data.method = null;
 		data.modal = {};
+		data.options =
+		{
+			useLabels:true
+		};
 
 		// return
 		return data;
@@ -135,7 +139,7 @@ var vm =
 			{
 				if(data)
 				{
-					var filtered = this.controllers.filter(function(c){ return c.path == data.path; });
+					var filtered = this.controllers.filter(function(c){ return c.path.toLowerCase() == data.path.toLowerCase(); });
 					if(filtered.length)
 					{
 						var found = filtered[0];

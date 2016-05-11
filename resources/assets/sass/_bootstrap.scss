@@ -75,3 +75,8 @@
 		outline:1px solid red;
 	}
 */
+
+input:focus {
+	color: rgb(204, 0, 0);
+	outline: none;
+}

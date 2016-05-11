@@ -1,4 +1,4 @@
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-striped debug">
 	<colgroup>
 		<col class="col-xs-1">
 		<col class="col-xs-7">
