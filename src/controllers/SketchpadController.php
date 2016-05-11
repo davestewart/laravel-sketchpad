@@ -40,42 +40,66 @@ class SketchpadController extends Controller
 	
 	
 	// ------------------------------------------------------------------------------------------------
-	// public methods
+	// main entry point
 
-		public function command($type, $data = null)
-		{
-			if($type == 'show')
-			{
-				return $this->sketchpad->getPage($data);
-			}
-			if($type == 'load')
-			{
-				return $this->sketchpad->getController($data);
-			}
-		}
-	
-		public function call($path = '')
+		/**
+		 * Main entry point for any non :command URIs
+		 *
+		 * Will trigger index or a controller/method call
+		 *
+		 * @param   Request     $request
+		 * @param   string      $path
+		 * @return  \Illuminate\View\View|mixed|string
+		 */
+		public function call(Request $request, $path = '')
 		{
 			// instantiate setup
 			$setup = new Setup();
 			
 			// return a view
-			return $setup->check()
-				? $this->sketchpad->call($path)
-				: $setup->view();
+			if($setup->check())
+			{
+				if(Input::get('call') || $request->isMethod('post'))
+				{
+					return $this->sketchpad->call($path);
+				}
+				return $this->sketchpad->index();
+			}
+			return $setup->view();
 		}
 
-		public function setup(Request $request)
+
+	// ------------------------------------------------------------------------------------------------
+	// main app methods
+
+		/**
+		 * Handles commands from the main UI
+		 *
+		 * @param   string      $type
+		 * @param   null        $data
+		 * @return  \Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+		 */
+		public function command($type, $data = null)
 		{
-			// instantiate setup
-			$setup  = new Setup();
-			$input  = $request->all();
-			$result = $setup->makeConfig($input);
-				
-			// run the next stage of setup
-			return redirect('/' .  $input['route']);
+			// shows an html page
+			if($type == 'show')
+			{
+				return $this->sketchpad->getPage($data);
+			}
+			
+			// loads controller data
+			if($type == 'load')
+			{
+				return response()->json($this->sketchpad->getController($data));
+			}
 		}
-	
+
+		/**
+		 * Creates a new controller
+		 *
+		 * @method  POST
+		 * @param   Request     $request
+		 */
 		public function create(Request $request)
 		{
 			// get input
@@ -89,9 +113,28 @@ class SketchpadController extends Controller
 	
 			// create
 		}
+
 	
 	// ------------------------------------------------------------------------------------------------
-	// protected methods
+	// setup methods
+
+		/**
+		 * Handles form data from the setup controller
+		 *
+		 * @method  POST
+		 * @param   Request     $request
+		 * @return  \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+		 */
+		public function setup(Request $request)
+		{
+			// instantiate setup
+			$setup  = new Setup();
+			$input  = $request->all();
+			$result = $setup->makeConfig($input);
+
+			// run the next stage of setup
+			return redirect('/' .  $input['route']);
+		}
 
 
 	

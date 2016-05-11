@@ -64,6 +64,7 @@ class Method implements JsonSerializable
 			$data->label        = $this->label;
 			$data->route        = $this->route;
 			$data->signature    = $this->signature;
+			$data->error        = 0;
 
 			// complex
 			if( ! $simple )
