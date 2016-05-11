@@ -221,7 +221,10 @@ form .form-group:last-child {
   body[data-mode="help"] #nav:hover {
     opacity: 1; }
   #nav .nav > li a {
-    padding: 4px 9px; }
+    padding: 4px 9px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; }
   #nav .nav > li p {
     padding-left: 9px;
     font-size: 0.8em;
@@ -275,11 +278,25 @@ form .form-group:last-child {
   #info nav input:not([type="checkbox"]) {
     width: 100px; }
 
+#params nav .loader {
+  position: absolute;
+  display: block;
+  width: 16px;
+  height: 16px;
+  right: 0;
+  margin: 8px 12px;
+  background-image: url("images/ajax-loader.gif");
+  background-repeat: no-repeat;
+  transition: opacity 0.2s;
+  opacity: 0; }
+  #result.loading #params nav .loader {
+    opacity: 1; }
+
 #output {
   transition: opacity 0.2s; }
   #output iframe.error {
     width: 100%;
     height: 2000px;
     outline: 1px solid #DDD; }
-  #output.loading {
+  #result.transition.loading #output {
     opacity: 0; }

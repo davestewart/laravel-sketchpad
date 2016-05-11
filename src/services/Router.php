@@ -48,7 +48,7 @@ class Router extends AbstractService
 		 */
 		public function __construct($route, $path)
 		{
-			$this->scanner      = new Scanner($path, $route);
+			$this->scanner = new Scanner($path, $route);
 		}
 
 
@@ -144,7 +144,7 @@ class Router extends AbstractService
 
 		public function getRoutes()
 		{
-			return $this->scanner->routes;
+			return $this->scanner->getRoutes();
 		}
 
 		public function getControllers()

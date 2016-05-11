@@ -15,11 +15,11 @@ Vue.component('navigation', {
 				this.$dispatch('onNavClick', controller.route);
 			},
 
-			onMethodClick:function(method, element, $http)
+			onMethodClick:function(method)
 			{
 				if(event.metaKey || event.ctrlKey)
 				{
-					return server.open(event.target.href);
+					return this.$root.server.open(event.target.href);
 				}
 				this.$dispatch('onNavClick', method.route);
 			},

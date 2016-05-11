@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\controllers;
 
+use davestewart\sketchpad\middleware\RequestId;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
@@ -8,8 +9,7 @@ use Illuminate\Support\Facades\Input;
 use Response;
 
 /**
- * Class TestController
- * @package app\Http\Controllers\test
+ * Class SketchpadController
  */
 class SketchpadController extends Controller
 {
@@ -44,9 +44,14 @@ class SketchpadController extends Controller
 
 		public function command($type, $data = null)
 		{
-			$data = $this->sketchpad->getVariables();
-			$data['folders'] = $this->sketchpad->init(true)->router->getFolders();
-			return view('sketchpad::pages.' . $type, $data);
+			if($type == 'show')
+			{
+				return $this->sketchpad->getPage($data);
+			}
+			if($type == 'load')
+			{
+				return $this->sketchpad->getController($data);
+			}
 		}
 	
 		public function call($path = '')
@@ -62,35 +67,11 @@ class SketchpadController extends Controller
 
 		public function setup(Request $request)
 		{
-	
-			// config
-			$input          = $request->all();
-			$config         = config_path('sketchpad.php');
-			$contents       = file_exists($config)
-								? file_get_contents($config)
-								: file_get_contents(base_path('vendor/davestewart/sketchpad/publish/config/config.php'));
-
-			// helper function
-			$update = function ($name, $trim) use($input, & $contents)
-			{
-				$value      = $input[$name];
-				$value      = trim($value, '\\/');
-				$value      = trim($value, $trim) . $trim;
-				$contents   = preg_replace("/('$name'[^']+?)'([^']+?)'/", "$1'$value'", $contents);
-			};
-	
-			// massage input
-			$update('route', '/');
-			$update('path', '/');
-			$update('namespace', '\\');
-			$update('assets', '/');
-	
-			// update double-slashes
-			$contents       = str_replace('\\', '\\\\', $contents);
-	
-			// write the file
-			file_put_contents($config, $contents);
-
+			// instantiate setup
+			$setup  = new Setup();
+			$input  = $request->all();
+			$result = $setup->makeConfig($input);
+				
 			// run the next stage of setup
 			return redirect('/' .  $input['route']);
 		}
@@ -109,32 +90,11 @@ class SketchpadController extends Controller
 			// create
 		}
 	
-	
-	
 	// ------------------------------------------------------------------------------------------------
-	// depreciated methods
+	// protected methods
 
-		public function index()
-		{
-			return view('sketchpad::index', $this->sketchpad->getData(''));
-		}
 
-		public function view($path)
-		{
-			return view('sketchpad::index', $this->sketchpad->getData($path));
-		}
 	
-		public function get($path = '')
-		{
-			return Response::json($this->sketchpad->getFolder($path));
-		}
-	
-		public function all($path = '')
-		{
-			return Response::json($this->sketchpad->getFolder($path, true));
-		}
-	
-
 
 }
 
