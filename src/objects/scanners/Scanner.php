@@ -1,12 +1,10 @@
 <?php namespace davestewart\sketchpad\objects\scanners;
 
-use App;
 use davestewart\sketchpad\objects\reflection\Controller;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\objects\route\FolderReference;
 use davestewart\sketchpad\traits\GetterTrait;
-use Route;
-use Session;
+
 
 /**
  * Router
@@ -73,30 +71,6 @@ class Scanner extends AbstractScanner
 			$this->controllers  = [];
 		}
 
-		public static function make($path, $route)
-		{
-			return new self($path, $route = null);
-		}
-
-
-	// -----------------------------------------------------------------------------------------------------------------
-	// MAKING METHODS
-
-		/**
-		 * Make a controller instance from an absolute path
-		 *
-		 * The method works out the correct route and passes it in
-		 *
-		 * @param   string      $abspath        The absolute path to the controller
-		 * @return  Controller
-		 */
-		public function makeController($abspath)
-		{
-			$relpath        = substr($abspath, strlen($this->path));
-			$route          = strtolower($this->route . preg_replace('/Controller\.php$/', '', $relpath)) . '/';
-			return new Controller($abspath, $route);
-		}
-
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// SCANNING METHODS
@@ -104,39 +78,6 @@ class Scanner extends AbstractScanner
 		public function start()
 		{
 			$this->scan();
-			$this->save();
-			return $this;
-		}
-
-		public function getRoutes()
-		{
-			// existing routes
-			if($this->routes)
-			{
-				return $this->routes;
-			}
-
-			// saved routes
-			$routes = $this->load()->routes;
-			if($routes)
-			{
-				return $routes;
-			}
-
-			// scan routes
-			$this->start();
-			return $this->routes;
-		}
-
-		public function save()
-		{
-			Session::put('sketchpad.routes', $this->routes);
-			return $this;
-		}
-
-		public function load()
-		{
-			$this->routes = Session::get('sketchpad.routes');
 			return $this;
 		}
 
@@ -154,7 +95,7 @@ class Scanner extends AbstractScanner
 		protected function scan($path = '')
 		{
 			// variables
-			$root               = $this->folderize($this->path . $path);
+			$root               = AbstractScanner::folderize($this->path . $path);
 			$files              = array_diff(scandir($root), ['.', '..']);
 
 			// folders
@@ -174,7 +115,7 @@ class Scanner extends AbstractScanner
 				}
 				else if($this->isController($abspath))
 				{
-					$this->addController($abspath);
+					$this->addController($abspath, $path);
 				}
 			}
 		}
@@ -196,14 +137,20 @@ class Scanner extends AbstractScanner
 		 *
 		 * @param          $abspath
 		 */
-		protected function addController($abspath)
+		protected function addController($abspath, $route)
 		{
-			$controller     = $this->makeController($abspath);
-			$ref            = new ControllerReference($controller->route, $controller->path, $controller->classpath);
+			// variables
+			$name           = pathinfo($abspath, PATHINFO_FILENAME);
+			$segment        = preg_replace('/Controller$/', '/', $name);
+			$route          = strtolower($this->route . $route . $segment);
 
-			// set route
+			// objects
+			$controller     = new Controller($abspath, $route);
+			$ref            = new ControllerReference($route, $controller->path, $controller->classpath);
+
+			// assign objects
 			$this->controllers[] = $controller;
-			$this->addRoute($controller->route, $ref);
+			$this->addRoute($route, $ref);
 		}
 
 		/**

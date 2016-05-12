@@ -58,7 +58,6 @@ class Controller extends File implements Arrayable, JsonSerializable
 
 			// class
 			$class              = $this->getClassPath($path);
-			// ucfirst(str_replace('/', '\\', str_replace('.php', '', str_replace(base_path() . '/', '', $path))));
 			$this->ref          = new ReflectionClass($class);
 	
 			// properties
