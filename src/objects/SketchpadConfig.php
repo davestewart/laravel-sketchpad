@@ -21,18 +21,11 @@ class SketchpadConfig
 		public $route;
 
 		/**
-		 * The absolute path to the Sketchpad controllers folder
+		 * An array of paths to controller folders
 		 *
-		 * @var string $path
+		 * @var string[] $path
 		 */
-		public $path;
-
-		/**
-		 * The base namespace for the Sketchpad controllers folder
-		 *
-		 * @var string $namespace
-		 */
-		public $namespace;
+		public $paths;
 
 		/**
 		 * The public-relative path to the assets folder
@@ -62,13 +55,15 @@ class SketchpadConfig
 					$this->$key = $value;
 				}
 
+				// update trailing slash on paths
+				$this->paths = array_map(function ($path)
+				{
+					return rtrim($path, '/') . '/';
+				}, $this->paths);
+
 				// ensure route is bounded by slashes to prevent concatenation issue later
 				$this->route    = '/' . trim($this->route, '/') . '/';
-
-				// convert the relative path to an absolute one
-				$this->path     = base_path($this->path);
 			}
 		}
-
 
 }

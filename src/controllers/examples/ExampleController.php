@@ -1,6 +1,9 @@
-<?php namespace App\Http\Controllers\Sketchpad;
+<?php namespace davestewart\sketchpad\controllers\examples;
 
+use davestewart\sketchpad\objects\SketchpadConfig;
 use Illuminate\Routing\Controller;
+use Illuminate\View\FileViewFinder;
+use Illuminate\View\View;
 
 /**
  * An example controller to demonstrate some of Sketchpad's functionality
@@ -10,14 +13,25 @@ use Illuminate\Routing\Controller;
 class ExampleController extends Controller
 {
 
+
 	/**
-	 * Simple "Hello World" example
+	 * Simple "Hello World"
 	 *
 	 * @param string $name
 	 */
 	public function hello($name = 'world')
 	{
-		echo "Hello $name!";
+		echo "Hello " . $name;
+	}
+
+	/**
+	 * Simple "Hello World" example
+	 *
+	 * @param int|number $id
+	 */
+	public function user($id = 1)
+	{
+		echo $id;
 	}
 
 	/**
@@ -49,14 +63,14 @@ class ExampleController extends Controller
 
 	/**
 	 * Prints the app's current config array
-	 * 
+	 *
 	 * Note the use of the @output tag to format the result
-	 * 
+	 *
 	 * @format text
 	 */
 	public function printConfig()
 	{
-		print_r(app()->config->all());
+		pr(app()->config->all());
 	}
 
 	/**
@@ -67,6 +81,21 @@ class ExampleController extends Controller
 	public function iframe()
 	{
 		phpinfo();
+	}
+
+	/**
+	 * Uses the html format to instruct Sketchpad to show the content of a curl
+	 *
+	 * @format html
+	 */
+	public function curl($url = 'davestewart.io')
+	{
+		$ch		= curl_init('http://' . $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$data = curl_exec($ch);
+		curl_close($ch);
+
+		echo $data;
 	}
 
 	/**
@@ -130,5 +159,27 @@ class ExampleController extends Controller
 	public function exception()
 	{
 		throw new \Exception('Random exception!');
+	}
+
+	/**
+	 * Format data in a tree format
+	 */
+	public function formatDump()
+	{
+		$model = new SketchpadConfig();
+		dump($model);
+	}
+
+	/**
+	 * Output data in a table format. Add keys in the input to drill down
+	 *
+	 * @param string $config
+	 */
+	public function formatTable($config = '')
+	{
+		$data = $config
+			? config($config)
+			: app()->config->all();
+		tb($data);
 	}
 }

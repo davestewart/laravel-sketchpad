@@ -1,12 +1,13 @@
 <?php namespace davestewart\sketchpad\services;
 
-use App;
+use davestewart\sketchpad\objects\reflection\Controller;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\objects\route\FolderReference;
+use davestewart\sketchpad\objects\route\RouteReference;
+use davestewart\sketchpad\objects\scanners\AbstractScanner;
 use davestewart\sketchpad\objects\scanners\Scanner;
 use davestewart\sketchpad\traits\GetterTrait;
-use Route;
-
+use Session;
 /**
  * Router
  *
@@ -20,17 +21,32 @@ use Route;
  */
 class Router
 {
-	
+
 	use GetterTrait;
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// PROPERTIES
 
 		/**
-		 * @var Scanner
+		 * @var string
 		 */
-		protected $scanner;
-
+		protected $route;
+	
+		/**
+		 * @var string[]
+		 */
+		protected $paths;
+	
+		/**
+		 * @var RouteReference[]
+		 */
+		protected $routes;
+	
+		/**
+		 * @var Controller[]
+		 */
+		protected $controllers;
+		
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// INSTANTIATION
@@ -42,27 +58,45 @@ class Router
 		 *
 		 * Parameters are all from the Sketchpad config file
 		 *
-		 * @param   string   $route         the base r
-		 * @param   string   $path
+		 * @param   string      $route      the base route for all controllers
+		 * @param   string[]    $paths      an array of paths
 		 */
-		public function __construct($route, $path)
+		public function __construct($route, $paths)
 		{
-			$this->scanner = new Scanner($path, $route);
+			$this->route = $route;
+			$this->paths = (array) $paths;
 		}
 
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// METHODS
-	
+
 		public function scan()
 		{
-			$this->scanner->start();
+			// reset
+			$this->routes       = [];
+			$this->controllers  = [];
+
+			// scan
+			foreach ($this->paths as $path)
+			{
+				$scanner            = new Scanner(base_path($path), $this->route);
+				$scanner->start();
+				$this->routes       = array_merge($this->routes, $scanner->routes);
+				$this->controllers  = array_merge($this->controllers, $scanner->controllers);
+			}
+			
+			// save
+			Session::put('sketchpad.routes', $this->routes);
+
+			// return
+			return $this;
 		}
-	
+
 		/**
 		 * Reverse route lookup
 		 *
-		 * Compares a given route against routes determined when the controllers folder was processed
+		 * Compares a given route against routes determined when controllers were scanned
 		 *
 		 * Determines the controller, method and parameters to call if there is a match
 		 *
@@ -72,8 +106,8 @@ class Router
 		public function getRoute($route)
 		{
 			// variables
-			$route      = $this->scanner->folderize($route);
-			$routes     = $this->scanner->getRoutes();
+			$route      = AbstractScanner::folderize($route);
+			$routes     = $this->getRoutes();
 
 			// debug
 			//pr($route, $routes);
@@ -136,55 +170,55 @@ class Router
 			return null;
 		}
 
-		public function getFolders()
-		{
-			return array_filter($this->scanner->routes, function($ref){ return $ref instanceof FolderReference; });
-		}
-
 		public function getRoutes()
 		{
-			return $this->scanner->getRoutes();
+			// existing routes
+			if($this->routes)
+			{
+				return $this->routes;
+			}
+
+			// saved routes
+			$routes = Session::get('sketchpad.routes');
+			if($routes)
+			{
+				$this->routes = $routes;
+				return $routes;
+			}
+
+			// scan routes
+			$this->scan();
+			return $this->routes;
+		}
+
+		public function getFolders()
+		{
+			return array_filter($this->routes, function($ref){ return $ref instanceof FolderReference; });
 		}
 
 		public function getControllers()
 		{
-			return $this->scanner->controllers;
+			return $this->controllers;
 		}
 
-
-	// ------------------------------------------------------------------------------------------------
-	// ROUTING
-
-		/**
-		 * Wildcard routing method
-		 *
-		 * @param   string          $route          Base route, i.e. 'test'
-		 * @param   string          $controller     Path to controller, i.e. 'TestController'
-		 * @param   string|array    $verbs          Optional Route verb(s), i.e. 'get'; defaults to ['get', 'post']
-
-		 * @usage   wildcard('test', 'TestController');
-		 * @usage   wildcard('test', 'TestController', ['get']);
-		 * @usage   wildcard('test', 'Test\TestController');
-		 *
-		 * @example	http://localhost/test/hello/world
-		 *
-		 * @author	Dave Stewart | dave@davestewart.io
-		 */
-		protected function wildcard($route, $controller, $verbs = ['get', 'post'])
+		public function getController($path)
 		{
-			// variables
-			$stack      = Route::getGroupStack();
-			$namespace  = end($stack)['namespace'];
-			$controller = $namespace . '\\' . $controller;
-
-			// routing
-			Route::match($verbs, rtrim($route, '/') . '/{method}/{params?}', function($method, $params = null) use ($controller)
+			if(file_exists($path))
 			{
-				Router::call($controller, $method, $params);
+				// variables
+				$path   = strtolower($path);
+				$routes = $this->getRoutes();
 
-			})->where('params', '.*');
+				// filter
+				foreach($routes as /** @var ControllerReference */$ref)
+				{
+					if(strtolower($ref->path) == $path)
+					{
+						return new Controller($ref->path, $ref->route);
+					}
+				}
+			}
+			return null;
 		}
-
-
-
+	
 }

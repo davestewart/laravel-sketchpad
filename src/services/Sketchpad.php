@@ -45,7 +45,7 @@ class Sketchpad
 	
 		public function __construct()
 		{
-			$this->config = new SketchpadConfig();;
+			$this->config = new SketchpadConfig();
 		}
 
 
@@ -54,7 +54,7 @@ class Sketchpad
 
 		public function init($scan = false)
 		{
-			$this->router = new Router($this->config->route, $this->config->path);
+			$this->router = new Router($this->config->route, $this->config->paths);
 			if($scan)
 			{
 				//pr($this->router);
@@ -87,12 +87,7 @@ class Sketchpad
 	
 		public function getController($path)
 		{
-			$this->init();
-			if(file_exists($path))
-			{
-				return $this->router->scanner->makeController($path);
-			}
-			return null;
+			return $this->init()->router->getController($path);
 		}
 
 
@@ -130,7 +125,7 @@ class Sketchpad
 		public function call($route = '')
 		{
 			// set up the router, but don't scan
-			$this->init(1);
+			$this->init();
 
 			//pd($this->router);
 
