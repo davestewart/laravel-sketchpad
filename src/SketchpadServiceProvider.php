@@ -1,8 +1,10 @@
 <?php namespace davestewart\sketchpad;
 
 use davestewart\sketchpad\middleware\RequestId;
+use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Support\ServiceProvider;
+use Route;
 
 /**
  * SketchpadServiceProvider
@@ -20,6 +22,7 @@ class SketchpadServiceProvider extends ServiceProvider
 	public function register()
 	{
 		$this->app->singleton(Sketchpad::class);
+		//$this->app->singleton(Sketchpad::class, function() { return new Sketchpad(); } );
 	}
 
 	/**
@@ -33,7 +36,7 @@ class SketchpadServiceProvider extends ServiceProvider
 	 *
 	 * @param Sketchpad $sketchpad
 	 */
-	public function boot(Sketchpad $sketchpad, \Illuminate\Contracts\Http\Kernel $kernel, \Illuminate\Routing\Router $router)
+	public function boot()
 	{
 		// ------------------------------------------------------------------------------------------------
 		// variables
@@ -78,6 +81,28 @@ class SketchpadServiceProvider extends ServiceProvider
 				$publish . 'examples' => base_path($examples),
 			], 'examples');
 
+
+		// ------------------------------------------------------------------------------------------------
+		// routes
+
+			// config
+			$config = new SketchpadConfig();
+	
+			// routing
+			$parameters =
+			[
+				'namespace'     => 'davestewart\sketchpad\controllers',
+				'middleware'    => $config->middleware,
+			];
+	
+			// setup sketchpad routes
+			Route::group($parameters, function ($router) use ($config)
+			{
+				Route::get  ($config->route . ':setup', 'SetupController@index');
+				Route::post ($config->route . ':create', 'SketchpadController@create');
+				Route::get  ($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
+				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
+			});
 
 	}
 

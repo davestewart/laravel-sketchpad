@@ -45,37 +45,7 @@ class Sketchpad
 	
 		public function __construct()
 		{
-			// config
-			$config             = new SketchpadConfig();
-			$this->config       = $config;
-
-			// routing
-			$parameters         =
-			[
-				'namespace'     => 'davestewart\sketchpad\controllers',
-				'middleware'    => $config->middleware,
-			];
-
-			// setup sketchpad routes
-			Route::group($parameters, function ($router) use ($config)
-			{
-				Route::post ($config->route . ':setup', 'SketchpadController@setup');
-				Route::post ($config->route . ':create', 'SketchpadController@create');
-				Route::get  ($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
-				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
-			});
-
-			/*
-			dump($config);
-			// debug
-			$finder     = new Finder();
-			$finder->start();
-
-			pr($finder);
-			$scanner = new Scanner($finder->path . 'Sketchpad/');
-			$scanner->start();
-
-			*/
+			$this->config = new SketchpadConfig();;
 		}
 
 
