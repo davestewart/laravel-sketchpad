@@ -1,4 +1,5 @@
 <?php namespace davestewart\sketchpad\services;
+use davestewart\sketchpad\objects\scanners\Finder;
 use davestewart\sketchpad\objects\SketchpadConfig;
 
 /**
@@ -23,7 +24,6 @@ class Setup
 		public function __construct()
 		{
 			$this->configPath   = config_path('sketchpad.php');
-			$this->config       = new SketchpadConfig();
 		}
 
 
@@ -38,46 +38,68 @@ class Setup
 		public function check()
 		{
 			// config
+			$config = new SketchpadConfig();
+			
+			// config
 			if( ! file_exists($this->configPath) )
 			{
-				return ! is_writable(config_path())
-					? $this->fail('config-form')
-					: $this->fail('config-path');
+				return $this->fail('config-form');
 			}
-
-			// check controllers folder exists
-			$controllerPath = rtrim(base_path( $this->config->path ), '/') . '/';
-			if( ! file_exists($controllerPath) )
-			{
-				return $this->fail('controller-path');
-			}
-
-			// controllers
-			$files = glob($controllerPath . '*Controller.php');
-			if( count($files) === 0 )
-			{
-				return $this->fail('controller-count');
-			}
-
+			
 			// return
 			return true;
 		}
 
 		public function view()
 		{
+			// config
+			$config = new SketchpadConfig();
+
 			// variables
 			$app  = app();
 			$data = app(Sketchpad::class)->getVariables();
 			$vars =
 			[
 				'configPath'        => $this->configPath,
-				'config'            => $this->config,
+				'config'            => $config,
 				'ns'                => method_exists($app, 'getNamespace') ? $app->getNamespace() : 'App\\',
 			];
 
 			// return view
 			return view('sketchpad::setup.pages.' . $this->view, array_merge($data, $vars));
 		}
+
+		public function form()
+		{
+			// variables
+			$app  = app();
+			$data = app(Sketchpad::class)->getVariables();
+			$vars =
+			[
+				'config'            => $this->getDefaultConfig(),
+				'ns'                => method_exists($app, 'getNamespace') ? $app->getNamespace() : 'App\\',
+			];
+
+			// return view
+			return view('sketchpad::setup.pages.config-form', array_merge($data, $vars));
+		}
+
+		protected function getDefaultConfig()
+		{
+			// find folders
+			$finder = new Finder();
+			$finder->start();
+
+			// config
+			$config             = (object) ((array) new SketchpadConfig());
+			$config->route      = ltrim($config->route, '/');
+			$config->path       = str_replace(base_path() . '/', '', $finder->path) . 'Sketchpad/';
+			$config->namespace  = $finder->namespace . '\\Sketchpad';
+
+			// return
+			return $config;
+		}
+
 
 		public function getView()
 		{

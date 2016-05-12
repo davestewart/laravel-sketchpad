@@ -76,11 +76,6 @@ class SketchpadServiceProvider extends ServiceProvider
 				$publish . 'assets' => public_path($assets),
 			], 'assets');
 
-			$this->publishes
-			([
-				$publish . 'examples' => base_path($examples),
-			], 'examples');
-
 
 		// ------------------------------------------------------------------------------------------------
 		// routes
@@ -99,6 +94,7 @@ class SketchpadServiceProvider extends ServiceProvider
 			Route::group($parameters, function ($router) use ($config)
 			{
 				Route::get  ($config->route . ':setup', 'SetupController@index');
+				Route::post ($config->route . ':setup', 'SetupController@create');
 				Route::post ($config->route . ':create', 'SketchpadController@create');
 				Route::get  ($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
 				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
