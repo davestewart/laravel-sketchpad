@@ -55,16 +55,19 @@ class SketchpadConfig
 		public function __construct()
 		{
 			$config = config('sketchpad');
-			foreach($config as $key => $value)
+			if($config)
 			{
-				$this->$key = $value;
+				foreach($config as $key => $value)
+				{
+					$this->$key = $value;
+				}
+
+				// ensure route is bounded by slashes to prevent concatenation issue later
+				$this->route    = '/' . trim($this->route, '/') . '/';
+
+				// convert the relative path to an absolute one
+				$this->path     = base_path($this->path);
 			}
-
-			// ensure route is bounded by slashes to prevent concatenation issue later
-			$this->route    = '/' . trim($this->route, '/') . '/';
-
-			// convert the relative path to an absolute one
-			$this->path     = base_path($this->path);
 		}
 
 
