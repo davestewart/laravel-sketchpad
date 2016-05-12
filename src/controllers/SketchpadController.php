@@ -65,7 +65,8 @@ class SketchpadController extends Controller
 				}
 				return $this->sketchpad->index();
 			}
-			return $setup->view();
+			//die('setup' . $setup->view());
+			return $setup->index();
 		}
 
 
@@ -113,30 +114,6 @@ class SketchpadController extends Controller
 	
 			// create
 		}
-
-	
-	// ------------------------------------------------------------------------------------------------
-	// setup methods
-
-		/**
-		 * Handles form data from the setup controller
-		 *
-		 * @method  POST
-		 * @param   Request     $request
-		 * @return  \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-		 */
-		public function setup(Request $request)
-		{
-			// instantiate setup
-			$setup  = new Setup();
-			$input  = $request->all();
-			$result = $setup->makeConfig($input);
-
-			// run the next stage of setup
-			return redirect('/' .  $input['route']);
-		}
-
-
 	
 
 }

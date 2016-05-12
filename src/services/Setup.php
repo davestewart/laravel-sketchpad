@@ -1,4 +1,5 @@
 <?php namespace davestewart\sketchpad\services;
+use davestewart\sketchpad\objects\SketchpadConfig;
 
 /**
  * Checks setup is OK and advises what to do if not
@@ -21,20 +22,25 @@ class Setup
 
 		public function __construct()
 		{
-			$this->configPath = config_path('sketchpad.php');
-			$this->config     = (object) config('sketchpad');
+			$this->configPath   = config_path('sketchpad.php');
+			$this->config       = new SketchpadConfig();
 		}
 
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// public methods
 
+		public function index()
+		{
+			return redirect('/sketchpad/:setup');
+		}
+
 		public function check()
 		{
 			// config
 			if( ! file_exists($this->configPath) )
 			{
-				return is_writable(config_path())
+				return ! is_writable(config_path())
 					? $this->fail('config-form')
 					: $this->fail('config-path');
 			}
@@ -73,13 +79,18 @@ class Setup
 			return view('sketchpad::setup.pages.' . $this->view, array_merge($data, $vars));
 		}
 
+		public function getView()
+		{
+			return $this->view;
+		}
+
 		public function makeConfig($input)
 		{
 
 			// config
-			$config         = config_path('sketchpad.php');
-			$contents       = file_exists($config)
-								? file_get_contents($config)
+			$path           = $this->configPath;
+			$contents       = file_exists($path)
+								? file_get_contents($path)
 								: file_get_contents(base_path('vendor/davestewart/sketchpad/publish/config/config.php'));
 
 			// helper function
@@ -101,7 +112,7 @@ class Setup
 			$contents       = str_replace('\\', '\\\\', $contents);
 
 			// write the file
-			file_put_contents($config, $contents);
+			file_put_contents($path, $contents);
 
 			// run the next stage of setup
 			return true;
