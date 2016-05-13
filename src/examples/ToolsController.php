@@ -29,7 +29,7 @@ class ToolsController extends Controller
 	 */
 	public function session()
 	{
-		tb(\Session::all(), true);
+		ls(\Session::all(), true);
 	}
 
 	/**

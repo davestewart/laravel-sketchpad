@@ -136,7 +136,7 @@ class TagsController extends Controller
 	}
 
 	/**
-	 * Hides the method from Sketchpad
+	 * Hides the method from Sketchpad. You might want to do this if you make a public callback, for example
 	 *
 	 * @label   private
 	 * @private The thing
@@ -147,7 +147,7 @@ class TagsController extends Controller
 	}
 
 	/**
-	 * Marks the method as archived, which dims teh method name in the methods list
+	 * Marks the method as archived, which dims the method name in the methods list
 	 *
 	 * @archived The thing
 	 */
@@ -157,7 +157,7 @@ class TagsController extends Controller
 	}
 
 	/**
-	 * Marks a particular author as having written this method
+	 * Marks a particular author as having written this method, which may be used in a future release
 	 *
 	 * @date The thing
 	 */

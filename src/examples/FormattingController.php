@@ -2,8 +2,7 @@
 
 use Illuminate\Routing\Controller;
 use Illuminate\Translation\Translator;
-use Illuminate\View\FileViewFinder;
-use Illuminate\View\View;
+
 
 
 /**
@@ -15,15 +14,23 @@ class FormattingController extends Controller
 {
 
 	/**
-	 * No need to return data; just `echo` or use `pr()` to dump it as soon as you're ready
+	 * No need to return data or views; just `echo` directly to the page`
 	 */
 	public function text()
+	{
+		echo 'Hello there';
+	}
+
+	/**
+	 * Use the built-in `vd()`, `pr()` and `pd()` to output object structures. All functions take variadic parameters
+	 */
+	public function printr()
 	{
 		pr($this->data());
 	}
 
 	/**
-	 * Returned objects are converted to JSON and formatted by Sketchpad
+	 * Return (not echo) objects to convert to JSON and have Sketchpad format interactive output
 	 */
 	public function json()
 	{
@@ -33,39 +40,54 @@ class FormattingController extends Controller
 	/**
 	 * Use `dump()` and `dd()` to format data in an interactive tree
 	 */
-	public function dump()
+	public function tree()
 	{
 		p('Use dump()...');
 		dump($this->data());
-		p('Ad dd()...');
-		dd($this->data());
+		p('And dd()...');
+		dd(app());
 	}
 
 	/**
-	 * Use `tb($data)` to format objects or arrays in table format
+	 * Use `ls()` to output any Object or Array in list format (single `foreach` loop). Pass a boolean 2nd argument to preformat values
 	 *
-	 * @label   table (as text)
-	 * @param   Translator  $translator
+	 * @label list
+	 *
+	 * @param bool         $pre
 	 */
-	public function tableText(Translator $translator)
+	public function ls($pre = false)
 	{
-		$data = $translator->get('validation');
-		tb($data);
+		$pre    = $pre == 'true';
+		$data   = \App::make(Translator::class)->get('validation');
+		ls($data, $pre);
 	}
 
 	/**
-	 * Use `tb($data, true)` to format the `value` column as code
+	 * Use `tb()` to output any Collection or Array of Objects in table format (nested `foreach` loop). Pass a boolean 2nd argument to preformat values
 	 *
-	 * @label   table (as code)
-	 * @param   string      $config
+	 * @param bool $pre
 	 */
-	public function tableCode($config = '')
+	public function table($pre = false)
 	{
-		$data = $config
-			? config($config)
-			: app()->config->all();
-		tb($data, true);
+		$pre    = $pre == 'true';
+		$routes = \Route::getRoutes();
+		$array  = [];
+		foreach ($routes as /** @var Route */ $route)
+		{
+			$array[] =
+			[
+				'path'  => $route->getPath(),
+			    'parameters' => implode(', ', $route->parameterNames()),
+			    'methods' => implode(', ', $route->getMethods()),
+				'name'  => $route->getName(),
+			    'prefix' => $route->getPrefix(),
+			];
+		}
+		tb($array, $pre);
+
 	}
+
+
 
 	protected function data()
 	{

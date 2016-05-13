@@ -24,6 +24,9 @@
 		border-right:1px solid #eee;
 	}
 
+	#controllers{
+		border-right:0;
+	}
 
 
 // ------------------------------------------------------------------------------------------------
@@ -50,8 +53,17 @@
 			opacity:1;
 		}
 
-		#controllers .nav{
-			margin-top:-30px;
+		#controllers{
+
+			.nav{
+				margin-top:-38px;
+			}
+
+			li.folder {
+				padding: 3px 5px;
+				border-bottom: 1px dashed #EEE;
+				margin-bottom: 4px;
+			}
 		}
 
 		// list elements
@@ -211,13 +223,17 @@
 			padding:5px 8px;
 		}
 
+		thead th{
+			font-weight: bold !important;
+		}
+
 		thead tr {
 			background: inherit;
 		}
 
 		tbody th{
-			min-width: 100px;
-			color:#e74c3c;
+			min-width: 50px;
+			color:#e74c3c !important;
 		}
 
 		tbody td{

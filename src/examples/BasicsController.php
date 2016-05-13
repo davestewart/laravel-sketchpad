@@ -62,11 +62,11 @@ class BasicsController extends Controller
 	}
 
 	/**
-	 * If you render forms Sketchpad automatically posts them using AJAX, and displays the result
+	 * Sketchpad can post any forms you render using AJAX, and display the result
 	 *
 	 * @param Request $request
 	 */
-	public function htmlForm(Request $request)
+	public function postData(Request $request)
 	{
 		if($request->isMethod('post'))
 		{

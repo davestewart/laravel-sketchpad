@@ -58,6 +58,8 @@ input:focus {
   color: #cc0000;
   outline: none; }
 
+.table.pre td,
+.table.pre th,
 pre,
 .code {
   font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace !important;
@@ -227,6 +229,9 @@ form .form-group:last-child {
   padding-bottom: 100px;
   border-right: 1px solid #eee; }
 
+#controllers {
+  border-right: 0; }
+
 #welcome {
   display: none; }
 
@@ -238,7 +243,11 @@ form .form-group:last-child {
   body[data-mode="help"] #nav:hover {
     opacity: 1; }
   #nav #controllers .nav {
-    margin-top: -30px; }
+    margin-top: -38px; }
+  #nav #controllers li.folder {
+    padding: 3px 5px;
+    border-bottom: 1px dashed #EEE;
+    margin-bottom: 4px; }
   #nav .nav > li a {
     padding: 4px 9px;
     white-space: nowrap;
@@ -334,12 +343,15 @@ form .form-group:last-child {
   font-size: 13px;
   padding: 5px 8px; }
 
+.table.debug thead th {
+  font-weight: bold !important; }
+
 .table.debug thead tr {
   background: inherit; }
 
 .table.debug tbody th {
-  min-width: 100px;
-  color: #e74c3c; }
+  min-width: 50px;
+  color: #e74c3c !important; }
 
 .table.debug tbody td {
   white-space: pre;

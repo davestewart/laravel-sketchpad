@@ -1,10 +1,33 @@
 <?php
 
+use Illuminate\Contracts\Support\Arrayable;
+
 if( ! function_exists('tb') )
 {
-	function tb($data, $pre = false)
+	function tb($values, $pre = false)
 	{
-		echo view('sketchpad::utils.table', ['data' => $data, 'classes' => $pre ? 'code' : '']);
+		$data =
+		[
+			'values'    => $values instanceof Arrayable
+							? $values->toArray()
+							: (array) $values,
+			'keys'      => array_keys( (array) $values[0]),
+			'class'     => $pre ? 'pre' : 'table-striped',
+		];
+		echo view('sketchpad::utils.table', $data);
+	}
+}
+
+if( ! function_exists('ls') )
+{
+	function ls($values, $pre = false)
+	{
+		$data =
+		[
+			'values' => $values,
+			'class' => $pre ? 'pre' : 'table-striped',
+		];
+		echo view('sketchpad::utils.list', $data);
 	}
 }
 
