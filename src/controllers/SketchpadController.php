@@ -55,11 +55,12 @@ class SketchpadController extends Controller
 		{
 			// instantiate setup
 			$setup = new Setup();
-			
+
+
 			// return a view
 			if($setup->check())
 			{
-				if(Input::get('call') || $request->isMethod('post'))
+				if(Input::get('call') || $request->isMethod('POST'))
 				{
 					return $this->sketchpad->call($path);
 				}
@@ -118,3 +119,4 @@ class SketchpadController extends Controller
 
 }
 
+require_once __DIR__ . '/../utils/utils.php';

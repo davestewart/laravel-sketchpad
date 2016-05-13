@@ -152,9 +152,6 @@ class Sketchpad
 				// setup headers for AJAX call matching
 				header('X-Request-ID:' . Input::get('requestId', ''));
 
-				// include utility methods for user
-				require __DIR__ . '/utils.php';
-
 				// get controller response
 				ob_start();
 				$response   = $this->exec($ref->class, $ref->method, $ref->params);

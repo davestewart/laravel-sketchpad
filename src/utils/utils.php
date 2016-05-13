@@ -2,9 +2,9 @@
 
 if( ! function_exists('tb') )
 {
-	function tb($data)
+	function tb($data, $pre = false)
 	{
-		echo view('sketchpad::elements.table', ['data' => $data]);
+		echo view('sketchpad::utils.table', ['data' => $data, 'classes' => $pre ? 'code' : '']);
 	}
 }
 
@@ -33,6 +33,14 @@ if( ! function_exists('vd') )
 	function vd($value)
 	{
 		var_dump($value);
+	}
+}
+
+if( ! function_exists('p') )
+{
+	function p($value)
+	{
+		echo "<p>$value</p>";
 	}
 }
 

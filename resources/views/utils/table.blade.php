@@ -12,8 +12,8 @@
 	<tbody>
 		@foreach($data as $key => $value)
 		<tr>
-			<th scope="row">{{ $key }}</th>
-			<td style="white-space: pre; overflow-x:auto">{{ is_array($value) || is_object($value) ? print_r($value, true) : $value }}</td>
+			<th class="key" scope="row">{{ $key }}</th>
+			<td class="value {{ $classes }}">{{ is_array($value) || is_object($value) ? print_r($value, true) : $value }}</td>
 		</tr>
 		@endforeach
 	</tbody>
