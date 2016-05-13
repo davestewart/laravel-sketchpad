@@ -78,9 +78,9 @@ class Router
 			$this->controllers  = [];
 
 			// scan
-			foreach ($this->paths as $path)
+			foreach ($this->paths as $name => $path)
 			{
-				$scanner            = new Scanner(base_path($path), $this->route);
+				$scanner            = new Scanner(base_path($path), $this->route . $name . '/');
 				$scanner->start();
 				$this->routes       = array_merge($this->routes, $scanner->routes);
 				$this->controllers  = array_merge($this->controllers, $scanner->controllers);

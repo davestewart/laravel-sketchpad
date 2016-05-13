@@ -50,6 +50,10 @@
 			opacity:1;
 		}
 
+		#controllers .nav{
+			margin-top:-30px;
+		}
+
 		// list elements
 		.nav > li {
 
@@ -60,6 +64,7 @@
 				overflow: hidden;
 			}
 
+			&.folder,
 			p {
 				padding-left: 9px;
 				font-size: 0.8em;
@@ -68,6 +73,21 @@
 				white-space: nowrap;
 				color: #ccc;
 				font-style: normal;
+				cursor: default;
+				//margin-bottom:0.3em;
+			}
+
+			p.comment{
+
+			}
+
+			&.folder{
+				margin-top:10px;
+				margin-left:-20px;
+
+				.name{
+					color:#999;
+				}
 			}
 		}
 
@@ -198,6 +218,11 @@
 		tbody th{
 			min-width: 100px;
 			color:#e74c3c;
+		}
+
+		tbody td{
+			white-space: pre;
+			overflow-x:auto
 		}
 
 	}

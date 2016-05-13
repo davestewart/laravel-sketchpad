@@ -6,8 +6,8 @@
 	// processed folders
 	'paths'         =>
 	[
-		'project'   => 'app/Http/Controllers/Sketchpad/',
-		'examples'  => 'vendor/davestewart/sketchpad/src/controllers/examples/'
+		'project'   => 'app/Http/Sketchpad/',
+		'examples'  => 'vendor/davestewart/sketchpad/src/examples/'
 	],
 
 	// public assets folder for sketchpad resources

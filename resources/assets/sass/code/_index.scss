@@ -2,6 +2,21 @@
 // code
 // ------------------------------------------------------------------------------------------------
 
+pre,
+.code{
+	font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace !important; // Menlo
+	white-space: pre;
+	color:#555;
+}
+
+pre{
+	background-color: #FBFBFB;
+}
+
+pre small, pre *{
+	font-size:1em;
+}
+
 #output {
 
 	& pre.sf-dump,
@@ -11,7 +26,7 @@
 		display: block;
 		padding: 5px;
 
-		font: normal 11px/1.2em Monaco, Consolas, "Courier New", monospace; // Menlo
+		font: normal 11px/1.2em Menlo, Monaco, Consolas, "Courier New", monospace; // Menlo
 		background-color: #fff;
 		//color: #222;
 

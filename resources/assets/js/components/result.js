@@ -108,7 +108,7 @@ Vue.component('result', {
 			setTitle:function(title, info)
 			{
 				this.title 	= title;
-				this.info	= info;
+				this.info	= info.replace(/`([^`]+)`/g, '<code>$1</code>');
 			},
 
 
@@ -123,8 +123,7 @@ Vue.component('result', {
 				this.method.error = 0;
 
 				// format
-				var format 	= (this.format = this.method.comment.tags.format || null);
-				if(format == 'html')
+				if(this.method.comment.tags.iframe)
 				{
 					return this.loadIframe(xhr);
 				}

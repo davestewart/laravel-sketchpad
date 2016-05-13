@@ -31,19 +31,25 @@
 			<div id="controllers" class="col-xs-6">
 
 				<ul class="nav nav-pills nav-stacked">
-					<li
-						v-for="controller in controllers"
-						:class="{ active:isActive(controller.route) }"
-						@click.prevent="onControllerClick(controller)"
+
+					<template v-for="controller in controllers">
+
+						<li
+							v-if="! $index || controllers[$index -1].folder !== controllers[$index].folder"
+							class="folder"
+							>{{{ getLinkHtml(controller.folder) }}}</li>
+						<li
+							:class="{ controller:true, active:isActive(controller.route) }"
+							@click.prevent="onControllerClick(controller)"
 						>
-						<a
-							class="controller"
-							data-name="{{ controller.class }}"
-							href="{{ controller.route }}"
-							>
-							{{{ getLinkHtml(controller.route) }}}
-						</a>
-					</li>
+							<a
+								data-name="{{ controller.class }}"
+								href="{{ controller.route }}"
+								>
+								{{{ controller.label }}}
+							</a>
+						</li>
+					</template>
 				</ul>
 			</div>
 
@@ -62,7 +68,10 @@
 							>
 							{{ $root.options.useLabels ? method.label : method.name + '()' }}
 						</a>
-						<p v-if="method.comment.intro">{{ method.comment.intro }}</p>
+						<p
+							v-if="method.comment.intro"
+							class="comment"
+							>{{ method.comment.intro }}</p>
 					</li>
 				</ul>
 			</div>
@@ -84,7 +93,7 @@
 
 			<header>
 				<h1>{{ title }}</h1>
-				<p class="info">{{ info || '&nbsp;' }}</p>
+				<p class="info">{{{ info || '&nbsp;' }}}</p>
 			</header>
 
 			<!-- parameters -->

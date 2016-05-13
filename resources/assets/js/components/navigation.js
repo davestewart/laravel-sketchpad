@@ -30,11 +30,15 @@ Vue.component('navigation', {
 
 			getLinkHtml:function(route)
 			{
-				return route
+				var name 	= '<span class="name">';
+				var divider	= ' <span class="divider">&#9656;</span> ';
+				var close	= '</span>';
+
+				return name + route
 					.replace('/sketchpad/', '')
 					.replace(/\/$/, '')
 					.split('/')
-					.join(' <span class="divider">&#9656;</span> ');
+					.join(close + divider + name) + close;
 			},
 
 			isActive:function(route)
