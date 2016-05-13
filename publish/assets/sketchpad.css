@@ -58,12 +58,24 @@ input:focus {
   color: #cc0000;
   outline: none; }
 
+pre,
+.code {
+  font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace !important;
+  white-space: pre;
+  color: #555; }
+
+pre {
+  background-color: #FBFBFB; }
+
+pre small, pre * {
+  font-size: 1em; }
+
 #output pre.sf-dump,
 #output .jsonview {
   position: relative;
   display: block;
   padding: 5px;
-  font: normal 11px/1.2em Monaco, Consolas, "Courier New", monospace;
+  font: normal 11px/1.2em Menlo, Monaco, Consolas, "Courier New", monospace;
   background-color: #fff;
   word-wrap: normal;
   white-space: pre;
@@ -225,11 +237,14 @@ form .form-group:last-child {
     opacity: 0.2; }
   body[data-mode="help"] #nav:hover {
     opacity: 1; }
+  #nav #controllers .nav {
+    margin-top: -30px; }
   #nav .nav > li a {
     padding: 4px 9px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden; }
+  #nav .nav > li.folder,
   #nav .nav > li p {
     padding-left: 9px;
     font-size: 0.8em;
@@ -237,7 +252,13 @@ form .form-group:last-child {
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #ccc;
-    font-style: normal; }
+    font-style: normal;
+    cursor: default; }
+  #nav .nav > li.folder {
+    margin-top: 10px;
+    margin-left: -20px; }
+    #nav .nav > li.folder .name {
+      color: #999; }
   #nav a.controller span.divider {
     position: relative;
     display: inline-block;
@@ -319,3 +340,7 @@ form .form-group:last-child {
 .table.debug tbody th {
   min-width: 100px;
   color: #e74c3c; }
+
+.table.debug tbody td {
+  white-space: pre;
+  overflow-x: auto; }

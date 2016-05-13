@@ -245,11 +245,15 @@ Vue.component('navigation', {
 
 			getLinkHtml:function(route)
 			{
-				return route
+				var name 	= '<span class="name">';
+				var divider	= ' <span class="divider">&#9656;</span> ';
+				var close	= '</span>';
+
+				return name + route
 					.replace('/sketchpad/', '')
 					.replace(/\/$/, '')
 					.split('/')
-					.join(' <span class="divider">&#9656;</span> ');
+					.join(close + divider + name) + close;
 			},
 
 			isActive:function(route)
@@ -399,7 +403,7 @@ Vue.component('result', {
 			setTitle:function(title, info)
 			{
 				this.title 	= title;
-				this.info	= info;
+				this.info	= info.replace(/`([^`]+)`/g, '<code>$1</code>');
 			},
 
 
@@ -414,8 +418,7 @@ Vue.component('result', {
 				this.method.error = 0;
 
 				// format
-				var format 	= (this.format = this.method.comment.tags.format || null);
-				if(format == 'html')
+				if(this.method.comment.tags.iframe)
 				{
 					return this.loadIframe(xhr);
 				}
@@ -458,12 +461,6 @@ function UserHistory(app)
 	// setup base route
 	this.base = $('meta[name="route"]').attr('content');
 
-	// fwd hndler
-	History.Adapter.bind(window,'statechange',function(){
-		console.log('push')
-		var State = History.getState();
-	});
-
 	// back handler
 	window.onpopstate = this.onPopState.bind(this);
 
@@ -483,7 +480,6 @@ UserHistory.prototype =
 
 	onPopState:function(event)
 	{
-		console.log('pop')
 		var state = History.getStateById(event.state);
 		if(state)
 		{
@@ -626,17 +622,17 @@ $(function(){
 
 		// store original callback
 		window.__onLiveReloadFileChanged = window._onLiveReloadFileChanged;
-	
+
 		// proxy livereload function
 		window._onLiveReloadFileChanged = function(file)
 		{
 			// intercept controller updates
-			if (/Controller\.php/.test(file.path)) 
+			if (/Controller\.php/.test(file.path))
 			{
 				app.reloadController(file.path);
 				return false;
 			}
-			else 
+			else
 			{
 				window.__onLiveReloadFileChanged(file);
 			}
