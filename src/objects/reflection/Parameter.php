@@ -52,7 +52,7 @@ class Parameter extends Tag implements JsonSerializable
 			$this->optional     = $param->isOptional();
 
 			// value
-			$value              = $param->isOptional()
+			$value              = $param->isOptional() && ! $param->isVariadic()
                                     ? $param->getDefaultValue()
                                     : $param->getName();
             $value              = $value === null ? 'null' : $value;
