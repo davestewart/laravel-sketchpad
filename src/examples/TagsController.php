@@ -64,16 +64,6 @@ class TagsController extends Controller
 	}
 
 	/**
-	 * Renders a custom view in the output panel (useful to provide extra information for controllers)
-	 *
-	 * @group sketchpad::views.example
-	 */
-	public function view()
-	{
-
-	}
-
-	/**
 	 * Shows a warning triangle next to the method name, and an alert when you select the method for the first time. Additionally, this method is deferred.
 	 *
 	 * @warning Only run this once you've asked a grown up for permission

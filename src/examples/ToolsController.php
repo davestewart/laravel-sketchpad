@@ -122,7 +122,7 @@ class ToolsController extends Controller
 	}
 
 	/**
-	 * Vue version of the `artisan route:list` command with additional filtering functionality
+	 * Example tool with a Vue version of the `artisan route:list` command, plus filtering functionality
 	 */
 	public function viewRoutes()
 	{
@@ -142,7 +142,7 @@ class ToolsController extends Controller
 			];
 		}
 
-		echo vue('sketchpad::vue.routes', ['data' => $array]);
+		echo vue('sketchpad::examples.vue.routes', ['data' => $array]);
 	}
 
 

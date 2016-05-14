@@ -10,11 +10,11 @@ use Illuminate\Translation\Translator;
  *
  * @package App\Http\Controllers
  */
-class FormattingController extends Controller
+class OutputController extends Controller
 {
 
 	/**
-	 * No need to return data or views; just `echo` directly to the page`
+	 * No need to return data or views; just `echo` directly to the page
 	 */
 	public function text()
 	{
@@ -22,11 +22,12 @@ class FormattingController extends Controller
 	}
 
 	/**
-	 * Use the built-in `vd()`, `pr()` and `pd()` to output object structures. All functions take variadic parameters
+	 * Use `vd()`, `pr()` and `pd()` to output object structures. All functions take variadic parameters
 	 */
-	public function printr()
+	public function print_r()
 	{
 		pr($this->data());
+		vd($this->data());
 	}
 
 	/**
@@ -87,7 +88,33 @@ class FormattingController extends Controller
 
 	}
 
+	/**
+	 * Use `p()` and `alert()` to print basic HTML out to the page. Alert takes optional bootstrap alert classes as the 2nd argument
+	 */
+	public function html()
+	{
+		p('This is a paragraph');
+		alert('This is an info box');
+		alert('This is a warning box', 'warning');
+		alert('This is a danger box', 'danger');
+		alert('This is a success box', 'success');
+	}
 
+	/**
+	 * Use `md()` to load markdown `.md` documents from your views folder, which will be rendered client-side
+	 */
+	public function markdown()
+	{
+		echo md('sketchpad::examples.md.text');
+	}
+
+	/**
+	 * Use `vue()` to load Vue `.vue` templates from your views folder, even passing data (with no need to escape!)
+	 */
+	public function vue()
+	{
+		echo vue('sketchpad::examples.vue.form', ['name' => 'World']);
+	}
 
 	protected function data()
 	{

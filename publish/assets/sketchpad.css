@@ -222,6 +222,11 @@ form .form-group:last-child {
 #setup {
   width: 600px; }
 
+body:after {
+  padding-bottom: 100px;
+  clear: both;
+  content: "."; }
+
 #controllers,
 #methods {
   height: 100%;

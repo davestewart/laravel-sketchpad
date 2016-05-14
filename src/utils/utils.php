@@ -65,6 +65,20 @@ if( ! function_exists('p') )
 	}
 }
 
+if( ! function_exists('alert') )
+{
+	/**
+	 * Bootstrap info / alert box function
+	 *
+	 * @param   string  $html   The HTML or text to display
+	 * @param   string  $class  An optional CSS class, can be info, success, warning, danger
+	 */
+	function alert($html, $class = 'info')
+	{
+		echo '<div class="alert alert-' .$class. '" role="alert">' .$html. '</div>';
+	}
+}
+
 if( ! function_exists('vue') )
 {
 	\View::addExtension('vue', 'vue');
@@ -74,7 +88,7 @@ if( ! function_exists('vue') )
 		$str    = file_get_contents($path);
 		if($data)
 		{
-			foreach($data as $key => $value) 
+			foreach($data as $key => $value)
 			{
 				$value = json_encode($value);
 				$str = str_replace("%$key%", $value, $str);
@@ -84,4 +98,14 @@ if( ! function_exists('vue') )
 	}
 }
 
+if( ! function_exists('md') )
+{
+	\View::addExtension('md', 'md');
+	function md($path)
+	{
+		$path = \View::getFinder()->find($path);
+		header('Content-Type: text/markdown');
+		return file_get_contents($path);
+	}
+}
 

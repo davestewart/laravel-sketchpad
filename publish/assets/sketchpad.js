@@ -423,12 +423,23 @@ Vue.component('result', {
 					return this.loadIframe(xhr);
 				}
 
-				// handle json response
 				var contentType = xhr.getResponseHeader('Content-Type');
+
+				// handle json response
 				if(contentType === 'application/json')
 				{
 					this.format = 'json';
 					$output.JSONView(data);
+					return;
+				}
+
+				// handle md response
+				if(contentType.indexOf('text/markdown') > -1)
+				{
+					var converter 	= new showdown.Converter();
+					var html		= converter.makeHtml(data);
+					this.format 	= 'markdown';
+					$output.html(html);
 					return;
 				}
 

@@ -41,7 +41,7 @@
 						<li
 							:class="{ controller:true, active:isActive(controller.route) }"
 							@click.prevent="onControllerClick(controller)"
-						>
+							>
 							<a
 								data-name="{{ controller.class }}"
 								href="{{ controller.route }}"

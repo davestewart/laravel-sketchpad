@@ -158,10 +158,21 @@ class Sketchpad
 				$content    = ob_get_contents();
 				ob_end_clean();
 
-				// return response or any echoed content
-				return $response
+				// determine response or any echoed content
+				$response = $response
 					? $response
 					: $content;
+
+				// return markdown immediately, as some versions of laravel may be replacing headers
+				$headers = implode(' ', headers_list());
+				if(strstr($headers, 'Content-type: text/markdown') !== false)
+				{
+					die($content);
+				}
+
+				// otherwise, return response
+				return $response;
+
 			}
 
 			// if there's not a valid controller or method, it's a 404
