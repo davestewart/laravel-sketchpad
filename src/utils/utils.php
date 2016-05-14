@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Contracts\Support\Arrayable;
-
 if( ! function_exists('tb') )
 {
 	function tb($values, $pre = false)
@@ -66,4 +64,24 @@ if( ! function_exists('p') )
 		echo "<p>$value</p>";
 	}
 }
+
+if( ! function_exists('vue') )
+{
+	\View::addExtension('vue', 'vue');
+	function vue($path, array $data = null)
+	{
+		$path   = \View::getFinder()->find($path);
+		$str    = file_get_contents($path);
+		if($data)
+		{
+			foreach($data as $key => $value) 
+			{
+				$value = json_encode($value);
+				$str = str_replace("%$key%", $value, $str);
+			}
+		}
+		return $str;
+	}
+}
+
 
