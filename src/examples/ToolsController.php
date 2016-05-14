@@ -1,7 +1,6 @@
 <?php namespace davestewart\sketchpad\examples;
 
 use App\data\entities\User;
-use davestewart\sketchpad\objects\SketchpadConfig;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
@@ -18,7 +17,7 @@ class ToolsController extends Controller
 	/**
 	 * View the app state
 	 */
-	public function app()
+	public function dumpApp()
 	{
 		dump(app());
 	}
@@ -27,7 +26,7 @@ class ToolsController extends Controller
 	 * See what's in the session
 	 *
 	 */
-	public function session()
+	public function viewSession()
 	{
 		ls(\Session::all(), true);
 	}
@@ -88,11 +87,9 @@ class ToolsController extends Controller
 	}
 
 	/**
-	 * Pull a user from the database
-	 *
-	 * @param int|number $id
+	 * Show users in a table
 	 */
-	public function user($id = 1)
+	public function viewUsers()
 	{
 		$classes =
 		[
@@ -107,8 +104,8 @@ class ToolsController extends Controller
 		{
 			if(class_exists($class))
 			{
-				p("Instantiating user class '$class' and fetching user $id ...");
-				$data = $class::findOrFail($id);
+				p("Instantiating user class '$class' and fetching users...");
+				$data = $class::all();
 				break;
 			}
 		}
@@ -123,6 +120,31 @@ class ToolsController extends Controller
 		}
 
 	}
+
+	/**
+	 * Vue version of the `artisan route:list` command with additional filtering functionality
+	 */
+	public function viewRoutes()
+	{
+		// variables
+		$routes = \Route::getRoutes();
+		$array  = [];
+		foreach ($routes as /** @var Route */ $route)
+		{
+			$action = $route->getAction()['uses'];
+			$array[] =
+			[
+				'method'    => implode('|', $route->getMethods()),
+				'uri'       => $route->getUri(),
+				'name'      => $route->getName(),
+				'action'    => $action instanceof \Closure ? 'Closure' : $action,
+				'middleware'=> implode(', ', $route->middleware()),
+			];
+		}
+
+		echo vue('sketchpad::vue.routes', ['data' => $array]);
+	}
+
 
 	protected function cat($type = '')
 	{
