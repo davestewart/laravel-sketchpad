@@ -59,7 +59,6 @@ input:focus {
   outline: none; }
 
 .table.pre td,
-.table.pre th,
 pre,
 .code {
   font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace !important;

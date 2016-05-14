@@ -1,4 +1,4 @@
-<table class="table table-bordered {{ $class }} debug">
+<table class="table table-bordered table-striped {{ $class }} debug">
 	<colgroup>
 		<col class="col-xs-1">
 		<col class="col-xs-7">
