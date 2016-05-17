@@ -59,9 +59,10 @@ if( ! function_exists('vd') )
 
 if( ! function_exists('p') )
 {
-	function p($value)
+	function p($value, $bold = false)
 	{
-		echo "<p>$value</p>";
+		$class = $bold ? ' class="note"' : '';
+		echo "<p$class>$value</p>";
 	}
 }
 
@@ -75,6 +76,14 @@ if( ! function_exists('alert') )
 	 */
 	function alert($html, $class = 'info')
 	{
+		if(is_bool($class))
+		{
+			$state  = !! $class;
+			$result = $state ? 'PASS' : 'FAIL';
+			$class  = $state ? 'success' : 'danger';
+			$icon   = $state ? 'check' : 'times';
+			$html   = '<i class="fa fa-' .$icon. '" aria-hidden="true"></i> ' . $html;
+		}
 		echo '<div class="alert alert-' .$class. '" role="alert">' .$html. '</div>';
 	}
 }

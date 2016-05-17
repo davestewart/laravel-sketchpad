@@ -15,6 +15,8 @@ class OutputController extends Controller
 
 	/**
 	 * No need to return data or views; just `echo` directly to the page
+	 *
+	 * @label echo
 	 */
 	public function text()
 	{
@@ -22,7 +24,9 @@ class OutputController extends Controller
 	}
 
 	/**
-	 * Use `vd()`, `pr()` and `pd()` to output object structures. All functions take variadic parameters
+	 * Use `vd()`, `pr()` and `pd()` to output object structures with HTML `pre` tag. All functions take variadic parameters
+	 *
+	 * @label print_r
 	 */
 	public function print_r()
 	{
@@ -77,11 +81,9 @@ class OutputController extends Controller
 		{
 			$array[] =
 			[
+			    'methods' => implode(', ', $route->getMethods()),
 				'path'  => $route->getPath(),
 			    'parameters' => implode(', ', $route->parameterNames()),
-			    'methods' => implode(', ', $route->getMethods()),
-				'name'  => $route->getName(),
-			    'prefix' => $route->getPrefix(),
 			];
 		}
 		tb($array, $pre);
@@ -89,15 +91,30 @@ class OutputController extends Controller
 	}
 
 	/**
-	 * Use `p()` and `alert()` to print basic HTML out to the page. Alert takes optional bootstrap alert classes as the 2nd argument
+	 * Use `p()` to print HTML paragraphs tags
 	 */
-	public function html()
+	public function paragraph()
 	{
 		p('This is a paragraph');
-		alert('This is an info box');
-		alert('This is a warning box', 'warning');
-		alert('This is a danger box', 'danger');
-		alert('This is a success box', 'success');
+		p('This is a paragraph with true passed as the second argument', true);
+	}
+
+	/**
+	 * Use `alert()` to print Bootstrap "alert" message boxes to the page
+	 */
+	public function alert()
+	{
+		p('Just text passed');
+		alert('Just text passed; defaults to "info"');
+
+		p('Passed with a 2nd argument of a Bootstrap <a href="http://getbootstrap.com/components/#alerts" target="_blank">alert</a> message class');
+		alert('Passed with "warning"', 'warning');
+		alert('Passed with "danger"', 'danger');
+		alert('Passed with "success"', 'success');
+
+		p('Passed with 2nd argument of a boolean state');
+		alert('Passed with true', true);
+		alert('Passed with false', false);
 	}
 
 	/**

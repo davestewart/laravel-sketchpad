@@ -45,6 +45,11 @@
   .container {
     width: 1570px; } }
 
+.alert {
+  padding: 6px 11px; }
+  .alert i.fa {
+    margin-right: 5px; }
+
 /*
 	.container{
 		outline:1px solid green;

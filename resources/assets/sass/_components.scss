@@ -10,6 +10,12 @@
 
 	}
 
+	body:after{
+		padding-bottom: 100px;
+		clear:both;
+		content:"."
+	}
+
 	#output {
 		body[data-mode="home"] &,
 		body[data-mode="help"] &{
@@ -100,6 +106,16 @@
 				.name{
 					color:#999;
 				}
+			}
+
+			&.favourite{
+				content: "\f005";
+				position: absolute;
+				top: 4px;
+				left: -19px;
+				font-family: FontAwesome;
+				font-weight: 400;
+				color: #FFCC00;
 			}
 		}
 

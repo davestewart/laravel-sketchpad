@@ -11,6 +11,7 @@
 	<script src="/{{ $assets }}lib.min.js"></script>
 	<link  href="/{{ $assets }}lib.min.css" rel="stylesheet">
 	<link  href="/{{ $assets }}fonts/lato/lato.css" rel="stylesheet">
+	<link  href="/{{ $assets }}fonts/font-awesome/font-awesome.min.css" rel="stylesheet">
 
 	<!-- sketchpad -->
 	<meta name="route" content="{{ $route }}">

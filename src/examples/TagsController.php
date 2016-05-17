@@ -20,17 +20,20 @@ class TagsController extends Controller
 	 */
 	public function label()
 	{
-		echo 'My function name is actually "' . __FUNCTION__ . '"';
+		p('This method\'s name is actually "' . __FUNCTION__ . '"');
+		pr('@label Custom label!');
 	}
 
 	/**
-	 * Adds an icon next to the method name
+	 * Adds a <a href="http://fontawesome.io/icons/" target="_blank">FontAwesome</a> icon next to the method name
 	 *
 	 * @icon red bookmark
 	 */
 	public function icon()
 	{
-
+		pr('@icon tick (no need to add the fa- prefix)');
+		p('Prefix with a color to colorize:');
+		pr('@icon green tick');
 	}
 
 	/**
@@ -40,7 +43,7 @@ class TagsController extends Controller
 	 */
 	public function color()
 	{
-
+		pr('@color red');
 	}
 
 	/**
@@ -50,7 +53,7 @@ class TagsController extends Controller
 	 */
 	public function css()
 	{
-
+		pr('@css important');
 	}
 
 	/**
@@ -60,7 +63,8 @@ class TagsController extends Controller
 	 */
 	public function group()
 	{
-
+		pr('@group These methods');
+		pr('@group Those methods');
 	}
 
 	/**
@@ -70,17 +74,7 @@ class TagsController extends Controller
 	 */
 	public function warning()
 	{
-
-	}
-
-	/**
-	 * Shows the notice text below the method name in the result panel
-	 *
-	 * @notice This is some more information for the user
-	 */
-	public function notice()
-	{
-		// should this just show the existing comment text?
+		pr('@warning This method sends emails, so be sure you have the right addresses before sending');
 	}
 
 	/**
@@ -90,7 +84,7 @@ class TagsController extends Controller
 	 */
 	public function deferred()
 	{
-
+		pr('@deferred');
 	}
 
 	/**
@@ -102,16 +96,18 @@ class TagsController extends Controller
 	 */
 	public function options()
 	{
-
+		p('Allows per-field customisation of method parameters. It uses the Laravel validation syntax, and a couple of additional parameters');
+		pr('@options {method name} {options}');
 	}
 
 	/**
 	 * Call the method in an iframe, rather than rendering it to the page
 	 *
-	 * @iframe html
+	 * @iframe
 	 */
 	public function iframe()
 	{
+		pr('@iframe');
 		phpinfo();
 	}
 
@@ -122,7 +118,8 @@ class TagsController extends Controller
 	 */
 	public function favourite()
 	{
-
+		pr('@favourite');
+		pr('@favorite');
 	}
 
 	/**
@@ -133,7 +130,7 @@ class TagsController extends Controller
 	 */
 	public function privateExample()
 	{
-
+		pr('@private');
 	}
 
 	/**
@@ -143,7 +140,7 @@ class TagsController extends Controller
 	 */
 	public function archived()
 	{
-
+		pr('@archived This method has been superseded by someOtherMethod');
 	}
 
 	/**
@@ -153,7 +150,7 @@ class TagsController extends Controller
 	 */
 	public function author()
 	{
-
+		pr('@author Dave Stewart');
 	}
 
 	/**
@@ -163,7 +160,7 @@ class TagsController extends Controller
 	 */
 	public function date()
 	{
-
+		pr('@date 20/05/2016');
 	}
 
 
