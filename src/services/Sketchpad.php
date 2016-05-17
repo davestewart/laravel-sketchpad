@@ -106,7 +106,7 @@ class Sketchpad
 
 			// build the index page
 			$data           = $this->getVariables();
-			$data['app']    = file_get_contents(base_path('vendor/davestewart/sketchpad/resources/views/vue/app.vue'));
+			$data['app']    = vue('sketchpad::vue.app');
 			$data['data']   =
 			[
 				'controllers'   => $this->router->getControllers(),
