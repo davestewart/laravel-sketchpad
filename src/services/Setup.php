@@ -1,6 +1,7 @@
 <?php namespace davestewart\sketchpad\services;
 use davestewart\sketchpad\objects\scanners\Finder;
 use davestewart\sketchpad\objects\SketchpadConfig;
+use Illuminate\Console\AppNamespaceDetectorTrait;
 
 /**
  * Checks setup is OK and advises what to do if not
@@ -77,7 +78,7 @@ class Setup
 			$vars =
 			[
 				'config'            => $this->getDefaultConfig(),
-				'ns'                => method_exists($app, 'getNamespace') ? $app->getNamespace() : 'App\\',
+				'ns'                => $this->getAppNamespace(),
 			];
 
 			// return view
@@ -143,6 +144,8 @@ class Setup
 
 	// ------------------------------------------------------------------------------------------------
 	// utility methods
+
+		use AppNamespaceDetectorTrait;
 
 		protected function fail($view)
 		{
