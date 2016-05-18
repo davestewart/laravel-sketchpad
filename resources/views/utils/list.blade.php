@@ -1,4 +1,4 @@
-<table class="table table-bordered table-striped {{ $class }} debug ">
+<table class="table table-bordered table-striped {{ $class }} debug">
 	<colgroup>
 		<col class="col-xs-1">
 		<col class="col-xs-7">
@@ -11,9 +11,10 @@
 	</thead>
 	<tbody>
 		@foreach($values as $key => $value)
+		<?php $obj = ! is_scalar($value); ?>
 		<tr>
 			<th>{{ $key }}</th>
-			<td>{{ is_array($value) || is_object($value) ? print_r($value, true) : $value }}</td>
+			<td<?php echo $obj ? ' class="pre"' : '' ?>>{{ $obj ? print_r($value, true) : $value }}</td>
 		</tr>
 		@endforeach
 	</tbody>

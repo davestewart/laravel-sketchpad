@@ -1,8 +1,4 @@
 <table class="table table-bordered table-striped {{ $class }} debug">
-	<colgroup>
-		<col class="col-xs-1">
-		<col class="col-xs-7">
-	</colgroup>
 	<thead>
 		<tr>
 			<th>#</th>
@@ -16,7 +12,8 @@
 		<tr>
 			<th>{{ $index }}</th>
 			@foreach($obj as $key => $value)
-			<td>{{ is_array($value) || is_object($value) ? print_r($value, true) : $value }}</td>
+			<?php $obj = ! is_scalar($value); ?>
+			<td<?php echo $obj ? ' class="pre"' : '' ?>>{{ $obj ? print_r($value, true) : $value }}</td>
 			@endforeach
 		</tr>
 		@endforeach
