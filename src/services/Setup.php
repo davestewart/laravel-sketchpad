@@ -81,7 +81,7 @@ class Setup
 			];
 
 			// return view
-			return view('sketchpad::setup.pages.config-form', array_merge($data, $vars));
+			return view('sketchpad::setup.pages.config-path', array_merge($data, $vars));
 		}
 
 		protected function getDefaultConfig()

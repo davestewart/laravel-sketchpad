@@ -12,15 +12,7 @@
 	<fieldset>
 
 		<div class="form-group">
-			<label for="name" class="col-lg-2 control-label">Name</label>
-			<div class="col-lg-10">
-				<input type="text" class="form-control" name="name" placeholder="Database, Users, Tests, etc...">
-				<span class="help-block">No need to add the word "Controller", as Sketchpad will do that for you</span>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="path" class="col-lg-2 control-label">Path</label>
+			<label for="path" class="col-lg-2 control-label">Location</label>
 			<div class="col-lg-10">
 				<select class="form-control" name="path">
 					@foreach($folders as $route => $value)
@@ -28,10 +20,17 @@
 					@endforeach
 					<option value="">New...</option>
 				</select>
-			<span class="help-block">This is the folder location where your new controller will be saved</span>
+				<span class="help-block">This is the folder location where your new controller will be saved</span>
 			</div>
 		</div>
 
+		<div class="form-group">
+			<label for="name" class="col-lg-2 control-label">Name</label>
+			<div class="col-lg-10">
+				<input type="text" class="form-control" name="name" placeholder="Database, Users, Tests, etc...">
+				<span class="help-block">No need to add the word "Controller", as Sketchpad will do that for you</span>
+			</div>
+		</div>
 
 		<div class="form-group">
 			<label for="methods" class="col-lg-2 control-label">Methods</label>

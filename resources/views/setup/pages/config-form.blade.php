@@ -2,9 +2,7 @@
 
 @section('content')
 
-	<h1>Howdy...</h1>
-
-	<h2>Welcome to the Sketchpad installer</h2>
+	<h1>Sketchpad installer</h1>
 
 	<h3 class="text-info">To begin the installation, Sketchpad needs to know a little about your system.</h3>
 
@@ -19,7 +17,7 @@
 
 		<div class="wegll" style="margin:30px 20px;">
 
-			<form class="form-forizontal" method="post" action="/{{ $route }}:setup" data-ns="{{ $ns }}">
+			<form class="form-forizontal" method="post" action="/{{ $route }}:setup/create" data-ns="{{ $ns }}">
 
 				<fieldset>
 
@@ -76,6 +74,8 @@
 
 			</form>
 
+			<input type="hidden" id="data" value="{{ json_encode($config) }}">
+
 			<script>
 
 				$('input[name="path"]').on('change keyup input', function()
@@ -84,9 +84,24 @@
 					var value   = $(this).val();
 					value       = value.replace(/^app\//, ns || 'App\\');
 					value       = value.replace(/\//g, '\\');
+					value       = value.replace(/\\+$/, '');
 
 					$('input[name="namespace"]').val(value);
-				}).trigger('input');
+				});
+
+
+				var app = new Vue({
+					el:'body',
+					data: function()
+					{
+						var json = $('#data').val();
+						return JSON.parse(json);
+					},
+					computed:
+					{
+
+					}
+				})
 			</script>
 
 		</div>
