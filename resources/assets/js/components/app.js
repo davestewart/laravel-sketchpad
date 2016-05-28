@@ -27,6 +27,10 @@ var vm =
 		// objects
 		this.server		= new Server();
 		this.history 	= new UserHistory(this);
+		if(window.LiveReload)
+		{
+			this.reloader	= new Reloader(this);
+		}
 
 		// front page
 		if(this.history.isHome())
@@ -97,13 +101,14 @@ var vm =
 				}
 			},
 
+			getControllerFromPath:function(path)
+			{
+				return this.controllers.some(function(c){ return c.path == path; }).shift();
+			},
+
 			getController:function (route)
 			{
-				var arr = this.controllers.filter(function(e)
-				{
-					return route.indexOf(e.route) == 0;
-				});
-				return arr ? arr[0] : null;
+				return this.controllers.filter(function(c){ return route.indexOf(c.route) == 0; }).shift();
 			},
 
 			getMethod:function (route, controller)
@@ -137,8 +142,9 @@ var vm =
 
 			onControllerReload:function(data)
 			{
-				if(data)
+				if(data && data.path)
 				{
+					// insert if the controller exists
 					var filtered = this.controllers.filter(function(c){ return c.path.toLowerCase() == data.path.toLowerCase(); });
 					if(filtered.length)
 					{
@@ -146,6 +152,8 @@ var vm =
 						var index = this.controllers.indexOf(found);
 						this.controllers.$set(index, data);
 					}
+
+					// append and sort if not
 					else
 					{
 						this.controllers.push(data);
@@ -161,7 +169,12 @@ var vm =
 							return 0;
 						});
 					}
-					this.setRoute(this.route);
+
+					// reload if we're on the same controller
+					if(this.controller && this.controller.path == data.path)
+					{
+						this.setRoute(this.route);
+					}
 				}
 			},
 
@@ -169,9 +182,17 @@ var vm =
 		// ------------------------------------------------------------------------------------------------
 		// other
 
-			reloadController:function(file)
+			reloadController:function(path)
 			{
-				this.server.load(':load/' + file, this.onControllerReload);
+				if(this.getControllerFromPath(path))
+				{
+					this.server.load(':load/' + path, this.onControllerReload);
+				}
+			},
+		
+			reloadMethod:function()
+			{
+				this.$refs.result.callMethod();
 			}
 
 	}

@@ -25,13 +25,11 @@
 
 	@yield('content')
 
-	<script src="/{{ $assets }}sketchpad.js"></script>
-
-	@if ( Config::get('app.debug') ) 
-	<script type="text/javascript">
-		document.write('<script src="//localhost:35729/livereload.js?snipver=1" type="text/javascript"><\/script>')
-	</script>
+	@if ( Config::get('app.debug') )
+	<script src="//localhost:35729/livereload.js?snipver=1" type="text/javascript"></script>
 	@endif
+
+	<script src="/{{ $assets }}sketchpad.js"></script>
 
 </body>
 </html>
