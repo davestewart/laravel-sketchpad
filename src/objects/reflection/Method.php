@@ -2,6 +2,7 @@
 
 use davestewart\sketchpad\traits\ReflectionTraits;
 use JsonSerializable;
+use ReflectionParameter;
 
 /**
  * Reflection Method
@@ -50,9 +51,12 @@ class Method implements JsonSerializable
 			// params
 			$params			= $method->getParameters();
 			$this->params	= [];
-			foreach($params as $param)
+			foreach($params as /** @var ReflectionParameter */ $param)
 			{
-				array_push($this->params, new Parameter($param));
+				if($param->isOptional())
+				{
+					array_push($this->params, new Parameter($param));
+				}
 			}
 		}
 	
