@@ -38,7 +38,7 @@ Server.prototype =
 		/**
 		 * Opens a sketchpad route in a new window
 		 *
-		 * @param url
+		 * @param route
 		 */
 		open:function(route)
 		{

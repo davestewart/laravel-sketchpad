@@ -8,8 +8,6 @@ use ReflectionMethod;
 
 /**
  * Class ControllerObject
- *
- * @package davestewart\sketchpad\helpers
  */
 class Controller extends File implements Arrayable, JsonSerializable
 {

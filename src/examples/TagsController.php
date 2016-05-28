@@ -47,7 +47,7 @@ class TagsController extends Controller
 	}
 
 	/**
-	 * Renders custom css classes in the method list item. Can be used to add icons, colours, styling etc
+	 * Renders custom css footage in the method list item. Can be used to add icons, colours, styling etc
 	 *
 	 * @css user
 	 */
@@ -123,6 +123,16 @@ class TagsController extends Controller
 	}
 
 	/**
+	 * Marks the method as archived, which dims the method name in the methods list
+	 *
+	 * @archived The thing
+	 */
+	public function archived()
+	{
+		pr('@archived This method has been superseded by someOtherMethod');
+	}
+
+	/**
 	 * Hides the method from Sketchpad. You might want to do this if you make a public callback, for example
 	 *
 	 * @label   private
@@ -131,16 +141,6 @@ class TagsController extends Controller
 	public function privateExample()
 	{
 		pr('@private');
-	}
-
-	/**
-	 * Marks the method as archived, which dims the method name in the methods list
-	 *
-	 * @archived The thing
-	 */
-	public function archived()
-	{
-		pr('@archived This method has been superseded by someOtherMethod');
 	}
 
 	/**
