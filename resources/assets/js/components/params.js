@@ -22,7 +22,7 @@ Vue.component('params', {
 
 		onParamChange:function()
 		{
-			this.$dispatch('onParamChange');
+			//this.$dispatch('onParamChange');
 		}
 	}
 	

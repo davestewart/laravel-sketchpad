@@ -1,39 +1,33 @@
-var vm =
-{
+var App = Vue.extend({
 
-	el:'#app',
+	el:function(){ return '#app'; },
 
 	data:function()
 	{
-		// controllers
-		var data = JSON.parse($('#data').text());
-
-		// props
-		data._route = '';
-		data.controller = null;
-		data.method = null;
-		data.modal = {};
-		data.options =
-		{
-			useLabels:true
+		return {
+			store		:this.$options.store,
+			state		:this.$options.state,
+			options		:
+			{
+				useLabels:true
+			}
 		};
-
-		// return
-		return data;
 	},
 
 	ready:function()
 	{
 		// objects
-		this.server		= new Server();
-		this.history 	= new UserHistory(this);
-		if(window.LiveReload)
-		{
-			this.reloader	= new Reloader(this);
-		}
+		this.server		= this.$options.server;
+		this.router 	= new Router({controllers:this.store.controllers, state:this.state});
+
+		// history
+		window.onpopstate = this.onPopState;
+
+		// start
+		this.state.setRoute(this.router.parseRoute());
 
 		// front page
-		if(this.history.isHome())
+		if(this.state.route == '')
 		{
 			$('#welcome').appendTo('#output').show();
 		}
@@ -46,155 +40,44 @@ var vm =
 		$('body').on('click', 'a', this.onLinkClick);
 	},
 
-	computed:
-	{
-		route:
-		{
-			get:function ()
-			{
-				return this.$data._route;
-			},
-			set:function (route)
-			{
-				this.setRoute(route);
-			}
-		}
-
-	},
-
-	events:
-	{
-		onNavClick:function(route)
-		{
-			this.history.pushState(route);
-			this.setRoute(route);
-		}
-
-	},
-
 	methods:
 	{
 
-
 		// ------------------------------------------------------------------------------------------------
-		// route
+		// handlers
 
-			setRoute:function(route)
+			onPopState:function(event)
 			{
-				// params
-				route 				= route.replace(/\/*$/, '/');
-
-				// properties
-				this.$data._route 	= route;
-				this.controller 	= this.getController(route);
-				var method 			= this.getMethod(route);
-
-				// take action
-				if(method)
+				if(event.state)
 				{
-					this.method = method;
-					this.$broadcast('loadMethod', method);
-				}
-				else if(this.controller)
-				{
-					this.$broadcast('loadController', this.controller);
+					this.state.setRoute(event.state);
 				}
 			},
-
-			getControllerFromPath:function(path)
-			{
-				return this.controllers.some(function(c){ return c.path == path; }).shift();
-			},
-
-			getController:function (route)
-			{
-				return this.controllers.filter(function(c){ return route.indexOf(c.route) == 0; }).shift();
-			},
-
-			getMethod:function (route, controller)
-			{
-				controller = controller || this.controller || this.getController(route);
-				if(controller)
-				{
-					var arr = controller.methods.filter(function(e)
-					{
-						return route.indexOf(e.route) == 0;
-					});
-					return arr ? arr[0] : null;
-				}
-			},
-
-
-		// ------------------------------------------------------------------------------------------------
-		// dom event handlers
 
 			onLinkClick:function(event)
 			{
 				// variables
 				var url		= event.target.href;
-				var matches = url.match(/\/:(\w+)\/(\w+)/);
-				if(matches)
+				var route 	= this.router.parseRoute(url);
+
+				// controller
+				if(route.controller)
+				{
+					event.preventDefault();
+					route.method && (event.metaKey || event.ctrlKey)
+						? this.server.open(url)
+						: this.router.go(route);
+				}
+
+				// modal
+				else if(url.match(/\/:(\w+)\/(\w+)/))
 				{
 					event.preventDefault();
 					this.$refs.modal.load(url);
 				}
-			},
 
-			onControllerReload:function(data)
-			{
-				if(data && data.path)
-				{
-					// insert if the controller exists
-					var filtered = this.controllers.filter(function(c){ return c.path.toLowerCase() == data.path.toLowerCase(); });
-					if(filtered.length)
-					{
-						var found = filtered[0];
-						var index = this.controllers.indexOf(found);
-						this.controllers.$set(index, data);
-					}
-
-					// append and sort if not
-					else
-					{
-						this.controllers.push(data);
-						this.controllers.sort(function(a, b){
-							if(a.path < b.path)
-							{
-								return -1;
-							}
-							if(a.path > b.path)
-							{
-								return 1;
-							}
-							return 0;
-						});
-					}
-
-					// reload if we're on the same controller
-					if(this.controller && this.controller.path == data.path)
-					{
-						this.setRoute(this.route);
-					}
-				}
-			},
-
-
-		// ------------------------------------------------------------------------------------------------
-		// other
-
-			reloadController:function(path)
-			{
-				if(this.getControllerFromPath(path))
-				{
-					this.server.load(':load/' + path, this.onControllerReload);
-				}
-			},
-		
-			reloadMethod:function()
-			{
-				this.$refs.result.callMethod();
 			}
 
 	}
 
-};
+});

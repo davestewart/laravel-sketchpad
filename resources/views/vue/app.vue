@@ -2,16 +2,13 @@
 <div id="app" class="row">
 
 	<div class="col-xs-4">
-
-		<navigation v-ref:navigation :controllers="controllers" :controller="controller">
+		<navigation v-ref:navigation :controllers="store.controllers" :state="state" >
 			Navigation
 		</navigation>
-
 	</div>
 
 	<div class="col-xs-8">
-
-		<result v-ref:result>
+		<result v-ref:result :state="state" :method="state.method">
 			Result
 		</result>
 	</div>
@@ -37,10 +34,11 @@
 						<li
 							v-if="! $index || controllers[$index -1].folder !== controllers[$index].folder"
 							class="folder"
-							>{{{ getLinkHtml(controller.folder) }}}</li>
+							>
+							{{{ getLinkHtml(controller.folder) }}}
+						</li>
 						<li
 							:class="{ controller:true, active:isActive(controller.route) }"
-							@click.prevent="onControllerClick(controller)"
 							>
 							<a
 								data-name="{{ controller.class }}"
@@ -50,19 +48,19 @@
 							</a>
 						</li>
 					</template>
+
 				</ul>
 			</div>
 
 			<!-- methods -->
 			<div id="methods" class="col-xs-6">
-				<ul v-if="controller" class="nav nav-pills nav-stacked">
+				<ul v-if="state.controller" class="nav nav-pills nav-stacked">
 					<li
-						v-for="method in controller.methods"
-						class="{{ isActive(method.route) ? 'active' : ''}}"
-						@click.prevent="onMethodClick(method, this)"
+						v-for="method in state.controller.methods"
+						:class="{ active:isActive(method.route) }"
 						>
 						<a
-							:class="{method:1, error:method.error}"
+							:class="{method:true, error:method.error}"
 							title="{{ method.label }}"
 							href="{{ method.route }}"
 							>
@@ -93,16 +91,18 @@
 
 			<header>
 				<h1>{{ title }}</h1>
-				<p class="info">{{{ info || '&nbsp;' }}}</p>
+				<p class="info">{{{ info | marked }}}</p>
 			</header>
 
 			<!-- parameters -->
-			<params v-ref:params></params>
+			<params v-ref:params :params="method ? method.params : null"></params>
 
 		</section>
 
 		<!-- output -->
 		<section id="output" data-format="{{ format }}"></section>
+
+		<pre>{{ state.method | json }}</pre>
 
 	</div>
 
@@ -124,15 +124,13 @@
 							v-if="getType(param) == 'checkbox'"
 							type="{{ getType(param) }}"
 							v-model="params[$index].value"
-							value="{{ param.value }}"
-							@change="onParamChange | debounce 400"
+							debounce="400"
 						>
 						<input
 							v-else
 							type="{{ getType(param) }}"
 							v-model="params[$index].value"
-							value="{{ param.value }}"
-							@input="onParamChange | debounce 400"
+							debounce="400"
 						>
 					</li>
 					<li v-if="params.length == 0"><span>No parameters</span></li>

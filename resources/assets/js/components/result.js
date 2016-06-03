@@ -11,30 +11,52 @@ Vue.component('result', {
 			loading		:false,
 			transition	:false,
 			title		:'Sketchpad',
-			info		:'',
-			method		:null
+			info		:''
 		}
 	},
 
-	/*
+	props:
+	[
+		'state', 
+		'method'
+	],
+
 	computed:
 	{
 		title:function()
 		{
-			return this.$root.options.useLabels ? this.method.label : this.method.name + '()';
+			var state = this.state;
+			return state.method
+					? state.method.name
+					: state.controller
+						? state.controller.label
+						: 'no title';
 		},
 
-		comment:function()
+		info:function()
 		{
-
+			var state = this.state;
+			return state.method
+					? state.method.comment.intro
+					: state.controller
+						? state.controller.methods.length + ' methods'
+						: '';
 		}
 	},
-	*/
+
+	filters:
+	{
+		marked:marked
+	},
 
 	ready:function()
 	{
 		$output = $('#output');
 		//this.$watch('method.params', this.callMethod, {deep:true});
+		this.$watch('method', this.callMethod);
+
+		this.timer = new Timer();
+
 	},
 
 	events:
@@ -59,7 +81,9 @@ Vue.component('result', {
 
 		onParamChange:function()
 		{
+			//this.$dispatch();
 			this.callMethod();
+
 		}
 
 	},
@@ -70,11 +94,15 @@ Vue.component('result', {
 		// ------------------------------------------------------------------------------------------------
 		// load methods
 
-			callMethod:function(update)
+			callMethod:function()
 			{
 				// properties
-				var method = this.method;
-				this.setTitle(this.$root.options.useLabels ? method.label : method.name + '()', method.comment ? method.comment.intro : method.label);
+				var method 	= this.method;
+
+				if ( ! method )
+				{
+					return;
+				}
 
 				// values
 				var values 	= method.params.map(function(e){ return e.value; });
@@ -82,7 +110,7 @@ Vue.component('result', {
 
 				// debug
 				this.lastUrl = url;
-				this.date = new Date();
+				this.timer.start();
 
 				// load
 				this.$root.server
@@ -101,15 +129,6 @@ Vue.component('result', {
 				$output.empty().append($iframe.attr('src', src));
 			},
 
-
-		// ------------------------------------------------------------------------------------------------
-		// accessors
-
-			setTitle:function(title, info)
-			{
-				this.title 	= title;
-				this.info	= info.replace(/`([^`]+)`/g, '<code>$1</code>');
-			},
 
 
 		// ------------------------------------------------------------------------------------------------
@@ -162,7 +181,7 @@ Vue.component('result', {
 
 			onComplete:function()
 			{
-				console.info('Ran "%s" in %d ms', this.lastUrl, new Date - this.date);
+				console.info('Ran "%s" in %d ms', this.lastUrl, this.timer.stop().time);
 				this.loading 	= this.$root.server.count != 0;
 			}
 
