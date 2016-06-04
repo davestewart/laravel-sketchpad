@@ -277,6 +277,14 @@ body:after {
     margin-left: -20px; }
     #nav .nav > li.folder .name {
       color: #999; }
+  #nav .nav > li.favourite {
+    content: "\f005";
+    position: absolute;
+    top: 4px;
+    left: -19px;
+    font-family: FontAwesome;
+    font-weight: 400;
+    color: #FFCC00; }
   #nav a.controller span.divider {
     position: relative;
     display: inline-block;
@@ -287,43 +295,45 @@ body:after {
   #nav a.method.error {
     color: red; }
 
-#info .info {
+#info {
   /*
+		.info:empty:after{
+			visibility: hidden;
+		}
+		*/ }
+  #info .info p {
+    /*
 			padding: 3px 10px;
 			margin: 0 0 10px;
 			border-left: 5px solid #ecf0f1;
 			*/
-  padding: 3px 0px; }
-
-#info .info:empty {
-  visibility: hidden; }
-
-#info nav {
-  min-height: 39px;
-  padding: 4px; }
-  #info nav li {
-    padding: 2px 6px;
-    padding-right: 10px;
-    border-right: 1px dotted rgba(0, 0, 0, 0.1);
-    margin-right: 8px;
-    vertical-align: middle;
-    float: none;
-    display: inline-block; }
-    #info nav li:last-child {
-      border-right: none; }
-    #info nav li > * {
+    padding: 3px 0px; }
+  #info nav {
+    min-height: 39px;
+    padding: 4px; }
+    #info nav li {
+      padding: 2px 6px;
+      padding-right: 10px;
+      border-right: 1px dotted rgba(0, 0, 0, 0.1);
+      margin-right: 8px;
       vertical-align: middle;
-      margin: 0; }
-  #info nav label:after {
-    content: ' : '; }
-  #info nav li span {
-    opacity: 0.2; }
-  #info nav input {
-    border-radius: 3px;
-    border: none;
-    padding: 3px 6px; }
-  #info nav input:not([type="checkbox"]) {
-    width: 100px; }
+      float: none;
+      display: inline-block; }
+      #info nav li:last-child {
+        border-right: none; }
+      #info nav li > * {
+        vertical-align: middle;
+        margin: 0; }
+    #info nav label:after {
+      content: ' : '; }
+    #info nav li span {
+      opacity: 0.2; }
+    #info nav input {
+      border-radius: 3px;
+      border: none;
+      padding: 3px 6px; }
+    #info nav input:not([type="checkbox"]) {
+      width: 100px; }
 
 #params nav .loader {
   position: absolute;
