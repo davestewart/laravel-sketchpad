@@ -90,7 +90,7 @@
 						var index = this.controllers.indexOf(controller);
 						this.controllers.$set(index, data);
 
-						// update state
+						// update state if current controller was reloaded
 						if(this.state.controller == controller)
 						{
 							var methodIndex = this.state.controller.methods.indexOf(this.state.method);

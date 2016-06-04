@@ -21,23 +21,31 @@ var App = Vue.extend({
 		this.router 	= new Router({controllers:this.store.controllers, state:this.state});
 
 		// history
-		window.onpopstate = this.onPopState;
+		window.onpopstate = this.onHistoryPop;
 
 		// start
 		this.state.setRoute(this.router.parseRoute());
+		this.$refs.result.method = this.state.method;
+
+		// method update
+		this.$watch('state.method.params', this.onParamsChange, {deep:true});
+
+		// links
+		$('body').on('click', 'a', this.onLinkClick);
 
 		// front page
 		if(this.state.route == '')
 		{
 			$('#welcome').appendTo('#output').show();
 		}
+		else
+		{
+			this.onParamsChange();
+		}
 
 		// ui
 		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
 		//$('#params .sticky').sticky({topSpacing:20});
-
-		// links
-		$('body').on('click', 'a', this.onLinkClick);
 	},
 
 	methods:
@@ -46,7 +54,14 @@ var App = Vue.extend({
 		// ------------------------------------------------------------------------------------------------
 		// handlers
 
-			onPopState:function(event)
+			onParamsChange:function(value, old)
+			{
+				this.state.updateHistory();
+				this.state.updateRoute();
+				this.$refs.result.load(value != old);
+			},
+
+			onHistoryPop:function(event)
 			{
 				if(event.state)
 				{

@@ -91,7 +91,7 @@
 
 			<header>
 				<h1>{{ title }}</h1>
-				<p class="info">{{{ info | marked }}}</p>
+				<div class="info">{{{ info | marked }}}</div>
 			</header>
 
 			<!-- parameters -->
@@ -101,8 +101,6 @@
 
 		<!-- output -->
 		<section id="output" data-format="{{ format }}"></section>
-
-		<pre>{{ state.method | json }}</pre>
 
 	</div>
 

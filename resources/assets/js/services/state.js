@@ -30,14 +30,14 @@ state =
 				this.updateParams(route.params);
 			}
 
-			// route
-			this.updateRoute();
-
 			// history
 			if(updateHistory)
 			{
 				this.updateHistory(true);
 			}
+
+			// route
+			this.updateRoute();
 		},
 
 		/**
@@ -119,7 +119,7 @@ state =
 			{
 				title += ' - ' + this.route.replace(this.base, '');
 			}
-			document.title = title
+			document.title = title.replace(/\/$/, '').replace(/\//g, ' ▸ ');
 		},
 
 		/**

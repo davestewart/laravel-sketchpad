@@ -140,7 +140,7 @@
 
 	#info{
 
-		.info{
+		.info p{
 			/*
 			padding: 3px 10px;
 			margin: 0 0 10px;
@@ -152,9 +152,11 @@
 			//border-left: 5px solid #ecf0f1;
 		}
 
-		.info:empty{
+		/*
+		.info:empty:after{
 			visibility: hidden;
 		}
+		*/
 
 		nav{
 			min-height: 39px;

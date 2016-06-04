@@ -30,14 +30,14 @@ Vue.component('result', {
 					? state.method.name
 					: state.controller
 						? state.controller.label
-						: 'no title';
+						: 'Sketchpad';
 		},
 
 		info:function()
 		{
 			var state = this.state;
 			return state.method
-					? state.method.comment.intro
+					? state.method.comment.intro || '&hellip;'
 					: state.controller
 						? state.controller.methods.length + ' methods'
 						: '';
@@ -51,41 +51,8 @@ Vue.component('result', {
 
 	ready:function()
 	{
-		$output = $('#output');
-		//this.$watch('method.params', this.callMethod, {deep:true});
-		this.$watch('method', this.callMethod);
-
-		this.timer = new Timer();
-
-	},
-
-	events:
-	{
-
-		loadController:function(controller)
-		{
-			this.method = null;
-			this.$refs.params.params = null;
-			this.setTitle(controller.label, controller.comment.intro || controller.methods.length + ' methods');
-			$output.empty();
-		},
-
-		loadMethod:function(method)
-		{
-			this.loading 	= true;
-			this.transition = this.method && this.method.route !== method.route;
-			this.method 	= method;
-			this.$refs.params.params = method.params;
-			this.callMethod();
-		},
-
-		onParamChange:function()
-		{
-			//this.$dispatch();
-			this.callMethod();
-
-		}
-
+		$output 		= $('#output');
+		this.timer 		= new Timer();
 	},
 
 	methods:
@@ -94,22 +61,18 @@ Vue.component('result', {
 		// ------------------------------------------------------------------------------------------------
 		// load methods
 
-			callMethod:function()
+			load:function(transition)
 			{
-				// properties
-				var method 	= this.method;
-
-				if ( ! method )
+				if ( ! this.method )
 				{
+					$output.empty();
 					return;
 				}
 
-				// values
-				var values 	= method.params.map(function(e){ return e.value; });
-				var url		= method.route + values.join('/');
-
-				// debug
-				this.lastUrl = url;
+				// variables
+				var url			= this.state.getRoute();
+				this.transition	= transition;
+				this.loading	= true;
 				this.timer.start();
 
 				// load
@@ -138,8 +101,8 @@ Vue.component('result', {
 			{
 				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
 				// properties
-				this.transition = false;
-				this.method.error = 0;
+				this.transition 	= false;
+				this.method.error 	= 0;
 
 				// format
 				if(this.method.comment.tags.iframe)
@@ -160,8 +123,7 @@ Vue.component('result', {
 				// handle md response
 				if(contentType.indexOf('text/markdown') > -1)
 				{
-					var converter 	= new showdown.Converter();
-					var html		= converter.makeHtml(data);
+					var html		= marked(data);
 					this.format 	= 'markdown';
 					$output.html(html);
 					return;
@@ -175,13 +137,14 @@ Vue.component('result', {
 			onFail:function(xhr, status, message)
 			{
 				this.format = 'error';
-				this.loadIframe(xhr);
 				this.method.error = 1;
+				$output.empty();
+				this.loadIframe(xhr);
 			},
 
 			onComplete:function()
 			{
-				console.info('Ran "%s" in %d ms', this.lastUrl, this.timer.stop().time);
+				console.info('Ran "%s" in %d ms', this.state.getRoute(), this.timer.stop().time);
 				this.loading 	= this.$root.server.count != 0;
 			}
 
