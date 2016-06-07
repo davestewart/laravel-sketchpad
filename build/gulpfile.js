@@ -33,7 +33,9 @@
 			watch:jsFolder + '**/*.js',
 			input:
 			[
-				jsFolder + '*/**/*.js',
+				jsFolder + 'classes/**/*.js',
+				jsFolder + 'services/**/*.js',
+				jsFolder + 'components/**/*.js',
 				jsFolder + 'main.js',
 			],
 			output:
