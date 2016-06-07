@@ -1,352 +1,23 @@
-var App = Vue.extend({
-
-	el:function(){ return '#app'; },
-
-	data:function()
+Helpers =
+{
+	methodLabel:function(method)
 	{
-		return {
-			store		:this.$options.store,
-			state		:this.$options.state,
-			options		:
-			{
-				useLabels:true
-			}
-		};
+		return settings.useLabels
+			? method.label
+			? method.label
+			: this.humanize(method.name)
+			: method.name + '()';
 	},
 
-	ready:function()
+	humanize:function(input)
 	{
-		// objects
-		this.server		= this.$options.server;
-		this.router 	= new Router({controllers:this.store.controllers, state:this.state});
-
-		// history
-		window.onpopstate = this.onHistoryPop;
-
-		// start
-		this.state.setRoute(this.router.parseRoute());
-		this.$refs.result.method = this.state.method;
-
-		// method update
-		this.$watch('state.method.params', this.onParamsChange, {deep:true});
-
-		// links
-		$('body').on('click', 'a', this.onLinkClick);
-
-		// front page
-		if(this.state.route == '')
-		{
-			$('#welcome').appendTo('#output').show();
-		}
-		else
-		{
-			this.onParamsChange();
-		}
-
-		// ui
-		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
-		//$('#params .sticky').sticky({topSpacing:20});
-	},
-
-	methods:
-	{
-
-		// ------------------------------------------------------------------------------------------------
-		// handlers
-
-			onParamsChange:function(value, old)
-			{
-				this.state.updateHistory();
-				this.state.updateRoute();
-				this.$refs.result.load(value != old);
-			},
-
-			onHistoryPop:function(event)
-			{
-				if(event.state)
-				{
-					this.state.setRoute(event.state);
-				}
-			},
-
-			onLinkClick:function(event)
-			{
-				// variables
-				var url		= event.target.href;
-				var route 	= this.router.parseRoute(url);
-
-				// controller
-				if(route.controller)
-				{
-					event.preventDefault();
-					route.method && (event.metaKey || event.ctrlKey)
-						? this.server.open(url)
-						: this.router.go(route);
-				}
-
-				// modal
-				else if(url.match(/\/:(\w+)\/(\w+)/))
-				{
-					event.preventDefault();
-					this.$refs.modal.load(url);
-				}
-
-			}
-
+		return input
+			.replace(/_/g, ' ')
+			.replace(/([a-z])([A-Z0-9])/g, '$1 $2')
+			.toLowerCase();
 	}
 
-});
-
-Vue.component('modal', {
-
-	template:'#modal-template',
-	
-	props:['title', 'body', 'save'],
-
-	methods:
-	{
-		load:function(url)
-		{
-
-			$.get(url, function (html)
-			{
-				var $body 	= $('<div>').append(html);
-				this.title 	= $body.find('h1').remove().text();
-				this.save	= $body.find('form').length;
-				this.body 	= $body.html();
-				this.show();
-			}.bind(this))
-		},
-
-		show:function()
-		{
-			console.log('show');
-			$('#modal').modal('show');
-		},
-
-		hide:function()
-		{
-			$('#modal').modal('hide');
-		}
-
-	}
-	
-});
-Vue.component('navigation', {
-
-	template:'#navigation-template',
-
-	props:
-	[
-		'controllers',
-		'state'
-	],
-
-	methods:
-	{
-		getLinkHtml:function(route)
-		{
-			var name 	= '<span class="name">';
-			var divider	= '<span class="divider">&#9656;</span> ';
-			var close	= '</span> ';
-
-			return name + route
-				.replace('/sketchpad/', '')
-				.replace(/\/$/, '')
-				.split('/')
-				.join(close + divider + name) + close;
-		},
-
-		isActive:function(route)
-		{
-			return this.state.route && this.state.route.indexOf(route) == 0;
-		}
-
-	}
-
-});
-Vue.component('params', {
-	
-	template:'#params-template',
-	
-	props:['params'],
-
-	methods:
-	{
-
-		getType:function(param)
-		{
-			if(/^-?(\d+|\d+\.\d+|\.\d+)([eE][-+]?\d+)?$/.test(param.value))
-			{
-				return 'number';
-			}
-			if(/^true|false$/i.test(param.value))
-			{
-				return 'checkbox';
-			}
-			return 'text';
-		},
-
-		onParamChange:function()
-		{
-			//this.$dispatch('onParamChange');
-		}
-	}
-	
-});
-var $output;
-
-Vue.component('result', {
-
-	template:'#result-template',
-
-	data:function(){
-
-		return{
-			format		:'',
-			loading		:false,
-			transition	:false,
-			title		:'Sketchpad',
-			info		:''
-		}
-	},
-
-	props:
-	[
-		'state', 
-		'method'
-	],
-
-	computed:
-	{
-		title:function()
-		{
-			var state = this.state;
-			return state.method
-					? state.method.name
-					: state.controller
-						? state.controller.label
-						: 'Sketchpad';
-		},
-
-		info:function()
-		{
-			var state = this.state;
-			return state.method
-					? state.method.comment.intro || '&hellip;'
-					: state.controller
-						? state.controller.methods.length + ' methods'
-						: '';
-		}
-	},
-
-	filters:
-	{
-		marked:marked
-	},
-
-	ready:function()
-	{
-		$output 		= $('#output');
-		this.timer 		= new Timer();
-	},
-
-	methods:
-	{
-
-		// ------------------------------------------------------------------------------------------------
-		// load methods
-
-			load:function(transition)
-			{
-				if ( ! this.method )
-				{
-					$output.empty();
-					return;
-				}
-
-				// variables
-				var url			= this.state.getRoute();
-				this.transition	= transition;
-				this.loading	= true;
-				this.timer.start();
-
-				// load
-				this.$root.server
-					.call(url, this.onLoad, this.onFail)
-					.always(this.onComplete);
-			},
-
-			loadIframe:function(xhr)
-			{
-				var text	= xhr.responseText;
-				var type	= xhr.getResponseHeader('Content-Type');
-				var src		= 'data:' + type + ',' + encodeURIComponent(text);
-				var $iframe = $('<iframe class="error" frameborder="0">');
-				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
-
-				$output.empty().append($iframe.attr('src', src));
-			},
-
-
-
-		// ------------------------------------------------------------------------------------------------
-		// events
-
-			onLoad:function(data, status, xhr)
-			{
-				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
-				// properties
-				this.transition 	= false;
-				this.method.error 	= 0;
-
-				// format
-				if(this.method.comment.tags.iframe)
-				{
-					return this.loadIframe(xhr);
-				}
-
-				var contentType = xhr.getResponseHeader('Content-Type');
-
-				// handle json response
-				if(contentType === 'application/json')
-				{
-					this.format = 'json';
-					$output.JSONView(data);
-					return;
-				}
-
-				// handle md response
-				if(contentType.indexOf('text/markdown') > -1)
-				{
-					var html		= marked(data);
-					this.format 	= 'markdown';
-					$output.html(html);
-					return;
-				}
-
-				// content
-				$output.html(data);
-
-			},
-
-			onFail:function(xhr, status, message)
-			{
-				this.format = 'error';
-				this.method.error = 1;
-				$output.empty();
-				this.loadIframe(xhr);
-			},
-
-			onComplete:function()
-			{
-				console.info('Ran "%s" in %d ms', this.state.getRoute(), this.timer.stop().time);
-				this.loading 	= this.$root.server.count != 0;
-			}
-
-	}
-
-});
+};
 
 function Timer()
 {
@@ -387,190 +58,6 @@ Timer.prototype =
 		this.timeStart 	= this.time = 0;
 		return this;
 	}
-};
-function UserHistory(app)
-{
-	this.app = app;
-
-	// setup base route
-	this.base = $('meta[name="route"]').attr('content');
-
-	// back handler
-	window.onpopstate = this.onPopState.bind(this);
-
-	this.updateRoute();
-}
-
-UserHistory.prototype =
-{
-	app:null,
-
-	base:'',
-
-	pushState:function(route)
-	{
-		History.pushState(null, this.getTitle(route), route);
-	},
-
-	onPopState:function(event)
-	{
-		var state = History.getStateById(event.state);
-		if(state)
-		{
-			document.title = state.title;
-		}
-		this.updateRoute();
-	},
-
-	// update app
-	updateRoute:function(event)
-	{
-		this.app.route = window.location.pathname;
-	},
-
-	getTitle:function(route)
-	{
-		return 'Sketchpad - ' + this.getRelativeRoute(route);
-	},
-
-	getRelativeRoute:function(route)
-	{
-		route = route || this.app.route;
-		return route.substr(this.base.length);
-	},
-
-	isHome:function()
-	{
-		return this.getRelativeRoute() == '';
-	}
-
-};
-;function Reloader(app)
-{
-	// properties
-	this.app = app;
-	this.paths = app.paths;
-
-	// monkeypatch livereloader
-	var reload 	= LiveReload.reloader.reload;
-	var monkey	= this;
-	LiveReload.reloader.reload = function(path, options)
-	{
-		if(monkey.reload(path))
-		{
-			return;
-		}
-		return reload.call(this, path, options);
-	};
-}
-
-Reloader.prototype =
-{
-	app:null,
-
-	paths:[],
-
-	reload:function(path)
-	{
-		// intercept controller updates
-		if (/Controller\.php$/.test(path))
-		{
-			this.app.reloadController(path);
-			return true;
-		}
-
-		// php file
-		if(/\.php$/.test(path))
-		{
-			this.app.reloadMethod();
-			return true;
-		}
-
-		// let LiveReload handle the load
-		return false;
-	}
-};
-
-window.Router = Vue.extend({
-
-	data:function()
-	{
-		return {
-			controllers	:this.$options.controllers,
-			state		:this.$options.state
-		}
-	},
-
-	methods:
-	{
-
-		go:function(route)
-		{
-			// data
-			route = route instanceof Route
-				? route
-				: this.parseRoute(route);
-
-			// assign
-			if(route.controller)
-			{
-				this.state.setRoute(route, true);
-			}
-		},
-
-		/**
-		 * Gets a Route instance from a route string
-		 *
-		 * @param 	{string}	[route]
-		 * @returns {Route}
-		 */
-		parseRoute:function(route)
-		{
-			// parameters
-			route = route || location.href;
-			route = route.replace(location.origin, '');
-
-			// variables
-			var controller, method, params;
-
-			// assignments
-			controller = this.controllers.filter(function(c) { return route.indexOf(c.route) == 0; }).shift();
-			if(controller)
-			{
-				method = controller.methods.filter(function(m) { return route.indexOf(m.route) == 0; }).shift();
-			}
-			if(method)
-			{
-				params = route.replace(method.route, '').match(/[^\/]+/g);
-			}
-
-			// return
-			return new Route(route, controller, method, params);
-		},
-
-		dispatch:function(type, data)
-		{
-			this.$dispatch('update', {type:type, data:data});
-		}
-
-	}
-
-});
-
-function Route(route, controller, method, params)
-{
-	this.route 		= route || '';
-	this.controller	= controller;
-	this.method 	= method;
-	this.params 	= params;
-}
-
-Route.prototype =
-{
-	route		:null,
-	controller	:null,
-	method		:null,
-	params		:null
 };
 function Server()
 {
@@ -670,153 +157,138 @@ Server.prototype =
 
 };
 
-state =
+;window.State = Vue.extend(
 {
 
 	// ------------------------------------------------------------------------------------------------
 	// properties
 
-		route		:'',
-		controller	:null,
-		method		:null,
-		base		:$('meta[name="route"]').attr('content'),
-
-
-	// ------------------------------------------------------------------------------------------------
-	// public setters
-
-		/**
-		 * Set multiple values using a Route instance, optionally adding to history
-		 *
-		 * @param route
-		 * @param updateHistory
-		 */
-		setRoute:function(route, updateHistory)
-		{
-			// state
-			this.route		= route.route;
-			this.controller	= route.controller;
-			this.method		= route.method;
-			if(route.params)
-			{
-				this.updateParams(route.params);
-			}
-
-			// history
-			if(updateHistory)
-			{
-				this.updateHistory(true);
-			}
-
-			// route
-			this.updateRoute();
-		},
-
-		/**
-		 * Set params only, and replace history
-		 *
-		 * @param params
-		 */
-		setParams:function(params)
-		{
-			this.updateParams(params);
-			this.updateRoute();
-			this.updateHistory();
-		},
-
-		/**
-		 * Get the current state values as an object
-		 *
-		 * @returns {{route: *, controller: *, method: *}}
-		 */
-		getState:function()
+		data:function()
 		{
 			return {
-				route		:this.route,
-				controller	:this.controller,
-				method		:this.method
+				baseUrl		:$('meta[name="route"]').attr('content'),
+				store		:this.$options.store,
+				controller	:null,
+				method		:null
 			};
 		},
 
-		/**
-		 * Gets a route string based on the values of the current controller, method
-		 *
-		 * @returns {string}
-		 */
-		getRoute:function()
+		computed:
 		{
-			return this.method
-				? this.method.route + this.method.params.map(function (p) { return p.value; }).join('/')
-				: this.controller
-					? this.controller.route
-					: '';
+			route:function()
+			{
+				return this.makeRoute(this.method, this.controller);
+			}
 		},
+
+		props:['store'],
 
 
 	// ------------------------------------------------------------------------------------------------
-	// internal update properties
+	// methods
 
-		/**
-		 * Update the current method's parameters
-		 *
-		 * @param params
-		 */
-		updateParams:function(params)
+		methods:
 		{
-			var method = this.method;
-			if(method)
-			{
-				params.forEach(function (value, index)
+
+			// ------------------------------------------------------------------------------------------------
+			// public methods
+
+				/**
+				 * Set values from route string
+				 *
+				 * @param route
+				 */
+				setRoute:function(route)
 				{
-					var param = method.params[index];
-					if (param)
+					// data
+					var data 				= this.parseRoute(route);
+
+					// state
+					this.controller 		= data.controller;
+					this.method 			= data.method;
+					if(data.method && data.params)
 					{
-						param.value = value;
+						data.params.forEach(function (value, index)
+						{
+							var param = data.method.params[index];
+							if (param)
+							{
+								param.value = value;
+							}
+						});
 					}
-				});
-			}
-		},
 
-		/**
-		 * Update the current route string
-		 */
-		updateRoute:function()
-		{
-			// route
-			this.route 		= this.getRoute();
+					// page
+					var title		= 'Sketchpad - ' + this.route.replace(this.baseUrl, '');
+					document.title 	= title.replace(/\/$/, '').replace(/\//g, ' ▸ ');
+				},
 
-			// title
-			var title		= 'Sketchpad';
-			if(this.route)
-			{
-				title += ' - ' + this.route.replace(this.base, '');
-			}
-			document.title = title.replace(/\/$/, '').replace(/\//g, ' ▸ ');
-		},
+				/**
+				 * Rest all values
+				 */
+				reset:function()
+				{
+					this.controller = null;
+					this.method 	= null;
+				},
 
-		/**
-		 * Update the HTML5 history state
-		 *
-		 * @param push
-		 */
-		updateHistory:function(push)
-		{
-			history[push ? 'pushState' : 'replaceState'](this.getState(), document.title, this.route);
+
+			// ------------------------------------------------------------------------------------------------
+			// private methods
+
+				/**
+				 * Gets a Route instance from a route string
+				 *
+				 * @param 	{string}	[route]
+				 * @returns {object}
+				 */
+				parseRoute:function(route)
+				{
+					// parameters
+					route = route || location.href;
+					route = route.replace(location.origin, '');
+
+					// variables
+					var controller, method, params;
+
+					// assignments
+					controller = this.store.controllers.filter(function(c) { return route.indexOf(c.route) == 0; }).shift();
+					if(controller)
+					{
+						method = controller.methods.filter(function(m) { return route.indexOf(m.route) == 0; }).shift();
+					}
+					if(method)
+					{
+						params = route.replace(method.route, '').match(/[^\/]+/g);
+					}
+
+					// return
+					return {controller:controller, method:method, params:params};
+				},
+
+				makeRoute:function(method, controller)
+				{
+					return method
+						? method.route + method.params.map(function (p) { return p.value; }).join('/')
+						: controller
+							? controller.route
+							: '';
+				},
+
+				getRoute:function(route)
+				{
+
+				}
 		}
 
-};
+
+});
 ;window.Store = Vue.extend({
 
 	data:function()
 	{
 		// object with single controllers property
-		var data 	= JSON.parse($('#data').text());
-
-		// state object
-		data.state 	= this.$options.state || state;
-
-		// return
-		return data;
+		return JSON.parse($('#data').text());
 	},
 
 	created:function()
@@ -889,24 +361,14 @@ state =
 				{
 					// check for existing controller
 					var controller = this.getControllerByPath(data.path);
+					var index;
 
 					// insert if the controller exists
 					if(controller)
 					{
 						// update store
-						var index = this.controllers.indexOf(controller);
+						index = this.controllers.indexOf(controller);
 						this.controllers.$set(index, data);
-
-						// update state if current controller was reloaded
-						if(this.state.controller == controller)
-						{
-							var methodIndex = this.state.controller.methods.indexOf(this.state.method);
-							this.state.controller = data;
-							if(methodIndex > -1)
-							{
-								this.state.method = this.state.controller.methods[methodIndex];
-							}
-						}
 					}
 
 					// append and sort if not
@@ -928,7 +390,7 @@ state =
 					}
 
 					// dispatch
-					this.dispatch('controller', data.path);
+					this.dispatch('controller', data.path, index);
 				}
 			},
 
@@ -941,9 +403,9 @@ state =
 				return this.controllers.filter(function(c){ return c.path == path; }).shift();
 			},
 
-			dispatch:function(type, path)
+			dispatch:function(type, path, index)
 			{
-				this.$dispatch('load', {type:type, path:path});
+				this.$dispatch('load', {type:type, path:path, index:index});
 			}
 
 	}
@@ -951,13 +413,467 @@ state =
 });
 
 
+var App = Vue.extend({
+
+	el:function(){ return '#app'; },
+
+	data:function()
+	{
+		return {
+			store		:this.$options.store,
+			state		:this.$options.state,
+			settings	:this.$options.settings
+		};
+	},
+
+	ready:function()
+	{
+		// objects
+		this.server		= this.$options.server;
+
+		// reloading
+		this.store.$on('load', this.onStoreLoad);
+
+		// links
+		$('body').on('click', 'a[href^="/sketchpad/"]', this.onLinkClick);
+
+		// routes
+		this.router = new Router();
+		this.router.route('/sketchpad/', this.onHome);
+		this.router.route('/sketchpad/~/:view', this.onView);
+		this.router.route('/sketchpad/*path', this.onRoute);
+		//this.router.start();
+
+		// page load
+		this.run(location.pathname);
+
+		// ui
+		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
+		//$('#params .sticky').sticky({topSpacing:20});
+	},
+
+	methods:
+	{
+
+		// ------------------------------------------------------------------------------------------------
+		// methods
+
+			run:function(route)
+			{
+				this.unwatch();
+				this.state.setRoute(route);
+				this.$refs.result.method = this.state.method;
+				this.update(true);
+				if(this.state.method)
+				{
+					this.watch();
+				}
+			},
+
+			update:function(run)
+			{
+				this.state.method
+					? this.$refs.result.load(run)
+					: this.$refs.result.clear();
+			},
+
+			watch:function()
+			{
+				this.unwatch = this.$watch('state.method.params', this.onParamsChange, {deep:true});
+			},
+
+			unwatch:function()
+			{
+				// will be populate by $watch
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// handlers
+
+			onLinkClick:function(event)
+			{
+				event.preventDefault();
+				var href = $(event.target).attr('href');
+				this.router.navigate(href);
+			},
+
+			onRoute:function(route)
+			{
+				this.run(this.state.baseUrl + route);
+			},
+
+			onParamsChange:function()
+			{
+				var route = this.state.route;
+				this.router.navigate(route, false, true);
+				this.update();
+			},
+
+			onHome:function()
+			{
+				// need to do this with reactive properties
+				$('#welcome').appendTo('#output').show();
+				this.state.reset();
+			},
+
+			onView:function(params)
+			{
+				console.log('view:', params);
+			},
+
+			onStoreLoad:function(event)
+			{
+				if(this.state.controller && this.state.controller.path == event.path)
+				{
+					var cIndex 	= event.index;
+					var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
+					if(cIndex > -1)
+					{
+						this.unwatch();
+						this.state.controller = this.store.controllers[cIndex]
+						if(mIndex > -1)
+						{
+							this.state.method = this.state.controller.methods[mIndex];
+						}
+						this.watch();
+					}
+
+					// reload
+					this.update();
+				}
+			}
+	}
+
+});
+
+Vue.component('modal', {
+
+	template:'#modal-template',
+	
+	props:['title', 'body', 'save'],
+
+	methods:
+	{
+		load:function(url)
+		{
+
+			$.get(url, function (html)
+			{
+				var $body 	= $('<div>').append(html);
+				this.title 	= $body.find('h1').remove().text();
+				this.save	= $body.find('form').length;
+				this.body 	= $body.html();
+				this.show();
+			}.bind(this))
+		},
+
+		show:function()
+		{
+			console.log('show');
+			$('#modal').modal('show');
+		},
+
+		hide:function()
+		{
+			$('#modal').modal('hide');
+		}
+
+	}
+	
+});
+Vue.component('navigation', {
+
+	template:'#navigation-template',
+
+	props:
+	[
+		'controllers',
+		'state'
+	],
+
+	filters:
+	{
+		humanize:Helpers.humanize
+	},
+
+	methods:
+	{
+		getLabel:function(method)
+		{
+			return Helpers.methodLabel(method);
+		},
+		
+		getLinkHtml:function(route)
+		{
+			var name 	= '<span class="name">';
+			var divider	= '<span class="divider">&#9656;</span> ';
+			var close	= '</span> ';
+
+			return name + route
+				.replace('/sketchpad/', '')
+				.replace(/\/$/, '')
+				.split('/')
+				.join(close + divider + name) + close;
+		},
+
+		isActive:function(route)
+		{
+			return this.state.route && this.state.route.indexOf(route) == 0;
+		}
+
+	}
+
+});
+Vue.component('params', {
+	
+	template:'#params-template',
+	
+	props:['params', 'deferred'],
+
+	methods:
+	{
+
+		run:function()
+		{
+			this.$dispatch('run');
+		},
+
+		getType:function(param)
+		{
+			if(/^-?(\d+|\d+\.\d+|\.\d+)([eE][-+]?\d+)?$/.test(param.value))
+			{
+				return 'number';
+			}
+			if(/^true|false$/i.test(param.value))
+			{
+				return 'checkbox';
+			}
+			return 'text';
+		},
+
+		getId:function(param)
+		{
+			return 'param-' + param.name;
+		},
+
+		onParamChange:function()
+		{
+			//this.$dispatch('onParamChange');
+		}
+	}
+	
+});
+var $output;
+
+Vue.component('result', {
+
+	template:'#result-template',
+
+	data:function(){
+
+		return{
+			format		:'',
+			loading		:false,
+			transition	:false,
+			title		:'Sketchpad',
+			info		:''
+		}
+	},
+
+	props:
+	[
+		'state', 
+		'method'
+	],
+
+	computed:
+	{
+		title:function()
+		{
+			var state = this.state;
+			return state.method
+					? Helpers.methodLabel(state.method)
+					: state.controller
+						? state.controller.label
+						: 'Sketchpad';
+		},
+
+		info:function()
+		{
+			var state = this.state;
+			return state.method
+					? state.method.comment.intro || '&hellip;'
+					: state.controller
+						? state.controller.methods.length + ' methods'
+						: '';
+		},
+
+		params:function()
+		{
+			return this.state.method
+				? this.state.method.params
+				: null;
+		},
+
+		deferred:function()
+		{
+			return !! (this.state.method && 'deferred' in this.state.method.comment.tags);
+		}
+	},
+
+	filters:
+	{
+		marked:marked,
+		humanize:Helpers.humanize
+	},
+
+	ready:function()
+	{
+		$output 		= $('#output');
+		this.timer 		= new Timer();
+	},
+
+	methods:
+	{
+
+		// ------------------------------------------------------------------------------------------------
+		// load methods
+
+			load:function(transition)
+			{
+				if ( ! this.method )
+				{
+					$output.empty();
+					return;
+				}
+				this.transition	= transition;
+				this.loading	= true;
+
+				// load
+				if( ! this.deferred )
+				{
+					this._load(transition);
+				}
+			},
+
+			_load:function(transition)
+			{
+				// variables
+				this.timer.start();
+
+				// run
+				this.$root.server
+					.call(this.state.route, this.onLoad, this.onFail)
+					.always(this.onComplete);
+			},
+
+			clear:function()
+			{
+				$output.empty();
+			},
+
+			loadIframe:function(xhr)
+			{
+				var text	= xhr.responseText;
+				var type	= xhr.getResponseHeader('Content-Type');
+				var src		= 'data:' + type + ',' + encodeURIComponent(text);
+				var $iframe = $('<iframe class="error" frameborder="0">');
+				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
+
+				$output.empty().append($iframe.attr('src', src));
+			},
+
+
+
+		// ------------------------------------------------------------------------------------------------
+		// events
+
+			onLoad:function(data, status, xhr)
+			{
+				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
+				// properties
+				this.transition 	= false;
+				this.method.error 	= 0;
+
+				// format
+				if(this.method.comment.tags.iframe)
+				{
+					return this.loadIframe(xhr);
+				}
+
+				var contentType = xhr.getResponseHeader('Content-Type');
+
+				// handle json response
+				if(contentType === 'application/json')
+				{
+					this.format = 'json';
+					$output.JSONView(data);
+					return;
+				}
+
+				// handle md response
+				if(contentType.indexOf('text/markdown') > -1)
+				{
+					var html		= marked(data);
+					this.format 	= 'markdown';
+					$output.html(html);
+					return;
+				}
+
+				// content
+				$output.html(data);
+
+			},
+
+			onFail:function(xhr, status, message)
+			{
+				this.format = 'error';
+				this.method.error = 1;
+				$output.empty();
+				this.loadIframe(xhr);
+			},
+
+			onComplete:function()
+			{
+				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
+				this.loading 	= this.$root.server.count != 0;
+			}
+
+	},
+
+	events:
+	{
+		run:function()
+		{
+			this._load();
+		}
+	}
+
+});
+
+
+
+
+var settings =
+{
+	useLabels:true
+};
+
 var server 	= new Server();
 
 var store 	= new Store({
-	server:server,
-	state:state});
+	server	:server
+	});
+
+var state 	= new State({
+	store	:store
+	});
 
 var app 	= new App({
-	server:server,
-	state:state,
-	store:store});
+	settings:settings,
+	server	:server,
+	store	:store,
+	state	:state
+	});
+
