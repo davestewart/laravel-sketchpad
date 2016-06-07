@@ -23,7 +23,7 @@ class TagsController extends Controller
 		p('This method\'s name is actually "' . __FUNCTION__ . '"');
 		pr('@label Custom label!');
 	}
-
+	
 	/**
 	 * Adds a <a href="http://fontawesome.io/icons/" target="_blank">FontAwesome</a> icon next to the method name
 	 *
@@ -80,7 +80,7 @@ class TagsController extends Controller
 	/**
 	 * Defers the calling of a method until parameters are changed or the "Run" button is clicked
 	 *
-	 * @deferred The thing
+	 * @deferred
 	 */
 	public function deferred()
 	{
@@ -114,7 +114,7 @@ class TagsController extends Controller
 	/**
 	 * Marks a method as a favourite
 	 *
-	 * @favourite The thing
+	 * @favourite
 	 */
 	public function favourite()
 	{
@@ -125,7 +125,7 @@ class TagsController extends Controller
 	/**
 	 * Marks the method as archived, which dims the method name in the methods list
 	 *
-	 * @archived The thing
+	 * @archived This method is no longer used
 	 */
 	public function archived()
 	{
@@ -136,7 +136,7 @@ class TagsController extends Controller
 	 * Hides the method from Sketchpad. You might want to do this if you make a public callback, for example
 	 *
 	 * @label   private
-	 * @private The thing
+	 * @private
 	 */
 	public function privateExample()
 	{
@@ -146,7 +146,7 @@ class TagsController extends Controller
 	/**
 	 * Marks a particular author as having written this method, which may be used in a future release
 	 *
-	 * @date The thing
+	 * @author Dave Stewart
 	 */
 	public function author()
 	{
@@ -156,7 +156,7 @@ class TagsController extends Controller
 	/**
 	 * Provides date information to Sketchpad, which may be used in a future release
 	 *
-	 * @date The thing
+	 * @date 2016-05-01
 	 */
 	public function date()
 	{

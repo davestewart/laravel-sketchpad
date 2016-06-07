@@ -23,11 +23,13 @@ class BasicsController extends Controller
 	}
 
 	/**
-	 * Defer a call by using the `deferred` tag in the method DocBlock. It will then only be called when you change a parameter or click "Run"
+	 * Defer a call by using the `deferred` tag in the method DocBlock. It will then only be called when you click "Run"
+	 *
+	 * @deferred
 	 */
 	public function deferredCall()
 	{
-		echo date(DATE_RFC850);
+		echo "Received call at " . date(DATE_RFC850);
 	}
 
 	/**
@@ -37,7 +39,7 @@ class BasicsController extends Controller
 	 */
 	public function parameters($name = 'world')
 	{
-		echo "Hello " . $name;
+		echo "Hello $name !";
 	}
 
 	/**
@@ -51,10 +53,9 @@ class BasicsController extends Controller
 	/**
 	 * If you type-hint your param docbocks, Sketchpad automatically casts values as they come in
 	 *
-	 * @convert
-	 * @param string $string
-	 * @param int    $number
-	 * @param bool   $bool
+	 * @param string $string    This is a string
+	 * @param int    $number    This is a number
+	 * @param bool   $bool      This is a bool
 	 */
 	public function parameterTypeConversion($string = 'world', $number = 1, $bool = true)
 	{
