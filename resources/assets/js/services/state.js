@@ -1,135 +1,126 @@
-state =
+;window.State = Vue.extend(
 {
 
 	// ------------------------------------------------------------------------------------------------
 	// properties
 
-		route		:'',
-		controller	:null,
-		method		:null,
-		base		:$('meta[name="route"]').attr('content'),
-
-
-	// ------------------------------------------------------------------------------------------------
-	// public setters
-
-		/**
-		 * Set multiple values using a Route instance, optionally adding to history
-		 *
-		 * @param route
-		 * @param updateHistory
-		 */
-		setRoute:function(route, updateHistory)
-		{
-			// state
-			this.route		= route.route;
-			this.controller	= route.controller;
-			this.method		= route.method;
-			if(route.params)
-			{
-				this.updateParams(route.params);
-			}
-
-			// history
-			if(updateHistory)
-			{
-				this.updateHistory(true);
-			}
-
-			// route
-			this.updateRoute();
-		},
-
-		/**
-		 * Set params only, and replace history
-		 *
-		 * @param params
-		 */
-		setParams:function(params)
-		{
-			this.updateParams(params);
-			this.updateRoute();
-			this.updateHistory();
-		},
-
-		/**
-		 * Get the current state values as an object
-		 *
-		 * @returns {{route: *, controller: *, method: *}}
-		 */
-		getState:function()
+		data:function()
 		{
 			return {
-				route		:this.route,
-				controller	:this.controller,
-				method		:this.method
+				baseUrl		:$('meta[name="route"]').attr('content'),
+				store		:this.$options.store,
+				controller	:null,
+				method		:null
 			};
 		},
 
-		/**
-		 * Gets a route string based on the values of the current controller, method
-		 *
-		 * @returns {string}
-		 */
-		getRoute:function()
+		computed:
 		{
-			return this.method
-				? this.method.route + this.method.params.map(function (p) { return p.value; }).join('/')
-				: this.controller
-					? this.controller.route
-					: '';
+			route:function()
+			{
+				return this.makeRoute(this.method, this.controller);
+			}
 		},
+
+		props:['store'],
 
 
 	// ------------------------------------------------------------------------------------------------
-	// internal update properties
+	// methods
 
-		/**
-		 * Update the current method's parameters
-		 *
-		 * @param params
-		 */
-		updateParams:function(params)
+		methods:
 		{
-			var method = this.method;
-			if(method)
-			{
-				params.forEach(function (value, index)
+
+			// ------------------------------------------------------------------------------------------------
+			// public methods
+
+				/**
+				 * Set values from route string
+				 *
+				 * @param route
+				 */
+				setRoute:function(route)
 				{
-					var param = method.params[index];
-					if (param)
+					// data
+					var data 				= this.parseRoute(route);
+
+					// state
+					this.controller 		= data.controller;
+					this.method 			= data.method;
+					if(data.method && data.params)
 					{
-						param.value = value;
+						data.params.forEach(function (value, index)
+						{
+							var param = data.method.params[index];
+							if (param)
+							{
+								param.value = value;
+							}
+						});
 					}
-				});
-			}
-		},
 
-		/**
-		 * Update the current route string
-		 */
-		updateRoute:function()
-		{
-			// route
-			this.route 		= this.getRoute();
+					// page
+					var title		= 'Sketchpad - ' + this.route.replace(this.baseUrl, '');
+					document.title 	= title.replace(/\/$/, '').replace(/\//g, ' ▸ ');
+				},
 
-			// title
-			var title		= 'Sketchpad';
-			if(this.route)
-			{
-				title += ' - ' + this.route.replace(this.base, '');
-			}
-			document.title = title.replace(/\/$/, '').replace(/\//g, ' ▸ ');
-		},
+				/**
+				 * Rest all values
+				 */
+				reset:function()
+				{
+					this.controller = null;
+					this.method 	= null;
+				},
 
-		/**
-		 * Update the HTML5 history state
-		 *
-		 * @param push
-		 */
-		updateHistory:function(push)
-		{
-			history[push ? 'pushState' : 'replaceState'](this.getState(), document.title, this.route);
+
+			// ------------------------------------------------------------------------------------------------
+			// private methods
+
+				/**
+				 * Gets a Route instance from a route string
+				 *
+				 * @param 	{string}	[route]
+				 * @returns {object}
+				 */
+				parseRoute:function(route)
+				{
+					// parameters
+					route = route || location.href;
+					route = route.replace(location.origin, '');
+
+					// variables
+					var controller, method, params;
+
+					// assignments
+					controller = this.store.controllers.filter(function(c) { return route.indexOf(c.route) == 0; }).shift();
+					if(controller)
+					{
+						method = controller.methods.filter(function(m) { return route.indexOf(m.route) == 0; }).shift();
+					}
+					if(method)
+					{
+						params = route.replace(method.route, '').match(/[^\/]+/g);
+					}
+
+					// return
+					return {controller:controller, method:method, params:params};
+				},
+
+				makeRoute:function(method, controller)
+				{
+					return method
+						? method.route + method.params.map(function (p) { return p.value; }).join('/')
+						: controller
+							? controller.route
+							: '';
+				},
+
+				getRoute:function(route)
+				{
+
+				}
 		}
 
-};
+
+});

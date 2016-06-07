@@ -64,7 +64,7 @@
 							title="{{ method.label }}"
 							href="{{ method.route }}"
 							>
-							{{ $root.options.useLabels ? method.label : method.name + '()' }}
+							{{ getLabel(method) }}
 						</a>
 						<p
 							v-if="method.comment.intro"
@@ -95,7 +95,7 @@
 			</header>
 
 			<!-- parameters -->
-			<params v-ref:params :params="method ? method.params : null"></params>
+			<params v-ref:params :params="params" :deferred="deferred"></params>
 
 		</section>
 
@@ -117,21 +117,24 @@
 				<span class="loader"></span>
 				<ul class="nav navbar-nav">
 					<li v-for="param in params">
-						<label>{{ param.name }}</label>
+						<label for="{{ getId(param) }}">{{ param.name }}</label>
 						<input
 							v-if="getType(param) == 'checkbox'"
+							id="{{ getId(param) }}"
 							type="{{ getType(param) }}"
 							v-model="params[$index].value"
 							debounce="400"
 						>
 						<input
 							v-else
+							id="{{ getId(param) }}"
 							type="{{ getType(param) }}"
 							v-model="params[$index].value"
 							debounce="400"
 						>
 					</li>
-					<li v-if="params.length == 0"><span>No parameters</span></li>
+					<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>
+					<li v-if="deferred"><button @click="run">Run</button></li>
 				</ul>
 			</nav>
 

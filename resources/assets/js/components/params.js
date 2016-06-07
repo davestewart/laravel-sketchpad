@@ -2,10 +2,15 @@ Vue.component('params', {
 	
 	template:'#params-template',
 	
-	props:['params'],
+	props:['params', 'deferred'],
 
 	methods:
 	{
+
+		run:function()
+		{
+			this.$dispatch('run');
+		},
 
 		getType:function(param)
 		{
@@ -18,6 +23,11 @@ Vue.component('params', {
 				return 'checkbox';
 			}
 			return 'text';
+		},
+
+		getId:function(param)
+		{
+			return 'param-' + param.name;
 		},
 
 		onParamChange:function()

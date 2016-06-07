@@ -27,7 +27,7 @@ Vue.component('result', {
 		{
 			var state = this.state;
 			return state.method
-					? state.method.name
+					? Helpers.methodLabel(state.method)
 					: state.controller
 						? state.controller.label
 						: 'Sketchpad';
@@ -41,12 +41,25 @@ Vue.component('result', {
 					: state.controller
 						? state.controller.methods.length + ' methods'
 						: '';
+		},
+
+		params:function()
+		{
+			return this.state.method
+				? this.state.method.params
+				: null;
+		},
+
+		deferred:function()
+		{
+			return !! (this.state.method && 'deferred' in this.state.method.comment.tags);
 		}
 	},
 
 	filters:
 	{
-		marked:marked
+		marked:marked,
+		humanize:Helpers.humanize
 	},
 
 	ready:function()
@@ -68,17 +81,30 @@ Vue.component('result', {
 					$output.empty();
 					return;
 				}
-
-				// variables
-				var url			= this.state.getRoute();
 				this.transition	= transition;
 				this.loading	= true;
-				this.timer.start();
 
 				// load
+				if( ! this.deferred )
+				{
+					this._load(transition);
+				}
+			},
+
+			_load:function(transition)
+			{
+				// variables
+				this.timer.start();
+
+				// run
 				this.$root.server
-					.call(url, this.onLoad, this.onFail)
+					.call(this.state.route, this.onLoad, this.onFail)
 					.always(this.onComplete);
+			},
+
+			clear:function()
+			{
+				$output.empty();
 			},
 
 			loadIframe:function(xhr)
@@ -144,10 +170,18 @@ Vue.component('result', {
 
 			onComplete:function()
 			{
-				console.info('Ran "%s" in %d ms', this.state.getRoute(), this.timer.stop().time);
+				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
 				this.loading 	= this.$root.server.count != 0;
 			}
 
+	},
+
+	events:
+	{
+		run:function()
+		{
+			this._load();
+		}
 	}
 
 });

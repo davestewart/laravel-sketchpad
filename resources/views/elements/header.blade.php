@@ -15,7 +15,7 @@
 
 			<ul class="nav navbar-nav">
 				<li>
-					<a href="{{ $route }}:show/new" title="New Controller">New</a>
+					<a href="{{ $route }}~/new" title="New Controller">New</a>
 				</li>
 			</ul>
 
@@ -26,7 +26,7 @@
 				</li>
 				-->
 				<li>
-					<a target="_blank" href="{{ $route }}:show/help" title="Help">Help</a>
+					<a target="_blank" href="{{ $route }}~/help" title="Help">Help</a>
 				</li>
 			</ul>
 

@@ -8,8 +8,18 @@ Vue.component('navigation', {
 		'state'
 	],
 
+	filters:
+	{
+		humanize:Helpers.humanize
+	},
+
 	methods:
 	{
+		getLabel:function(method)
+		{
+			return Helpers.methodLabel(method);
+		},
+		
 		getLinkHtml:function(route)
 		{
 			var name 	= '<span class="name">';

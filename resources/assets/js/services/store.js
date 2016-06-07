@@ -3,13 +3,7 @@
 	data:function()
 	{
 		// object with single controllers property
-		var data 	= JSON.parse($('#data').text());
-
-		// state object
-		data.state 	= this.$options.state || state;
-
-		// return
-		return data;
+		return JSON.parse($('#data').text());
 	},
 
 	created:function()
@@ -82,24 +76,14 @@
 				{
 					// check for existing controller
 					var controller = this.getControllerByPath(data.path);
+					var index;
 
 					// insert if the controller exists
 					if(controller)
 					{
 						// update store
-						var index = this.controllers.indexOf(controller);
+						index = this.controllers.indexOf(controller);
 						this.controllers.$set(index, data);
-
-						// update state if current controller was reloaded
-						if(this.state.controller == controller)
-						{
-							var methodIndex = this.state.controller.methods.indexOf(this.state.method);
-							this.state.controller = data;
-							if(methodIndex > -1)
-							{
-								this.state.method = this.state.controller.methods[methodIndex];
-							}
-						}
 					}
 
 					// append and sort if not
@@ -121,7 +105,7 @@
 					}
 
 					// dispatch
-					this.dispatch('controller', data.path);
+					this.dispatch('controller', data.path, index);
 				}
 			},
 
@@ -134,9 +118,9 @@
 				return this.controllers.filter(function(c){ return c.path == path; }).shift();
 			},
 
-			dispatch:function(type, path)
+			dispatch:function(type, path, index)
 			{
-				this.$dispatch('load', {type:type, path:path});
+				this.$dispatch('load', {type:type, path:path, index:index});
 			}
 
 	}

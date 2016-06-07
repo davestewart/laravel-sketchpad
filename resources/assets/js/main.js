@@ -1,10 +1,25 @@
+
+
+
+var settings =
+{
+	useLabels:true
+};
+
 var server 	= new Server();
 
 var store 	= new Store({
-	server:server,
-	state:state});
+	server	:server
+	});
+
+var state 	= new State({
+	store	:store
+	});
 
 var app 	= new App({
-	server:server,
-	state:state,
-	store:store});
+	settings:settings,
+	server	:server,
+	store	:store,
+	state	:state
+	});
+

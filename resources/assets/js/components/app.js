@@ -7,10 +7,7 @@ var App = Vue.extend({
 		return {
 			store		:this.$options.store,
 			state		:this.$options.state,
-			options		:
-			{
-				useLabels:true
-			}
+			settings	:this.$options.settings
 		};
 	},
 
@@ -18,30 +15,22 @@ var App = Vue.extend({
 	{
 		// objects
 		this.server		= this.$options.server;
-		this.router 	= new Router({controllers:this.store.controllers, state:this.state});
 
-		// history
-		window.onpopstate = this.onHistoryPop;
-
-		// start
-		this.state.setRoute(this.router.parseRoute());
-		this.$refs.result.method = this.state.method;
-
-		// method update
-		this.$watch('state.method.params', this.onParamsChange, {deep:true});
+		// reloading
+		this.store.$on('load', this.onStoreLoad);
 
 		// links
-		$('body').on('click', 'a', this.onLinkClick);
+		$('body').on('click', 'a[href^="/sketchpad/"]', this.onLinkClick);
 
-		// front page
-		if(this.state.route == '')
-		{
-			$('#welcome').appendTo('#output').show();
-		}
-		else
-		{
-			this.onParamsChange();
-		}
+		// routes
+		this.router = new Router();
+		this.router.route('/sketchpad/', this.onHome);
+		this.router.route('/sketchpad/~/:view', this.onView);
+		this.router.route('/sketchpad/*path', this.onRoute);
+		//this.router.start();
+
+		// page load
+		this.run(location.pathname);
 
 		// ui
 		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
@@ -52,47 +41,93 @@ var App = Vue.extend({
 	{
 
 		// ------------------------------------------------------------------------------------------------
-		// handlers
+		// methods
 
-			onParamsChange:function(value, old)
+			run:function(route)
 			{
-				this.state.updateHistory();
-				this.state.updateRoute();
-				this.$refs.result.load(value != old);
-			},
-
-			onHistoryPop:function(event)
-			{
-				if(event.state)
+				this.unwatch();
+				this.state.setRoute(route);
+				this.$refs.result.method = this.state.method;
+				this.update(true);
+				if(this.state.method)
 				{
-					this.state.setRoute(event.state);
+					this.watch();
 				}
 			},
+
+			update:function(run)
+			{
+				this.state.method
+					? this.$refs.result.load(run)
+					: this.$refs.result.clear();
+			},
+
+			watch:function()
+			{
+				this.unwatch = this.$watch('state.method.params', this.onParamsChange, {deep:true});
+			},
+
+			unwatch:function()
+			{
+				// will be populate by $watch
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// handlers
 
 			onLinkClick:function(event)
 			{
-				// variables
-				var url		= event.target.href;
-				var route 	= this.router.parseRoute(url);
+				event.preventDefault();
+				var href = $(event.target).attr('href');
+				this.router.navigate(href);
+			},
 
-				// controller
-				if(route.controller)
+			onRoute:function(route)
+			{
+				this.run(this.state.baseUrl + route);
+			},
+
+			onParamsChange:function()
+			{
+				var route = this.state.route;
+				this.router.navigate(route, false, true);
+				this.update();
+			},
+
+			onHome:function()
+			{
+				// need to do this with reactive properties
+				$('#welcome').appendTo('#output').show();
+				this.state.reset();
+			},
+
+			onView:function(params)
+			{
+				console.log('view:', params);
+			},
+
+			onStoreLoad:function(event)
+			{
+				if(this.state.controller && this.state.controller.path == event.path)
 				{
-					event.preventDefault();
-					route.method && (event.metaKey || event.ctrlKey)
-						? this.server.open(url)
-						: this.router.go(route);
-				}
+					var cIndex 	= event.index;
+					var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
+					if(cIndex > -1)
+					{
+						this.unwatch();
+						this.state.controller = this.store.controllers[cIndex]
+						if(mIndex > -1)
+						{
+							this.state.method = this.state.controller.methods[mIndex];
+						}
+						this.watch();
+					}
 
-				// modal
-				else if(url.match(/\/:(\w+)\/(\w+)/))
-				{
-					event.preventDefault();
-					this.$refs.modal.load(url);
+					// reload
+					this.update();
 				}
-
 			}
-
 	}
 
 });
