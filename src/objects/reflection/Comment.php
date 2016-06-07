@@ -82,11 +82,11 @@ class Comment implements JsonSerializable
 			$this->params   = [];
 			$this->tags     = [];
 
-			preg_match_all('/@(\w+)\s+(.+)/', $body, $matches);
+			preg_match_all('/@(\w+)(.*)/', $body, $matches);
 			foreach ($matches[0] as $index => $match)
 			{
 				$name   = $matches[1][$index];
-				$value  = $matches[2][$index];
+				$value  = trim($matches[2][$index]);
 				$tag    = new Tag($name, $value);
 				if($name == 'param')
 				{
@@ -97,6 +97,13 @@ class Comment implements JsonSerializable
 					$this->tags[$tag->name] = $tag->text;
 				}
 			}
+			
+			// fix favourites
+			if(isset($this->tags['favorite']))
+			{
+				unset($this->tags['favorite']);
+				$this->tags['favourite'] = '';
+			}
 		}
 
 		function jsonSerialize()
@@ -105,7 +112,6 @@ class Comment implements JsonSerializable
 			$data->intro        = $this->intro;
 			$data->paragraphs   = $this->paragraphs;
 			$data->tags         = $this->tags;
-			$data->params       = $this->params;
 			return $data;
 		}
 

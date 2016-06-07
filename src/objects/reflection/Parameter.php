@@ -32,9 +32,16 @@ class Parameter extends Tag implements JsonSerializable
 		/**
 		 * The parameter value, if optional
 		 *
-		 * @var mixed|string
+		 * @var mixed
 		 */
 		public $value;
+
+		/**
+		 * Optional docblock text (must be set externally)
+		 *
+		 * @var string
+		 */
+		public $text;
 
 
 	// ---------------------------------------------------------------------------------------------------------------
@@ -43,13 +50,15 @@ class Parameter extends Tag implements JsonSerializable
 		/**
 		 * Parses a ReflectionParameter into a more usable object
 		 *
-		 * @param   ReflectionParameter $param
+		 * @param   ReflectionParameter     $param
+		 * @param   string                  $text
 		 */
-		public function __construct($param)
+		public function __construct($param, $text = '')
 		{
 			// name & optional
 			$this->name         = $param->getName();
 			$this->optional     = $param->isOptional();
+			$this->text         = $text;
 
 			// value
 			$value              = $param->isOptional() && ! $param->isVariadic()
@@ -60,8 +69,7 @@ class Parameter extends Tag implements JsonSerializable
 			$this->value	    = $value;
 
 			// type
-			$this->type         = $this->getType($param);
-
+			$this->type         = $this->getType($param, $value);
 		}
 
 		/**
@@ -70,13 +78,18 @@ class Parameter extends Tag implements JsonSerializable
 		 * @param ReflectionParameter $param
 		 * @return string
 		 */
-		protected function getType($param)
+		protected function getType($param, $value)
 		{
-			if(method_exists($param, 'getType'))
+			$type = method_exists($param, 'getType')
+				? $param->getType()
+				: gettype($value);
+
+			if($type == 'double' || $type == 'integer' || $type == 'int')
 			{
-				return $param->getType();
+				$type = 'number';
 			}
-			return '';
+
+			return $type;
 		}
 
 		/**
@@ -86,8 +99,9 @@ class Parameter extends Tag implements JsonSerializable
 		{
 			$data           = (object) [];
 			$data->name     = $this->name;
+			$data->type     = $this->type;
 			$data->value    = $this->value;
-			$data->optional = $this->optional;
+			$data->text     = $this->text;
 			return $data;
 		}
 
