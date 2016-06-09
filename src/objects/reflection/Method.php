@@ -55,10 +55,8 @@ class Method implements JsonSerializable
 			{
 				if($p->isOptional())
 				{
-					$text = isset($this->comment->params[$p->name])
-						? $this->comment->params[$p->name]->text
-						: '';
-					$param  = new Parameter($p, $text);
+					$tag    = $this->comment->getParam($p->name);
+					$param  = new Parameter($p, $tag);
 					array_push($this->params, $param);
 				}
 			}

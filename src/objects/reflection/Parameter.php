@@ -50,43 +50,54 @@ class Parameter extends Tag implements JsonSerializable
 		/**
 		 * Parses a ReflectionParameter into a more usable object
 		 *
-		 * @param   ReflectionParameter     $param
-		 * @param   string                  $text
+		 * @param   ReflectionParameter $param
+		 * @param   Tag                 $tag
 		 */
-		public function __construct($param, $text = '')
+		public function __construct($param, $tag = null)
 		{
 			// name & optional
 			$this->name         = $param->getName();
 			$this->optional     = $param->isOptional();
-			$this->text         = $text;
+			$this->text         = $tag ? $tag->text : '';
 
 			// value
 			$value              = $param->isOptional() && ! $param->isVariadic()
                                     ? $param->getDefaultValue()
                                     : $param->getName();
-            $value              = $value === null ? 'null' : $value;
-			$value              = $value === false ? 'false' : $value;
+
+            //$value              = $value === null ? 'null' : $value;
+			//$value              = $value === false ? 'false' : $value;
 			$this->value	    = $value;
 
 			// type
-			$this->type         = $this->getType($param, $value);
+			$this->type         = $this->getType($param, $value, $tag ? $tag->type : null);
 		}
 
 		/**
 		 * Gets the parameter type
 		 *
-		 * @param ReflectionParameter $param
-		 * @return string
+		 * @param   ReflectionParameter $param
+		 * @param   mixed               $value
+		 * @param   string              $type
+		 * @return  string
 		 */
-		protected function getType($param, $value)
+		protected function getType($param, $value, $type = null)
 		{
+			// attempt to get the type
 			$type = method_exists($param, 'getType')
 				? $param->getType()
-				: gettype($value);
+				: $type
+					? $type
+					: gettype($value);
 
+			// coerce type to something javascript will understand
 			if($type == 'double' || $type == 'integer' || $type == 'int')
 			{
 				$type = 'number';
+			}
+			if($type == 'NULL')
+			{
+				$type = 'null';
 			}
 
 			return $type;
@@ -97,12 +108,13 @@ class Parameter extends Tag implements JsonSerializable
 		 */
 		public function jsonSerialize()
 		{
-			$data           = (object) [];
-			$data->name     = $this->name;
-			$data->type     = $this->type;
-			$data->value    = $this->value;
-			$data->text     = $this->text;
-			return $data;
+			return (object)
+			[
+				'name'    => $this->name,
+				'type'    => $this->type,
+				'value'   => $this->value,
+				'text'    => $this->text,
+			];
 		}
 
 }

@@ -94,7 +94,7 @@ class Comment implements JsonSerializable
 				}
 				else
 				{
-					$this->tags[$tag->name] = $tag->text;
+					$this->tags[$tag->name] = $tag->text ? $tag->text : true;
 				}
 			}
 			
@@ -104,6 +104,32 @@ class Comment implements JsonSerializable
 				unset($this->tags['favorite']);
 				$this->tags['favourite'] = '';
 			}
+		}
+
+		/**
+		 * Returns a parameter by name
+		 *
+		 * @param   string      $name
+		 * @return  Tag|null
+		 */
+		public function getParam($name)
+		{
+			return isset($this->params[$name])
+				? $this->params[$name]
+				: null;
+		}
+
+		/**
+		 * Returns a tag by name
+		 *
+		 * @param   string      $name
+		 * @return  Tag|null
+		 */
+		public function getTag($name)
+		{
+			return isset($this->tags[$name])
+				? $this->tags[$name]
+				: null;
 		}
 
 		function jsonSerialize()
