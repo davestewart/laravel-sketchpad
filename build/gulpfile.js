@@ -33,12 +33,14 @@
 			watch:jsFolder + '**/*.js',
 			input:
 			[
-				jsFolder + '*/**/*.js',
+				jsFolder + 'classes/**/*.js',
+				jsFolder + 'services/**/*.js',
+				jsFolder + 'components/**/*.js',
 				jsFolder + 'main.js',
 			],
 			output:
 			{
-				file	:'sketchpad.js',
+				file	:'app.js',
 				folder	:pubFolder,
 			}
 		}
@@ -109,10 +111,10 @@
 		log('Rebuilding lib scripts...');
 		return gulp
 			.src(lib.js.input)
-			.pipe(sourcemaps.init())
+			//.pipe(sourcemaps.init())
 			.pipe(uglify({compress:true}))
 			.pipe(concat(lib.js.output.file))
-			.pipe(sourcemaps.write('.'))
+			//.pipe(sourcemaps.write('.'))
 			.pipe(gulp.dest(lib.js.output.folder));
 	}
 

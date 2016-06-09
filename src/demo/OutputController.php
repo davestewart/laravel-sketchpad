@@ -1,8 +1,7 @@
-<?php namespace davestewart\sketchpad\examples;
+<?php namespace davestewart\sketchpad\demo;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Translation\Translator;
-
 
 
 /**
@@ -12,6 +11,7 @@ use Illuminate\Translation\Translator;
  */
 class OutputController extends Controller
 {
+
 
 	/**
 	 * No need to return data or views; just `echo` directly to the page
@@ -24,33 +24,64 @@ class OutputController extends Controller
 	}
 
 	/**
+	 * Use `p()` to print HTML paragraphs tags
+	 */
+	public function paragraph()
+	{
+		p('This is a paragraph');
+		p('This is a paragraph with <code>true</code> passed as the second argument; the css class <code>note</code> is added', true);
+	}
+
+	/**
+	 * Use `alert()` to print Bootstrap "alert" message boxes to the page
+	 */
+	public function alert()
+	{
+		p('Just text passed; defaults to "info" class:');
+		alert('Just text passed');
+
+		p('Passed with a 2nd argument of a Bootstrap <a href="http://getbootstrap.com/components/#alerts" target="_blank">alert</a> message class:');
+		alert('Passed with "warning"', 'warning');
+		alert('Passed with "danger"', 'danger');
+		alert('Passed with "success"', 'success');
+
+		p('Passed with 2nd argument of a boolean state, renders tick and cross icons:');
+		alert('Passed with true', true);
+		alert('Passed with false', false);
+	}
+
+	/**
 	 * Use `vd()`, `pr()` and `pd()` to output object structures with HTML `pre` tag. All functions take variadic parameters
 	 *
 	 * @label print_r
 	 */
 	public function print_r()
 	{
+		p('Use <code>pr()</code> to format and <code>print_r()</code>:');
 		pr($this->data());
-		vd($this->data());
-	}
 
-	/**
-	 * Return (not echo) objects to convert to JSON and have Sketchpad format interactive output
-	 */
-	public function json()
-	{
-		return $this->data();
+		p('Use <code>vd()</code> to format and <code>var_dump()</code>:');
+		vd($this->data());
 	}
 
 	/**
 	 * Use `dump()` and `dd()` to format data in an interactive tree
 	 */
-	public function tree()
+	public function dump()
 	{
-		p('Use dump()...');
+
+		p('Use <code>dump()</code> to format and dump:');
 		dump($this->data());
-		p('And dd()...');
+		p('And <code>dd()</code> to format and dump and die:');
 		dd(app());
+	}
+
+	/**
+	 * Return (*not* echo) objects to convert to JSON and have Sketchpad format interactive output
+	 */
+	public function json()
+	{
+		return $this->data();
 	}
 
 	/**
@@ -68,9 +99,7 @@ class OutputController extends Controller
 	}
 
 	/**
-	 * Use `tb()` to output any Collection or Array of Objects in table format (nested `foreach` loop). Pass a boolean 2nd argument to preformat values
-	 *
-	 * @param bool $pre
+	 * Use `tb()` to output any Collection or Array of Objects in table format (nested `foreach` loop). Pass a boolean 2nd argument to preformat values*
 	 */
 	public function table($pre = false)
 	{
@@ -91,38 +120,11 @@ class OutputController extends Controller
 	}
 
 	/**
-	 * Use `p()` to print HTML paragraphs tags
-	 */
-	public function paragraph()
-	{
-		p('This is a paragraph');
-		p('This is a paragraph with true passed as the second argument', true);
-	}
-
-	/**
-	 * Use `alert()` to print Bootstrap "alert" message boxes to the page
-	 */
-	public function alert()
-	{
-		p('Just text passed');
-		alert('Just text passed; defaults to "info"');
-
-		p('Passed with a 2nd argument of a Bootstrap <a href="http://getbootstrap.com/components/#alerts" target="_blank">alert</a> message class');
-		alert('Passed with "warning"', 'warning');
-		alert('Passed with "danger"', 'danger');
-		alert('Passed with "success"', 'success');
-
-		p('Passed with 2nd argument of a boolean state');
-		alert('Passed with true', true);
-		alert('Passed with false', false);
-	}
-
-	/**
 	 * Use `md()` to load markdown `.md` documents from your views folder, which will be rendered client-side
 	 */
 	public function markdown()
 	{
-		echo md('sketchpad::examples.md.text');
+		echo md('sketchpad::demo.md.text');
 	}
 
 	/**
@@ -130,13 +132,14 @@ class OutputController extends Controller
 	 */
 	public function vue()
 	{
-		echo vue('sketchpad::examples.vue.form', ['name' => 'World']);
+		echo vue('sketchpad::demo.vue.form', ['name' => 'World']);
 	}
 
 	protected function data()
 	{
 		return [
 			'number'    => 1,
+			'boolean'   => true,
 			'string'    => 'Sketchpad',
 			'array'     => [1, 2, 3],
 			'object'    => (object) ['a' => 1, 'b' => 2, 'c' => 3],

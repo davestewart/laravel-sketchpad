@@ -34,6 +34,10 @@
 		border-right:0;
 	}
 
+	#content{
+		max-width:700px;
+	}
+
 
 // ------------------------------------------------------------------------------------------------
 // formatting
@@ -59,21 +63,21 @@
 			opacity:1;
 		}
 
+		li.folder {
+			&:first-child{
+				margin-top:-30px !important;
+			}
+			padding: 3px 5px;
+			border-bottom: 1px dashed #EEE;
+			margin-bottom: 4px;
+		}
+
 		#controllers{
-
-			.nav{
-				margin-top:-38px;
-			}
-
-			li.folder {
-				padding: 3px 5px;
-				border-bottom: 1px dashed #EEE;
-				margin-bottom: 4px;
-			}
+			padding-right:40px;
 		}
 
 		// list elements
-		.nav > li {
+		li {
 
 			a {
 				padding: 4px 9px;
@@ -90,7 +94,6 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				color: #ccc;
-				font-style: normal;
 				cursor: default;
 				//margin-bottom:0.3em;
 			}
@@ -108,21 +111,47 @@
 				}
 			}
 
-			&.favourite{
-				content: "\f005";
+			&.icon:before{
+				color:#CCC;
 				position: absolute;
 				top: 4px;
-				left: -19px;
+				left: -12px;
 				font-family: FontAwesome;
+				text-align: center;
 				font-weight: 400;
+				transition: left 0.3s;
+			}
+
+			&.icon:hover:before,
+			&.active.icon:before{
+				left:-18px;
+				transition: left 0.2s;
+			}
+
+			// icons & styling
+			&.favourite:before{
+				content: "\f005";
 				color: #FFCC00;
 			}
+
+			&.deferred:before{
+				content: "\f017";
+			}
+
+			&.warning:before{
+				content: "\f12a";
+				color: #FF0000;
+			}
+
+			&.archived a{
+				color:#CCC;
+			}
+
 		}
 
 		a.controller span.divider{
 
 			position: relative;
-
 			display: inline-block;
 			padding:0 3px;
 			color:#CCC;
@@ -140,7 +169,7 @@
 
 	#info{
 
-		.info{
+		.info p{
 			/*
 			padding: 3px 10px;
 			margin: 0 0 10px;
@@ -152,9 +181,11 @@
 			//border-left: 5px solid #ecf0f1;
 		}
 
-		.info:empty{
+		/*
+		.info:empty:after{
 			visibility: hidden;
 		}
+		*/
 
 		nav{
 			min-height: 39px;

@@ -1,7 +1,5 @@
-<h1>Options</h1>
 
-
-
+<h1>Settings</h1>
 <form class="form-horizontal">
 	<fieldset>
 		<div class="form-group">

@@ -82,11 +82,11 @@ class Comment implements JsonSerializable
 			$this->params   = [];
 			$this->tags     = [];
 
-			preg_match_all('/@(\w+)\s+(.+)/', $body, $matches);
+			preg_match_all('/@(\w+)(.*)/', $body, $matches);
 			foreach ($matches[0] as $index => $match)
 			{
 				$name   = $matches[1][$index];
-				$value  = $matches[2][$index];
+				$value  = trim($matches[2][$index]);
 				$tag    = new Tag($name, $value);
 				if($name == 'param')
 				{
@@ -94,9 +94,42 @@ class Comment implements JsonSerializable
 				}
 				else
 				{
-					$this->tags[$tag->name] = $tag->text;
+					$this->tags[$tag->name] = $tag->text ? $tag->text : true;
 				}
 			}
+			
+			// fix favourites
+			if(isset($this->tags['favorite']))
+			{
+				unset($this->tags['favorite']);
+				$this->tags['favourite'] = '';
+			}
+		}
+
+		/**
+		 * Returns a parameter by name
+		 *
+		 * @param   string      $name
+		 * @return  Tag|null
+		 */
+		public function getParam($name)
+		{
+			return isset($this->params[$name])
+				? $this->params[$name]
+				: null;
+		}
+
+		/**
+		 * Returns a tag by name
+		 *
+		 * @param   string      $name
+		 * @return  Tag|null
+		 */
+		public function getTag($name)
+		{
+			return isset($this->tags[$name])
+				? $this->tags[$name]
+				: null;
 		}
 
 		function jsonSerialize()
@@ -105,7 +138,6 @@ class Comment implements JsonSerializable
 			$data->intro        = $this->intro;
 			$data->paragraphs   = $this->paragraphs;
 			$data->tags         = $this->tags;
-			$data->params       = $this->params;
 			return $data;
 		}
 

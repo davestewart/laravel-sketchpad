@@ -91,13 +91,15 @@ class Controller extends File implements Arrayable, JsonSerializable
 			$arr        = [];
 
 			// get methods
-			foreach ($methods as $method)
+			foreach ($methods as $m)
 			{
-				if($method->getFileName() === $file && $method->name !== '__construct')
+				if($m->getFileName() === $file && $m->name !== '__construct')
 				{
-					//echo $this->ref->name ."\n";
-					//echo $method->class ."\n";
-					$arr[] = new Method($method, $this->route);
+					$method = new Method($m, $this->route);
+					if( ! isset($method->comment->tags['private']) )
+					{
+						$arr[] = $method;
+					}
 				}
 			}
 			$this->methods = $arr;

@@ -84,7 +84,22 @@
 	}
 */
 
-input:focus {
-	color: rgb(204, 0, 0);
-	outline: none;
+.tooltip {
+
+	.tooltip-inner{
+		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+		width:100%;
+		max-width: 400px;
+		text-align:left;
+	}
+}
+
+.table{
+	max-width: inherit;
+	width:inherit;
+}
+
+a:active,
+a:focus{
+	outline:none !important;
 }

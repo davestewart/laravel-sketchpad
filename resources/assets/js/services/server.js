@@ -58,6 +58,15 @@ Server.prototype =
 			return $.get(url, onSuccess);
 		},
 
+		loadController:function(path, onSuccess)
+		{
+			var url = ':load/' + path;
+			return onSuccess
+				? this.load(url, onSuccess)
+				: window.open(this.base + url);
+		},
+
+
 	// ------------------------------------------------------------------------------------------------
 	// utilities
 

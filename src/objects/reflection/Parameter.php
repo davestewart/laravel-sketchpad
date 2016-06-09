@@ -32,9 +32,16 @@ class Parameter extends Tag implements JsonSerializable
 		/**
 		 * The parameter value, if optional
 		 *
-		 * @var mixed|string
+		 * @var mixed
 		 */
 		public $value;
+
+		/**
+		 * Optional docblock text (must be set externally)
+		 *
+		 * @var string
+		 */
+		public $text;
 
 
 	// ---------------------------------------------------------------------------------------------------------------
@@ -44,39 +51,61 @@ class Parameter extends Tag implements JsonSerializable
 		 * Parses a ReflectionParameter into a more usable object
 		 *
 		 * @param   ReflectionParameter $param
+		 * @param   Tag                 $tag
 		 */
-		public function __construct($param)
+		public function __construct($param, $tag = null)
 		{
 			// name & optional
 			$this->name         = $param->getName();
 			$this->optional     = $param->isOptional();
+			$this->text         = $tag ? $tag->text : '';
 
 			// value
 			$value              = $param->isOptional() && ! $param->isVariadic()
                                     ? $param->getDefaultValue()
                                     : $param->getName();
-            $value              = $value === null ? 'null' : $value;
-			$value              = $value === false ? 'false' : $value;
+
+            //$value              = $value === null ? 'null' : $value;
+			//$value              = $value === false ? 'false' : $value;
 			$this->value	    = $value;
 
 			// type
-			$this->type         = $this->getType($param);
-
+			$this->type         = $this->getType($param, $value, $tag ? $tag->type : null);
 		}
 
 		/**
 		 * Gets the parameter type
 		 *
-		 * @param ReflectionParameter $param
-		 * @return string
+		 * @param   ReflectionParameter $param
+		 * @param   mixed               $value
+		 * @param   string              $type
+		 * @return  string
 		 */
-		protected function getType($param)
+		protected function getType($param, $value, $type = null)
 		{
-			if(method_exists($param, 'getType'))
+			// attempt to get the type
+			$type = method_exists($param, 'getType')
+				? $param->getType()
+				: $type
+					? $type
+					: gettype($value);
+
+			// coerce type to something javascript will understand
+			if($type == 'double' || $type == 'float' || $type == 'integer' || $type == 'int')
 			{
-				return $param->getType();
+				$type = 'number';
 			}
-			return '';
+			else if($type == 'bool')
+			{
+				$type = 'boolean';
+			}
+			else if($type == 'NULL')
+			{
+				$type = 'null';
+			}
+
+			// return
+			return $type;
 		}
 
 		/**
@@ -84,11 +113,13 @@ class Parameter extends Tag implements JsonSerializable
 		 */
 		public function jsonSerialize()
 		{
-			$data           = (object) [];
-			$data->name     = $this->name;
-			$data->value    = $this->value;
-			$data->optional = $this->optional;
-			return $data;
+			return (object)
+			[
+				'name'    => $this->name,
+				'type'    => $this->type,
+				'value'   => $this->value,
+				'text'    => $this->text,
+			];
 		}
 
 }

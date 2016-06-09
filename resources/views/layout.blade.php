@@ -10,12 +10,18 @@
 	<!-- libs -->
 	<script src="/{{ $assets }}lib.min.js"></script>
 	<link  href="/{{ $assets }}lib.min.css" rel="stylesheet">
+
+	<!-- fonts -->
 	<link  href="/{{ $assets }}fonts/lato/lato.css" rel="stylesheet">
 	<link  href="/{{ $assets }}fonts/font-awesome/font-awesome.min.css" rel="stylesheet">
 
 	<!-- sketchpad -->
 	<meta name="route" content="{{ $route }}">
-	<link  href="/{{ $assets }}sketchpad.css" rel="stylesheet">
+	<link  href="/{{ $assets }}app.css" rel="stylesheet">
+
+	<!-- user -->
+	<link  href="/{{ $assets }}user.css" rel="stylesheet">
+	<script src="/{{ $assets }}user.js"></script>
 
 	<!-- custom head -->
 	@yield('head')
@@ -29,7 +35,7 @@
 	<script src="//localhost:35729/livereload.js?snipver=1" type="text/javascript"></script>
 	@endif
 
-	<script src="/{{ $assets }}sketchpad.js"></script>
+	<script src="/{{ $assets }}app.js"></script>
 
 </body>
 </html>

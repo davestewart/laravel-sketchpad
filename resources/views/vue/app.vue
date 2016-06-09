@@ -2,18 +2,18 @@
 <div id="app" class="row">
 
 	<div class="col-xs-4">
-
-		<navigation v-ref:navigation :controllers="controllers" :controller="controller">
+		<navigation v-ref:navigation :controllers="store.controllers" :state="state" >
 			Navigation
 		</navigation>
-
 	</div>
 
 	<div class="col-xs-8">
-
-		<result v-ref:result>
+		<result v-if="state.controller" v-ref:result :state="state">
 			Result
 		</result>
+		<div id="content" v-else>
+
+		</div>
 	</div>
 
 	<modal v-ref:modal></modal>
@@ -37,42 +37,29 @@
 						<li
 							v-if="! $index || controllers[$index -1].folder !== controllers[$index].folder"
 							class="folder"
-							>{{{ getLinkHtml(controller.folder) }}}</li>
+							>
+							{{{ getLinkHtml(controller.folder) }}}
+						</li>
 						<li
 							:class="{ controller:true, active:isActive(controller.route) }"
-							@click.prevent="onControllerClick(controller)"
 							>
 							<a
 								data-name="{{ controller.class }}"
+								data-path="{{ controller.path }}"
 								href="{{ controller.route }}"
 								>
 								{{{ controller.label }}}
 							</a>
 						</li>
 					</template>
+
 				</ul>
 			</div>
 
 			<!-- methods -->
 			<div id="methods" class="col-xs-6">
-				<ul v-if="controller" class="nav nav-pills nav-stacked">
-					<li
-						v-for="method in controller.methods"
-						class="{{ isActive(method.route) ? 'active' : ''}}"
-						@click.prevent="onMethodClick(method, this)"
-						>
-						<a
-							:class="{method:1, error:method.error}"
-							title="{{ method.label }}"
-							href="{{ method.route }}"
-							>
-							{{ $root.options.useLabels ? method.label : method.name + '()' }}
-						</a>
-						<p
-							v-if="method.comment.intro"
-							class="comment"
-							>{{ method.comment.intro }}</p>
-					</li>
+				<ul v-if="state.controller" class="nav nav-pills nav-stacked">
+					<method v-if="method && method.name != 'index' " :method="method" :state="state" v-for="method in state.controller.methods"></method>
 				</ul>
 			</div>
 
@@ -80,6 +67,32 @@
 
 	</div>
 
+</template>
+
+
+<template id="method-template">
+
+	<li v-if="tags.group" class="folder">
+		<span class="name">{{ tags.group }}</span>
+	</li>
+
+	<li
+		:style="listStyle"
+		:class="listClass"
+		>
+		<a
+			:class="{method:true, error:error}"
+			:style="linkStyle"
+			title="{{ comment.intro }}"
+			href="{{ state.makeRoute(method) }}"
+			>
+			{{ label }}
+		</a>
+		<p
+			v-if="comment.intro && $root.settings.showComments"
+			class="comment"
+			>{{ comment.intro }}</p>
+	</li>
 </template>
 
 
@@ -93,12 +106,26 @@
 
 			<header>
 				<h1>{{ title }}</h1>
-				<p class="info">{{{ info || '&nbsp;' }}}</p>
+				<div :class="{info:true, alert:warning, 'alert-danger':warning }">{{{ info | marked }}}</div>
 			</header>
 
 			<!-- parameters -->
-			<params v-ref:params></params>
+			<div id="params" v-if="state.method && state.method.name != 'index'">
+				<div class="sticky">
 
+					<nav v-if="params" class="navbar navbar-default">
+						<span class="loader"></span>
+						<ul class="nav navbar-nav">
+							<li v-for="param in params">
+								<param :param="param"></param>
+							</li>
+							<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>
+							<li v-if="deferred"><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
+						</ul>
+					</nav>
+
+				</div>
+			</div>
 		</section>
 
 		<!-- output -->
@@ -108,41 +135,20 @@
 
 </template>
 
+<template id="param-template">
 
+	<label for="{{ id }}">{{ param.name }}</label>
+	<input
 
-<template id="params-template">
-
-	<div id="params">
-		<div class="sticky">
-
-			<nav v-if="params" class="navbar navbar-default">
-				<span class="loader"></span>
-				<ul class="nav navbar-nav">
-					<li v-for="param in params">
-						<label>{{ param.name }}</label>
-						<input
-							v-if="getType(param) == 'checkbox'"
-							type="{{ getType(param) }}"
-							v-model="params[$index].value"
-							value="{{ param.value }}"
-							@change="onParamChange | debounce 400"
-						>
-						<input
-							v-else
-							type="{{ getType(param) }}"
-							v-model="params[$index].value"
-							value="{{ param.value }}"
-							@input="onParamChange | debounce 400"
-						>
-					</li>
-					<li v-if="params.length == 0"><span>No parameters</span></li>
-				</ul>
-			</nav>
-
-		</div>
-	</div>
+		:id="id"
+		:type="type"
+		v-model="value"
+		debounce="400"
+	>
 
 </template>
+
+
 
 
 <template id="modal-template">

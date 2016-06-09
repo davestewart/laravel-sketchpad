@@ -1,200 +1,157 @@
-var vm =
-{
+var App = Vue.extend({
 
-	el:'#app',
+	el:function(){ return '#app'; },
 
 	data:function()
 	{
-		// controllers
-		var data = JSON.parse($('#data').text());
-
-		// props
-		data._route = '';
-		data.controller = null;
-		data.method = null;
-		data.modal = {};
-		data.options =
-		{
-			useLabels:true
+		return {
+			store		:this.$options.store,
+			state		:this.$options.state,
+			settings	:this.$options.settings
 		};
-
-		// return
-		return data;
 	},
 
 	ready:function()
 	{
 		// objects
-		this.server		= new Server();
-		this.history 	= new UserHistory(this);
-		if(window.LiveReload)
-		{
-			this.reloader	= new Reloader(this);
-		}
+		this.server		= this.$options.server;
 
-		// front page
-		if(this.history.isHome())
-		{
-			$('#welcome').appendTo('#output').show();
-		}
+		// reloading
+		this.store.$on('load', this.onStoreLoad);
+
+		// links
+		//$('body').on('click', 'a[href^="/sketchpad/"]', this.onLinkClick);
+		$('body').on('click', 'a', this.onLinkClick);
+
+		// routes
+		var url = this.state.baseUrl;
+		this.router = new Router();
+		this.router.route(url, this.onHome);
+		this.router.route(url + '~/*view', this.onView);
+		this.router.route(url + '*path', this.onRoute);
+
+		// seems to be a small bug with router on home route, so trigger home then start as normal
+		this.onHome();
+		this.router.start();
 
 		// ui
 		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
 		//$('#params .sticky').sticky({topSpacing:20});
-
-		// links
-		$('body').on('click', 'a', this.onLinkClick);
-	},
-
-	computed:
-	{
-		route:
-		{
-			get:function ()
-			{
-				return this.$data._route;
-			},
-			set:function (route)
-			{
-				this.setRoute(route);
-			}
-		}
-
-	},
-
-	events:
-	{
-		onNavClick:function(route)
-		{
-			this.history.pushState(route);
-			this.setRoute(route);
-		}
-
 	},
 
 	methods:
 	{
 
-
 		// ------------------------------------------------------------------------------------------------
-		// route
+		// methods
 
-			setRoute:function(route)
+			run:function(route)
 			{
-				// params
-				route 				= route.replace(/\/*$/, '/');
-
-				// properties
-				this.$data._route 	= route;
-				this.controller 	= this.getController(route);
-				var method 			= this.getMethod(route);
-
-				// take action
-				if(method)
+				this.unwatch();
+				this.state.setRoute(route);
+				this.$nextTick(function()
 				{
-					this.method = method;
-					this.$broadcast('loadMethod', method);
-				}
-				else if(this.controller)
-				{
-					this.$broadcast('loadController', this.controller);
-				}
-			},
-
-			getControllerFromPath:function(path)
-			{
-				return this.controllers.some(function(c){ return c.path == path; }).shift();
-			},
-
-			getController:function (route)
-			{
-				return this.controllers.filter(function(c){ return route.indexOf(c.route) == 0; }).shift();
-			},
-
-			getMethod:function (route, controller)
-			{
-				controller = controller || this.controller || this.getController(route);
-				if(controller)
-				{
-					var arr = controller.methods.filter(function(e)
+					this.update();
+					if(this.state.method)
 					{
-						return route.indexOf(e.route) == 0;
-					});
-					return arr ? arr[0] : null;
+						this.watch();
+					}
+				});
+			},
+
+			update:function()
+			{
+				if(this.$refs.result)
+				{
+					this.$refs.result.load();
 				}
+			},
+
+			watch:function()
+			{
+				this.unwatch = this.$watch('state.method.params', this.onParamsChange, {deep:true});
+			},
+
+			unwatch:function()
+			{
+				// will be populate by $watch
 			},
 
 
 		// ------------------------------------------------------------------------------------------------
-		// dom event handlers
+		// handlers
 
 			onLinkClick:function(event)
 			{
 				// variables
-				var url		= event.target.href;
-				var matches = url.match(/\/:(\w+)\/(\w+)/);
-				if(matches)
+				var meta 	= event.ctrlKey || event.metaKey;
+				var route	= this.state.getLink(event.target.href);
+				var $target	= $(event.target);
+				var path	= $target.data('path');
+
+				// controller
+				if(path && meta)
 				{
 					event.preventDefault();
-					this.$refs.modal.load(url);
+					this.server.loadController(path);
 				}
-			},
 
-			onControllerReload:function(data)
-			{
-				if(data && data.path)
+				// method
+				if(route)
 				{
-					// insert if the controller exists
-					var filtered = this.controllers.filter(function(c){ return c.path.toLowerCase() == data.path.toLowerCase(); });
-					if(filtered.length)
-					{
-						var found = filtered[0];
-						var index = this.controllers.indexOf(found);
-						this.controllers.$set(index, data);
-					}
-
-					// append and sort if not
-					else
-					{
-						this.controllers.push(data);
-						this.controllers.sort(function(a, b){
-							if(a.path < b.path)
-							{
-								return -1;
-							}
-							if(a.path > b.path)
-							{
-								return 1;
-							}
-							return 0;
-						});
-					}
-
-					// reload if we're on the same controller
-					if(this.controller && this.controller.path == data.path)
-					{
-						this.setRoute(this.route);
-					}
+					event.preventDefault();
+					meta
+						? this.server.open(route)
+						: this.router.navigate(route);
 				}
 			},
 
-
-		// ------------------------------------------------------------------------------------------------
-		// other
-
-			reloadController:function(path)
+			onRoute:function(route)
 			{
-				if(this.getControllerFromPath(path))
+				this.run(this.state.baseUrl + route);
+			},
+
+			onParamsChange:function()
+			{
+				this.router.navigate(this.state.route, false, true);
+			},
+
+			onHome:function()
+			{
+				this.onView('welcome');
+			},
+
+			onView:function(type)
+			{
+				document.title 	= 'Sketchpad - ' + type;
+				this.state.reset();
+				this.server.load(':page/' + type, function(html)
 				{
-					this.server.load(':load/' + path, this.onControllerReload);
-				}
+					$('#content').html(html);
+				});
 			},
-		
-			reloadMethod:function()
+
+			onStoreLoad:function(event)
 			{
-				this.$refs.result.callMethod();
+				if(this.state.controller && this.state.controller.path == event.path)
+				{
+					var cIndex 	= event.index;
+					var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
+					if(cIndex > -1)
+					{
+						this.unwatch();
+						this.state.controller = this.store.controllers[cIndex]
+						if(mIndex > -1)
+						{
+							this.state.method = this.state.controller.methods[mIndex];
+						}
+						this.watch();
+					}
+
+					// reload
+					this.update();
+				}
 			}
-
 	}
 
-};
+});

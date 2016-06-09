@@ -86,9 +86,12 @@ class Router
 				$this->routes       = array_merge($this->routes, $scanner->routes);
 				$this->controllers  = array_merge($this->controllers, $scanner->controllers);
 			}
-			
-			// save
+
+			// save routes
 			Session::put('sketchpad.routes', $this->routes);
+
+			// save controller types
+			ParamTypeManager::create()->saveAll($this->controllers);
 
 			// return
 			return $this;
@@ -154,7 +157,7 @@ class Router
 
 					// properties
 					$ref->method    = array_shift($segments);
-					$ref->params    = $segments;
+					$ref->params    = ParamTypeManager::create()->convert($segments, $ref->route . $ref->method . '/');
 
 					// finally check if we have a folder with methods; this indicates a 404
 					if($ref instanceof FolderReference && $ref->method)
@@ -215,11 +218,175 @@ class Router
 				{
 					if(strtolower($ref->path) == $path)
 					{
-						return new Controller($ref->path, $ref->route);
+
+						$controller = new Controller($ref->path, $ref->route);
+						ParamTypeManager::create()->saveOne($controller);
+						return $controller;
 					}
 				}
 			}
 			return null;
 		}
 	
+}
+
+
+/**
+ * Utility class to save, load and parse controller and method parameter types
+ */
+class ParamTypeManager
+{
+
+	// ------------------------------------------------------------------------------------------------
+	// instantiation
+
+		public static function create()
+		{
+			return new self;
+		}
+
+
+	// ------------------------------------------------------------------------------------------------
+	// session
+
+		/**
+		 * Saves an array of controllers' parameter types to the session
+		 *
+		 * @param   Controller[]  $controllers
+		 */
+		public function saveAll($controllers)
+		{
+			$types = [];
+			foreach($controllers as $controller)
+			{
+				$types = array_merge($types, $this->get($controller));
+			}
+			Session::forget('sketchpad.types');
+			Session::put('sketchpad.types', $types);
+		}
+
+		/**
+		 * Saves a single controller's parameter types to the session
+		 *
+		 * @param   Controller  $controller
+		 */
+		public function saveOne($controller)
+		{
+			$types = Session::get('sketchpad.types');
+			$types = array_merge($types, $this->get($controller));
+			Session::put('sketchpad.types', $types);
+		}
+
+		/**
+		 * Loads (if teh route exists) a parameter array if saved in the session
+		 *
+		 * @param $route
+		 * @return array
+		 */
+		public function loadOne($route)
+		{
+			return Session::get('sketchpad.types.' . $route);
+		}
+
+
+	// ------------------------------------------------------------------------------------------------
+	// objects
+
+		/**
+		 * Gets a single controller's parameter types as a routes => types array
+		 *
+		 * @param   Controller  $controller
+		 * @return  array
+		 */
+		public function get($controller)
+		{
+			$types = [];
+			foreach($controller->methods as $method)
+			{
+				$params = array_map(function($param){ return $param->type; }, $method->params);
+				if($params)
+				{
+					$types[$method->route] = $params;
+				}
+			}
+			return $types;
+		}
+
+		/**
+		 * Converts an array of parameters to the correct type
+		 *
+		 * Works by loading any saved array from the session, and converting
+		 *
+		 * @param   array   $params
+		 * @param   string  $route
+		 * @return  array
+		 */
+		public function convert($params, $route)
+		{
+			$types = $this->loadOne($route);
+			if($types)
+			{
+				foreach ($params as $index => $value)
+				{
+					$type = $types[$index];
+					if ($type == 'number')
+					{
+						$params[$index] = (float) $value;
+					}
+					else if ($type == 'boolean')
+					{
+						$params[$index] = $value === 'true';
+					}
+					else if($type == 'mixed')
+					{
+						$params[$index] = $this->cast($value);
+					}
+					else if($type == 'null' && $value == 'null')
+					{
+						$params[$index] = null;
+					}
+				}
+			}
+
+			return $params;
+		}
+
+		/**
+		 * Parses an array of parameters to the correct type
+		 *
+		 * Works by guessing the types from the values
+		 *
+		 * @param   mixed[]     $params
+		 * @return  mixed[]
+		 */
+		protected function parse($params)
+		{
+			foreach($params as $name => $value)
+			{
+				$params[$name] = $this->cast($value);
+			}
+			return $params;
+		}
+
+		/**
+		 * Casts a string value to its appropriate type
+		 *
+		 * Works by guessing the types from the values
+		 *
+		 * @param   string      $value
+		 * @return  mixed
+		 */
+		protected function cast($value)
+		{
+			if(is_numeric($value))
+			{
+				return (float) $value;
+			}
+			else if($value === 'true' || $value === 'false')
+			{
+				return $value === 'true';
+			}
+			return $value;
+		}
+
 }

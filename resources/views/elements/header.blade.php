@@ -14,20 +14,17 @@
 		<div class="navbar-collapse collapse" id="navbar-main">
 
 			<ul class="nav navbar-nav">
-				<li>
-					<a href="{{ $route }}:show/new" title="New Controller">New</a>
-				</li>
+				<!--
+				<li><input class="form-control" type="text" placeholder="Search..."></li>
+				-->
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
 				<!--
-				<li>
-					<a href="{{ $route }}:options" title="Options">Options</a>
-				</li>
+				<li><a href="{{ $route }}~/new" title="New Controller">New</a></li>
+				<li><a href="{{ $route }}~/settings" title="Settings">Settings</a></li>
 				-->
-				<li>
-					<a target="_blank" href="{{ $route }}:show/help" title="Help">Help</a>
-				</li>
+				<li><a target="_blank" href="{{ $route }}~/help" title="Help">Help</a></li>
 			</ul>
 
 		</div>

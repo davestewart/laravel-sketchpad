@@ -1,5 +1,3 @@
-var $output;
-
 Vue.component('result', {
 
 	template:'#result-template',
@@ -12,56 +10,81 @@ Vue.component('result', {
 			transition	:false,
 			title		:'Sketchpad',
 			info		:'',
-			method		:null
+			oldMethod	:null
 		}
 	},
 
-	/*
+	props:
+	[
+		'state', 
+		'method'
+	],
+
 	computed:
 	{
 		title:function()
 		{
-			return this.$root.options.useLabels ? this.method.label : this.method.name + '()';
+			var state = this.state;
+			return state.method && state.method.name != 'index'
+					? Helpers.methodLabel(state.method)
+					: state.controller
+						? state.controller.label
+						: 'Sketchpad';
 		},
 
-		comment:function()
+		info:function()
 		{
+			var state = this.state;
+			return state.method && state.method.name != 'index'
+					? state.method.comment.intro || '&hellip;'
+					: state.controller
+						? state.controller.methods.length + ' methods'
+						: '';
+		},
 
+		params:function()
+		{
+			return this.state.method
+				? this.state.method.params
+				: null;
+		},
+
+		deferred:function()
+		{
+			if(this.state.method)
+			{
+				var tags = this.state.method.comment.tags;
+				return tags.deferred || tags.warning;
+			}
+			return false;
+		},
+
+		warning:function()
+		{
+			if(this.state.method)
+			{
+				var tags = this.state.method.comment.tags;
+				return tags.warning;
+			}
+			return false;
+		},
+
+		method:function()
+		{
+			return this.state.method;
 		}
 	},
-	*/
+
+	filters:
+	{
+		marked:marked,
+		humanize:Helpers.humanize
+	},
 
 	ready:function()
 	{
-		$output = $('#output');
-		//this.$watch('method.params', this.callMethod, {deep:true});
-	},
-
-	events:
-	{
-
-		loadController:function(controller)
-		{
-			this.method = null;
-			this.$refs.params.params = null;
-			this.setTitle(controller.label, controller.comment.intro || controller.methods.length + ' methods');
-			$output.empty();
-		},
-
-		loadMethod:function(method)
-		{
-			this.loading 	= true;
-			this.transition = this.method && this.method.route !== method.route;
-			this.method 	= method;
-			this.$refs.params.params = method.params;
-			this.callMethod();
-		},
-
-		onParamChange:function()
-		{
-			this.callMethod();
-		}
-
+		this.$output 	= $('#output');
+		this.timer 		= new Timer();
 	},
 
 	methods:
@@ -70,24 +93,49 @@ Vue.component('result', {
 		// ------------------------------------------------------------------------------------------------
 		// load methods
 
-			callMethod:function(update)
+			load:function(transition)
 			{
-				// properties
-				var method = this.method;
-				this.setTitle(this.$root.options.useLabels ? method.label : method.name + '()', method.comment ? method.comment.intro : method.label);
+				if ( ! this.state.method )
+				{
+					this.clear();
+					return;
+				}
 
-				// values
-				var values 	= method.params.map(function(e){ return e.value; });
-				var url		= method.route + values.join('/');
-
-				// debug
-				this.lastUrl = url;
-				this.date = new Date();
+				this.transition	= this.state.method !== this.oldMethod;
+				this.loading	= true;
 
 				// load
+				if( ! this.deferred )
+				{
+					this._load(transition);
+				}
+				else
+				{
+					this.clear();
+					if(this.state.method.comment.tags.warning)
+					{
+						//alert(this.state.method.comment.tags.warning || 'Be careful when running this method!');
+					}
+				}
+			},
+
+			_load:function(transition)
+			{
+				// time load process
+				this.timer.start();
+
+				// store old method
+				this.oldMethod = this.state.method;
+
+				// run
 				this.$root.server
-					.call(url, this.onLoad, this.onFail)
+					.call(this.state.route, this.onLoad, this.onFail)
 					.always(this.onComplete);
+			},
+
+			clear:function()
+			{
+				return this.$output.empty();
 			},
 
 			loadIframe:function(xhr)
@@ -98,18 +146,9 @@ Vue.component('result', {
 				var $iframe = $('<iframe class="error" frameborder="0">');
 				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
 
-				$output.empty().append($iframe.attr('src', src));
+				this.clear().append($iframe.attr('src', src));
 			},
 
-
-		// ------------------------------------------------------------------------------------------------
-		// accessors
-
-			setTitle:function(title, info)
-			{
-				this.title 	= title;
-				this.info	= info.replace(/`([^`]+)`/g, '<code>$1</code>');
-			},
 
 
 		// ------------------------------------------------------------------------------------------------
@@ -119,11 +158,14 @@ Vue.component('result', {
 			{
 				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
 				// properties
-				this.transition = false;
-				this.method.error = 0;
+				this.transition 	= false;
+				if(this.state.method)
+				{
+					this.state.method.error = 0;
+				}
 
 				// format
-				if(this.method.comment.tags.iframe)
+				if(this.state.method.comment.tags.iframe)
 				{
 					return this.loadIframe(xhr);
 				}
@@ -134,35 +176,64 @@ Vue.component('result', {
 				if(contentType === 'application/json')
 				{
 					this.format = 'json';
-					$output.JSONView(data);
+					this.$output.JSONView(data);
 					return;
 				}
 
 				// handle md response
 				if(contentType.indexOf('text/markdown') > -1)
 				{
-					var converter 	= new showdown.Converter();
-					var html		= converter.makeHtml(data);
+					var html		= marked(data);
 					this.format 	= 'markdown';
-					$output.html(html);
+					this.$output.html(html);
 					return;
 				}
 
 				// content
-				$output.html(data);
+				this.$output.html(data);
+
+				// format code blocks
+				if(settings.formatCode)
+				{
+					this.$output.find('pre.code').each(function(i, block) {
+						hljs.highlightBlock(block);
+					});
+				}
+
+				// handle forms
+				var $form = this.$output.find('form[action=""]');
+				if($form.length)
+				{
+					var result = this;
+					$form
+						.attr('action', '')
+						.on('submit', function(event)
+						{
+							event.preventDefault();
+							var data =
+							{
+								type        : 'POST',
+								url         : window.location.href,
+								data        : $form.serialize()
+							};
+							$
+								.post(data)
+								.done(result.onLoad.bind(this));
+						});
+				}
 
 			},
 
 			onFail:function(xhr, status, message)
 			{
 				this.format = 'error';
+				this.state.method.error = 1;
 				this.loadIframe(xhr);
-				this.method.error = 1;
 			},
 
 			onComplete:function()
 			{
-				console.info('Ran "%s" in %d ms', this.lastUrl, new Date - this.date);
+				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
 				this.loading 	= this.$root.server.count != 0;
 			}
 
