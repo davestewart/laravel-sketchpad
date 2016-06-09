@@ -119,6 +119,15 @@ Server.prototype =
 			return $.get(url, onSuccess);
 		},
 
+		loadController:function(path, onSuccess)
+		{
+			var url = ':load/' + path;
+			return onSuccess
+				? this.load(url, onSuccess)
+				: window.open(this.base + url);
+		},
+
+
 	// ------------------------------------------------------------------------------------------------
 	// utilities
 
@@ -218,6 +227,16 @@ Server.prototype =
 						});
 					}
 
+					// index fallback
+					if(this.controller && ! this.method)
+					{
+						var methods = this.controller.methods.filter(function(m){ return m.name == 'index'; });
+						if(methods.length)
+						{
+							this.method = methods.shift();
+						}
+					}
+
 					// page
 					var title		= 'Sketchpad - ' + this.route.replace(this.baseUrl, '');
 					document.title 	= title.replace(/\/$/, '').replace(/\//g, ' ▸ ');
@@ -230,6 +249,14 @@ Server.prototype =
 				{
 					this.controller = null;
 					this.method 	= null;
+				},
+
+				getLink:function(url)
+				{
+					url = String(url).replace(location.origin, '');
+					return url.indexOf(this.baseUrl) === 0
+						? url.replace(/\/*$/, '/')
+						: null;
 				},
 
 
@@ -245,8 +272,7 @@ Server.prototype =
 				parseRoute:function(route)
 				{
 					// parameters
-					route = route || location.href;
-					route = route.replace(location.origin, '');
+					route = this.getLink(route || location.href);
 
 					// variables
 					var controller, method, params;
@@ -293,7 +319,7 @@ Server.prototype =
 
 	created:function()
 	{
-		if(LiveReload)
+		if(window.LiveReload)
 		{
 			// server
 			this.server = this.$options.server || server;
@@ -334,7 +360,7 @@ Server.prototype =
 					var controller = this.getControllerByPath(path);
 					if(controller)
 					{
-						this.server.load(':load/' + path, this.onLoad);
+						this.server.loadController(path, this.onLoad);
 					}
 					return true;
 				}
@@ -351,7 +377,7 @@ Server.prototype =
 			},
 
 			/**
-			 * Called when AJAX response with new controller data comes back from server
+			 * Update controller data when a controller is changed, requested, and data reloaded
 			 *
 			 * @param data
 			 */
@@ -435,17 +461,19 @@ var App = Vue.extend({
 		this.store.$on('load', this.onStoreLoad);
 
 		// links
-		$('body').on('click', 'a[href^="/sketchpad/"]', this.onLinkClick);
+		//$('body').on('click', 'a[href^="/sketchpad/"]', this.onLinkClick);
+		$('body').on('click', 'a', this.onLinkClick);
 
 		// routes
+		var url = this.state.baseUrl;
 		this.router = new Router();
-		this.router.route('/sketchpad/', this.onHome);
-		this.router.route('/sketchpad/~/:view', this.onView);
-		this.router.route('/sketchpad/*path', this.onRoute);
-		//this.router.start();
+		this.router.route(url, this.onHome);
+		this.router.route(url + '~/*view', this.onView);
+		this.router.route(url + '*path', this.onRoute);
 
-		// page load
-		this.run(location.pathname);
+		// seems to be a small bug with router on home route, so trigger home then start as normal
+		this.onHome();
+		this.router.start();
 
 		// ui
 		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
@@ -462,19 +490,22 @@ var App = Vue.extend({
 			{
 				this.unwatch();
 				this.state.setRoute(route);
-				this.$refs.result.method = this.state.method;
-				this.update(true);
-				if(this.state.method)
+				this.$nextTick(function()
 				{
-					this.watch();
-				}
+					this.update();
+					if(this.state.method)
+					{
+						this.watch();
+					}
+				});
 			},
 
-			update:function(run)
+			update:function()
 			{
-				this.state.method
-					? this.$refs.result.load(run)
-					: this.$refs.result.clear();
+				if(this.$refs.result)
+				{
+					this.$refs.result.load();
+				}
 			},
 
 			watch:function()
@@ -493,9 +524,27 @@ var App = Vue.extend({
 
 			onLinkClick:function(event)
 			{
-				event.preventDefault();
-				var href = $(event.target).attr('href');
-				this.router.navigate(href);
+				// variables
+				var meta 	= event.ctrlKey || event.metaKey;
+				var route	= this.state.getLink(event.target.href);
+				var $target	= $(event.target);
+				var path	= $target.data('path');
+
+				// controller
+				if(path && meta)
+				{
+					event.preventDefault();
+					this.server.loadController(path);
+				}
+
+				// method
+				if(route)
+				{
+					event.preventDefault();
+					meta
+						? this.server.open(route)
+						: this.router.navigate(route);
+				}
 			},
 
 			onRoute:function(route)
@@ -505,21 +554,23 @@ var App = Vue.extend({
 
 			onParamsChange:function()
 			{
-				var route = this.state.route;
-				this.router.navigate(route, false, true);
-				this.update();
+				this.router.navigate(this.state.route, false, true);
 			},
 
 			onHome:function()
 			{
-				// need to do this with reactive properties
-				$('#welcome').appendTo('#output').show();
-				this.state.reset();
+				this.onView('welcome');
 			},
 
-			onView:function(params)
+			onView:function(type)
 			{
-				console.log('view:', params);
+				console.log('VIEW:' + type);
+				document.title 	= 'Sketchpad - ' + type;
+				this.state.reset();
+				this.server.load(':page/' + type, function(html)
+				{
+					$('#content').html(html);
+				});
 			},
 
 			onStoreLoad:function(event)
@@ -547,6 +598,79 @@ var App = Vue.extend({
 
 });
 
+Vue.component('method', {
+
+	template:'#method-template',
+
+	props:'method state'.split(' '),
+
+	computed:
+	{
+		listClass:function()
+		{
+			var tags 	= this.tags;
+			var state 	= this.state;
+			var data 	=
+			{
+				active		:state.route && state.route.indexOf(this.route) == 0,
+				favourite	:tags.favourite,
+				icon		:tags.favourite || tags.icon
+			};
+
+			if(tags.css) {
+				data[tags.css] = true;
+			}
+			if(tags.deferred) {
+				data.icon = true;
+				data['deferred'] = true;
+			}
+			if(tags.warning) {
+				data.icon = true;
+				data['warning'] = true;
+			}
+			if(tags.archived) {
+				data['archived'] = true;
+			}
+			if(tags.icon) {
+				var parts = tags.icon.split(/\s+/);
+				data['fa-' + parts.pop()] = true;
+			}
+			return data;
+		},
+
+		listStyle:function()
+		{
+			var tags	= this.tags;
+			var data 	= {};
+			if(tags.icon) {
+				var parts = tags.icon.split(/\s+/);
+				if(parts.length == 2)
+				{
+					data.color = parts.shift();
+				}
+			}
+			return data;
+		},
+
+		linkStyle:function()
+		{
+			var tags	= this.tags;
+			var data 	= {};
+			if(tags.color){
+				data.color = tags.color;
+			}
+			return data;
+		},
+
+		name:function() { return this.method.name; },
+		label:function() { return this.method.label; },
+		route:function() { return this.method.route; },
+		error:function() { return this.method.error; },
+		comment:function() { return this.method.comment; },
+		tags:function() { return this.method.comment.tags; },
+	}
+
+});
 Vue.component('modal', {
 
 	template:'#modal-template',
@@ -597,6 +721,15 @@ Vue.component('navigation', {
 		humanize:Helpers.humanize
 	},
 
+	ready:function()
+	{
+		this.$watch('state.controller', function ()
+		{
+			//$(this.$el).find('a[title]').tooltip({container:'body', trigger:'hover', placement:'right', delay: { "show": 500, "hide": 100 }})
+		});
+
+	},
+
 	methods:
 	{
 		getLabel:function(method)
@@ -625,47 +758,34 @@ Vue.component('navigation', {
 	}
 
 });
-Vue.component('params', {
-	
-	template:'#params-template',
-	
-	props:['params', 'deferred'],
+Vue.component('param', {
 
-	methods:
+	template:'#param-template',
+
+	props:['param'],
+
+	computed:
 	{
-
-		run:function()
+		type:function()
 		{
-			this.$dispatch('run');
-		},
-
-		getType:function(param)
-		{
-			if(/^-?(\d+|\d+\.\d+|\.\d+)([eE][-+]?\d+)?$/.test(param.value))
-			{
-				return 'number';
-			}
-			if(/^true|false$/i.test(param.value))
+			if(/^bool/.test(this.param.type))
 			{
 				return 'checkbox';
 			}
-			return 'text';
+			else if(this.param.type == 'number')
+			{
+				return 'number';
+			}
+			return this.param.type;
 		},
 
-		getId:function(param)
+		id:function()
 		{
-			return 'param-' + param.name;
-		},
-
-		onParamChange:function()
-		{
-			//this.$dispatch('onParamChange');
+			return 'param-' + this.param.name;
 		}
 	}
-	
-});
-var $output;
 
+});
 Vue.component('result', {
 
 	template:'#result-template',
@@ -677,7 +797,8 @@ Vue.component('result', {
 			loading		:false,
 			transition	:false,
 			title		:'Sketchpad',
-			info		:''
+			info		:'',
+			oldMethod	:null
 		}
 	},
 
@@ -692,7 +813,7 @@ Vue.component('result', {
 		title:function()
 		{
 			var state = this.state;
-			return state.method
+			return state.method && state.method.name != 'index'
 					? Helpers.methodLabel(state.method)
 					: state.controller
 						? state.controller.label
@@ -702,7 +823,7 @@ Vue.component('result', {
 		info:function()
 		{
 			var state = this.state;
-			return state.method
+			return state.method && state.method.name != 'index'
 					? state.method.comment.intro || '&hellip;'
 					: state.controller
 						? state.controller.methods.length + ' methods'
@@ -718,7 +839,27 @@ Vue.component('result', {
 
 		deferred:function()
 		{
-			return !! (this.state.method && 'deferred' in this.state.method.comment.tags);
+			if(this.state.method)
+			{
+				var tags = this.state.method.comment.tags;
+				return tags.deferred || tags.warning;
+			}
+			return false;
+		},
+
+		warning:function()
+		{
+			if(this.state.method)
+			{
+				var tags = this.state.method.comment.tags;
+				return tags.warning;
+			}
+			return false;
+		},
+
+		method:function()
+		{
+			return this.state.method;
 		}
 	},
 
@@ -730,7 +871,7 @@ Vue.component('result', {
 
 	ready:function()
 	{
-		$output 		= $('#output');
+		this.$output 	= $('#output');
 		this.timer 		= new Timer();
 	},
 
@@ -742,12 +883,13 @@ Vue.component('result', {
 
 			load:function(transition)
 			{
-				if ( ! this.method )
+				if ( ! this.state.method )
 				{
-					$output.empty();
+					this.clear();
 					return;
 				}
-				this.transition	= transition;
+
+				this.transition	= this.state.method !== this.oldMethod;
 				this.loading	= true;
 
 				// load
@@ -755,12 +897,23 @@ Vue.component('result', {
 				{
 					this._load(transition);
 				}
+				else
+				{
+					this.clear();
+					if(this.state.method.comment.tags.warning)
+					{
+						//alert(this.state.method.comment.tags.warning || 'Be careful when running this method!');
+					}
+				}
 			},
 
 			_load:function(transition)
 			{
-				// variables
+				// time load process
 				this.timer.start();
+
+				// store old method
+				this.oldMethod = this.state.method;
 
 				// run
 				this.$root.server
@@ -770,7 +923,7 @@ Vue.component('result', {
 
 			clear:function()
 			{
-				$output.empty();
+				return this.$output.empty();
 			},
 
 			loadIframe:function(xhr)
@@ -781,7 +934,7 @@ Vue.component('result', {
 				var $iframe = $('<iframe class="error" frameborder="0">');
 				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
 
-				$output.empty().append($iframe.attr('src', src));
+				this.clear().append($iframe.attr('src', src));
 			},
 
 
@@ -794,10 +947,13 @@ Vue.component('result', {
 				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
 				// properties
 				this.transition 	= false;
-				this.method.error 	= 0;
+				if(this.state.method)
+				{
+					this.state.method.error = 0;
+				}
 
 				// format
-				if(this.method.comment.tags.iframe)
+				if(this.state.method.comment.tags.iframe)
 				{
 					return this.loadIframe(xhr);
 				}
@@ -808,7 +964,7 @@ Vue.component('result', {
 				if(contentType === 'application/json')
 				{
 					this.format = 'json';
-					$output.JSONView(data);
+					this.$output.JSONView(data);
 					return;
 				}
 
@@ -817,20 +973,49 @@ Vue.component('result', {
 				{
 					var html		= marked(data);
 					this.format 	= 'markdown';
-					$output.html(html);
+					this.$output.html(html);
 					return;
 				}
 
 				// content
-				$output.html(data);
+				this.$output.html(data);
+
+				// format code blocks
+				if(settings.formatCode)
+				{
+					this.$output.find('pre.code').each(function(i, block) {
+						hljs.highlightBlock(block);
+					});
+				}
+
+				// handle forms
+				var $form = this.$output.find('form[action=""]');
+				if($form.length)
+				{
+					var result = this;
+					$form
+						.attr('action', '')
+						.on('submit', function(event)
+						{
+							event.preventDefault();
+							var data =
+							{
+								type        : 'POST',
+								url         : window.location.href,
+								data        : $form.serialize()
+							};
+							$
+								.post(data)
+								.done(result.onLoad.bind(this));
+						});
+				}
 
 			},
 
 			onFail:function(xhr, status, message)
 			{
 				this.format = 'error';
-				this.method.error = 1;
-				$output.empty();
+				this.state.method.error = 1;
 				this.loadIframe(xhr);
 			},
 
@@ -840,24 +1025,15 @@ Vue.component('result', {
 				this.loading 	= this.$root.server.count != 0;
 			}
 
-	},
-
-	events:
-	{
-		run:function()
-		{
-			this._load();
-		}
 	}
 
 });
 
-
-
-
 var settings =
 {
-	useLabels:true
+	useLabels:true,
+	formatCode:false,
+	showComments:true
 };
 
 var server 	= new Server();

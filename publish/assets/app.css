@@ -59,16 +59,27 @@
 		outline:1px solid red;
 	}
 */
-input:focus {
-  color: #cc0000;
-  outline: none; }
+.tooltip .tooltip-inner {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: left; }
 
-.table.pre td,
+.table {
+  max-width: inherit;
+  width: inherit; }
+
+a:active,
+a:focus {
+  outline: none !important; }
+
 pre,
+.table.pre td,
 .code {
   font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace !important;
   white-space: pre;
-  color: #555; }
+  color: #555;
+  margin: 20px; }
 
 pre {
   background-color: #FBFBFB; }
@@ -76,92 +87,129 @@ pre {
 pre small, pre * {
   font-size: 1em; }
 
-#output pre.sf-dump,
-#output .jsonview {
-  position: relative;
-  display: block;
-  padding: 5px;
-  font: normal 11px/1.2em Menlo, Monaco, Consolas, "Courier New", monospace;
-  background-color: #fff;
-  word-wrap: normal;
-  white-space: pre;
-  z-index: 0; }
-
-#output pre {
-  border: none !important; }
-
-#output[data-format="text"] {
-  white-space: pre;
-  font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace; }
-
-#output .jsonview {
-  line-height: 1.4em; }
-  #output .jsonview .prop {
-    font-weight: 700;
+#output {
+  /* Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org> */
+  /* Base color: saturation 0; */
+  /* User color: hue: 0 */
+  /* Language color: hue: 90; */
+  /* Meta color: hue: 200 */
+  /* Misc effects */ }
+  #output pre.sf-dump,
+  #output .jsonview {
+    position: relative;
+    display: block;
+    padding: 5px;
+    font: normal 11px/1.2em Menlo, Monaco, Consolas, "Courier New", monospace;
+    background-color: #fff;
+    word-wrap: normal;
+    white-space: pre;
+    z-index: 0; }
+  #output pre {
+    border: none !important; }
+  #output[data-format="text"] {
+    white-space: pre;
+    font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace; }
+  #output .jsonview {
+    line-height: 1.4em; }
+    #output .jsonview .prop {
+      font-weight: 700;
+      text-decoration: none;
+      color: #000; }
+    #output .jsonview .null,
+    #output .jsonview .undefined {
+      color: #AAA; }
+    #output .jsonview .bool {
+      color: #18bc9c; }
+    #output .jsonview .num {
+      color: #3498db; }
+    #output .jsonview .string {
+      color: #c7254e;
+      white-space: pre-wrap; }
+  #output pre.sf-dump span {
+    display: inline; }
+  #output pre.sf-dump abbr {
     text-decoration: none;
-    color: #000; }
-  #output .jsonview .null,
-  #output .jsonview .undefined {
-    color: red; }
-  #output .jsonview .bool,
-  #output .jsonview .num {
-    color: #00f; }
-  #output .jsonview .string {
-    color: #18bc9c;
-    white-space: pre-wrap; }
-
-#output pre.sf-dump span {
-  display: inline; }
-
-#output pre.sf-dump abbr {
-  text-decoration: none;
-  border: none;
-  cursor: help; }
-
-#output pre.sf-dump a {
-  text-decoration: none;
-  cursor: pointer;
-  border: 0;
-  outline: none; }
-
-#output pre.sf-dump .sf-dump-compact {
-  display: none; }
-
-#output pre.sf-dump .sf-dump-num {
-  color: #a71d5d; }
-
-#output pre.sf-dump .sf-dump-const {
-  color: #795da3; }
-
-#output pre.sf-dump .sf-dump-str {
-  color: #df5000; }
-
-#output pre.sf-dump .sf-dump-cchr {
-  color: #222; }
-
-#output pre.sf-dump .sf-dump-note {
-  color: #a71d5d; }
-
-#output pre.sf-dump .sf-dump-ref {
-  color: #a0a0a0; }
-
-#output pre.sf-dump .sf-dump-public {
-  color: #795da3; }
-
-#output pre.sf-dump .sf-dump-protected {
-  color: #795da3; }
-
-#output pre.sf-dump .sf-dump-private {
-  color: #795da3; }
-
-#output pre.sf-dump .sf-dump-meta {
-  color: #b729d9; }
-
-#output pre.sf-dump .sf-dump-key {
-  color: #df5000; }
-
-#output pre.sf-dump .sf-dump-index {
-  color: #a71d5d; }
+    border: none;
+    cursor: help; }
+  #output pre.sf-dump a {
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    outline: none; }
+  #output pre.sf-dump .sf-dump-compact {
+    display: none; }
+  #output pre.sf-dump .sf-dump-num {
+    color: #3498db; }
+  #output pre.sf-dump .sf-dump-str {
+    color: #c7254e; }
+  #output pre.sf-dump .sf-dump-const {
+    color: #18bc9c; }
+  #output pre.sf-dump .sf-dump-cchr {
+    color: #222; }
+  #output pre.sf-dump .sf-dump-note {
+    color: #a71d5d; }
+  #output pre.sf-dump .sf-dump-ref {
+    color: #a0a0a0; }
+  #output pre.sf-dump .sf-dump-public {
+    color: #795da3; }
+  #output pre.sf-dump .sf-dump-protected {
+    color: #795da3; }
+  #output pre.sf-dump .sf-dump-private {
+    color: #795da3; }
+  #output pre.sf-dump .sf-dump-meta {
+    color: #b729d9; }
+  #output pre.sf-dump .sf-dump-key {
+    color: #df5000; }
+  #output pre.sf-dump .sf-dump-index {
+    color: #a71d5d; }
+  #output font[color="#cc0000"] {
+    color: #c7254e; }
+  #output font[color="#4e9a06"] {
+    color: #3498db; }
+  #output font[color="#75507b"] {
+    color: #18bc9c; }
+  #output .hljs {
+    display: block;
+    overflow-x: auto; }
+  #output .hljs,
+  #output .hljs-subst {
+    color: #444; }
+  #output .hljs-comment {
+    color: #888888; }
+  #output .hljs-type,
+  #output .hljs-string,
+  #output .hljs-selector-id,
+  #output .hljs-selector-class,
+  #output .hljs-quote,
+  #output .hljs-template-tag,
+  #output .hljs-deletion {
+    color: #c7254e; }
+  #output .hljs-number {
+    color: #3498db; }
+  #output .hljs-title,
+  #output .hljs-section {
+    color: #18bc9c; }
+  #output .hljs-regexp,
+  #output .hljs-symbol,
+  #output .hljs-variable,
+  #output .hljs-template-variable,
+  #output .hljs-link,
+  #output .hljs-selector-attr,
+  #output .hljs-selector-pseudo {
+    color: #BC6060; }
+  #output .hljs-literal {
+    color: #78A960; }
+  #output .hljs-built_in,
+  #output .hljs-bullet,
+  #output .hljs-code,
+  #output .hljs-addition {
+    color: #397300; }
+  #output .hljs-meta {
+    color: #1f7199; }
+  #output .hljs-meta-string {
+    color: #4d99bf; }
+  #output .hljs-emphasis {
+    font-style: italic; }
 
 html,
 body {
@@ -224,6 +272,29 @@ form .form-group:last-child {
   font-size: inherit;
   height: 40px; }
 
+input[type="date"] {
+  min-width: 150px !important; }
+
+input[type="email"] {
+  min-width: 200px !important; }
+
+input:focus {
+  color: #cc0000;
+  outline: none; }
+
+button {
+  color: #666 !important; }
+
+button:active {
+  background: #666;
+  color: #FFF; }
+
+button:hover {
+  color: #FFF !important; }
+
+p.note {
+  color: #e74c3c !important; }
+
 #setup {
   width: 600px; }
 
@@ -241,6 +312,9 @@ body:after {
 #controllers {
   border-right: 0; }
 
+#content {
+  max-width: 700px; }
+
 #welcome {
   display: none; }
 
@@ -251,40 +325,55 @@ body:after {
     opacity: 0.2; }
   body[data-mode="help"] #nav:hover {
     opacity: 1; }
-  #nav #controllers .nav {
-    margin-top: -38px; }
-  #nav #controllers li.folder {
+  #nav li.folder {
     padding: 3px 5px;
     border-bottom: 1px dashed #EEE;
     margin-bottom: 4px; }
-  #nav .nav > li a {
+    #nav li.folder:first-child {
+      margin-top: -30px !important; }
+  #nav #controllers {
+    padding-right: 40px; }
+  #nav li a {
     padding: 4px 9px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden; }
-  #nav .nav > li.folder,
-  #nav .nav > li p {
+  #nav li.folder,
+  #nav li p {
     padding-left: 9px;
     font-size: 0.8em;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #ccc;
-    font-style: normal;
     cursor: default; }
-  #nav .nav > li.folder {
+  #nav li.folder {
     margin-top: 10px;
     margin-left: -20px; }
-    #nav .nav > li.folder .name {
+    #nav li.folder .name {
       color: #999; }
-  #nav .nav > li.favourite {
-    content: "\f005";
+  #nav li.icon:before {
+    color: #CCC;
     position: absolute;
     top: 4px;
-    left: -19px;
+    left: -12px;
     font-family: FontAwesome;
+    text-align: center;
     font-weight: 400;
+    transition: left 0.3s; }
+  #nav li.icon:hover:before, #nav li.active.icon:before {
+    left: -18px;
+    transition: left 0.2s; }
+  #nav li.favourite:before {
+    content: "\f005";
     color: #FFCC00; }
+  #nav li.deferred:before {
+    content: "\f017"; }
+  #nav li.warning:before {
+    content: "\f12a";
+    color: #FF0000; }
+  #nav li.archived a {
+    color: #CCC; }
   #nav a.controller span.divider {
     position: relative;
     display: inline-block;
