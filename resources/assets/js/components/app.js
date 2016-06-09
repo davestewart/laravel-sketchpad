@@ -123,7 +123,6 @@ var App = Vue.extend({
 
 			onView:function(type)
 			{
-				console.log('VIEW:' + type);
 				document.title 	= 'Sketchpad - ' + type;
 				this.state.reset();
 				this.server.load(':page/' + type, function(html)

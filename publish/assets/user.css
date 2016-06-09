@@ -1,0 +1,29 @@
+li.fancy{
+	padding:3px;
+	border:1px dashed red;
+	border-radius:7px;
+	left:-3px;
+	top:-3px;
+}
+
+li.fancy p{
+	font-style: italic;
+}
+
+li.fancy.active{
+	border:1px solid #333;
+	background: repeating-linear-gradient(
+		-45deg,
+		#222,
+		#222 5px,
+		#333 5px,
+		#333 10px
+	);
+}
+
+#nav li.fancy.active p{
+	overflow: visible;
+	text-overflow: clip;
+	white-space: normal;
+	margin: 5px 0;
+}

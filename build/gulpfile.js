@@ -36,7 +36,7 @@
 				jsFolder + 'classes/**/*.js',
 				jsFolder + 'services/**/*.js',
 				jsFolder + 'components/**/*.js',
-				jsFolder + 'app.js',
+				jsFolder + 'main.js',
 			],
 			output:
 			{

@@ -295,7 +295,7 @@ Server.prototype =
 				makeRoute:function(method, controller)
 				{
 					return method
-						? method.route + method.params.map(function (p) { return p.value; }).join('/')
+						? method.route + (method.params.length ? method.params.map(function (p) { return p.value; }).join('/') + '/' : '')
 						: controller
 							? controller.route
 							: '';
@@ -564,7 +564,6 @@ var App = Vue.extend({
 
 			onView:function(type)
 			{
-				console.log('VIEW:' + type);
 				document.title 	= 'Sketchpad - ' + type;
 				this.state.reset();
 				this.server.load(':page/' + type, function(html)
@@ -777,6 +776,26 @@ Vue.component('param', {
 				return 'number';
 			}
 			return this.param.type;
+		},
+
+		value:
+		{
+			get:function()
+			{
+				if(/^bool/.test(this.param.type))
+				{
+					return this.param.value == true || this.param.value == 'true';
+				}
+				else if(this.param.type == 'number')
+				{
+					return Number(this.param.value);
+				}
+				return this.param.value;
+			},
+			set:function(value)
+			{
+				this.param.value = value;
+			}
 		},
 
 		id:function()
