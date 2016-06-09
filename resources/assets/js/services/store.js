@@ -8,7 +8,7 @@
 
 	created:function()
 	{
-		if(LiveReload)
+		if(window.LiveReload)
 		{
 			// server
 			this.server = this.$options.server || server;
@@ -49,7 +49,7 @@
 					var controller = this.getControllerByPath(path);
 					if(controller)
 					{
-						this.server.load(':load/' + path, this.onLoad);
+						this.server.loadController(path, this.onLoad);
 					}
 					return true;
 				}
@@ -66,7 +66,7 @@
 			},
 
 			/**
-			 * Called when AJAX response with new controller data comes back from server
+			 * Update controller data when a controller is changed, requested, and data reloaded
 			 *
 			 * @param data
 			 */

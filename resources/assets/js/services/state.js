@@ -59,6 +59,16 @@
 						});
 					}
 
+					// index fallback
+					if(this.controller && ! this.method)
+					{
+						var methods = this.controller.methods.filter(function(m){ return m.name == 'index'; });
+						if(methods.length)
+						{
+							this.method = methods.shift();
+						}
+					}
+
 					// page
 					var title		= 'Sketchpad - ' + this.route.replace(this.baseUrl, '');
 					document.title 	= title.replace(/\/$/, '').replace(/\//g, ' ▸ ');
@@ -71,6 +81,14 @@
 				{
 					this.controller = null;
 					this.method 	= null;
+				},
+
+				getLink:function(url)
+				{
+					url = String(url).replace(location.origin, '');
+					return url.indexOf(this.baseUrl) === 0
+						? url.replace(/\/*$/, '/')
+						: null;
 				},
 
 
@@ -86,8 +104,7 @@
 				parseRoute:function(route)
 				{
 					// parameters
-					route = route || location.href;
-					route = route.replace(location.origin, '');
+					route = this.getLink(route || location.href);
 
 					// variables
 					var controller, method, params;

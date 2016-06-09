@@ -1,6 +1,6 @@
 /**
  * Slim Router
- * 
+ *
  * https://github.com/haithembelhaj/slim-router
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Router = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -8,104 +8,136 @@ typeof JSON!="object"&&(JSON={}),function(){"use strict";function f(e){return e<
 },{}],2:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () {
+		function defineProperties(target, props) {
+			for (var i = 0; i < props.length; i++) {
+				var descriptor = props[i];
+				descriptor.enumerable = descriptor.enumerable || false;
+				descriptor.configurable = true;
+				if ('value' in descriptor) descriptor.writable = true;
+				Object.defineProperty(target, descriptor.key, descriptor);
+			}
+		}
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+		return function (Constructor, protoProps, staticProps) {
+			if (protoProps) defineProperties(Constructor.prototype, protoProps);
+			if (staticProps) defineProperties(Constructor, staticProps);
+			return Constructor;
+		};
+	})();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _toConsumableArray(arr) {
+		if (Array.isArray(arr)) {
+			for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+			return arr2;
+		} else {
+			return Array.from(arr);
+		}
+	}
 
-require('../node_modules/history.js/scripts/bundled/html4+html5/native.history.js');
+	function _classCallCheck(instance, Constructor) {
+		if (!(instance instanceof Constructor)) {
+			throw new TypeError('Cannot call a class as a function');
+		}
+	}
 
-var optionalParam = /\((.*?)\)/g;
-var escapeRegExp = /[\-{}\[\]+?.,\\\^$|#\s]/g;
-var namedParam = /(\(\?)?:\w+/g;
-var splatParam = /\*\w+/g;
+	require('../node_modules/history.js/scripts/bundled/html4+html5/native.history.js');
 
-  var Router = (function () {
-    function Router() {
-      var _this = this;
+	var optionalParam = /\((.*?)\)/g;
+	var escapeRegExp = /[\-{}\[\]+?.,\\\^$|#\s]/g;
+	var namedParam = /(\(\?)?:\w+/g;
+	var splatParam = /\*\w+/g;
 
-      var routes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	var Router = (function () {
+		function Router() {
+			var _this = this;
 
-      _classCallCheck(this, Router);
+			var routes = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-      this.routes = routes;
+			_classCallCheck(this, Router);
 
-      History.Adapter.bind(window, 'statechange', function () {
-        return _this.checkRoutes(History.getState());
-      });
-    }
+			this.routes = routes;
 
-    _createClass(Router, [{
-      key: 'route',
-      value: function route(_route, callback) {
+			History.Adapter.bind(window, 'statechange', function () {
+				return _this.checkRoutes(History.getState());
+			});
+		}
 
-        _route = _route.replace(escapeRegExp, '\\$&').replace(optionalParam, '(?:$1)?').replace(namedParam, function (match, optional) {
-          return optional ? match : '([^/?]+)';
-        }).replace(splatParam, '([^?].*?)');
+		_createClass(Router, [{
+			key: 'route',
+			value: function route(_route, callback) {
 
-        this.routes["^" + _route + "(?:\\?([\\s\\S]*))?$"] = callback;
-      }
-    }, {
-      key: 'checkRoutes',
-      value: function checkRoutes(state) {
+				_route = _route.replace(escapeRegExp, '\\$&').replace(optionalParam, '(?:$1)?').replace(namedParam, function (match, optional) {
+					return optional ? match : '([^/?]+)';
+				}).replace(splatParam, '([^?].*?)');
 
-        var url     = state.data.url || state.hash;
-        var trigger = state.data.trigger !== undefined ? state.data.trigger : true;
+				this.routes["^" + _route + "(?:\\?([\\s\\S]*))?$"] = callback;
+			}
+		}, {
+			key: 'checkRoutes',
+			value: function checkRoutes(state) {
 
-        if (!trigger) return;
+				var url = state.data.url || state.hash;
+				var trigger = state.data.trigger !== undefined
+					? state.data.trigger
+					: true;
 
-        for(var key in this.routes)
-        {
-          var regex = new RegExp(key);
-          if (regex.test(url))
-          {
-            this.routes[key].apply(this.routes, _toConsumableArray(regex.exec(url).slice(1)));
-            return;
-          }
-        }
+				//console.log('trigger', trigger);
 
-      }
-    }, {
-      key: 'navigate',
-      value: function navigate(url) {
-        var trigger = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
-        var replace = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-        var title = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+				//if (!trigger) return;
 
-        return History[replace ? 'replaceState' : 'pushState']({url: url, trigger: trigger}, title, url);
-      }
-    }, {
-      key: 'start',
-      value: function start(url) {
+				for (var key in this.routes) {
+					var regex = new RegExp(key);
+					if (regex.test(url)) {
+						//console.log('route:', url);
+						this.routes[key].apply(this.routes, _toConsumableArray(regex.exec(url).slice(1)));
+						return;
+					}
+				}
 
-        var stateObj = url ? {data: {url: url}} : History.getState();
+			}
+		}, {
+			key: 'navigate',
+			value: function navigate(url) {
+				var trigger = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+				var replace = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+				var title = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 
-        this.checkRoutes(stateObj);
-      }
-    }, {
-      key: 'go',
-      value: function go(num) {
+				return History[replace ? 'replaceState' : 'pushState']({url: url, trigger: trigger}, title, url);
+			}
+		}, {
+			key: 'start',
+			value: function start(url) {
 
-        History.go(num);
-      }
-    }, {
-      key: 'back',
-      value: function back() {
+				var stateObj = url
+					? {data: {url: url}}
+					: History.getState();
 
-        History.back();
-      }
-    }]);
+				this.checkRoutes(stateObj);
+			}
+		}, {
+			key: 'go',
+			value: function go(num) {
 
-    return Router;
-  })();
+				History.go(num);
+			}
+		}, {
+			key: 'back',
+			value: function back() {
 
-  exports['default'] = Router;
-  module.exports = exports['default'];
+				History.back();
+			}
+		}]);
+
+		return Router;
+	})();
+
+	exports['default'] = Router;
+	module.exports = exports['default'];
 
 }, {"../node_modules/history.js/scripts/bundled/html4+html5/native.history.js": 1}]
 }, {}, [2])(2)

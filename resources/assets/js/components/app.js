@@ -20,17 +20,19 @@ var App = Vue.extend({
 		this.store.$on('load', this.onStoreLoad);
 
 		// links
-		$('body').on('click', 'a[href^="/sketchpad/"]', this.onLinkClick);
+		//$('body').on('click', 'a[href^="/sketchpad/"]', this.onLinkClick);
+		$('body').on('click', 'a', this.onLinkClick);
 
 		// routes
+		var url = this.state.baseUrl;
 		this.router = new Router();
-		this.router.route('/sketchpad/', this.onHome);
-		this.router.route('/sketchpad/~/:view', this.onView);
-		this.router.route('/sketchpad/*path', this.onRoute);
-		//this.router.start();
+		this.router.route(url, this.onHome);
+		this.router.route(url + '~/*view', this.onView);
+		this.router.route(url + '*path', this.onRoute);
 
-		// page load
-		this.run(location.pathname);
+		// seems to be a small bug with router on home route, so trigger home then start as normal
+		this.onHome();
+		this.router.start();
 
 		// ui
 		//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
@@ -47,19 +49,22 @@ var App = Vue.extend({
 			{
 				this.unwatch();
 				this.state.setRoute(route);
-				this.$refs.result.method = this.state.method;
-				this.update(true);
-				if(this.state.method)
+				this.$nextTick(function()
 				{
-					this.watch();
-				}
+					this.update();
+					if(this.state.method)
+					{
+						this.watch();
+					}
+				});
 			},
 
-			update:function(run)
+			update:function()
 			{
-				this.state.method
-					? this.$refs.result.load(run)
-					: this.$refs.result.clear();
+				if(this.$refs.result)
+				{
+					this.$refs.result.load();
+				}
 			},
 
 			watch:function()
@@ -78,9 +83,27 @@ var App = Vue.extend({
 
 			onLinkClick:function(event)
 			{
-				event.preventDefault();
-				var href = $(event.target).attr('href');
-				this.router.navigate(href);
+				// variables
+				var meta 	= event.ctrlKey || event.metaKey;
+				var route	= this.state.getLink(event.target.href);
+				var $target	= $(event.target);
+				var path	= $target.data('path');
+
+				// controller
+				if(path && meta)
+				{
+					event.preventDefault();
+					this.server.loadController(path);
+				}
+
+				// method
+				if(route)
+				{
+					event.preventDefault();
+					meta
+						? this.server.open(route)
+						: this.router.navigate(route);
+				}
 			},
 
 			onRoute:function(route)
@@ -90,21 +113,23 @@ var App = Vue.extend({
 
 			onParamsChange:function()
 			{
-				var route = this.state.route;
-				this.router.navigate(route, false, true);
-				this.update();
+				this.router.navigate(this.state.route, false, true);
 			},
 
 			onHome:function()
 			{
-				// need to do this with reactive properties
-				$('#welcome').appendTo('#output').show();
-				this.state.reset();
+				this.onView('welcome');
 			},
 
-			onView:function(params)
+			onView:function(type)
 			{
-				console.log('view:', params);
+				console.log('VIEW:' + type);
+				document.title 	= 'Sketchpad - ' + type;
+				this.state.reset();
+				this.server.load(':page/' + type, function(html)
+				{
+					$('#content').html(html);
+				});
 			},
 
 			onStoreLoad:function(event)

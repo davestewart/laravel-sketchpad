@@ -13,6 +13,15 @@ Vue.component('navigation', {
 		humanize:Helpers.humanize
 	},
 
+	ready:function()
+	{
+		this.$watch('state.controller', function ()
+		{
+			//$(this.$el).find('a[title]').tooltip({container:'body', trigger:'hover', placement:'right', delay: { "show": 500, "hide": 100 }})
+		});
+
+	},
+
 	methods:
 	{
 		getLabel:function(method)

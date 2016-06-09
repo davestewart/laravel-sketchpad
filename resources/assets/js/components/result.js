@@ -1,5 +1,3 @@
-var $output;
-
 Vue.component('result', {
 
 	template:'#result-template',
@@ -11,7 +9,8 @@ Vue.component('result', {
 			loading		:false,
 			transition	:false,
 			title		:'Sketchpad',
-			info		:''
+			info		:'',
+			oldMethod	:null
 		}
 	},
 
@@ -26,7 +25,7 @@ Vue.component('result', {
 		title:function()
 		{
 			var state = this.state;
-			return state.method
+			return state.method && state.method.name != 'index'
 					? Helpers.methodLabel(state.method)
 					: state.controller
 						? state.controller.label
@@ -36,7 +35,7 @@ Vue.component('result', {
 		info:function()
 		{
 			var state = this.state;
-			return state.method
+			return state.method && state.method.name != 'index'
 					? state.method.comment.intro || '&hellip;'
 					: state.controller
 						? state.controller.methods.length + ' methods'
@@ -52,7 +51,27 @@ Vue.component('result', {
 
 		deferred:function()
 		{
-			return !! (this.state.method && 'deferred' in this.state.method.comment.tags);
+			if(this.state.method)
+			{
+				var tags = this.state.method.comment.tags;
+				return tags.deferred || tags.warning;
+			}
+			return false;
+		},
+
+		warning:function()
+		{
+			if(this.state.method)
+			{
+				var tags = this.state.method.comment.tags;
+				return tags.warning;
+			}
+			return false;
+		},
+
+		method:function()
+		{
+			return this.state.method;
 		}
 	},
 
@@ -64,7 +83,7 @@ Vue.component('result', {
 
 	ready:function()
 	{
-		$output 		= $('#output');
+		this.$output 	= $('#output');
 		this.timer 		= new Timer();
 	},
 
@@ -76,12 +95,13 @@ Vue.component('result', {
 
 			load:function(transition)
 			{
-				if ( ! this.method )
+				if ( ! this.state.method )
 				{
-					$output.empty();
+					this.clear();
 					return;
 				}
-				this.transition	= transition;
+
+				this.transition	= this.state.method !== this.oldMethod;
 				this.loading	= true;
 
 				// load
@@ -89,12 +109,23 @@ Vue.component('result', {
 				{
 					this._load(transition);
 				}
+				else
+				{
+					this.clear();
+					if(this.state.method.comment.tags.warning)
+					{
+						//alert(this.state.method.comment.tags.warning || 'Be careful when running this method!');
+					}
+				}
 			},
 
 			_load:function(transition)
 			{
-				// variables
+				// time load process
 				this.timer.start();
+
+				// store old method
+				this.oldMethod = this.state.method;
 
 				// run
 				this.$root.server
@@ -104,7 +135,7 @@ Vue.component('result', {
 
 			clear:function()
 			{
-				$output.empty();
+				return this.$output.empty();
 			},
 
 			loadIframe:function(xhr)
@@ -115,7 +146,7 @@ Vue.component('result', {
 				var $iframe = $('<iframe class="error" frameborder="0">');
 				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
 
-				$output.empty().append($iframe.attr('src', src));
+				this.clear().append($iframe.attr('src', src));
 			},
 
 
@@ -128,10 +159,13 @@ Vue.component('result', {
 				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
 				// properties
 				this.transition 	= false;
-				this.method.error 	= 0;
+				if(this.state.method)
+				{
+					this.state.method.error = 0;
+				}
 
 				// format
-				if(this.method.comment.tags.iframe)
+				if(this.state.method.comment.tags.iframe)
 				{
 					return this.loadIframe(xhr);
 				}
@@ -142,7 +176,7 @@ Vue.component('result', {
 				if(contentType === 'application/json')
 				{
 					this.format = 'json';
-					$output.JSONView(data);
+					this.$output.JSONView(data);
 					return;
 				}
 
@@ -151,20 +185,49 @@ Vue.component('result', {
 				{
 					var html		= marked(data);
 					this.format 	= 'markdown';
-					$output.html(html);
+					this.$output.html(html);
 					return;
 				}
 
 				// content
-				$output.html(data);
+				this.$output.html(data);
+
+				// format code blocks
+				if(settings.formatCode)
+				{
+					this.$output.find('pre.code').each(function(i, block) {
+						hljs.highlightBlock(block);
+					});
+				}
+
+				// handle forms
+				var $form = this.$output.find('form[action=""]');
+				if($form.length)
+				{
+					var result = this;
+					$form
+						.attr('action', '')
+						.on('submit', function(event)
+						{
+							event.preventDefault();
+							var data =
+							{
+								type        : 'POST',
+								url         : window.location.href,
+								data        : $form.serialize()
+							};
+							$
+								.post(data)
+								.done(result.onLoad.bind(this));
+						});
+				}
 
 			},
 
 			onFail:function(xhr, status, message)
 			{
 				this.format = 'error';
-				this.method.error = 1;
-				$output.empty();
+				this.state.method.error = 1;
 				this.loadIframe(xhr);
 			},
 
@@ -174,14 +237,6 @@ Vue.component('result', {
 				this.loading 	= this.$root.server.count != 0;
 			}
 
-	},
-
-	events:
-	{
-		run:function()
-		{
-			this._load();
-		}
 	}
 
 });
