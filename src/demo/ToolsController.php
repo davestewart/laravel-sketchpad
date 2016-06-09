@@ -104,7 +104,7 @@ class ToolsController extends Controller
 		{
 			if(class_exists($class))
 			{
-				p("Instantiating user class '$class' and fetching users...");
+				p("Instantiating user class <code>$class</code> and fetching users...");
 				$data = $class::all();
 				break;
 			}
