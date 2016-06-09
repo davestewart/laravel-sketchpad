@@ -8,9 +8,12 @@
 	</div>
 
 	<div class="col-xs-8">
-		<result v-ref:result :state="state" :method="state.method">
+		<result v-if="state.controller" v-ref:result :state="state">
 			Result
 		</result>
+		<div id="content" v-else>
+
+		</div>
 	</div>
 
 	<modal v-ref:modal></modal>
@@ -42,6 +45,7 @@
 							>
 							<a
 								data-name="{{ controller.class }}"
+								data-path="{{ controller.path }}"
 								href="{{ controller.route }}"
 								>
 								{{{ controller.label }}}
@@ -55,22 +59,7 @@
 			<!-- methods -->
 			<div id="methods" class="col-xs-6">
 				<ul v-if="state.controller" class="nav nav-pills nav-stacked">
-					<li
-						v-for="method in state.controller.methods"
-						:class="{ active:isActive(method.route) }"
-						>
-						<a
-							:class="{method:true, error:method.error}"
-							title="{{ method.label }}"
-							href="{{ method.route }}"
-							>
-							{{ getLabel(method) }}
-						</a>
-						<p
-							v-if="method.comment.intro"
-							class="comment"
-							>{{ method.comment.intro }}</p>
-					</li>
+					<method v-if="method && method.name != 'index' " :method="method" :state="state" v-for="method in state.controller.methods"></method>
 				</ul>
 			</div>
 
@@ -78,6 +67,32 @@
 
 	</div>
 
+</template>
+
+
+<template id="method-template">
+
+	<li v-if="tags.group" class="folder">
+		<span class="name">{{ tags.group }}</span>
+	</li>
+
+	<li
+		:style="listStyle"
+		:class="listClass"
+		>
+		<a
+			:class="{method:true, error:error}"
+			:style="linkStyle"
+			title="{{ comment.intro }}"
+			href="{{ route }}"
+			>
+			{{ label }}
+		</a>
+		<p
+			v-if="comment.intro && $root.settings.showComments"
+			class="comment"
+			>{{ comment.intro }}</p>
+	</li>
 </template>
 
 
@@ -91,12 +106,26 @@
 
 			<header>
 				<h1>{{ title }}</h1>
-				<div class="info">{{{ info | marked }}}</div>
+				<div :class="{info:true, alert:warning, 'alert-danger':warning }">{{{ info | marked }}}</div>
 			</header>
 
 			<!-- parameters -->
-			<params v-ref:params :params="params" :deferred="deferred"></params>
+			<div id="params" v-if="state.method && state.method.name != 'index'">
+				<div class="sticky">
 
+					<nav v-if="params" class="navbar navbar-default">
+						<span class="loader"></span>
+						<ul class="nav navbar-nav">
+							<li v-for="param in params">
+								<param :param="param"></param>
+							</li>
+							<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>
+							<li v-if="deferred"><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
+						</ul>
+					</nav>
+
+				</div>
+			</div>
 		</section>
 
 		<!-- output -->
@@ -106,42 +135,19 @@
 
 </template>
 
+<template id="param-template">
 
-
-<template id="params-template">
-
-	<div id="params">
-		<div class="sticky">
-
-			<nav v-if="params" class="navbar navbar-default">
-				<span class="loader"></span>
-				<ul class="nav navbar-nav">
-					<li v-for="param in params">
-						<label for="{{ getId(param) }}">{{ param.name }}</label>
-						<input
-							v-if="getType(param) == 'checkbox'"
-							id="{{ getId(param) }}"
-							type="{{ getType(param) }}"
-							v-model="params[$index].value"
-							debounce="400"
-						>
-						<input
-							v-else
-							id="{{ getId(param) }}"
-							type="{{ getType(param) }}"
-							v-model="params[$index].value"
-							debounce="400"
-						>
-					</li>
-					<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>
-					<li v-if="deferred"><button @click="run">Run</button></li>
-				</ul>
-			</nav>
-
-		</div>
-	</div>
+	<label for="{{ id }}">{{ param.name }}</label>
+	<input
+		:id="id"
+		:type="type"
+		v-model="param.value"
+		debounce="400"
+	>
 
 </template>
+
+
 
 
 <template id="modal-template">

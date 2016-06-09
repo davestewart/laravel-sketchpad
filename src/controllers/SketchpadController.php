@@ -84,7 +84,7 @@ class SketchpadController extends Controller
 		public function command($type, $data = null)
 		{
 			// shows an html page
-			if($type == 'show')
+			if($type == 'page')
 			{
 				return $this->sketchpad->getPage($data);
 			}
