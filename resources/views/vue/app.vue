@@ -84,7 +84,7 @@
 			:class="{method:true, error:error}"
 			:style="linkStyle"
 			title="{{ comment.intro }}"
-			href="{{ route }}"
+			href="{{ state.makeRoute(method) }}"
 			>
 			{{ label }}
 		</a>
@@ -139,9 +139,10 @@
 
 	<label for="{{ id }}">{{ param.name }}</label>
 	<input
+
 		:id="id"
 		:type="type"
-		v-model="param.value"
+		v-model="value"
 		debounce="400"
 	>
 

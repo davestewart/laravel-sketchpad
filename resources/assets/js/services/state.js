@@ -127,7 +127,7 @@
 				makeRoute:function(method, controller)
 				{
 					return method
-						? method.route + method.params.map(function (p) { return p.value; }).join('/')
+						? method.route + (method.params.length ? method.params.map(function (p) { return p.value; }).join('/') + '/' : '')
 						: controller
 							? controller.route
 							: '';

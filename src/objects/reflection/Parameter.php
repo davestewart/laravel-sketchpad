@@ -91,15 +91,20 @@ class Parameter extends Tag implements JsonSerializable
 					: gettype($value);
 
 			// coerce type to something javascript will understand
-			if($type == 'double' || $type == 'integer' || $type == 'int')
+			if($type == 'double' || $type == 'float' || $type == 'integer' || $type == 'int')
 			{
 				$type = 'number';
 			}
-			if($type == 'NULL')
+			else if($type == 'bool')
+			{
+				$type = 'boolean';
+			}
+			else if($type == 'NULL')
 			{
 				$type = 'null';
 			}
 
+			// return
 			return $type;
 		}
 
