@@ -2,12 +2,13 @@
 // code
 // ------------------------------------------------------------------------------------------------
 
-.table.pre td,
 pre,
+.table.pre td,
 .code{
 	font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace !important; // Menlo
 	white-space: pre;
 	color:#555;
+	margin:20px;
 }
 
 pre{
@@ -47,6 +48,8 @@ pre small, pre *{
 
 	@import "json";
 	@import "php";
+	@import "xdebug";
+	@import "highlight";
 
 
 }
