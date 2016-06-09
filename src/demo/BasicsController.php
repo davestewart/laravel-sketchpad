@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\examples;
+<?php namespace davestewart\sketchpad\demo;
 
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
@@ -38,24 +38,26 @@ class BasicsController extends Controller
 	}
 
 	/**
-	 * Your method's parameter types influence both the parameter UI and the submitted values
+	 * Your method's parameter types determine the parameter UI and the submitted values
 	 *
 	 * @param string $string    This is a string
 	 * @param int    $number    This is a number
-	 * @param bool   $bool      This is a bool
+	 * @param bool   $boolean   This is a boolean
+	 * @param mixed  $mixed     This could be any type
 	 */
-	public function typeCasting($string = 'hello', $number = 1, $bool = true)
+	public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mixed = null)
 	{
 		?>
 
-		<p>Your method's optional parameter types (<code>string</code>, <code>boolean</code>, etc) determine the front end input controls.</p>
+		<p>Your method's parameter types (<code>string</code>, <code>boolean</code>, etc) determine the input control types.</p>
 		<p>Should you need to override determined types, type-hint your DocBocks:</p>
 		<pre class="code php">
-@param string   $string     This is a text field
-@param int      $number     This is a number field
-@param bool     $bool       This is a checkbox
+@param  string   $string   This is a text field
+@param  int      $number   This is a number field
+@param  boolean  $boolean  This is a checkbox
+@param  mixed    $mixed    This is a text field (but will be converted to the correct type)
 </pre>
-<p>Note that when you update values, Sketchpad casts them to the expected type; no need for type-juggling!</p>
+<p>Note that when you update values, Sketchpad casts them to the expected type; no need for type-juggling in your methods!</p>
 <?php
 	vd(func_get_args());
 
@@ -99,7 +101,6 @@ class BasicsController extends Controller
 		?>
 		<p>Type something below and submit the form back to the same URL:</p>
 		<form class="form" action="" method="post">
-			<label for="">Text:</label>
 			<input type="text" name="text">
 			<button type="submit">Submit</button>
 		</form>
@@ -109,7 +110,7 @@ class BasicsController extends Controller
 		{
 			echo '<hr />';
 			p('All you need to do is check for a POST submission in the same method, and take action appropriately:');
-			pr($request->all());
+			dump($request->all());
 		}
 	}
 

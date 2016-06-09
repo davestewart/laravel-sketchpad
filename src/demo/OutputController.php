@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\examples;
+<?php namespace davestewart\sketchpad\demo;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Translation\Translator;

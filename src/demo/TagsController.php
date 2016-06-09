@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\examples;
+<?php namespace davestewart\sketchpad\demo;
 
 use davestewart\sketchpad\objects\SketchpadConfig;
 use Illuminate\Routing\Controller;
@@ -144,7 +144,7 @@ li.fancy{
 	}
 
 	/**
-	 * Defers the calling of a method until parameters are changed or the "Run" button is clicked
+	 * Defers the calling of a method until the "Run" button is clicked
 	 *
 	 * @deferred
 	 */
