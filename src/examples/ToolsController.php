@@ -32,7 +32,7 @@ class ToolsController extends Controller
 	}
 
 	/**
-	 * Output the result of phpinfo()
+	 * Output the result of `phpinfo()`
 	 *
 	 * Note the use of escaping into HTML to output the style tag
 	 */
@@ -142,7 +142,7 @@ class ToolsController extends Controller
 			];
 		}
 
-		echo vue('sketchpad::examples.vue.routes', ['data' => $array]);
+		echo vue('sketchpad::demo.vue.routes', ['data' => $array]);
 	}
 
 
