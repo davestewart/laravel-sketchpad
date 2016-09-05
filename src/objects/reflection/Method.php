@@ -69,15 +69,11 @@ class Method implements JsonSerializable
 			$data->name         = $this->name;
 			$data->label        = $this->label;
 			$data->route        = $this->route;
-			$data->signature    = $this->signature;
+			//$data->signature    = $this->signature;
+			$data->params       = $this->params;
+			$data->comment      = $this->comment;
+			$data->tags         = $this->comment->tags;
 			$data->error        = 0;
-
-			// complex
-			if( ! $simple )
-			{
-				$data->comment      = $this->comment;
-				$data->params       = $this->params;
-			}
 
 			// return
 			return $data;

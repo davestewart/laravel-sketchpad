@@ -22,18 +22,18 @@ class Comment implements JsonSerializable
 		public $comment;
 
 		/**
-		 * All blocks of text separated by 2 lines
-		 *
-		 * @var string[]
-		 */
-		public $paragraphs;
-
-		/**
-		 * Any initial paragraph
+		 * Any intro paragraph
 		 *
 		 * @var string
 		 */
 		public $intro;
+
+		/**
+		 * All text excluding the intro
+		 *
+		 * @var string
+		 */
+		public $body;
 
 		/**
 		 * The method parameter tags
@@ -55,55 +55,67 @@ class Comment implements JsonSerializable
 
 		public function __construct($body)
 		{
-			// grab the entire comment body, trimming any faff
-			$body           = trim(preg_replace('%^[\t ]*(/\*\*|\*/|\*[\t ]*)%m', "", $body));
-
-			// strip windows line ends
-			$body           = str_replace("\r\n", "\n", $body);
-
-			// get text
-			preg_match('/^([\s\S]+?)@\w+/', $body, $matches);
-			if($matches)
-			{
-				$text = trim($matches[1]);
-			}
-			else
-			{
-				$text = trim(preg_replace('/^@.+/m', '', $body));
-			}
-
-			// split text into "paragraphs" at double-returns
-			$this->paragraphs	= preg_split('%(\n){2}%', $text);
-
-			// grab the first line
-			$this->intro        = preg_replace('%[\r\n]+%', ' ', $this->paragraphs[0]);
-
-			// tags
-			$this->params   = [];
-			$this->tags     = [];
-
-			preg_match_all('/@(\w+)(.*)/', $body, $matches);
-			foreach ($matches[0] as $index => $match)
-			{
-				$name   = $matches[1][$index];
-				$value  = trim($matches[2][$index]);
-				$tag    = new Tag($name, $value);
-				if($name == 'param')
-				{
-					$this->params[$tag->name] = $tag;
-				}
-				else
-				{
-					$this->tags[$tag->name] = $tag->text ? $tag->text : true;
-				}
-			}
+			// ------------------------------------------------------------------------------------------------
+			// all text content
 			
-			// fix favourites
-			if(isset($this->tags['favorite']))
-			{
-				unset($this->tags['favorite']);
-				$this->tags['favourite'] = '';
-			}
+				// grab the entire comment body, trimming any faff
+				$body           = trim(preg_replace('%^[\t ]*(/\*\*|\*/|\* ?)%m', "", $body));
+
+				//pd($body);
+
+	
+				// strip windows line ends
+				$body           = str_replace("\r\n", "\n", $body);
+			
+	
+			// ------------------------------------------------------------------------------------------------
+			// paragraph text
+			
+				// split text by @
+				$parts  = explode('@', $body);
+				$text   = trim(array_shift($parts));
+			
+				// got text
+				if(strstr($text, '@') === FALSE)
+				{
+					// split text into "paragraphs" at double-returns
+					$blocks = preg_split('/(\n){2,}/', $text, 2);
+
+					// assign text
+					$this->intro    = array_shift($blocks) ?: '';
+					$this->body     = array_shift($blocks) ?: '';
+				}
+				
+			
+			// ------------------------------------------------------------------------------------------------
+			// tags
+			
+				// match all tags, separate of paragraph text
+				$this->params   = [];
+				$this->tags     = [];
+	
+				preg_match_all('/@(\w+)(.*)/', $body, $matches);
+				foreach ($matches[0] as $index => $match)
+				{
+					$name   = $matches[1][$index];
+					$value  = trim($matches[2][$index]);
+					$tag    = new Tag($name, $value);
+					if($name == 'param')
+					{
+						$this->params[$tag->name] = $tag;
+					}
+					else
+					{
+						$this->tags[$tag->name] = $tag->text ? $tag->text : true;
+					}
+				}
+				
+				// fix favourites
+				if(isset($this->tags['favorite']))
+				{
+					unset($this->tags['favorite']);
+					$this->tags['favourite'] = '';
+				}
 		}
 
 		/**
@@ -136,8 +148,7 @@ class Comment implements JsonSerializable
 		{
 			$data               = (object) [];
 			$data->intro        = $this->intro;
-			$data->paragraphs   = $this->paragraphs;
-			$data->tags         = $this->tags;
+			$data->body         = $this->body;
 			return $data;
 		}
 
