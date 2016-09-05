@@ -1,6 +1,5 @@
 <?php namespace davestewart\sketchpad;
 
-use davestewart\sketchpad\middleware\RequestId;
 use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Support\ServiceProvider;
@@ -28,7 +27,7 @@ class SketchpadServiceProvider extends ServiceProvider
 	/**
 	 * Bootstrap the application services.
 	 *
-	 * The publishing section is in two parts:
+	 * The publishing section is in 3 parts:
 	 *
 	 *    1. Config        : this allows the config to be published, then edited, before...
 	 *    2. Public assets : the JS and CSS files for the web interface
@@ -82,7 +81,13 @@ class SketchpadServiceProvider extends ServiceProvider
 
 			// config
 			$config = new SketchpadConfig();
-	
+
+			// user views
+			if($config->views)
+			{
+				$this->loadViewsFrom(base_path($config->views), 'sketchpad');
+			}
+
 			// routing
 			$parameters =
 			[

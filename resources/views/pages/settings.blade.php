@@ -1,6 +1,33 @@
 
 <h1>Settings</h1>
-<form class="form-horizontal">
+<form class="form">
+
+
+	<p>Homepage</p>
+	<li><label><input type="radio" v-model="homepage" value="intro">Intro</label></li>
+	<li><label><input type="radio" v-model="homepage" value="favourites">Favourites</label></li>
+	<li><label><input type="radio" v-model="homepage" value="view">View: ______________________</label></li>
+
+	<p>Paths</p>
+	<li><label><input type="checkbox" v-model="paths.project">Project</label></li>
+	<li><label><input type="checkbox" v-model="paths.help">Help</label></li>
+
+	<p>Controllers / Methods</p>
+	<li><label><input type="checkbox" v-model="humanizeNames">Humanize names</label></li>
+	<li><label><input type="checkbox" v-model="showComments">Show comments</label></li>
+	<li><label><input type="checkbox" v-model="showArchived">Show archived</label></li>
+
+	<p>Organisation:</p>
+	<li><label><input type="radio" v-model="organisation" value="flat">Flat</label></li>
+	<li><label><input type="radio" v-model="organisation" value="organise.indented">Indented</label></li>
+	<li><label><input type="radio" v-model="organisation" value="organise.tree">Tree</label></li>
+
+	<p>Parameters</p>
+
+	<p>Update on:</p>
+	<li><label><input type="radio" v-model="update" value="input">input</label></li>
+	<li><label><input type="radio" v-model="update" value="change">change</label></li>
+
 	<fieldset>
 		<div class="form-group">
 			<label for="inputEmail" class="col-lg-2 control-label">Email</label>
@@ -26,23 +53,36 @@
 				<span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
 			</div>
 		</div>
+
+
 		<div class="form-group">
 			<label class="col-lg-2 control-label">Radios</label>
+
 			<div class="col-lg-10">
 				<div class="radio">
 					<label>
-						<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-						Option one is this
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-						Option two can be something else
+						<input type="radio" v-model="">Option two can be something else
 					</label>
 				</div>
 			</div>
+
+
 		</div>
+
+		<div class="form-group">
+			<label class="col-lg-2 control-label">Checkboxes</label>
+
+			<div class="col-lg-10">
+				<div class="checkbox">
+					<label>
+						<input type="radio" v-model="">Option two can be something else
+					</label>
+				</div>
+			</div>
+
+
+		</div>
+
 		<div class="form-group">
 			<label for="select" class="col-lg-2 control-label">Selects</label>
 			<div class="col-lg-10">

@@ -48,7 +48,7 @@
 								data-path="{{ controller.path }}"
 								href="{{ controller.route }}"
 								>
-								{{{ controller.label }}}
+								{{{ getLabel(controller) }}}
 							</a>
 						</li>
 					</template>
@@ -86,7 +86,7 @@
 			title="{{ comment.intro }}"
 			href="{{ state.makeRoute(method) }}"
 			>
-			{{ label }}
+			{{{ label }}}
 		</a>
 		<p
 			v-if="comment.intro && $root.settings.showComments"
@@ -106,7 +106,7 @@
 
 			<header>
 				<h1>{{ title }}</h1>
-				<div :class="{info:true, alert:warning, 'alert-danger':warning }">{{{ info | marked }}}</div>
+				<div :class="{info:true, alert:alert, 'alert-danger':warning, 'alert-info':archived }">{{{ info | marked }}}</div>
 			</header>
 
 			<!-- parameters -->
@@ -119,8 +119,8 @@
 							<li v-for="param in params">
 								<param :param="param"></param>
 							</li>
-							<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>
-							<li v-if="deferred"><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
+							<!--<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>-->
+							<li><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
 						</ul>
 					</nav>
 
@@ -137,7 +137,10 @@
 
 <template id="param-template">
 
-	<label for="{{ id }}">{{ param.name }}</label>
+	<label
+		for="{{ id }}"
+		:title="param.text"
+	>{{ param.name }}</label>
 	<input
 
 		:id="id"

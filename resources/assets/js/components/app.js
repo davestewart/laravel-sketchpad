@@ -88,6 +88,13 @@ var App = Vue.extend({
 				var route	= this.state.getLink(event.target.href);
 				var $target	= $(event.target);
 				var path	= $target.data('path');
+				var href	= $target.attr('href');
+
+				// skip # links
+				if(href && href.indexOf('#') == 0)
+				{
+					return;
+				}
 
 				// controller
 				if(path && meta)

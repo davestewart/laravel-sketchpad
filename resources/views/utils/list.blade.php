@@ -1,4 +1,4 @@
-<table class="table table-bordered table-striped {{ $class }} debug">
+<table class="table table-bordered table-striped {{ $class }} debug" style="{{ $style }}">
 	<colgroup>
 		<col class="col-xs-1">
 		<col class="col-xs-7">
@@ -14,7 +14,7 @@
 		<?php $obj = ! is_scalar($value); ?>
 		<tr>
 			<th>{{ $key }}</th>
-			<td<?php echo $obj ? ' class="pre"' : '' ?>>{{ $obj ? print_r($value, true) : $value }}</td>
+			<td<?php echo $obj ? ' class="obj"' : '' ?>>{{ $obj ? print_r($value, true) : $value }}</td>
 		</tr>
 		@endforeach
 	</tbody>

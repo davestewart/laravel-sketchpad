@@ -1,12 +1,17 @@
 Helpers =
 {
-	methodLabel:function(method)
+	getMethodLabel:function(method)
 	{
 		return settings.useLabels
-			? method.label
-			? method.label
-			: this.humanize(method.name)
-			: method.name + '()';
+			? this.humanize(method.label)
+			: method.label + '()';
+	},
+
+	getControllerLabel:function(method)
+	{
+		return settings.useLabels
+			? this.humanize(method.label)
+			: method.label;
 	},
 
 	humanize:function(input)

@@ -2,7 +2,8 @@ var settings =
 {
 	useLabels:true,
 	formatCode:false,
-	showComments:true
+	showComments:true,
+	appendResult:false
 };
 
 var server 	= new Server();

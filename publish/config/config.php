@@ -6,12 +6,15 @@
 	// processed folders
 	'paths'         =>
 	[
-		'project'   => 'app/Http/Sketchpad/',
-		'examples'  => 'vendor/davestewart/sketchpad/src/examples/'
+		'project'   => 'sketchpad/controllers/',
+		'demo'      => 'vendor/davestewart/sketchpad/src/demo/'
 	],
 
 	// public assets folder for sketchpad resources
 	'assets'        => 'vendor/sketchpad/',
+
+	// optional path to a sketchpad views folder, accessible via 'sketch::view.path'
+	'views'         => 'sketchpad/views/',
 
 	// any middleware you want to run on sketchpad routes
 	'middleware'    => null,

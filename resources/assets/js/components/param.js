@@ -39,6 +39,13 @@ Vue.component('param', {
 			}
 		},
 
+		fields:function()
+		{
+			// http://www.w3schools.com/html/html_form_input_types.asp
+			var types		= 'text,number,date,select';
+			var attributes 	= 'min,max,step,size,maxlength,pattern,options';
+		},
+
 		id:function()
 		{
 			return 'param-' + this.param.name;

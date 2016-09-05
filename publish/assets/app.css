@@ -66,6 +66,7 @@
   text-align: left; }
 
 .table {
+  margin: 20px;
   max-width: inherit;
   width: inherit; }
 
@@ -74,6 +75,7 @@ a:focus {
   outline: none !important; }
 
 pre,
+.table td.pre,
 .table.pre td,
 .code {
   font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace !important;

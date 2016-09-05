@@ -63,11 +63,11 @@ Vue.component('method', {
 		},
 
 		name:function() { return this.method.name; },
-		label:function() { return this.method.label; },
+		label:function() { return Helpers.getMethodLabel(this.method); },
 		route:function() { return this.method.route; },
 		error:function() { return this.method.error; },
 		comment:function() { return this.method.comment; },
-		tags:function() { return this.method.comment.tags; },
+		tags:function() { return this.method.tags; }
 	}
 
 });

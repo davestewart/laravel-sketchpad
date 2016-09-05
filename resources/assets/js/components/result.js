@@ -26,7 +26,7 @@ Vue.component('result', {
 		{
 			var state = this.state;
 			return state.method && state.method.name != 'index'
-					? Helpers.methodLabel(state.method)
+					? Helpers.getMethodLabel(state.method)
 					: state.controller
 						? state.controller.label
 						: 'Sketchpad';
@@ -53,18 +53,33 @@ Vue.component('result', {
 		{
 			if(this.state.method)
 			{
-				var tags = this.state.method.comment.tags;
+				var tags = this.state.method.tags;
 				return tags.deferred || tags.warning;
 			}
 			return false;
+		},
+
+		alert:function()
+		{
+			return this.warning || this.archived;
 		},
 
 		warning:function()
 		{
 			if(this.state.method)
 			{
-				var tags = this.state.method.comment.tags;
+				var tags = this.state.method.tags;
 				return tags.warning;
+			}
+			return false;
+		},
+
+		archived:function()
+		{
+			if(this.state.method)
+			{
+				var tags = this.state.method.tags;
+				return tags.archived;
 			}
 			return false;
 		},
@@ -112,9 +127,9 @@ Vue.component('result', {
 				else
 				{
 					this.clear();
-					if(this.state.method.comment.tags.warning)
+					if(this.state.method.tags.warning)
 					{
-						//alert(this.state.method.comment.tags.warning || 'Be careful when running this method!');
+						//alert(this.state.method.tags.warning || 'Be careful when running this method!');
 					}
 				}
 			},
@@ -123,9 +138,6 @@ Vue.component('result', {
 			{
 				// time load process
 				this.timer.start();
-
-				// store old method
-				this.oldMethod = this.state.method;
 
 				// run
 				this.$root.server
@@ -156,52 +168,64 @@ Vue.component('result', {
 
 			onLoad:function(data, status, xhr)
 			{
+				// variables
+				var method = this.state.method;
+
 				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
 				// properties
 				this.transition 	= false;
-				if(this.state.method)
+				if(method)
 				{
-					this.state.method.error = 0;
+					method.error = 0;
 				}
 
 				// format
-				if(this.state.method.comment.tags.iframe)
+				if(method.tags.iframe)
 				{
 					return this.loadIframe(xhr);
 				}
 
 				var contentType = xhr.getResponseHeader('Content-Type');
 
+				var $data = $('<div class="data">' + data + '</div>');
+
 				// handle json response
-				if(contentType === 'application/json')
+				if(contentType == 'application/json')
 				{
 					this.format = 'json';
-					this.$output.JSONView(data);
-					return;
+					$data.html($('<pre class="code json">').JSONView(data));
 				}
 
 				// handle md response
-				if(contentType.indexOf('text/markdown') > -1)
+				else if(contentType.indexOf('text/markdown') > -1)
 				{
 					var html		= marked(data);
 					this.format 	= 'markdown';
-					this.$output.html(html);
-					return;
+					$data.html(html);
+					//return;
 				}
 
-				// content
-				this.$output.html(data);
+				// clear
+				if(! settings.appendResult && method.tags.append && method !== this.oldMethod)
+				{
+					this.$output.empty();
+				}
+
+				// add content
+				settings.appendResult || method.tags.append
+					? this.$output.prepend($data.append('<hr>'))
+					: this.$output.html($data);
 
 				// format code blocks
 				if(settings.formatCode)
 				{
-					this.$output.find('pre.code').each(function(i, block) {
+					$data.find('pre.code, pre > code').each(function(i, block) {
 						hljs.highlightBlock(block);
 					});
 				}
 
 				// handle forms
-				var $form = this.$output.find('form[action=""]');
+				var $form = $data.find('form[action=""]');
 				if($form.length)
 				{
 					var result = this;
@@ -235,6 +259,9 @@ Vue.component('result', {
 			{
 				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
 				this.loading 	= this.$root.server.count != 0;
+				this.oldMethod 	= this.state.method;
+
+
 			}
 
 	}

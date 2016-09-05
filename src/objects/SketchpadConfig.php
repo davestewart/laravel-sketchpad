@@ -12,7 +12,7 @@ class SketchpadConfig
 	// PROPERTIES
 
 		/**
-		 * the base route to all Sketchpad calls
+		 * The base route to all Sketchpad calls
 		 *
 		 * @example /sketchpad/
 		 *
@@ -33,6 +33,13 @@ class SketchpadConfig
 		 * @var string $assets
 		 */
 		public $assets;
+
+		/**
+		 * An optional path to a views folder
+		 *
+		 * @var string[] $path
+		 */
+		public $views;
 
 		/**
 		 * An optional array of middleware

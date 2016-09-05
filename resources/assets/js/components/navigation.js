@@ -24,9 +24,9 @@ Vue.component('navigation', {
 
 	methods:
 	{
-		getLabel:function(method)
+		getLabel:function(obj)
 		{
-			return Helpers.methodLabel(method);
+			return Helpers.getControllerLabel(obj);
 		},
 		
 		getLinkHtml:function(route)
