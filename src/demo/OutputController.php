@@ -85,38 +85,75 @@ class OutputController extends Controller
 	}
 
 	/**
-	 * Use `ls()` to output any Object or Array in list format (single `foreach` loop). Pass a boolean 2nd argument to preformat values
+	 * Use `ls()` to output any Object or Array in list format (single `foreach` loop)
 	 *
 	 * @label list
-	 *
-	 * @param bool         $pre
+	 * @param string $options
 	 */
-	public function ls($pre = false)
+	public function ls($options = '')
 	{
-		$pre    = $pre == 'true';
 		$data   = \App::make(Translator::class)->get('validation');
-		ls($data, $pre);
+		ls($data, $options);
 	}
 
 	/**
-	 * Use `tb()` to output any Collection or Array of Objects in table format (nested `foreach` loop). Pass a boolean 2nd argument to preformat values*
+	 * Use `tb()` to output any Collection or Array of Objects in table format (nested `foreach` loop)
+	 *
+	 * @param string $options
 	 */
-	public function table($pre = false)
+	public function table($options = 'html:example')
 	{
-		$pre    = $pre == 'true';
-		$routes = \Route::getRoutes();
-		$array  = [];
-		foreach ($routes as /** @var Route */ $route)
-		{
-			$array[] =
-			[
-			    'methods' => implode(', ', $route->getMethods()),
-				'path'  => $route->getPath(),
-			    'parameters' => implode(', ', $route->parameterNames()),
-			];
-		}
-		tb($array, $pre);
 
+		$rows =
+		[
+			["option","description","example"],
+			["index","Adds a numeric index column to the table","index"],
+			["pre","Preformats the entire table, or selected columns","pre, pre:example"],
+			["html","Specifies which columns to output as HTML","html:example|html:description,example"],
+			["label","Adds a label to the table","label:Formatting options"],
+			["width","Sets the width of the table","width:100%"],
+			["cols","Sets the width of individual columns","cols:50,400,200|cols:10%,60%,30%"],
+			["class","Sets the table class attribute","class:fancy"],
+			["style","Sets the table style attribute","style:border:1px solid red; background:blue"]
+		];
+
+		$keys   = array_shift($rows);
+		$data   = array_map(function($values) use ($keys){
+			return array_combine($keys, $values);
+		}, $rows);
+
+		foreach ($data as $index => $value)
+		{
+			$example = $data[$index]['example'];
+			$data[$index]['example'] = implode(' ', array_map(function($value){ return "<code>$value</code>";}, explode('|', $example)));
+		}
+
+		?>
+		<p>This function takes an optional formatting string, with a syntax similar to Laravel validation:</p>
+		<pre>tb($data, '<?php echo $options; ?>');</pre>
+		<p>The following table outlines the available options:</p>
+
+		<?php
+		tb($data, $options);
+?>
+
+		<p>Within the options string, you can:</p>
+		<ul>
+			<li>add multiple options, using the pipe character</li>
+			<li>specify arguments, using a colon</li>
+			<li>add multiple arguments, separated with commas</li>
+		</ul>
+
+		<p>Experiment with updating the options string above, or click the links below to explore some presets:</p>
+<ul>
+	<li><a href="/sketchpad/demo/output/table/html:example|index">Add an index</a></li>
+	<li><a href="/sketchpad/demo/output/table/html:example|index|cols:100,400,300">Set column widths</a></li>
+	<li><a href="/sketchpad/demo/output/table/html:example|index|cols:100,400,300|index|style:background:white;z-index:1000;transform:rotate(10deg)">Set the style</a></li>
+	<li><a href="/sketchpad/demo/output/table/html:example|label:Table formatting options">Set a table caption</a></li>
+	<li><a href="/sketchpad/demo/output/table/html:example">Reset the table</a></li>
+	<li><a href="/sketchpad/demo/output/table/null/">Clear all settings</a></li>
+</ul>
+<?php
 	}
 
 	/**

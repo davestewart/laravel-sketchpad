@@ -14,7 +14,7 @@ class TagsController extends Controller
 {
 
 	/**
-	 * Example of using a different label
+	 * Defines a specific label to use, other than the method name
 	 *
 	 * @group Formatting
 	 * @label Custom label!
@@ -59,7 +59,7 @@ class TagsController extends Controller
 ?>
 <p>The current method item <code>&lt;li&gt;</code> has a suitably over-the-top class <code>.fancy</code> added to it:</p>
 <pre>@css fancy</pre>
-<p>It's styled (in part) with the following code:</p>
+<p>It's styled (in part) with the following code in the <code>user.css</code> stylesheet (click <a href="javascript:toggleUserStyles()">here</a> to disable it):</p>
 <pre class="code css">
 li.fancy{
     padding:3px;
@@ -68,7 +68,14 @@ li.fancy{
     left:-3px;
     top:-3px;
 }</pre>
-<p>See the <a href="/sketchpad/demo/basics/usercss/">user css</a> section for more information about the user stylesheet.</p>
+<p>See the <a href="/sketchpad/demo/basics/userassets/">user assets</a> section for more information.</p>
+<script>function toggleUserStyles()
+{
+	var $link = $('link[href$="user.css"]');
+	$link.is('[disabled]')
+		? $link.removeAttr('disabled')
+		: $link.attr('disabled', 'disabled');
+}</script>
 <?php
 	}
 
@@ -97,40 +104,134 @@ li.fancy{
 	}
 
 	/**
-	 * Marks the method as archived, which dims the method name in the methods list
-	 *
-	 * @archived This method is no longer used
+	 * Prioritize a method or controller towards the top of a group
 	 */
-	public function archived()
+	public function order()
 	{
-		p('Probably best to remove methods you no longer use, but if you want to keep them, you can mark them as archived:');
-		pr('@archived This method has been superseded by someOtherMethod');
+		?>
+		<p>The tag takes a single numeric integer:</p>
+		<pre>@order 1</pre>
+		<p>Lower numbers appear first (so the same as natural numbering) with unordered members appearing after, in their given order:</p>
+		<ul>
+			<li>Groups will appear in the order they are listed in config</li>
+			<li>Controllers will appear in filesystem order</li>
+			<li>Methods will appear in the order they are written</li>
+		</ul>
+		<?php
 	}
 
 	/**
-	 * Hides the method from the Sketchpad front end
-	 *
-	 * @label   private
-	 */
-	public function privateExample()
-	{
-		p('Normally, you would declare a method as private, but you might need a public method for something like a callback:');
-		pr('@private');
-	}
-
-	/**
-	 * Allows customisation of parameter options
+	 * Allows customisation of parameter fields
 	 *
 	 * The format is @options param blah
 	 *
-	 * @group Behaviour
-	 * @options The thing
+	 * @group Output
+	 *
+	 * @field number min:10|max:20
+	 * @field date date
+	 * @field select options:foo,bar,baz
+	 *
+	 * @param string $date
+	 * @param string $select
+	 * @param int    $range
 	 */
-	public function options()
+	public function field($date = '2015-01-01', $select = 'foo', $range = 10)
 	{
-		alert('Not yet implemented', 'warning');
-		p('Allows per-field customisation of method parameters. It uses the Laravel validation syntax, and a couple of additional parameters');
-		pr('@options {method name} {options}');
+		$types =
+		[
+			[
+				'attribute' => 'text',
+				'description' => 'HTML text input',
+				'example' => '<code>text</code>',
+			],
+			[
+				'attribute' => 'number',
+				'description' => 'HTML number input',
+				'example' => '<code>number</code>',
+			],
+			[
+				'attribute' => 'date',
+				'description' => 'HTML date input',
+				'example' => '<code>date</code>',
+			],
+			[
+				'attribute' => 'select',
+				'description' => 'HTML select input (use with options to specify values)',
+				'example' => '<code>select</code>',
+			],
+		];
+
+		$attributes =
+		[
+			[
+				'attribute' => 'min',
+				'description' => 'set the minimum value',
+				'example' => '<code>min:0</code>',
+			],
+			[
+				'attribute' => 'max',
+				'description' => 'set the maximum value',
+				'example' => '<code>max:10</code>',
+			],
+			[
+				'attribute' => 'step',
+				'description' => 'set the step size',
+				'example' => '<code>step:0.1</code>',
+			],
+			[
+				'attribute' => 'size',
+				'description' => 'set the field size',
+				'example' => '<code>size:10</code>',
+			],
+			[
+				'attribute' => 'width',
+				'description' => 'set the field width, in pixels',
+				'example' => '<code>width:100</code>',
+			],
+			[
+				'attribute' => 'maxlength',
+				'description' => 'set the maximum character length',
+				'example' => '<code>maxlength:10</code>',
+			],
+			[
+				'attribute' => 'pattern',
+				'description' => 'set a regex pattern to check the input value against',
+				'example' => '<code>pattern:\d{3}</code>',
+			],
+			[
+				'attribute' => 'options',
+				'description' => 'set options for select element',
+				'example' => '<code>options:foo,bar,baz</code>',
+			],
+		];
+
+		$format = 'html:example|cols:100,400,200';
+		?>
+		<p>Allows per-field customisation of method parameters. It uses the Laravel validation syntax, and a couple of additional parameters</p>
+<pre>
+@field x numeric|min:10|max:20
+@field y numeric|min:20|max:30
+@field email email
+@field date date
+</pre>
+
+		<p>The following field types / coercions are available:</p>
+		<?php tb($types, $format); ?>
+
+		<p>The following attributes are available:</p>
+		<?php tb($attributes, $format); ?>
+
+<?php
+	}
+
+	/**
+	 * Append (rather than replace) results to the output panel. Re-run or re-save to see it in action...
+	 *
+	 * @append
+	 */
+	public function append()
+	{
+		p('Some new value: ' . rand(1, 100));
 	}
 
 	/**
@@ -145,6 +246,8 @@ li.fancy{
 
 	/**
 	 * Defers the calling of a method until the "Run" button is clicked
+	 *
+	 * @group Behaviour
 	 *
 	 * @deferred
 	 */
@@ -172,6 +275,29 @@ li.fancy{
 		</ul>
 <?php
 	}
+
+	/**
+	 * Marks the method as archived, which dims the method name in the methods list
+	 *
+	 * @archived This method is no longer used
+	 */
+	public function archived()
+	{
+		p('Probably best to remove methods you no longer use, but if you want to keep them, you can mark them as archived:');
+		pr('@archived This method has been superseded by someOtherMethod');
+	}
+
+	/**
+	 * Hides the method from the Sketchpad front end
+	 *
+	 * @label   private
+	 */
+	public function privateExample()
+	{
+		p('Normally, you would declare a method as private, but you might need a public method for something like a callback:');
+		pr('@private');
+	}
+
 
 
 }

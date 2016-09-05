@@ -29,6 +29,7 @@ class ToolsController extends Controller
 	public function viewSession()
 	{
 		ls(\Session::all(), true);
+		// TODO Add "clear" button
 	}
 
 	/**
@@ -40,16 +41,16 @@ class ToolsController extends Controller
 	{
 
 		$sections =
-			[
-				'general' => 1,
-				'credits' => 2,
-				'configuration' => 4,
-				'modules' => 8,
-				'environment' => 16,
-				'variables' => 32,
-				'license' => 64,
-				'all' => -1,
-			];
+		[
+			'general' => 1,
+			'credits' => 2,
+			'configuration' => 4,
+			'modules' => 8,
+			'environment' => 16,
+			'variables' => 32,
+			'license' => 64,
+			'all' => -1,
+		];
 		$section = isset($sections[$key])
 			? $sections[$key]
 			: -1;
@@ -99,19 +100,23 @@ class ToolsController extends Controller
 			'\App\Models\Entities\User',
 			'\App\data\entities\User',
 		];
-		$data = null;
+		$users = null;
 		foreach($classes as $class)
 		{
 			if(class_exists($class))
 			{
-				p("Instantiating user class <code>$class</code> and fetching users...");
-				$data = $class::all();
+				p("Using user class <code>$class</code> and fetching users...");
+				$users = $class::all();
 				break;
 			}
 		}
-		if($data)
+
+		if($users)
 		{
-			tb($data->toArray());
+			$data = $users->toArray();
+			return count($data)
+				? tb($data)
+				: p('There are no users in the database', 'note');
 		}
 		else
 		{
@@ -144,24 +149,6 @@ class ToolsController extends Controller
 
 		echo vue('sketchpad::demo.vue.routes', ['data' => $array]);
 	}
-
-
-	protected function cat($type = '')
-	{
-		return $this->curl('thecatapi.com/api/images/get?format=html&type=' . $type);
-	}
-
-
-	protected function curl($url)
-	{
-		$ch		= curl_init('http://' . $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$data = curl_exec($ch);
-		curl_close($ch);
-
-		return $data;
-	}
-
-
+	
 
 }

@@ -99,6 +99,7 @@ class BasicsController extends Controller
 	public function forms(Request $request)
 	{
 		?>
+		
 		<p>Type something below and submit the form back to the same URL:</p>
 		<form class="form" action="" method="post">
 			<input type="text" name="text">
@@ -157,17 +158,35 @@ class SomeController extends Controller
 	}
 
 	/**
-	 * Customise the look and feel of the app with the user stylesheet
+	 * Customise the Sketchpad with the user stylesheet and script
 	 */
-	public function userCss()
+	public function userAssets()
 	{
 ?>
+<h3>Styles</h3>
 <p>Edit the <code>vendor/sketchpad/user.css</code> stylesheet to:</p>
 <ul>
 	<li>Add your own styles for custom output</li>
 	<li>Override any of the default Sketchpad or Bootstrap styles</li>
 	<li>Individually <a href="/sketchpad/demo/tags/css/">target and style</a> controller and method menu items</li>
 </ul>
+
+<h3>Scripts</h3>
+<p>Should you need to add any JavaScript to the page, you can do this in two ways:</p>
+<ol>
+	<li>Edit the <code>vendor/sketchpad/user.js</code> file</li>
+	<li>Inject and call <code>Sketchpad::addScript()</code> in your controller methods</li>
+</ol>
+<p>Here's an example of injecting the script via the constructor, so it will available in all methods:</p>
+<pre>
+public function()
+{
+    public function __construct(Sketchpad $sketchpad)
+    {
+        $sketchpad->addScript('sketchpad::path/to/script.js');
+    }
+}
+</pre>
 <?php
 	}
 
