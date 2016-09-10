@@ -115,7 +115,11 @@
 		mix
 
 			// lib scripts
-			.combine(rootPath + 'resources/lib/**/*.js', '../publish/assets/lib.js')
+			.combine(
+			[
+				rootPath + 'resources/lib/jquery-1.12.3.min.js',
+				rootPath + 'resources/lib/**/*.js'
+			], '../publish/assets/lib.js')
 
 			// lib styles
 			.combine(rootPath + 'resources/lib/**/*.css', '../publish/assets/lib.css')
