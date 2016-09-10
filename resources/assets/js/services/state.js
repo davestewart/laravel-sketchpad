@@ -1,14 +1,18 @@
-;window.State = Vue.extend(
-{
+import Vue 		from 'vue';
+import store	from './store.js';
+
+var State = Vue.extend({
 
 	// ------------------------------------------------------------------------------------------------
 	// properties
+
+		el:() => document.createElement('div'),
 
 		data:function()
 		{
 			return {
 				baseUrl		:$('meta[name="route"]').attr('content'),
-				store		:this.$options.store,
+				store		:store,
 				controller	:null,
 				method		:null
 			};
@@ -22,7 +26,12 @@
 			}
 		},
 
-		props:['store'],
+		//props:['store'],
+
+		created:function()
+		{
+			console.log(this);
+		},
 
 
 	// ------------------------------------------------------------------------------------------------
@@ -139,5 +148,6 @@
 				}
 		}
 
-
 });
+
+export default new State;

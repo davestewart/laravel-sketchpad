@@ -8,8 +8,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
 	<!-- libs -->
-	<script src="/{{ $assets }}lib.min.js"></script>
-	<link  href="/{{ $assets }}lib.min.css" rel="stylesheet">
+	<script src="/{{ $assets }}lib.js"></script>
+	<link  href="/{{ $assets }}lib.css" rel="stylesheet">
 
 	<!-- fonts -->
 	<link  href="/{{ $assets }}fonts/lato/lato.css" rel="stylesheet">
@@ -18,6 +18,7 @@
 	<!-- sketchpad -->
 	<meta name="route" content="{{ $route }}">
 	<link  href="/{{ $assets }}app.css" rel="stylesheet">
+	<link  href="/{{ $assets }}components.css" rel="stylesheet">
 
 	<!-- user -->
 	<link  href="/{{ $assets }}user.css" rel="stylesheet">

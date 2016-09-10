@@ -1,4 +1,4 @@
-function Timer()
+export default function Timer()
 {
 	
 }

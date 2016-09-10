@@ -1,6 +1,59 @@
-Vue.component('result', {
+<template>
 
-	template:'#result-template',
+	<div id="result" :class="{loading:loading, transition:transition}">
+
+		<!-- info -->
+		<section id="info">
+
+			<header>
+				<h1>{{ title }}</h1>
+				<div :class="{info:true, alert:alert, 'alert-danger':warning, 'alert-info':archived }">{{{ info | marked }}}</div>
+			</header>
+
+			<!-- parameters -->
+			<div id="params" v-if="state.method && state.method.name != 'index'">
+				<div class="sticky">
+
+					<nav v-if="params" class="navbar navbar-default">
+						<span class="loader"></span>
+						<ul class="nav navbar-nav">
+							<li v-for="param in params">
+								<param :param="param"></param>
+							</li>
+							<!--<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>-->
+							<li><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
+						</ul>
+					</nav>
+
+				</div>
+			</div>
+		</section>
+
+		<!-- output -->
+		<section id="output" data-format="{{ format }}"></section>
+
+	</div>
+
+</template>
+
+<script>
+
+// objects
+import settings		from '../js/services/settings.js';
+import server		from '../js/services/server.js';
+import Helpers		from '../js/classes/helpers.js';
+import Timer		from '../js/classes/timer.js';
+
+// components
+import Param		from './Param.vue';
+
+export default
+{
+
+	components:
+	{
+		Param
+	},
 
 	data:function(){
 
@@ -16,7 +69,7 @@ Vue.component('result', {
 
 	props:
 	[
-		'state', 
+		'state',
 		'method'
 	],
 
@@ -140,7 +193,7 @@ Vue.component('result', {
 				this.timer.start();
 
 				// run
-				this.$root.server
+				server
 					.call(this.state.route, this.onLoad, this.onFail)
 					.always(this.onComplete);
 			},
@@ -156,7 +209,7 @@ Vue.component('result', {
 				var type	= xhr.getResponseHeader('Content-Type');
 				var src		= 'data:' + type + ',' + encodeURIComponent(text);
 				var $iframe = $('<iframe class="error" frameborder="0">');
-				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</script>';
+				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</scr' + 'ipt>';
 
 				this.clear().append($iframe.attr('src', src));
 			},
@@ -258,7 +311,7 @@ Vue.component('result', {
 			onComplete:function()
 			{
 				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
-				this.loading 	= this.$root.server.count != 0;
+				this.loading 	= server.count != 0;
 				this.oldMethod 	= this.state.method;
 
 
@@ -266,4 +319,10 @@ Vue.component('result', {
 
 	}
 
-});
+}
+
+</script>
+
+<style lang="scss">
+	
+</style>
