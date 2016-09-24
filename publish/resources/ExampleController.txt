@@ -1,0 +1,22 @@
+<?php namespace %controllersns%;
+
+use Illuminate\Routing\Controller;
+
+/**
+ * Example Controller
+ */
+class ExampleController extends Controller
+{
+
+    /**
+     * An example controller, just to get you started
+     */
+    public function startHere()
+    {
+        $config = file_get_contents(config_path('sketchpad.php'));
+        return view('sketchpad::example', compact('config'));
+    }
+
+    // your methods here...
+
+}

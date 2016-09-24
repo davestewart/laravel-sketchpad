@@ -14,7 +14,8 @@
 	],
 	"require": {
 		"php": ">=5.3.0",
-		"illuminate/support": "5.0.*"
+		"illuminate/support": "5.0.*",
+		"symfony/filesystem": "^3.1"
 	},
 	"autoload": {
 		"psr-4": {

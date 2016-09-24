@@ -1,12 +1,10 @@
 <?php namespace davestewart\sketchpad\controllers;
 
-use davestewart\sketchpad\objects\scanners\Finder;
-use davestewart\sketchpad\objects\scanners\Scanner;
+use davestewart\sketchpad\services\Installer;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Input;
 use Response;
 
 /**
@@ -24,9 +22,14 @@ class SetupController extends Controller
 		 * @var Sketchpad
 		 */
 		protected $sketchpad;
-	
-	
-	// ------------------------------------------------------------------------------------------------
+
+        /**
+         * @var \davestewart\sketchpad\install\\davestewart\sketchpad\services\Setup
+         */
+        protected $setup;
+
+
+    // ------------------------------------------------------------------------------------------------
 	// instantiation
 
 		/**
@@ -39,15 +42,14 @@ class SetupController extends Controller
 			$this->sketchpad    = $sketchpad;
 			$this->setup        = new Setup();
 		}
-	
-	
+
 
 	// ------------------------------------------------------------------------------------------------
 	// setup methods
 
 		public function index()
 		{
-			return $this->setup->form();
+			return $this->setup->view();
 		}
 
 		/**
@@ -55,20 +57,53 @@ class SetupController extends Controller
 		 *
 		 * @method  POST
 		 * @param   Request     $request
-		 * @return  \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+		 * @return  \Illuminate\Http\JsonResponse
 		 */
-		public function create(Request $request)
+		public function submit(Request $request)
 		{
-			// instantiate setup
-			$input  = $request->all();
-			$result = $this->setup->makeConfig($input);
-
-			// run the next stage of setup
-			return redirect('/' .  $input['route']);
+		    $input      = $request->all();
+			$state      = $this->setup->saveData($input);
+            $message    = $state ? 'Config saved OK' : 'Unable to save config';
+            return $this->response($message, $input, $state);
 		}
 
+        /**
+         * Tests sketchpad was successfully installed
+         *
+         * @return \Illuminate\Http\JsonResponse
+         */
+		public function test()
+        {
+            $installer  = new Installer();
+			$state      = $installer->test();
+            $message    = $state ? 'Installation OK' : 'Installation error';
+            return $this->response($message, $installer->logs, $state);
+        }
 
-	
+
+    // ------------------------------------------------------------------------------------------------
+    // utilities
+
+        /**
+         * Utility JSON response method
+         *
+         * @param $message
+         * @param null $data
+         * @param int|bool $code
+         * @return \Illuminate\Http\JsonResponse
+         */
+        protected function response($message, $data = null, $code = 200)
+        {
+            if(is_bool($code))
+            {
+                $code = $code ? 200 : 400;
+            }
+            return Response::json([
+                'message' => $message,
+                'data' => $data
+            ], $code);
+        }
+
 
 }
 

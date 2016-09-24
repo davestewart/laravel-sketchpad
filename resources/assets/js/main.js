@@ -3,33 +3,43 @@
 
 	// libraries
 	import Vue			from 'vue';
-	//import VueResource 	from 'vue-resource';
 
 	// components
 	import App			from '../vue/App.vue';
+	import Setup		from '../vue/setup/Setup.vue';
 	import settings		from './services/settings.js';
 
 
 // ------------------------------------------------------------------------------------------------
 // configuration
 
-	// debug
-	console.log('APP CONFIGURING!');
-
 	// vue
-	Vue.config.debug	= true
+	Vue.config.debug	= true;
 	window.Vue			= Vue;
+
+	// token
+	var csrf = $('meta[name="csrf-token"]').attr('content');
+	var root = $('meta[name="app-url"]').attr('content');
 
 	// resource
 	Vue.use(require('vue-resource'));
-	Vue.http.options.root = $('meta[name="app-url"]').attr('content');
-	Vue.http.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
+	Vue.http.options.root = root;
+	Vue.http.headers.common['X-CSRF-TOKEN'] = csrf;
+
+	// jquery
+	jQuery.ajaxSetup(
+	{
+		headers:
+		{
+			'X-CSRF-Token': csrf
+		}
+	});
 
 
 // ------------------------------------------------------------------------------------------------
 // app
 
-	window.app = new Vue(
+	window.root = new Vue(
 	{
 		el: 'body',
 
@@ -42,7 +52,7 @@
 
 		components:
 		{
+			Setup,
 			App
 		}
-
 	});

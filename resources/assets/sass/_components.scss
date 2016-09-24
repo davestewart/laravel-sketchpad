@@ -16,21 +16,21 @@
 		content:"."
 	}
 
-	#output {
+	section#output {
 		body[data-mode="home"] &,
 		body[data-mode="help"] &{
 			// max-width: 700px;
 		}
 	}
 
-	#controllers,
-	#methods{
+	section#controllers,
+	section#methods{
 		height:100%;
 		padding-bottom:100px;
 		border-right:1px solid #eee;
 	}
 
-	#controllers{
+	section#controllers{
 		border-right:0;
 	}
 

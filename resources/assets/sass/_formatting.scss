@@ -79,6 +79,7 @@
 			max-width: 100%;
 		}
 
+		.help-text,
 		.help-block{
 			font-size:0.8em;
 			padding-left:4px;
@@ -127,8 +128,9 @@
 		outline: none;
 	}
 
+    /*
 	button{
-		color:#666 !important;
+		color:#666;
 	}
 
 	button:active{
@@ -137,8 +139,9 @@
 	}
 
 	button:hover{
-		color:#FFF !important;
+		color:#FFF;
 	}
+    */
 
 
 // ------------------------------------------------------------------------------------------------

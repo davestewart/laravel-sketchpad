@@ -10,6 +10,7 @@
 	<!-- libs -->
 	<script src="/{{ $assets }}lib.js"></script>
 	<link  href="/{{ $assets }}lib.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- fonts -->
 	<link  href="/{{ $assets }}fonts/lato/lato.css" rel="stylesheet">

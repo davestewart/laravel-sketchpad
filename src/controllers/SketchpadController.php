@@ -1,12 +1,10 @@
 <?php namespace davestewart\sketchpad\controllers;
 
-use davestewart\sketchpad\middleware\RequestId;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Input;
-use Response;
 
 /**
  * Class SketchpadController
@@ -53,12 +51,8 @@ class SketchpadController extends Controller
 		 */
 		public function call(Request $request, $path = '')
 		{
-			// instantiate setup
-			$setup = new Setup();
-
-
 			// return a view
-			if($setup->check())
+			if(file_exists(config_path('sketchpad.php')))
 			{
 				if(Input::get('call') || $request->isMethod('POST'))
 				{
@@ -66,7 +60,11 @@ class SketchpadController extends Controller
 				}
 				return $this->sketchpad->index();
 			}
-			//die('setup' . $setup->view());
+
+			//dump($path);
+
+			// no config
+			$setup = new Setup();
 			return $setup->index();
 		}
 
