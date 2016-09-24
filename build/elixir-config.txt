@@ -1,0 +1,44 @@
+/**
+ * Created by Dave on 13/09/2016.
+ */
+  // a portion of vanilla elixir config; not used, just here for reference
+var elixirConfig =
+  {
+    tasks			: [],
+    production		: false,
+    sourcemaps		: true,
+    appPath			: 'app',
+    assetsPath		: 'resources/assets',
+    viewPath		: 'resources/views',
+    publicPath		: 'public',
+    css:
+    {
+      folder			: 'css',
+      outputFolder	: 'css',
+      autoprefix		: { enabled: true, options: '[Object]' },
+      cssnano			: { pluginOptions: '[Object]' },
+      sass			: { folder: 'sass', pluginOptions: '[Object]' },
+      less			: { folder: 'less', pluginOptions: {} }
+    },
+    js:
+    {
+      folder			: 'js',
+      outputFolder	: 'js',
+      babel			: { options: '[Object]' },
+      browserify:
+      {
+        options		: {},
+        plugins		: [],
+        externals	: [],
+        transformers: '[Object]',
+        watchify	: '[Object]'
+      }
+    },
+    browserSync:
+    {
+      proxy: 'homestead.app',
+      reloadOnRestart: true,
+      notify: true
+    }
+  };
+

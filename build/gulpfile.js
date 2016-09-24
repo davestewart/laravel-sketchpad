@@ -16,54 +16,13 @@
 // ---------------------------------------------------------------------------------
 // config
 
-	// a portion of vanilla elixir config; not used, just here for reference
-	var elixirConfig =
-	{
-		tasks			: [],
-		production		: false,
-		sourcemaps		: true,
-		appPath			: 'app',
-		assetsPath		: 'resources/assets',
-		viewPath		: 'resources/views',
-		publicPath		: 'public',
-		css:
-		{
-			folder			: 'css',
-			outputFolder	: 'css',
-			autoprefix		: { enabled: true, options: '[Object]' },
-			cssnano			: { pluginOptions: '[Object]' },
-			sass			: { folder: 'sass', pluginOptions: '[Object]' },
-			less			: { folder: 'less', pluginOptions: {} }
-		},
-		js:
-		{
-			folder			: 'js',
-			outputFolder	: 'js',
-			babel			: { options: '[Object]' },
-			browserify:
-			{
-				options		: {},
-				plugins		: [],
-				externals	: [],
-				transformers: '[Object]',
-				watchify	: '[Object]'
-			}
-		},
-		browserSync:
-		{
-			proxy: 'homestead.app',
-			reloadOnRestart: true,
-			notify: true
-		}
-	};
-
 	// paths
 	var rootPath					= path.normalize(__dirname + '/../');
 	var assetsPath					= rootPath + 'publish/assets/';
 
 	// elixir input
 	elixir.config.assetsPath		= '../' + elixir.config.assetsPath;
-	elixir.config.sourcemaps		= false;
+	elixir.config.sourcemaps		= true;
 
 	// elixir output
 	elixir.config.publicPath		= '../publish/assets';
@@ -141,4 +100,3 @@
 					]
 				});
 	});
-
