@@ -5,7 +5,7 @@
 		<div class="sticky">
 
 			<!-- controllers -->
-			<div id="controllers" class="col-xs-6">
+			<section id="controllers" class="col-xs-6">
 
 				<ul class="nav nav-pills nav-stacked">
 
@@ -31,14 +31,19 @@
 					</template>
 
 				</ul>
-			</div>
+			</section>
 
 			<!-- methods -->
-			<div id="methods" class="col-xs-6">
+			<section id="methods" class="col-xs-6">
 				<ul v-if="state.controller" class="nav nav-pills nav-stacked">
-					<method v-if="method && method.name != 'index' " :method="method" :state="state" v-for="method in state.controller.methods"></method>
+					<method
+						v-if="method && method.name != 'index' "
+						v-for="method in state.controller.methods"
+						:method="method"
+						:state="state"
+					></method>
 				</ul>
-			</div>
+			</section>
 
 		</div>
 

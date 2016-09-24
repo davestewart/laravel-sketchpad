@@ -145,8 +145,8 @@ export default
 
 	filters:
 	{
-		marked:marked,
-		humanize:Helpers.humanize
+		marked		:window.marked,
+		humanize	:Helpers.humanize
 	},
 
 	ready:function()

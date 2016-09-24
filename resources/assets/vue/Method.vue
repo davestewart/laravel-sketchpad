@@ -1,6 +1,6 @@
 <template>
 
-		<li v-if="tags.group" class="folder">
+	<li v-if="tags.group" class="folder">
 		<span class="name">{{ tags.group }}</span>
 	</li>
 

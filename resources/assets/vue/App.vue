@@ -51,7 +51,7 @@
 			Modal
 		},
 
-		data:function()
+		data()
 		{
 			return {
 				settings	:settings,
@@ -61,7 +61,12 @@
 			};
 		},
 
-		ready:function()
+        created()
+        {
+            window.app = this;
+        },
+
+		ready()
 		{
 			// reloading
 			this.store.$on('load', this.onStoreLoad);
@@ -93,7 +98,7 @@
 			// ------------------------------------------------------------------------------------------------
 			// methods
 
-				run:function(route)
+				run(route)
 				{
 					this.unwatch();
 					this.state.setRoute(route);
@@ -107,7 +112,7 @@
 					});
 				},
 
-				update:function()
+				update()
 				{
 					if(this.$refs.result)
 					{
@@ -115,12 +120,12 @@
 					}
 				},
 
-				watch:function()
+				watch()
 				{
 					this.unwatch = this.$watch('state.method.params', this.onParamsChange, {deep:true});
 				},
 
-				unwatch:function()
+				unwatch()
 				{
 					// will be populate by $watch
 				},
@@ -129,7 +134,7 @@
 			// ------------------------------------------------------------------------------------------------
 			// handlers
 
-				onLinkClick:function(event)
+				onLinkClick(event)
 				{
 					// variables
 					var meta 	= event.ctrlKey || event.metaKey;
@@ -161,22 +166,22 @@
 					}
 				},
 
-				onRoute:function(route)
+				onRoute(route)
 				{
 					this.run(this.state.baseUrl + route);
 				},
 
-				onParamsChange:function()
+				onParamsChange()
 				{
 					this.router.navigate(this.state.route, false, true);
 				},
 
-				onHome:function()
+				onHome()
 				{
 					this.onView('welcome');
 				},
 
-				onView:function(type)
+				onView(type)
 				{
 					document.title 	= 'Sketchpad - ' + type;
 					this.state.reset();
@@ -186,7 +191,7 @@
 					});
 				},
 
-				onStoreLoad:function(event)
+				onStoreLoad(event)
 				{
 					if(this.state.controller && this.state.controller.path == event.path)
 					{
@@ -195,7 +200,7 @@
 						if(cIndex > -1)
 						{
 							this.unwatch();
-							this.state.controller = this.store.controllers[cIndex]
+							this.state.controller = this.store.controllers[cIndex];
 							if(mIndex > -1)
 							{
 								this.state.method = this.state.controller.methods[mIndex];
