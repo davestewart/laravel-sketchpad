@@ -17,11 +17,11 @@
 					<nav v-if="params" class="navbar navbar-default">
 						<span class="loader"></span>
 						<ul class="nav navbar-nav">
+							<li><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
 							<li v-for="param in params">
 								<param :param="param"></param>
 							</li>
 							<!--<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>-->
-							<li><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
 						</ul>
 					</nav>
 
