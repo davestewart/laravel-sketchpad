@@ -2,9 +2,9 @@
 
 if( ! function_exists('p') )
 {
-	function p($value, $bold = false)
+	function p($value, $class = null)
 	{
-		\davestewart\sketchpad\utils\Html::p($value, $bold);
+		\davestewart\sketchpad\utils\Html::p($value, $class);
 	}
 }
 

@@ -30,6 +30,7 @@ class OutputController extends Controller
 	{
 		p('This is a paragraph');
 		p('This is a paragraph with <code>true</code> passed as the second argument; the css class <code>note</code> is added', true);
+		p('This is a paragraph with <code>"special"</code> passed as the second argument; the user css class <code>special</code> is added', 'special');
 	}
 
 	/**
