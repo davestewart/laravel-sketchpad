@@ -5,7 +5,9 @@
 	@include('sketchpad::elements.header')
 
 	<div class="container">
-		{!! $app !!}
+
+		<app></app>
+
 	</div>
 
 	<script id="data" type="text/plain">

@@ -1,4 +1,6 @@
-Helpers =
+import settings from '../services/settings.js';
+
+export default
 {
 	getMethodLabel:function(method)
 	{

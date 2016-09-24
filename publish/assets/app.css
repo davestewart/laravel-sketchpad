@@ -4,7 +4,6 @@
   top: 0%; }
   .modal .modal-dialog {
     transition: none !important;
-    -webkit-transform: none !important;
     transform: none !important; }
 
 /*
@@ -466,3 +465,5 @@ body:after {
 .table.debug tbody td {
   white-space: pre;
   overflow-x: auto; }
+
+/*# sourceMappingURL=app.css.map */

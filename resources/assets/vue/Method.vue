@@ -1,6 +1,43 @@
-Vue.component('method', {
+<template>
 
-	template:'#method-template',
+	<li v-if="tags.group" class="folder">
+		<span class="name">{{ tags.group }}</span>
+	</li>
+
+	<li
+		:style="listStyle"
+		:class="listClass"
+		>
+		<a
+			:class="{method:true, error:error}"
+			:style="linkStyle"
+			title="{{ comment.intro }}"
+			href="{{ state.makeRoute(method) }}"
+			>
+			{{{ label }}}
+		</a>
+		<p
+			v-if="comment.intro && settings.showComments"
+			class="comment"
+			>{{ comment.intro }}</p>
+	</li>
+
+</template>
+
+<script>
+
+import Helpers		from '../js/classes/helpers.js';
+import settings 	from '../js/services/settings.js';
+
+export default
+{
+
+	data:function()
+	{
+		return {
+			settings:settings
+		};
+	},
 
 	props:'method state'.split(' '),
 
@@ -70,4 +107,10 @@ Vue.component('method', {
 		tags:function() { return this.method.tags; }
 	}
 
-});
+}
+
+</script>
+
+<style lang="scss">
+	
+</style>

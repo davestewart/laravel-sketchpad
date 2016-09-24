@@ -1,4 +1,7 @@
-;window.Store = Vue.extend({
+import Vue 		from 'vue';
+import server	from './server.js';
+
+var Store = Vue.extend({
 
 	data:function()
 	{
@@ -11,7 +14,7 @@
 		if(window.LiveReload)
 		{
 			// server
-			this.server = this.$options.server || server;
+			this.server = server;
 
 			// proxies
 			var reload 	= LiveReload.reloader.reload;
@@ -127,3 +130,4 @@
 
 });
 
+export default new Store();

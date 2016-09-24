@@ -1,8 +1,29 @@
-Vue.component('param', {
+<template>
 
-	template:'#param-template',
+	<label
+		for="{{ id }}"
+		:title="param.text"
+	>{{ param.name }}</label>
+	<input
 
+		:id="id"
+		:type="type"
+		v-model="value"
+		debounce="400"
+	>
+
+</template>
+
+<script>
+	
+export default
+{
 	props:['param'],
+
+	ready:function()
+	{
+		console.log(this.param);
+	},
 
 	computed:
 	{
@@ -52,4 +73,10 @@ Vue.component('param', {
 		}
 	}
 
-});
+}
+
+</script>
+
+<style lang="scss">
+	
+</style>

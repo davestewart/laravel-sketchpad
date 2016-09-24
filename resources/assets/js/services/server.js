@@ -104,3 +104,6 @@ Server.prototype =
 		}
 
 };
+
+export default new Server;
+
