@@ -6,7 +6,7 @@
 		<!--
 		<p>The installer needs to know some information so it can create folders and copy files.</p>
 		-->
-		<p>Sketchpad (and its subfolders) can be installed anywhere in your project, but the default "Standalone" setup is recommended. This allows you to keep everything in one place, and makes version control easier.</p>
+		<p>Sketchpad (and its subfolders) can be installed anywhere in your project, but the default "separate" setup is recommended. This allows you to keep everything in one place, and makes version control easier.</p>
         <p>If the controllers folder is outside of your app namespace, you'll need to supply PSR-4 autoloader info.</p>
 		<p>Choose your install type, edit any paths you need to, then click Next to continue.</p>
 
@@ -150,8 +150,8 @@ var prompts = {
 };
 
 var options = {
-	standalone: {
-		type		:'standalone',
+	separate: {
+		type		:'separate',
         desc        :'Sketchpad functions separately from your app; easiest for version control',
 		controllers	:'sketchpad/controllers',
 		views		:'sketchpad/views',
@@ -209,9 +209,9 @@ export default
 	data()
 	{
 		return {
-			type        :'standalone',
+			type        :'separate',
             focus       :'',
-			options	    :copy(options.standalone),
+			options	    :copy(options.separate),
             prompts     :copy(prompts),
             hints       :copy(prompts),
             autoloader  :false,

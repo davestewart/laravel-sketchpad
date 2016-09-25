@@ -2,7 +2,7 @@
 
 use Config;
 use davestewart\sketchpad\install\objects\JSON;
-use davestewart\sketchpad\install\Paths;
+use davestewart\sketchpad\services\Paths;
 use davestewart\sketchpad\install\Settings;
 use davestewart\sketchpad\objects\scanners\Finder;
 use davestewart\sketchpad\services\Sketchpad;
@@ -20,7 +20,7 @@ class Setup
 	// -----------------------------------------------------------------------------------------------------------------
 	// properties
 
-        protected $paths;
+
 
 
     // ------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ class Setup
 
         public function __construct()
 		{
-		    $this->paths = new Paths();
+
 		}
 
 
@@ -62,22 +62,26 @@ class Setup
             $finder = new Finder();
             $finder->start();
 
+            // paths
+            $paths  = new Paths();;
+
             // functions
             function path($path)
             {
                 return trim(str_replace(base_path(), '', $path), '/');
             }
 
+            // base name
+            $basePath   = base_path() . '/';
+            $temp       = explode('/', base_path());
+            $baseName   = array_pop($temp) . '/';
+
             // view path
             $temp       = Config::get('view.paths');
             $viewPath   = substr($temp[0], strlen(base_path() . '/'));
 
-            // base name
-            $temp       = explode('/', base_path());
-            $baseName   = array_pop($temp) . '/';
-
 			// variables
-            $assets = base_path('vendor/davestewart/sketchpad/publish/assets/');
+            $assets = $paths->publish('assets/');
 			$app    = app();
 			$data   = app(Sketchpad::class)->getVariables();
 			$vars   =
@@ -86,12 +90,14 @@ class Setup
 			    'styles' => file_get_contents($assets . 'app.css'),
 				'settings' =>
 				[
-					'basepath'          => base_path() . '/',
+					'basepath'          => $basePath,
 					'basename'          => $baseName,
                     'viewpath'          => $viewPath,
-					'configpath'        => path($this->paths->config),
-                    'controllerpath'    => path($finder->path),
-					'namespace'         => method_exists($app, 'getNamespace') ? trim($app->getNamespace(), '\\') : 'App\\',
+					'configpath'        => $paths->relative(config_path('sketchpad.php')),
+                    'controllerpath'    => trim($paths->relative($finder->path), '/'),
+					'namespace'         => method_exists($app, 'getNamespace')
+                                            ? trim($app->getNamespace(), '\\')
+                                            : 'App\\',
                     'namespaces'        => (new JSON('composer.json'))->get('autoload.psr-4')
 				]
 			];

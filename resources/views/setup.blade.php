@@ -233,7 +233,7 @@
 	</script>
 
 	<script type="application/json" id="settings">
-		{!! json_encode($settings, JSON_UNESCAPED_SLASHES) !!}
+{!! json_encode($settings, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 	</script>
 
 </head>

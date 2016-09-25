@@ -4,7 +4,7 @@ use davestewart\sketchpad\install\objects\Copier;
 use davestewart\sketchpad\install\objects\Folder;
 use davestewart\sketchpad\install\objects\JSON;
 use davestewart\sketchpad\install\objects\Template;
-use davestewart\sketchpad\install\Paths;
+use davestewart\sketchpad\services\Paths;
 use davestewart\sketchpad\install\Settings;
 
 /**
@@ -44,7 +44,7 @@ class Installer
             $this->state        = true;
             $this->settings     = $settings = new Settings(true);
             $this->paths        = $paths    = new Paths();
-            $publish            = $paths->publish;
+            $publish            = $paths->publish();
 
             // objects
             //$this->config       = new Template( $publish . 'templates/config.txt', 'custom/config/sketchpad.php');
@@ -155,7 +155,7 @@ class Installer
                     : $this->fail('The PSR-4 autoload entry was not added to your composer.json', "Add a new entry in <code>autoload.psr-4</code>: <code>\"$key\" : \"$value\"</code>");
             }
 
-            file_put_contents($this->paths->storage . 'install.log', json_encode($this->logs, JSON_PRETTY_PRINT));
+            file_put_contents($this->paths->storage('install.log'), json_encode($this->logs, JSON_PRETTY_PRINT));
 
             return $this->state;
 		}

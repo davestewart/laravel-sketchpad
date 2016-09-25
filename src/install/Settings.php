@@ -1,4 +1,5 @@
 <?php namespace davestewart\sketchpad\install;
+use davestewart\sketchpad\services\Paths;
 
 /**
  * Installer settings
@@ -29,11 +30,12 @@ class Settings
         public function __construct()
         {
             // paths
-            $paths = new Paths();
-            $this->path = $paths->storage . 'install.json';
-            if( ! file_exists($paths->storage) )
+            $paths      = new Paths();
+            $storage    = $paths->storage();
+            $this->path = $storage . 'install.json';
+            if( ! file_exists($storage) )
             {
-                mkdir($paths->storage, null, true);
+                mkdir($storage, null, true);
             }
             $this->load();
         }
