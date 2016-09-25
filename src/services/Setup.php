@@ -1,12 +1,11 @@
 <?php namespace davestewart\sketchpad\services;
 
 use Config;
-use davestewart\sketchpad\install\objects\JSON;
-use davestewart\sketchpad\services\Paths;
-use davestewart\sketchpad\install\Settings;
-use davestewart\sketchpad\objects\scanners\Finder;
-use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
+use davestewart\sketchpad\objects\install\JSON;
+use davestewart\sketchpad\objects\settings\Paths;
+use davestewart\sketchpad\objects\settings\InstallerSettings;
+use davestewart\sketchpad\objects\scanners\Finder;
 
 
 /**
@@ -112,13 +111,13 @@ class Setup
 
         public function saveData($input)
         {
-            $settings = new Settings();
+            $settings = new InstallerSettings();
             return $settings->save($input);
 		}
 
         public function loadData()
         {
-            $settings = new Settings();
+            $settings = new InstallerSettings();
             return $settings;
 		}
 

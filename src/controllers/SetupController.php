@@ -3,6 +3,7 @@
 use davestewart\sketchpad\services\Installer;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Response;
@@ -24,7 +25,7 @@ class SetupController extends Controller
 		protected $sketchpad;
 
         /**
-         * @var \davestewart\sketchpad\install\\davestewart\sketchpad\services\Setup
+         * @var Setup
          */
         protected $setup;
 
@@ -57,7 +58,7 @@ class SetupController extends Controller
 		 *
 		 * @method  POST
 		 * @param   Request     $request
-		 * @return  \Illuminate\Http\JsonResponse
+		 * @return  JsonResponse
 		 */
 		public function submit(Request $request)
 		{
@@ -70,7 +71,7 @@ class SetupController extends Controller
         /**
          * Tests sketchpad was successfully installed
          *
-         * @return \Illuminate\Http\JsonResponse
+         * @return JsonResponse
          */
 		public function test()
         {
@@ -90,7 +91,7 @@ class SetupController extends Controller
          * @param $message
          * @param null $data
          * @param int|bool $code
-         * @return \Illuminate\Http\JsonResponse
+         * @return JsonResponse
          */
         protected function response($message, $data = null, $code = 200)
         {

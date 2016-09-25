@@ -1,10 +1,9 @@
-<?php namespace davestewart\sketchpad\install;
-use davestewart\sketchpad\services\Paths;
+<?php namespace davestewart\sketchpad\objects\settings;
 
 /**
  * Installer settings
  */
-class Settings
+class InstallerSettings
 {
 
     // -----------------------------------------------------------------------------------------------------------------

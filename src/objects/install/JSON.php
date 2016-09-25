@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\install\objects;
+<?php namespace davestewart\sketchpad\objects\install;
 
 /**
  * File templating class

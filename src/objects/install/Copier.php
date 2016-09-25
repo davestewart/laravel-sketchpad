@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\install\objects;
+<?php namespace davestewart\sketchpad\objects\install;
 
 /**
  * Copies files or folders from one directory to another

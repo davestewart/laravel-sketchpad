@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\services;
+<?php namespace davestewart\sketchpad\objects\settings;
 
 /**
  * Paths class

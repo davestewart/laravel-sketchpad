@@ -1,11 +1,11 @@
 <?php namespace davestewart\sketchpad\services;
 
-use davestewart\sketchpad\install\objects\Copier;
-use davestewart\sketchpad\install\objects\Folder;
-use davestewart\sketchpad\install\objects\JSON;
-use davestewart\sketchpad\install\objects\Template;
-use davestewart\sketchpad\services\Paths;
-use davestewart\sketchpad\install\Settings;
+use davestewart\sketchpad\objects\install\Copier;
+use davestewart\sketchpad\objects\install\Folder;
+use davestewart\sketchpad\objects\install\JSON;
+use davestewart\sketchpad\objects\install\Template;
+use davestewart\sketchpad\objects\settings\Paths;
+use davestewart\sketchpad\objects\settings\InstallerSettings;
 
 /**
  * Installs Sketchpad according to the settings saved by the GUI form
@@ -42,7 +42,7 @@ class Installer
         {
             // variables
             $this->state        = true;
-            $this->settings     = $settings = new Settings(true);
+            $this->settings     = $settings = new InstallerSettings(true);
             $this->paths        = $paths    = new Paths();
             $publish            = $paths->publish();
 
