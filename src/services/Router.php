@@ -38,11 +38,15 @@ class Router
 		protected $paths;
 	
 		/**
+         * A cache of all routes so
+         *
 		 * @var RouteReference[]
 		 */
 		protected $routes;
 	
 		/**
+         * An array of full controller properties to pass to the front end
+         *
 		 * @var Controller[]
 		 */
 		protected $controllers;
@@ -207,8 +211,9 @@ class Router
 
 		public function getController($path)
 		{
-			if(file_exists($path))
-			{
+		    $abspath = base_path($path);
+            if(file_exists($abspath))
+            {
 				// variables
 				$path   = strtolower($path);
 				$routes = $this->getRoutes();
@@ -218,8 +223,7 @@ class Router
 				{
 					if(strtolower($ref->path) == $path)
 					{
-
-						$controller = new Controller($ref->path, $ref->route);
+						$controller = new Controller($ref->abspath, $ref->route);
 						ParamTypeManager::create()->saveOne($controller);
 						return $controller;
 					}

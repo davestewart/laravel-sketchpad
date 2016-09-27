@@ -9,7 +9,7 @@
  *
  *  1.  When scanning all the folders at the start.
  *
- *      The references is saved to the session so no need to re-scan later.
+ *      The references are saved to the session so no need to re-scan later.
  *      At this point, only the path, class and route are saved
  *
  *  2.  When a method is called from the app
@@ -26,19 +26,13 @@ class ControllerReference extends RouteReference
 	public $class;
 
 	/**
-	 * An absolute path to the controller file
-	 * @var
-	 */
-	public $path;
-
-	/**
-	 * A string method for the called method
+	 * A string method for the called method (only populated in phase 2)
 	 * @var string
 	 */
 	public $method;
 
 	/**
-	 * An array of strings for the called parameters
+	 * An array of strings for the called parameters (only populated in phase 2)
 	 * @var string[]
 	 */
 	public $params;
@@ -52,8 +46,7 @@ class ControllerReference extends RouteReference
 	 */
 	public function __construct($route, $path, $class = null)
 	{
-		parent::__construct('controller', $route);
-		$this->path     = $path;
+		parent::__construct('controller', $route, $path);
 		$this->class    = $class;
 	}
 

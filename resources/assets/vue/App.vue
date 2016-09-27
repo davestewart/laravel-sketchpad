@@ -193,7 +193,7 @@
 
 				onStoreLoad(event)
 				{
-					if(this.state.controller && this.state.controller.path == event.path)
+					if(this.state.controller && this.state.controller.relpath == event.path)
 					{
 						var cIndex 	= event.index;
 						var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
