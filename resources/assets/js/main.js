@@ -35,6 +35,10 @@
 		}
 	});
 
+	// utilities
+	window.clone = function clone(obj){ return JSON.parse(JSON.stringify(obj)); };
+	window.dump = function dump(){ Array.prototype.slice.call(arguments).map( obj => console.log(clone(obj) ) ) };
+
 
 // ------------------------------------------------------------------------------------------------
 // app
