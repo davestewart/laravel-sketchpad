@@ -74,6 +74,9 @@ class SketchpadServiceProvider extends ServiceProvider
 			    // setup view
 				Route::get  ($config->route . ':setup', 'SetupController@index');
 
+			    // setup assets
+				Route::get  ($config->route . ':setup/assets/{file}', 'SetupController@asset')->where(['file' => '.*']);
+
                 // post setup data
 				Route::post ($config->route . ':setup', 'SetupController@submit');
 

@@ -1,12 +1,15 @@
 <?php namespace davestewart\sketchpad\controllers;
 
+use davestewart\sketchpad\objects\settings\Paths;
+use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\services\Installer;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class SketchpadController
@@ -51,6 +54,29 @@ class SetupController extends Controller
 		public function index()
 		{
 			return $this->setup->view();
+		}
+
+        public function asset($file)
+        {
+            // absolute path
+            $paths  = new Paths();
+            $path   = $paths->publish("assets/$file");
+
+            // mimetype
+            $info  = pathinfo($file);
+            $mimes =
+            [
+                'js'    => 'application/javascript',
+                'css'   => 'text/css',
+                'woff'  => 'application/font-woff',
+                'ttf'   => 'application/x-font-ttf',
+            ];
+            $mime = $mimes[$info['extension']];
+
+            // serve file
+            $response = new BinaryFileResponse($path);
+            $response->headers->set('Content-Type', $mime);
+            return $response;
 		}
 
 		/**

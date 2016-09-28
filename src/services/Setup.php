@@ -62,7 +62,7 @@ class Setup
             $finder->start();
 
             // paths
-            $paths  = new Paths();;
+            $paths  = new Paths();
 
             // functions
             function path($path)
@@ -85,8 +85,6 @@ class Setup
 			$data   = app(Sketchpad::class)->getVariables();
 			$vars   =
 			[
-			    'script' => file_get_contents($assets . 'app.js'),
-			    'styles' => file_get_contents($assets . 'app.css'),
 				'settings' =>
 				[
 					'basepath'          => $basePath,
