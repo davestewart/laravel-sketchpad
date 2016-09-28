@@ -183,12 +183,12 @@ var options = {
 	custom: {
 		type		:'custom',
         desc        :'Full control over the installation; choose your own folders, paths, routes, etc.',
-		controllers	:'custom/sketchpad/controllers',
-		views		:'custom/sketchpad/views',
-		assets		:'assets/sketchpad',
+		controllers	:'custom/src/Controllers/Sketchpad',
+		views		:'custom/resources/views/sketchpad',
+		assets		:'custom/assets/sketchpad',
 		route		:'custom',
-		namespace	:'custom',
-		basedir	    :'custom'
+		namespace	:'Custom',
+		basedir	    :'custom/src'
 	}
 };
 
