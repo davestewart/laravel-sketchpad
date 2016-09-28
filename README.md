@@ -4,6 +4,8 @@
 
 Sketchpad is an interactive front-end for your Laravel back-end; a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.
 
+![sketchpad](https://cloud.githubusercontent.com/assets/132681/18911464/22c08000-8575-11e6-814b-5ebfda9861a2.png)
+
 ## What it does
 
 It shows the controllers and methods from your `Controllers/sketchpad/` folder, and allows you to run them without setting up routing, views, etc.
