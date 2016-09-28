@@ -245,7 +245,6 @@ export default
                 type            :options.type,
                 autoloader      :this.autoloader,
                 controllers	    :tail(options.controllers),
-                controllersns	:tail(options.controllers, '').replace(/\//g, '\\'),
                 views		    :tail(options.views),
                 assets		    :tail(options.assets),
                 route		    :tail(options.route),

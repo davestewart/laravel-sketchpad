@@ -8,7 +8,7 @@
 class Template extends Copier
 {
 
-    protected $text;
+    public $text;
 
     /**
      * Template constructor.
@@ -23,7 +23,7 @@ class Template extends Copier
         $this->load();
         if($data)
         {
-            $this->populate($data);
+            $this->set($data);
         }
     }
 

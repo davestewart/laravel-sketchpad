@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\services;
 
+use davestewart\sketchpad\objects\install\ClassTemplate;
 use davestewart\sketchpad\objects\install\Copier;
 use davestewart\sketchpad\objects\install\Folder;
 use davestewart\sketchpad\objects\install\JSON;
@@ -52,12 +53,11 @@ class Installer
             $this->prefs        = new Copier(   $publish . 'config/settings.json', storage_path('vendor/sketchpad/'));
             $this->assets       = new Copier(   $publish . 'assets', public_path($settings->assets));
             $this->controllers  = new Folder(   $settings->controllers);
-            $this->controller   = new Template( $publish . 'resources/ExampleController.txt', $settings->controllers . '/{filename}.php');
+            $this->controller   = new ClassTemplate( $publish . 'resources/ExampleController.txt', $settings->controllers . '{filename}.php');
             $this->views        = new Folder(   $settings->views);
             $this->view         = new Copier(   $publish . 'resources/example.blade.php', $settings->views);
             if($this->settings->autoloader)
             {
-                //$this->composer = new JSON('composer.json', 'custom/composer.json');
                 $this->composer = new JSON('composer.json');
             }
         }
@@ -81,9 +81,17 @@ class Installer
             $this->assets
                 ->create();
 
+            if($this->composer)
+            {
+                $this->composer
+                    ->set("autoload.psr-4.{$this->settings->namespace}", "{$this->settings->basedir}")
+                    ->create();
+            }
+
             $this->controllers
                 ->create();
             $this->controller
+                ->loadNamespaces()
                 ->set($this->settings)
                 ->create();
 
@@ -91,13 +99,6 @@ class Installer
                 ->create();
             $this->view
                 ->create();
-
-            if($this->composer)
-            {
-                $this->composer
-                    ->set("autoload.psr-4.{$this->settings->namespace}", "{$this->settings->basedir}")
-                    ->create();
-            }
         }
 
         /**
