@@ -17,23 +17,44 @@ class Installer
     // -----------------------------------------------------------------------------------------------------------------
     // PROPERTIES
 
-        // variables
+    // variables
+
         protected $settings;
         protected $paths;
 
-        // state
+    // state
+
+        /** @var Log[] An array of installation step results */
         public $logs;
+
+        /** @var bool Flag to indicate installation was a success or failure */
         public $state;
 
-        // installers
-        public $config;
-        public $prefs;
-        public $assets;
-        public $controllers;
-        public $controller;
-        public $views;
-        public $view;
+    // installers
+
+        /** @var JSON */
         public $composer;
+
+        /** @var Template $config */
+        public $config;
+
+        /** @var Copier */
+        public $prefs;
+
+        /** @var Folder */
+        public $controllers;
+
+        /** @var ClassTemplate */
+        public $controller;
+
+        /** @var Folder */
+        public $views;
+
+        /** @var Copier */
+        public $view;
+
+        /** @var Copier */
+        public $assets;
 
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -41,30 +62,35 @@ class Installer
 
         public function __construct()
         {
-            // variables
             $this->state        = true;
-            $this->settings     = $settings = new InstallerSettings(true);
-            $this->paths        = $paths    = new Paths();
-            $publish            = $paths->publish();
+            $this->settings     = new InstallerSettings();
+            $this->paths        = new Paths();
+            $this->initialize();
+        }
+
+        protected function initialize()
+        {
+            // variables
+            $settings           = $this->settings;
+            $publish            = $this->paths->publish();
+
+            // update compose
+            if($this->settings->autoloader)
+            {
+                $this->composer = new JSON('composer.json');
+            }
 
             // objects
             //$this->config       = new Template( $publish . 'templates/config.txt', 'custom/config/sketchpad.php');
             $this->config       = new Template( $publish . 'templates/config.txt', config_path('sketchpad.php'));
             $this->prefs        = new Copier(   $publish . 'config/settings.json', storage_path('vendor/sketchpad/'));
-            $this->assets       = new Copier(   $publish . 'assets', public_path($settings->assets));
             $this->controllers  = new Folder(   $settings->controllers);
             $this->controller   = new ClassTemplate( $publish . 'resources/ExampleController.txt', $settings->controllers . '{filename}.php');
             $this->views        = new Folder(   $settings->views);
             $this->view         = new Copier(   $publish . 'resources/example.blade.php', $settings->views);
-            if($this->settings->autoloader)
-            {
-                $this->composer = new JSON('composer.json');
-            }
+            $this->assets       = new Copier(   $publish . 'assets', public_path($settings->assets));
+
         }
-
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // METHODS
 
 
     // ------------------------------------------------------------------------------------------------
@@ -75,10 +101,8 @@ class Installer
             $this->config
                 ->set($this->settings)
                 ->create();
-            $this->prefs
-                ->create();
 
-            $this->assets
+            $this->prefs
                 ->create();
 
             if($this->composer)
@@ -90,14 +114,19 @@ class Installer
 
             $this->controllers
                 ->create();
+
             $this->controller
-                ->loadNamespaces()
+                ->setNamespace()
                 ->set($this->settings)
                 ->create();
 
             $this->views
                 ->create();
+
             $this->view
+                ->create();
+
+            $this->assets
                 ->create();
         }
 
@@ -106,7 +135,7 @@ class Installer
          */
 		public function test()
 		{
-		    $this->status = [];
+		    $this->logs = [];
 
 		    $this->config->exists()
                 ? $this->pass('Config created')
@@ -116,9 +145,14 @@ class Installer
                 ? $this->pass('Settings created')
                 : $this->fail('The sketchpad settings file could not be found', "Copy it from <code>{$this->prefs->src}</code>");
 
-            $this->assets->exists()
-                ? $this->pass('Assets copied')
-                : $this->fail('The sketchpad assets folder was not copied', "Copy it from <code>{$this->assets->src}</code>");
+            if($this->composer)
+            {
+                $key    = $this->settings->namespace;
+                $value  = $this->settings->basedir;
+                $this->composer->has('autoload.psr-4.' . $key)
+                    ? $this->pass('Composer autoload config updated')
+                    : $this->fail('The PSR-4 autoload entry was not added to your composer.json', "Add a new entry in <code>autoload.psr-4</code>: <code>\"$key\" : \"$value\"</code>");
+            }
 
             $this->controllers->exists()
                 ? $this->pass('Controller folder created')
@@ -128,16 +162,9 @@ class Installer
                 ? $this->pass('Example controller created')
                 : $this->fail('The sketchpad example controller could not be found', "Create a new controller in <code>{$this->controller->trg}</code>");
 
-            try
-            {
-                $class      = $this->settings->controllersns . '\\ExampleController';
-                $controller = new \ReflectionClass($class);
-                $this->pass('Example controller loaded');
-            }
-            catch(\Exception $e)
-            {
-                $this->fail('Unable to load example controller', "Check the namespace declaration in <code>{$this->controller->trg}</code>");
-            }
+            $this->controller->loads()
+                ? $this->pass('Example controller loaded')
+                : $this->fail('Unable to load example controller', "Check the namespace declaration in <code>{$this->controller->trg}</code>");
 
             $this->views->exists()
                 ? $this->pass('Views folder created')
@@ -147,16 +174,11 @@ class Installer
                 ? $this->pass('Example view copied')
                 : $this->fail('The sketchpad example view was not found', "Create it at <code>{$this->view->trg}</code>");
 
-            if($this->composer)
-            {
-                $key    = $this->settings->namespace;
-                $value  = $this->settings->basedir;
-                $this->composer->has('autoload.psr-4.' . $key)
-                    ? $this->pass('composer.json updated')
-                    : $this->fail('The PSR-4 autoload entry was not added to your composer.json', "Add a new entry in <code>autoload.psr-4</code>: <code>\"$key\" : \"$value\"</code>");
-            }
+            $this->assets->exists()
+                ? $this->pass('Assets copied')
+                : $this->fail('The sketchpad assets folder was not copied', "Copy it from <code>{$this->assets->src}</code>");
 
-            file_put_contents($this->paths->storage('install.log'), json_encode($this->logs, JSON_PRETTY_PRINT));
+            $this->saveLogs();
 
             return $this->state;
 		}
@@ -174,7 +196,27 @@ class Installer
 
 		protected function log($state, $title, $text = '')
         {
-            $this->logs[] = ['state' => $state, 'title' => $title, 'text' => $text];
+            $this->logs[] = new Log($state, $title, $text);
         }
 
+        protected function saveLogs()
+        {
+            file_put_contents($this->paths->storage('install.log'), json_encode($this->logs, JSON_PRETTY_PRINT));
+        }
+
+}
+
+class Log
+{
+
+    public $state;
+    public $title;
+    public $text;
+
+    function __construct($state, $title, $text)
+    {
+        $this->state = $state;
+        $this->title = $title;
+        $this->text  = $text;
+    }
 }
