@@ -46,9 +46,11 @@ class NamespaceResolver
      * Attempts to get the namespace for a
      *
      * @param $file
+     * @param bool $defaultToPath
      * @return null|string
+     * @internal param string $default
      */
-    public function getNamespace($file)
+    public function getNamespace($file, $defaultToPath = false)
     {
         // massage file path into a format compatible with PSR-4 entries
         $file = str_replace('\\', '/', $file);
@@ -73,7 +75,11 @@ class NamespaceResolver
         }
 
         // namespace could not be resolved
-        return null;
+        $info = pathinfo($file);
+
+        return $defaultToPath
+            ? str_replace('/', '\\', $info['dirname'])
+            : null;
 
     }
 }

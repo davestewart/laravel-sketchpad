@@ -1,4 +1,5 @@
 <?php namespace davestewart\sketchpad\objects\install;
+use ReflectionClass;
 
 /**
  * ClassTemplate
@@ -17,21 +18,56 @@ class ClassTemplate extends Template
      */
     protected $resolver;
 
+    protected $classname;
+
+    protected $namespace;
+
     public function __construct($src, $trg, $data = null)
     {
+        // parent
         parent::__construct($src, $trg, $data);
+
+        // classname
+        preg_match('%([^/]+).php$%', $this->trg, $matches);
+        $this->classname = $matches[1];
+
+        // namespace
+        $this->setNamespace();
     }
 
-    public function loadNamespaces()
+    public function setNamespace()
     {
-        $resolver = new NamespaceResolver();
-        $resolver->loadNamespaces();
+        if( ! $this->resolver )
+        {
+            $this->resolver = new NamespaceResolver();
+        }
+        $this->resolver->loadNamespaces();
+        $this->namespace = $this->resolver->getNamespace($this->trg, true);
         $data =
         [
-            'namespace' => $resolver->getNamespace($this->trg)
+            'namespace' => $this->namespace
         ];
         $this->set($data);
         return $this;
+    }
+
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    public function loads()
+    {
+        $classpath = $this->namespace . '\\' . $this->classname;
+        try
+        {
+            new ReflectionClass($classpath);
+            return true;
+        }
+        catch(\Exception $e)
+        {
+            return false;
+        }
     }
 
 }
