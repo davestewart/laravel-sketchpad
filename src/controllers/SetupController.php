@@ -1,7 +1,6 @@
 <?php namespace davestewart\sketchpad\controllers;
 
 use davestewart\sketchpad\objects\settings\Paths;
-use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\services\Installer;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
@@ -9,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Response;
 
 /**
  * Class SketchpadController
@@ -75,7 +74,8 @@ class SetupController extends Controller
 
             // serve file
             $response = new BinaryFileResponse($path);
-            $response->headers->set('Content-Type', $mime);
+            $response->headers->set('Content-type', $mime);
+            $response->headers->set('Content-length', filesize($path));
             return $response;
 		}
 
