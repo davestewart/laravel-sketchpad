@@ -183,9 +183,9 @@ var options = {
 	custom: {
 		type		:'custom',
         desc        :'Full control over the installation; choose your own folders, paths, routes, etc.',
-		controllers	:'custom/src/Controllers/Sketchpad',
-		views		:'custom/resources/views/sketchpad',
-		assets		:'custom/assets/sketchpad',
+		controllers	:'custom/src/Controllers',
+		views		:'custom/resources/views',
+		assets		:'vendor/custom',
 		route		:'custom',
 		namespace	:'Custom',
 		basedir	    :'custom/src'
@@ -347,7 +347,7 @@ export default
             if(this.isValid)
             {
                 var options = this.cleanOptions;
-                jQuery.post('/sketchpad/:setup', options, function(res){
+                jQuery.post(this.settings.route + ':setup', options, function(res){
                     console.log('options saved: ', res);
                     this.isComplete = true;
                     resolve('Config updated OK!');

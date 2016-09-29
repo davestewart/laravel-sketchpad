@@ -55,7 +55,6 @@ composer dump-autoload
 				<h2 class="text-success">Installation complete</h2>
 				<p>The config file is located at:</p>
                 <pre><code>{{ settings.configpath }}</code></pre>
-				<p>You can edit it to add additional controllers folders.</p>
 				<p>Click Finish to start using Sketchpad!</p>
 			</wizard-step>
 

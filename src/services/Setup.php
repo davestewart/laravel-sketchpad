@@ -1,6 +1,7 @@
 <?php namespace davestewart\sketchpad\services;
 
 use Config;
+use davestewart\sketchpad\objects\SketchpadConfig;
 use Illuminate\Http\Request;
 use davestewart\sketchpad\objects\install\JSON;
 use davestewart\sketchpad\objects\settings\Paths;
@@ -63,6 +64,7 @@ class Setup
 
             // paths
             $paths  = new Paths();
+            $config = new SketchpadConfig();
 
             // functions
             function path($path)
@@ -87,6 +89,7 @@ class Setup
 			[
 				'settings' =>
 				[
+					'route'             => $config->route,
 					'basepath'          => $basePath,
 					'basename'          => $baseName,
                     'viewpath'          => $viewPath,
