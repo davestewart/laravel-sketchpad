@@ -1,11 +1,11 @@
 <?php namespace %namespace%;
 
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Controller as BaseController;
 
 /**
  * Example Controller
  */
-class ExampleController extends Controller
+class ExampleController extends BaseController
 {
 
     /**
