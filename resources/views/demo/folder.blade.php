@@ -23,6 +23,9 @@
 
     <h4>Folders</h4>
     <ul>
+        @if($path != '/')
+        <li><a href="?path={{ $parent }}">..</a></li>
+        @endif
         @foreach($folders as $folder)
         <li><a href="?path={{ $path  . $folder }}">{{ $folder }}</a></li>
         @endforeach
