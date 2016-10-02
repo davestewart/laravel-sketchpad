@@ -29,14 +29,14 @@ class ToolsController extends Controller
 	public function viewSession()
 	{
 		ls(\Session::all(), true);
-		// TODO Add "clear" button
 	}
 
-	/**
-	 * Output the result of `phpinfo()`
-	 *
-	 * Note the use of escaping into HTML to output the style tag
-	 */
+    /**
+     * Output the result of `phpinfo()`
+     *
+     * Note the use of escaping into HTML to output the style tag
+     * @param string $key
+     */
 	public function phpInfo($key = 'all')
 	{
 
@@ -149,6 +149,61 @@ class ToolsController extends Controller
 
 		echo vue('sketchpad::demo.vue.routes', ['data' => $array]);
 	}
-	
+
+    /**
+     * Browse your local filesystem
+     *
+     * @param $path
+     * @return View|string
+     */
+    public function browseFilesystem($path = '')
+    {
+
+        // parameters
+        if( ! $path )
+        {
+            $path = base_path($path);
+        }
+
+        // paths
+        $_path      = $path;
+        $path       = realpath($path);
+        $parent     = $path == '' ? null : realpath($path . '/../');
+
+        // found
+        if($path)
+        {
+            function getBreadcrumbs($path)
+            {
+                $segments   = array_flip(explode('/', $path));
+                $lastPath   = '';
+                foreach($segments as $key => $value)
+                {
+                    $path = $lastPath . $key . '/';
+                    $segments[$key] = $path;
+                    $lastPath = $path;
+                }
+                return $segments;
+            }
+
+            try
+            {
+                $objects        = array_diff(scandir($path), ['.','..']);
+                $breadcrumbs    = getBreadcrumbs($path);
+                $folders        = array_filter($objects, function($f) use ($path) { return is_dir($path . '/' . $f); });
+                $files          = array_filter($objects, function($f) use ($path) { return is_file($path . '/' . $f); });
+                $path           = rtrim($path, '/') . '/';
+
+                return view('sketchpad::demo.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
+            }
+            catch(\Exception $e)
+            {
+                return "Unable to read folder '$path'";
+            }
+        }
+
+        // not found
+        return "Path '$_path' not found";
+	}
 
 }

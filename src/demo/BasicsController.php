@@ -49,18 +49,18 @@ class BasicsController extends Controller
 	{
 		?>
 
-		<p>Your method's parameter types (<code>string</code>, <code>boolean</code>, etc) determine the input control types.</p>
-		<p>Should you need to override determined types, type-hint your DocBocks:</p>
-		<pre class="code php">
+<p>Your method's parameter types (<code>string</code>, <code>boolean</code>, etc) determine the HTML input control types.</p>
+<p>They also enable Sketchpad to cast submitted values to the expected type; no need for type-juggling in your methods:</p>
+<?php
+	vd(func_get_args());
+?>
+<p>Should you need to override determined types, type-hint your DocBocks:</p>
+<pre class="code php">
 @param  string   $string   This is a text field
 @param  int      $number   This is a number field
 @param  boolean  $boolean  This is a checkbox
 @param  mixed    $mixed    This is a text field (but will be converted to the correct type)
-</pre>
-<p>Note that when you update values, Sketchpad casts them to the expected type; no need for type-juggling in your methods!</p>
-<?php
-	vd(func_get_args());
-
+</pre><?
 	}
 
 	/**
@@ -77,11 +77,10 @@ class BasicsController extends Controller
 	public function links()
 	{
 		?>
-		<p>These links link to other methods, as they resolve to the base route:</p>
+		<p>These links resolve to other internal methods:</p>
 		<ul>
-			<li>This links to the <a href="../forms/">forms</a> method in the same controller</li>
-			<li>This links to one of the <a href="../../tools/viewsession">sample tools</a> in the tools controller</li>
-			<li>You can use absolute or relative links</li>
+			<li>This links to the <a href="forms">forms</a> method in the same controller</li>
+			<li>This links to one of the <a href="../tools/viewsession">sample tools</a> in the tools controller</li>
 		</ul>
 
 		<p>These links resolve normally, as they don't:</p>
