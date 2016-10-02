@@ -6,9 +6,9 @@ var State = Vue.extend({
 	// ------------------------------------------------------------------------------------------------
 	// properties
 
-		el:() => document.createElement('div'),
+		el: () => document.createElement('div'),
 
-		data:function()
+		data ()
 		{
 			return {
 				baseUrl		:$('meta[name="route"]').attr('content'),
@@ -20,7 +20,7 @@ var State = Vue.extend({
 
 		computed:
 		{
-			route:function()
+			route ()
 			{
 				return this.makeRoute(this.method, this.controller);
 			}
@@ -28,9 +28,9 @@ var State = Vue.extend({
 
 		//props:['store'],
 
-		created:function()
+		created ()
 		{
-			console.log(this);
+			//console.log(this);
 		},
 
 
@@ -48,7 +48,7 @@ var State = Vue.extend({
 				 *
 				 * @param route
 				 */
-				setRoute:function(route)
+				setRoute (route)
 				{
 					// data
 					var data 				= this.parseRoute(route);
@@ -58,10 +58,11 @@ var State = Vue.extend({
 					this.method 			= data.method;
 					if(data.method && data.params)
 					{
-						data.params.forEach(function (value, index)
+						data.method.params.forEach(function (param, index)
 						{
-							var param = data.method.params[index];
-							if (param)
+							var name    = param.name;
+							var value   = data.params[name];
+							if (typeof value !== 'undefined')
 							{
 								param.value = value;
 							}
@@ -86,17 +87,17 @@ var State = Vue.extend({
 				/**
 				 * Rest all values
 				 */
-				reset:function()
+				reset ()
 				{
 					this.controller = null;
 					this.method 	= null;
 				},
 
-				getLink:function(url)
+				getLink (url)
 				{
 					url = String(url).replace(location.origin, '');
 					return url.indexOf(this.baseUrl) === 0
-						? url.replace(/\/*$/, '/')
+						? url
 						: null;
 				},
 
@@ -110,7 +111,7 @@ var State = Vue.extend({
 				 * @param 	{string}	[route]
 				 * @returns {object}
 				 */
-				parseRoute:function(route)
+				parseRoute (route)
 				{
 					// parameters
 					route = this.getLink(route || location.href);
@@ -126,23 +127,41 @@ var State = Vue.extend({
 					}
 					if(method)
 					{
-						params = route.replace(method.route, '').match(/[^\/]+/g);
+						params = location.search.substr(1).split('&')
+							.reduce( function (params, p) {
+								let [name, value] = p.split('=');
+								params[name] = decodeURI(value);
+								return params;
+							}, {});
 					}
 
 					// return
-					return {controller:controller, method:method, params:params};
+					return {controller, method, params};
 				},
 
-				makeRoute:function(method, controller)
+				makeRoute (method, controller)
 				{
-					return method
-						? method.route + (method.params.length ? method.params.map(function (p) { return p.value; }).join('/') + '/' : '')
-						: controller
-							? controller.route
-							: '';
+					if(method)
+					{
+						var route = method.route;
+						if(method.params.length)
+						{
+							var params = method.params.map( p => p.name + '=' + (p.value || '') );
+							route += '?' + params.join('&');
+						}
+						return route;
+					}
+					return controller
+						? controller.route
+						: '';
 				},
 
-				getRoute:function(route)
+				getRoute (route)
+				{
+
+				},
+
+				parseQuery ()
 				{
 
 				}

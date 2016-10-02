@@ -1,5 +1,5 @@
 import Vue 		from 'vue';
-import server	from './server.js';
+import server	from './server/server';
 
 var Store = Vue.extend({
 
@@ -133,7 +133,7 @@ var Store = Vue.extend({
 
 			getControllerByPath:function(path)
 			{
-				return this.controllers.filter(function(c){ return c.path == path; }).shift();
+				return this.controllers.filter( c => c.path == path ).shift();
 			},
 
 			dispatch:function(type, path, index)

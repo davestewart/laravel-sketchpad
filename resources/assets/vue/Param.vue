@@ -22,7 +22,7 @@ export default
 
 	ready:function()
 	{
-		console.log(this.param);
+		//console.log(this.param);
 	},
 
 	computed:

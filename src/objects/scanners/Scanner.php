@@ -60,7 +60,7 @@ class Scanner extends AbstractScanner
 		 * @param   string   $path
 		 * @param   string   $route         the base route for sketchpad routes
 		 */
-		public function __construct($path, $route = '/sketchpad/')
+		public function __construct($path, $route = '')
 		{
 			// parameters
 			$this->path         = $path;
@@ -86,7 +86,7 @@ class Scanner extends AbstractScanner
 	// PROTECTED SCANNING METHODS
 
 		/**
-		 * Finds all controllers and folders Recursive path processing function
+		 * Recursively finds all controllers and folders
 		 *
 		 * Sets controllers and folders elements as they are found
 		 *

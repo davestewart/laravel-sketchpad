@@ -17,16 +17,22 @@
  *      At this point, method and params are populated, and within Sketchpad
  *      to determine how to call the actual Controller method via App::call()
  */
-class ControllerReference extends RouteReference
+class CallReference extends ControllerReference
 {
-	/**
-	 * The fully-qualified class path
-	 * @var string
-	 */
-	public $class;
+    /**
+     * A string method for the called method (only populated in phase 2)
+     * @var string
+     */
+    public $method;
 
-	/**
-	 * ControllerReference constructor
+    /**
+     * An array of strings for the called parameters (only populated in phase 2)
+     * @var string[]
+     */
+    public $params;
+
+    /**
+	 * CallReference constructor
 	 *
 	 * @param   string  $route
 	 * @param   string  $path
@@ -34,8 +40,18 @@ class ControllerReference extends RouteReference
 	 */
 	public function __construct($route, $path, $class = null)
 	{
-		parent::__construct('controller', $route, $path);
+		parent::__construct('call', $route, $path);
 		$this->class    = $class;
 	}
+
+	public static function fromControllerRef(ControllerReference $c)
+    {
+        $call = new self($c->route, $c->path, $c->class);
+        foreach($c as $key => $value)
+        {
+            $call->$key = $value;
+        }
+        return $call;
+    }
 
 }

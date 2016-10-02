@@ -2,14 +2,11 @@
 
 use App;
 use davestewart\sketchpad\objects\reflection\Controller;
+use davestewart\sketchpad\objects\route\CallReference;
 use davestewart\sketchpad\objects\route\ControllerReference;
-use davestewart\sketchpad\objects\scanners\Finder;
-use davestewart\sketchpad\objects\scanners\Scanner;
 use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\traits\GetterTrait;
-use Illuminate\Support\Facades\Input;
 use ReflectionMethod;
-
 
 /**
  * Class Sketchpad
@@ -133,24 +130,26 @@ class Sketchpad
 			return view('sketchpad::index', $data);
 		}
 
-		/**
-		 * Initial function that works out the controller, method and parameters to call from the URI string
-		 *
-		 * @param string $route
-		 * @return mixed|string
-		 */
-		public function call($route = '')
+        /**
+         * Initial function that works out the controller, method and parameters to call from the URI string
+         *
+         * @param string $route
+         * @param array $params
+         * @return mixed|string
+         */
+		public function call($route = '', array $params)
 		{
 			// set up the router, but don't scan
 			$this->init();
 
-			//pd($this->router);
+			//vd([$route, $params]);
+            //exit;
 
-			/** @var ControllerReference $ref */
-			$ref = $this->router->getRoute($this->config->route . $route);
+			/** @var CallReference $ref */
+			$ref = $this->router->getCall($this->config->route . $route, $params);
 
 			// controller has method
-			if($ref instanceof ControllerReference && $ref->method)
+			if($ref instanceof CallReference)
 			{
 				// test controller / method exists
 				try
@@ -168,9 +167,6 @@ class Sketchpad
 
 				// assign controller property
 				$this->route = $ref->route . $ref->method . '/';
-
-				// setup headers for AJAX call matching
-				header('X-Request-ID:' . Input::get('requestId', ''));
 
 				// get controller response
 				ob_start();
@@ -192,7 +188,6 @@ class Sketchpad
 
 				// otherwise, return response
 				return $response;
-
 			}
 
 			// if there's not a valid controller or method, it's a 404

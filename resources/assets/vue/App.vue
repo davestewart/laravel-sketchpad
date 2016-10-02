@@ -29,7 +29,7 @@
 // imports
 
 	// services
-	import server		from '../js/services/server.js';
+	import server		from '../js/services/server/server.js';
 	import store		from '../js/services/store.js';
 	import state		from '../js/services/state.js';
 	import settings		from '../js/services/settings.js';
@@ -55,7 +55,6 @@
 		{
 			return {
 				settings	:settings,
-				server		:server,
 				store		:store,
 				state		:state
 			};
@@ -63,7 +62,9 @@
 
         created()
         {
-            window.app = this;
+			this.router 	= new Router();
+            this.server     = server;
+            window.app      = this;
         },
 
 		ready()
@@ -77,7 +78,6 @@
 
 			// routes
 			var url 		= this.state.baseUrl;
-			this.router 	= new Router();
 
 			this.router.route(url, this.onHome);
 			this.router.route(url + '~/*view', this.onView);
@@ -148,6 +148,12 @@
 					{
 						return;
 					}
+
+					// resolve ~ links
+                    if(href.indexOf('~') == 0)
+                    {
+                        debugger;
+                    }
 
 					// controller
 					if(path && meta)
