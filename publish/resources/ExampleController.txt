@@ -11,10 +11,10 @@ class ExampleController extends BaseController
     /**
      * An example controller, just to get you started
      */
-    public function startHere()
+    public function startHere($name = 'there')
     {
-        $config = file_get_contents(config_path('sketchpad.php'));
-        return view('sketchpad::example', compact('config'));
+        $config = config('sketchpad');
+        return view('sketchpad::example', compact('config', 'name'));
     }
 
     // your methods here...
