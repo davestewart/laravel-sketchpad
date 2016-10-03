@@ -243,7 +243,7 @@ export default
 				if(contentType == 'application/json')
 				{
 					this.format = 'json';
-					$data.html($('<pre class="code json">').JSONView(data));
+					$data.html($('<div class="code json">').JSONView(data));
 				}
 
 				// handle md response
