@@ -127,7 +127,7 @@ class Scanner extends AbstractScanner
 		 */
 		protected function addFolder($path)
 		{
-			$route          = $this->route . $path;
+			$route          = rtrim($this->route . $path, '/');
 			$ref            = new FolderReference($route, $this->path . $path);
 			$this->addRoute($route, $ref);
 		}
@@ -141,7 +141,7 @@ class Scanner extends AbstractScanner
 		{
 			// variables
 			$name           = pathinfo($abspath, PATHINFO_FILENAME);
-			$segment        = preg_replace('/Controller$/', '/', $name);
+			$segment        = preg_replace('/Controller$/', '', $name);
 			$route          = strtolower($this->route . $route . $segment);
 
 			// objects

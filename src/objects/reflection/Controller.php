@@ -119,7 +119,7 @@ class Controller extends File implements Arrayable, JsonSerializable
 				'class'     => $this->classname,
 				'label'     => $this->label,
 				'route'     => $this->route,
-				'folder'    => preg_replace('%[^/]+/$%', '', $this->route),
+				'folder'    => preg_replace('%[^/]+$%', '', $this->route),
 				'comment'   => $this->comment,
 				'methods'   => $this->methods,
 			];

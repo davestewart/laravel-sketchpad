@@ -44,7 +44,7 @@ class Method implements JsonSerializable
 			// properties
 			$this->ref      = $method;
 			$this->name		= $method->name;
-			$this->route    = strtolower($route . $this->name);
+			$this->route    = strtolower($route . '/' . $this->name);
 			$this->label	= $this->getLabel();
 			$this->comment	= $this->getDocComment();
 
