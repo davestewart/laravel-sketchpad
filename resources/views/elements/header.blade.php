@@ -22,8 +22,8 @@
 			<ul class="nav navbar-nav navbar-right">
 				<!--
 				<li><a href="{{ $route }}~/new" title="New Controller">New</a></li>
-				<li><a href="{{ $route }}~/settings" title="Settings">Settings</a></li>
 				-->
+				<li><a href="{{ $route }}~/settings" title="Settings">Settings</a></li>
 				<li><a target="_blank" href="{{ $route }}~/help" title="Help">Help</a></li>
 			</ul>
 

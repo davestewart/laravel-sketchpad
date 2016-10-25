@@ -83,11 +83,15 @@ class SketchpadServiceProvider extends ServiceProvider
                 // test setup has worked correctly
 				Route::get  ($config->route . ':setup/test', 'SetupController@test');
 
+                // load content
+				Route::get  ($config->route . ':load/{data?}', 'SketchpadController@controller')->where('data', '.*');
+				Route::get  ($config->route . ':page/{data?}', 'SketchpadController@view')->where('data', '.*');
+
                 // create a new sketchpad controller
 				Route::post ($config->route . ':create', 'SketchpadController@create');
 
                 // catch-all command
-				Route::get  ($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
+				//Route::get  ($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
 
                 // catch-call route
 				Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');

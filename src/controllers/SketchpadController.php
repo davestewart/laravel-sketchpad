@@ -40,7 +40,35 @@ class SketchpadController extends Controller
 	// ------------------------------------------------------------------------------------------------
 	// main entry point
 
-		/**
+        public function action($action)
+        {
+            $data = Input::get('data');
+            switch($action)
+            {
+                case 'install':
+                    $this->install();
+                    break;
+
+                case 'view':
+                    return $this->sketchpad->getPage($data);
+                    break;
+
+                case 'call':
+                    $this->run();
+                    break;
+
+                case 'create':
+                    $this->create();
+                    break;
+
+                case 'settings':
+                    $this->settings();
+                    break;
+
+            }
+        }
+
+        /**
 		 * Main entry point for any non :command URIs
 		 *
 		 * Will trigger index or a controller/method call
@@ -54,9 +82,10 @@ class SketchpadController extends Controller
 			// return a view
 			if(file_exists(config_path('sketchpad.php')))
 			{
-				if(Input::get('call') || $request->isMethod('POST'))
+				if(Input::get('_call') || $request->isMethod('POST'))
 				{
-					return $this->sketchpad->call($path);
+				    $request->query->remove('_call');
+					return $this->sketchpad->call($path, $request->all());
 				}
 				return $this->sketchpad->index();
 			}
@@ -90,8 +119,18 @@ class SketchpadController extends Controller
 			// loads controller data
 			if($type == 'load')
 			{
-				return response()->json($this->sketchpad->getController($data));
+
 			}
+		}
+
+        public function controller($data)
+        {
+            return response()->json($this->sketchpad->getController($data));
+		}
+
+        public function view($data)
+        {
+            return $this->sketchpad->getPage($data);
 		}
 
 		/**

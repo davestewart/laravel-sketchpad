@@ -11,7 +11,7 @@
                 :settings="settings">
 			</config>
 
-			<wizard-step v-ref:script :next="checkInstall" :enter="install">
+			<wizard-step v-ref:script :next="checkInstall">
 
                 <h2 class="text-info">Installation</h2>
                 <p>Copy the script below and run it in the terminal to complete the installation:</p>
@@ -79,6 +79,20 @@ composer dump-autoload
 import Config from './Config.vue';
 import { WizardStep } from '../../js/classes/Wizard';
 
+var state =
+{
+    settings:{
+
+    },
+
+    config:{
+
+    },
+
+    logs:[
+
+    ]
+};
 
 export default
 {
