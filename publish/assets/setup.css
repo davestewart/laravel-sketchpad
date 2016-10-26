@@ -1,3 +1,30 @@
+    #steps article{
+        display: none;
+    }
+
+    #steps article.active {
+        display: block;
+    }
+
+    #steps {
+        transition: 0.5s all;
+    }
+
+    #steps.paused {
+        //opacity: 0.25;
+    }
+
+    .btn[disabled]{
+        opacity: 0.5;
+        cursor: default;
+    }
+
+    .btn[disabled],
+    .btn[disabled]:hover{
+        color:inherit !important;
+    }
+
+
     /** form **/
 
     fieldset {

@@ -1,6 +1,6 @@
 <template>
 
-	<section id="config">
+	<article id="config">
 
 		<h2 class="text-info">Configuration</h2>
 		<!--
@@ -15,7 +15,6 @@
 			<div class="xwell" style="margin:30px 20px;">
 
 				<form class="form-horizontal" autocomplete="off">
-
 
 					<fieldset>
 
@@ -133,7 +132,7 @@
 
 		</div>
 
-	</section>
+	</article>
 
 </template>
 
@@ -215,8 +214,7 @@ export default
             prompts     :copy(prompts),
             hints       :copy(prompts),
             autoloader  :false,
-            dirty       :false,
-            isComplete  :false
+            dirty       :false
 		}
 	},
 
@@ -342,22 +340,14 @@ export default
             this.dirty = true;
         },
 
-        submit(resolve, reject = reject)
+        validate()
         {
             if(this.isValid)
             {
-                var options = this.cleanOptions;
-                jQuery.post(this.settings.route + ':setup', options, function(res){
-                    console.log('options saved: ', res);
-                    this.isComplete = true;
-                    resolve('Config updated OK!');
-                }).fail(reject);
+                return true;
             }
-            else
-            {
-                this.isComplete = false;
-                reject('All fields are required!');
-            }
+            reject('All fields are required!');
+            return false;
         }
 
 	},

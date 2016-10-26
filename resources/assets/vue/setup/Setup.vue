@@ -4,27 +4,27 @@
 
 		<h1>Setup</h1>
 
-		<div class="wz-steps">
+		<section id="steps">
 
 			<config
+                id="config"
 				v-ref:config
                 :settings="settings">
 			</config>
 
-			<wizard-step v-ref:script :next="checkInstall">
+			<article id="summary">
 
                 <h2 class="text-info">Installation</h2>
                 <p>Copy the script below and run it in the terminal to complete the installation:</p>
-
 <pre>cd "{{ settings.basepath }}"
 php artisan sketchpad:install
 composer dump-autoload
 </pre>
                 <p>Once complete, click Next to test everything worked...</p>
 
-			</wizard-step>
+			</article>
 
-			<wizard-step v-ref:error :next="checkInstall" :back="restart">
+			<article id="error">
 				<h2 class="text-danger">Installation failed</h2>
 				<p>Review the errors and take action:</p>
 
@@ -49,25 +49,25 @@ composer dump-autoload
 
                 <p>If you think you made a mistake with the paths, restart, edit the details, and repeat the installation process.</p>
 				<p>If you think you can repair the errors yourself, do that, then click Next to check the installation again.</p>
-			</wizard-step>
+			</article>
 
-			<wizard-step v-ref:complete>
+			<article id="complete">
 				<h2 class="text-success">Installation complete</h2>
 				<p>The config file is located at:</p>
                 <pre><code>{{ settings.configpath }}</code></pre>
 				<p>Click Finish to start using Sketchpad!</p>
-			</wizard-step>
+			</article>
 
-		</div>
+		</section>
 
 		<hr>
 
-		<div class="wz-controls form-group">
+		<div id="controls" class="form-group">
 			<template v-if="! isLast">
-				<button @click="back" v-if="!isFirst" class="btnPrev btn btnPrevious">{{ index == 2 ? 'Restart' : 'Back' }}</button>
-				<button @click="next" :disabled="!isValid" class="btnNext btn btn-primary">Next</button>
+				<button name="back" class="btnPrev btn">Back</button>
+				<button name="next" class="btnNext btn btn-primary">Next</button>
 			</template>
-			<button v-else @click="finish" class="btn btn-primary btnNext">Finish</button>
+			<button v-else class="btn btn-primary btnNext">Finish</button>
 		</div>
 
 	</div>
@@ -76,8 +76,9 @@ composer dump-autoload
 
 <script>
 
+import {setup, scrollTop} from './scripts'
 import Config from './Config.vue';
-import { WizardStep } from '../../js/classes/Wizard';
+import StateMachine from '../../js/lib/state-machine';
 
 var state =
 {
@@ -97,201 +98,91 @@ var state =
 export default
 {
 	components:{
-		Config,
-		WizardStep
+		Config
 	},
 
 	data:() =>
 	{
-		var settings = JSON.parse($('#settings').text() || '{}');
-
-		return {
-			index	:0,
-			steps	:[
-				'config',
-				'script',
-                'error',
-                'complete'
-			],
-            logs    :[],
-			settings:settings
-		}
-	},
-
-	ready()
-	{
-		console.log(this.$refs);
-		this.show(0);
+	    state.settings = JSON.parse($('#settings').text() || '{}');
+		return state;
 	},
 
 	computed:
 	{
-		step()
-		{
-			let id = this.steps[this.index];
-			return this.$refs[id];
-		},
+	    options()
+	    {
+	        return this.$refs.config.cleanOptions;
+	    },
 
-		isFirst()
-		{
-			return this.index == 0;
-		},
-
-		isLast()
-		{
-			return this.index == this.steps.length - 1;
-		},
-
-        isValid()
-        {
-            if(this.step)
-            {
-                return this.step.hasOwnProperty('isValid')
-                    ? this.step.isValid
-                    : true;
-            }
-            return true;
-        }
-    },
-
-	methods:
-	{
-
-	    // ------------------------------------------------------------------------------------------------
-	    // navigation
-
-            back()
-            {
-                var ref = this.getRef();
-                var fn  = ref.back;
-                if(fn)
-                {
-                    fn(this.onBackComplete, this.onNavigateFail)
-                }
-                else
-                {
-                    this.onBackComplete();
-                }
-            },
-
-            next()
-            {
-                var ref = this.getRef();
-                var fn  = ref.submit || ref.next;
-                if(fn)
-                {
-                    // TODO consider chained promises to do submit and next
-                    fn(this.onNextComplete, this.onNavigateFail)
-                }
-                else
-                {
-                    this.onNextComplete();
-                }
-            },
-
-            onBackComplete()
-            {
-                this.index--;
-            },
-
-            onNextComplete()
-            {
-                var top  = $(window).scrollTop();
-                var next = () => { this.index++ };
-                if(top > 0)
-                {
-                    $('body').animate({scrollTop:0}, function(){
-                        setTimeout(function(){
-                            next();
-                        }, 250);
-                    });
-                }
-                else
-                {
-                    next();
-                }
-            },
-
-            onNavigateFail(message)
-            {
-                console.log('FAIL: ', message);
-            },
-
-
-        // ------------------------------------------------------------------------------------------------
-        // actions
-
-            checkInstall(onSuccess)
-            {
-                var route = this.getRef('config').cleanOptions.route;
-
-                console.log('checking install', this);
-
-                jQuery.get('/' + route + ':setup/test', () => {
-                    this.index  = 3;
-                }).fail( (response) => {
-                    this.logs   = response.responseJSON.data;
-                    this.index  = 2;
-                });
-            },
-
-            restart()
-            {
-                this.index = 0;
-            },
-
-            finish()
-            {
-                location.href = '/' + this.getRef('config').cleanOptions.route;
-            },
-
-
-        // ------------------------------------------------------------------------------------------------
-        // utilities
-
-            is(id)
-            {
-                return this.steps.indexOf(id) == this.index;
-            },
-
-            show:function(index)
-            {
-                this.steps.forEach( (id, i) =>
-                {
-                    let ref = this.$refs[id];
-                    if(ref)
-                    {
-                        ref.$el.style.display = index == i ? 'block' : 'none';
-                    }
-                });
-            },
-
-            getRef(id = null)
-            {
-                // name; return immediately
-                if(typeof id == 'string')
-                {
-                    return this.$refs[id];
-                }
-
-                // number; find by index
-                let index = typeof id == 'number'
-                    ? id
-                    : this.index;
-
-                // return
-                return this.$refs[this.steps[index]];
-            }
-
+	    route()
+	    {
+	        return '/' + this.$refs.config.cleanOptions.route;
+	    }
 	},
 
-	watch:
+	ready()
 	{
-		index(value)
-		{
-			this.show(value);
-		}
+		fsm = new StateMachine({
+
+		    scope:this,
+
+		    transitions:
+		    [
+		        'next    : config > summary > install > complete',
+		        'back    : config < summary',
+		        'error   :                    install >            error',
+		        'next    :                    install            < error',
+		        'back    : config                                < error',
+		        'next    :                              complete >         exit'
+		    ],
+
+		    handlers:
+		    {
+		        ':leave':function(event, fsm)
+		        {
+		            fsm.pause();
+		            scrollTop(fsm.resume.bind(fsm));
+		        },
+
+                summary(event, fsm)
+                {
+                    console.log(this.options);
+                    jQuery
+                        .post(this.route + ':setup', this.options, data => console.log('Options saved: ', data) )
+                        .fail( data => console.error(data || 'Options could not be saved') );
+                },
+
+		        install(event, fsm)
+                {
+                    fsm.pause();
+                    jQuery.get(this.route + ':setup/test', (data) =>
+                    {
+                        console.log('Installation succeeded!', data);
+                        fsm.go('complete', true);
+                    })
+                    .fail(response =>
+                    {
+                        this.logs   = response.responseJSON.data;
+                        fsm.go('error', true);
+                    });
+                },
+
+                complete(event, fsm)
+                {
+                    $('button[name=next]').text('Finish');
+                },
+
+                exit(event, fsm)
+                {
+                    fsm.cancel();
+                    location.href = '/' + this.$refs.config.cleanOptions.route;
+                }
+            }
+		});
+
+		setup(fsm, '#steps', '#controls', '> *');
 	}
+
 }
 
 </script>
