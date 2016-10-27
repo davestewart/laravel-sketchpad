@@ -165,7 +165,7 @@ class Router
 
 					// properties
 					$call->method    = array_shift($segments);
-					$call->params    = ParamTypeManager::create()->convert($call->route . $call->method, $params);
+					$call->params    = ParamTypeManager::create()->convert($call->route . '/' . $call->method, $params);
 
 					// return
 					return $call;
