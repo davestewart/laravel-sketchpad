@@ -29,7 +29,7 @@
 // imports
 
 	// services
-	import server		from '../js/services/server.js';
+	import server		from '../js/services/server/server.js';
 	import store		from '../js/services/store.js';
 	import state		from '../js/services/state.js';
 	import settings		from '../js/services/settings.js';
@@ -55,7 +55,6 @@
 		{
 			return {
 				settings	:settings,
-				server		:server,
 				store		:store,
 				state		:state
 			};
@@ -63,7 +62,9 @@
 
         created()
         {
-            window.app = this;
+			this.router 	= new Router(); // global: slim-router
+            this.server     = server;
+            window.app      = this;
         },
 
 		ready()
@@ -77,7 +78,6 @@
 
 			// routes
 			var url 		= this.state.baseUrl;
-			this.router 	= new Router();
 
 			this.router.route(url, this.onHome);
 			this.router.route(url + '~/*view', this.onView);
@@ -149,6 +149,12 @@
 						return;
 					}
 
+					// resolve ~ links
+                    if(href.indexOf('~') == 0)
+                    {
+                        debugger;
+                    }
+
 					// controller
 					if(path && meta)
 					{
@@ -193,7 +199,7 @@
 
 				onStoreLoad(event)
 				{
-					if(this.state.controller && this.state.controller.path == event.path)
+					if(this.state.controller && this.state.controller.relpath == event.path)
 					{
 						var cIndex 	= event.index;
 						var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;

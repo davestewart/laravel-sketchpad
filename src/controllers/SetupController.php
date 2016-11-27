@@ -1,32 +1,35 @@
 <?php namespace davestewart\sketchpad\controllers;
 
-use davestewart\sketchpad\objects\scanners\Finder;
-use davestewart\sketchpad\objects\scanners\Scanner;
+use Artisan;
+use davestewart\sketchpad\services\Installer;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Input;
-use Response;
 
 /**
  * Class SketchpadController
  */
 class SetupController extends Controller
 {
-	
+
 	// ------------------------------------------------------------------------------------------------
 	// properties
-	
+
 		/**
 		 * Sketchpad service
 		 *
 		 * @var Sketchpad
 		 */
 		protected $sketchpad;
-	
-	
-	// ------------------------------------------------------------------------------------------------
+
+        /**
+         * @var Setup
+         */
+        protected $setup;
+
+
+    // ------------------------------------------------------------------------------------------------
 	// instantiation
 
 		/**
@@ -39,15 +42,14 @@ class SetupController extends Controller
 			$this->sketchpad    = $sketchpad;
 			$this->setup        = new Setup();
 		}
-	
-	
+
 
 	// ------------------------------------------------------------------------------------------------
 	// setup methods
 
 		public function index()
 		{
-			return $this->setup->form();
+			return $this->setup->view();
 		}
 
 		/**
@@ -55,20 +57,54 @@ class SetupController extends Controller
 		 *
 		 * @method  POST
 		 * @param   Request     $request
-		 * @return  \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+		 * @return  array
 		 */
-		public function create(Request $request)
+		public function submit(Request $request)
 		{
-			// instantiate setup
-			$input  = $request->all();
-			$result = $this->setup->makeConfig($input);
-
-			// run the next stage of setup
-			return redirect('/' .  $input['route']);
+		    $input      = $request->all();
+			$state      = $this->setup->saveData($input);
+            $result     = [
+                'step'      => 'config',
+                'success'   => $state,
+                'message'   => $state ? 'Config saved OK' : 'Unable to save config',
+                'data'      => $input
+            ];
+            if($state)
+            {
+                return $this->install();
+            }
+            return $result;
 		}
 
+        /**
+         * Attempts to install sketchpad
+         *
+         * @return array
+         */
+		public function install()
+        {
+            Artisan::call('sketchpad:install');
+            return $this->test();
+        }
 
-	
+
+        /**
+         * Tests sketchpad was successfully installed
+         *
+         * @return array
+         */
+		public function test()
+        {
+            $installer  = new Installer();
+			$state      = $installer->test();
+            $result     = [
+                'step'      => 'install',
+                'success'   => $state,
+                'message'   => $state ? 'Installation OK' : 'Installation error',
+                'data'      => $installer->logs
+            ];
+            return $result;
+        }
 
 }
 

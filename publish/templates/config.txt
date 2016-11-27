@@ -1,0 +1,21 @@
+<?php return
+[
+    // sketchpad route
+    'route'         => '%route%',
+
+    // array of controller folders, add as many as you see fit
+    'paths'         =>
+    [
+        'project'   => '%controllers%',
+        'demo'      => 'vendor/davestewart/sketchpad/src/demo/'
+    ],
+
+    // sketchpad views folder, accessible via 'sketchpad::path.to.file'
+    'views'         => '%views%',
+
+    // public assets folder for sketchpad resources
+    'assets'        => '%assets%',
+
+    // any middleware you want to run on sketchpad routes
+    'middleware'    => null,
+];

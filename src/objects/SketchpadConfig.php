@@ -63,10 +63,13 @@ class SketchpadConfig
 				}
 
 				// update trailing slash on paths
-				$this->paths = array_map(function ($path)
-				{
-					return rtrim($path, '/') . '/';
-				}, $this->paths);
+                if(is_array($this->paths))
+                {
+                    $this->paths = array_map(function ($path)
+                    {
+                        return rtrim($path, '/') . '/';
+                    }, $this->paths);
+                }
 
 				// ensure route is bounded by slashes to prevent concatenation issue later
 				$this->route    = '/' . trim($this->route, '/') . '/';

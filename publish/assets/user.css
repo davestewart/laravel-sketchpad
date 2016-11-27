@@ -27,3 +27,19 @@ li.fancy.active{
 	white-space: normal;
 	margin: 5px 0;
 }
+
+#output p.note{
+    color:green;
+}
+
+p.special{
+    padding: 5px 8px;
+    border-radius: 5px;
+    background: repeating-linear-gradient(
+        -45deg,
+        #EEE,
+        #EEE 3px,
+        #FFF 3px,
+        #FFF 6px
+    );
+}

@@ -73,6 +73,19 @@ a:active,
 a:focus {
   outline: none !important; }
 
+fieldset {
+  margin-bottom: 1.5em; }
+
+legend {
+  margin-bottom: 0.3em; }
+
+.inline label.radio {
+  padding-top: 0; }
+
+.inline div.radio {
+  display: inline-block;
+  margin-right: 10px; }
+
 pre,
 .table td.pre,
 .table.pre td,
@@ -250,6 +263,7 @@ form label {
 form textarea {
   max-width: 100%; }
 
+form .help-text,
 form .help-block {
   font-size: 0.8em;
   padding-left: 4px; }
@@ -283,18 +297,22 @@ input:focus {
   color: #cc0000;
   outline: none; }
 
-button {
-  color: #666 !important; }
+/*
+	button{
+		color:#666;
+	}
 
-button:active {
-  background: #666;
-  color: #FFF; }
+	button:active{
+		background:#666;
+		color:#FFF;
+	}
 
-button:hover {
-  color: #FFF !important; }
-
+	button:hover{
+		color:#FFF;
+	}
+    */
 p.note {
-  color: #e74c3c !important; }
+  color: #e74c3c; }
 
 #setup {
   width: 600px; }
@@ -304,13 +322,13 @@ body:after {
   clear: both;
   content: "."; }
 
-#controllers,
-#methods {
+section#controllers,
+section#methods {
   height: 100%;
   padding-bottom: 100px;
   border-right: 1px solid #eee; }
 
-#controllers {
+section#controllers {
   border-right: 0; }
 
 #content {

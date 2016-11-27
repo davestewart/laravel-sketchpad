@@ -30,6 +30,7 @@ class OutputController extends Controller
 	{
 		p('This is a paragraph');
 		p('This is a paragraph with <code>true</code> passed as the second argument; the css class <code>note</code> is added', true);
+		p('This is a paragraph with <code>"special"</code> passed as the second argument; the user css class <code>special</code> is added', 'special');
 	}
 
 	/**
@@ -146,12 +147,12 @@ class OutputController extends Controller
 
 		<p>Experiment with updating the options string above, or click the links below to explore some presets:</p>
 <ul>
-	<li><a href="/sketchpad/demo/output/table/html:example|index">Add an index</a></li>
-	<li><a href="/sketchpad/demo/output/table/html:example|index|cols:100,400,300">Set column widths</a></li>
-	<li><a href="/sketchpad/demo/output/table/html:example|index|cols:100,400,300|index|style:background:white;z-index:1000;transform:rotate(10deg)">Set the style</a></li>
-	<li><a href="/sketchpad/demo/output/table/html:example|label:Table formatting options">Set a table caption</a></li>
-	<li><a href="/sketchpad/demo/output/table/html:example">Reset the table</a></li>
-	<li><a href="/sketchpad/demo/output/table/null/">Clear all settings</a></li>
+	<li><a href="/sketchpad/demo/output/table?options=html:example|index">Add an index</a></li>
+	<li><a href="/sketchpad/demo/output/table?options=html:example|index|cols:100,400,300">Set column widths</a></li>
+	<li><a href="/sketchpad/demo/output/table?options=html:example|index|cols:100,400,300|index|style:background:white;z-index:1000;transform:rotate(10deg)">Set the style</a></li>
+	<li><a href="/sketchpad/demo/output/table?options=html:example|label:Table formatting options">Set a table caption</a></li>
+	<li><a href="/sketchpad/demo/output/table?options=html:example">Reset the table</a></li>
+	<li><a href="/sketchpad/demo/output/table?options=">Clear all settings</a></li>
 </ul>
 <?php
 	}

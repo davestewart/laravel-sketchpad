@@ -1,0 +1,19 @@
+{
+	"useLabels": true,
+	"formatCode": false,
+	"showComments": true,
+	"appendResult": false,
+	"organisation": "flat",
+	"homepage": "intro",
+	"updateOn": "input",
+	"paths": [
+		{
+			"name": "project",
+			"enabled": true
+		},
+		{
+			"name": "demo",
+			"enabled": true
+		}
+	]
+}

@@ -1,16 +1,19 @@
 import Vue 		from 'vue';
-import server	from './server.js';
+import server	from './server/server';
 
 var Store = Vue.extend({
 
 	data:function()
 	{
 		// object with single controllers property
-		return JSON.parse($('#data').text());
+		var data = $('#data').text();
+		return data ? JSON.parse(data) : {};
 	},
 
 	created:function()
 	{
+		var self = this;
+
 		if(window.LiveReload)
 		{
 			// server
@@ -18,18 +21,27 @@ var Store = Vue.extend({
 
 			// proxies
 			var reload 	= LiveReload.reloader.reload;
-			var self	= this;
 
 			// monkeypatch livereloader
-			LiveReload.reloader.reload = function(path, options)
+			LiveReload.reloader.reload = function(file, options)
 			{
-				if(self.reload(path))
+				if(self.reload(file))
 				{
 					return;
 				}
-				return reload.call(this, path, options);
+				return reload.call(this, file, options);
 			};
 		}
+
+		if(window.___browserSync___)
+		{
+			___browserSync___.socket.on('sketchpad.udpate', function(event) {
+				console.log(arguments);
+				// TODO check this is the proper call
+				self.reload(event.file)
+			})
+		}
+
 	},
 
 	methods:
@@ -84,6 +96,9 @@ var Store = Vue.extend({
 					// insert if the controller exists
 					if(controller)
 					{
+						// debug
+						console.log('Updating controller: ' + data.name);
+
 						// update store
 						index = this.controllers.indexOf(controller);
 						this.controllers.$set(index, data);
@@ -118,7 +133,7 @@ var Store = Vue.extend({
 
 			getControllerByPath:function(path)
 			{
-				return this.controllers.filter(function(c){ return c.path == path; }).shift();
+				return this.controllers.filter( c => c.path == path ).shift();
 			},
 
 			dispatch:function(type, path, index)

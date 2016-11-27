@@ -6,22 +6,21 @@
   "main": "gulpfile.js",
   "dependencies": {
     "jquery": "^3.1.0",
+    "state-machine": "git+https://github.com/davestewart/javascript-state-machine.git",
     "underscore": "^1.8.3",
     "vue": "^1.0.25",
-    "vue-bootstrap-modal": "git+https://github.com/Coffcer/vue-bootstrap-modal.git",
-    "vue-resource": "^0.8.0",
-    "vue-validator": "^2.1.7"
+    "vue-bootstrap-modal": "git+https://github.com/Coffcer/vue-bootstrap-modal.git"
   },
   "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-util": "^3.0.7",
+    "laravel-elixir": "^4.0.4",
+    "laravel-elixir-vueify": "^1.0.3",
     "babel-core": "^6.10.4",
     "babel-plugin-transform-runtime": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-runtime": "^6.9.2",
     "browserify-hmr": "^0.3.1",
-    "gulp": "^3.9.0",
-    "gulp-util": "^3.0.7",
-    "laravel-elixir": "^4.0.4",
-    "laravel-elixir-vueify": "^1.0.3",
     "vueify": "^8.7.0",
     "vueify-extract-css": "^0.2.0"
   },

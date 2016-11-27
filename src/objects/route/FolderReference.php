@@ -7,13 +7,9 @@
  */
 class FolderReference extends RouteReference
 {
-	public $path;
-
 	public function __construct($route, $path)
 	{
-		parent::__construct('folder', $route);
-		$this->route    = $route;
-		$this->path     = $path;
+		parent::__construct('folder', $route, $path);
 	}
 
 }

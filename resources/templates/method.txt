@@ -1,5 +1,0 @@
-%docblock%
-public function %method% ()
-{
-    echo '%method';
-}

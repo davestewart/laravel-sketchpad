@@ -206,6 +206,7 @@ li.fancy{
 		];
 
 		$format = 'html:example|cols:100,400,200';
+        alert('Not yet implemented', false);
 		?>
 		<p>Allows per-field customisation of method parameters. It uses the Laravel validation syntax, and a couple of additional parameters</p>
 <pre>

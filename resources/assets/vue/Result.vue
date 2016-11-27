@@ -40,7 +40,7 @@
 
 // objects
 import settings		from '../js/services/settings.js';
-import server		from '../js/services/server.js';
+import server		from '../js/services/server/server.js';
 import Helpers		from '../js/classes/helpers.js';
 import Timer		from '../js/classes/timer.js';
 
@@ -69,8 +69,7 @@ export default
 
 	props:
 	[
-		'state',
-		'method'
+		'state'
 	],
 
 	computed:
@@ -170,7 +169,7 @@ export default
 				}
 
 				this.transition	= this.state.method !== this.oldMethod;
-				this.loading	= true;
+                this.loading = ! this.deferred;
 
 				// load
 				if( ! this.deferred )
@@ -192,10 +191,8 @@ export default
 				// time load process
 				this.timer.start();
 
-				// run
 				server
-					.call(this.state.route, this.onLoad, this.onFail)
-					.always(this.onComplete);
+					.call(this.state.method, this.onLoad, this.onFail, this.onComplete);
 			},
 
 			clear:function()
@@ -246,7 +243,7 @@ export default
 				if(contentType == 'application/json')
 				{
 					this.format = 'json';
-					$data.html($('<pre class="code json">').JSONView(data));
+					$data.html($('<div class="code json">').JSONView(data));
 				}
 
 				// handle md response
@@ -308,13 +305,11 @@ export default
 				this.loadIframe(xhr);
 			},
 
-			onComplete:function()
+			onComplete:function(loaded)
 			{
 				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
-				this.loading 	= server.count != 0;
+				this.loading 	= false;
 				this.oldMethod 	= this.state.method;
-
-
 			}
 
 	}

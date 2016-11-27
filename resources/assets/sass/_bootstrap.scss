@@ -84,23 +84,39 @@
 	}
 */
 
-.tooltip {
+	.tooltip {
 
-	.tooltip-inner{
-		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-		width:100%;
-		max-width: 400px;
-		text-align:left;
+		.tooltip-inner{
+			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+			width:100%;
+			max-width: 400px;
+			text-align:left;
+		}
 	}
-}
 
-.table{
-	margin:20px;
-	max-width: inherit;
-	width:inherit;
-}
+	.table{
+		margin:20px;
+		max-width: inherit;
+		width:inherit;
+	}
 
-a:active,
-a:focus{
-	outline:none !important;
-}
+	a:active,
+	a:focus{
+		outline:none !important;
+	}
+
+	fieldset{
+		margin-bottom:1.5em;
+	}
+
+	legend{
+		margin-bottom:0.3em;
+	}
+
+	.inline label.radio {
+		padding-top: 0;
+	}
+	.inline div.radio {
+		display: inline-block;
+		margin-right: 10px;
+	}

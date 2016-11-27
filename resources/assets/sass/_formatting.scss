@@ -79,6 +79,7 @@
 			max-width: 100%;
 		}
 
+		.help-text,
 		.help-block{
 			font-size:0.8em;
 			padding-left:4px;
@@ -114,21 +115,9 @@
 		height:40px;
 	}
 
-	input[type="date"]{
-		min-width:150px !important;
-	}
-
-	input[type="email"]{
-		min-width:200px !important;
-	}
-
-	input:focus {
-		color: rgb(204, 0, 0);
-		outline: none;
-	}
-
+    /*
 	button{
-		color:#666 !important;
+		color:#666;
 	}
 
 	button:active{
@@ -137,8 +126,9 @@
 	}
 
 	button:hover{
-		color:#FFF !important;
+		color:#FFF;
 	}
+    */
 
 
 // ------------------------------------------------------------------------------------------------
@@ -146,7 +136,7 @@
 // ------------------------------------------------------------------------------------------------
 
 	p.note{
-		color:#e74c3c !important;
+		color:#e74c3c;
 	}
 
 

@@ -60,7 +60,7 @@ class Scanner extends AbstractScanner
 		 * @param   string   $path
 		 * @param   string   $route         the base route for sketchpad routes
 		 */
-		public function __construct($path, $route = '/sketchpad/')
+		public function __construct($path, $route = '')
 		{
 			// parameters
 			$this->path         = $path;
@@ -86,7 +86,7 @@ class Scanner extends AbstractScanner
 	// PROTECTED SCANNING METHODS
 
 		/**
-		 * Finds all controllers and folders Recursive path processing function
+		 * Recursively finds all controllers and folders
 		 *
 		 * Sets controllers and folders elements as they are found
 		 *
@@ -127,7 +127,7 @@ class Scanner extends AbstractScanner
 		 */
 		protected function addFolder($path)
 		{
-			$route          = $this->route . $path;
+			$route          = rtrim($this->route . $path, '/');
 			$ref            = new FolderReference($route, $this->path . $path);
 			$this->addRoute($route, $ref);
 		}
@@ -141,7 +141,7 @@ class Scanner extends AbstractScanner
 		{
 			// variables
 			$name           = pathinfo($abspath, PATHINFO_FILENAME);
-			$segment        = preg_replace('/Controller$/', '/', $name);
+			$segment        = preg_replace('/Controller$/', '', $name);
 			$route          = strtolower($this->route . $route . $segment);
 
 			// objects

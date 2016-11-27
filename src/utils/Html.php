@@ -17,12 +17,12 @@ class Html
 		 */
 		public static function p($value, $class = null)
 		{
-			$class = $class === true
+			$attr = $class === true
 				? ' class="note"'
-				: is_string($class)
+				: (is_string($class)
 					? ' class="' .$class. '"'
-					: '';
-			echo "<p$class>$value</p>";
+					: '');
+			echo "<p{$attr}>$value</p>";
 		}
 
 		/**
@@ -112,8 +112,6 @@ class Html
 				//throw  new \InvalidArgumentException('Parameter "$values" is an empty array');
 				$values = [['' => '']];
 			};
-
-
 
 			$params = urldecode($params);
 			//pr($params);
