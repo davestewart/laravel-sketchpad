@@ -8,7 +8,7 @@
 		-->
 		<p>Sketchpad (and its subfolders) can be installed anywhere in your project, but the default "separate" setup is recommended. This allows you to keep everything in one place, and makes version control easier.</p>
         <p>If the controllers folder is outside of your app namespace, you'll need to supply PSR-4 autoloader info.</p>
-		<p>Choose your install type, edit any paths you need to, then click Next to continue.</p>
+		<p>Choose an installation preset, edit any paths you need to, then click Next to continue.</p>
 
 		<div class="form-container">
 
@@ -18,7 +18,7 @@
 
 					<fieldset>
 
-                        <legend>Installation</legend>
+                        <legend>Presets</legend>
 
 						<div id="type" class="form-group inline">
 							<label class="control-label col-sm-3">Type</label>

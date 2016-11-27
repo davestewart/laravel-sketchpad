@@ -82,11 +82,11 @@ class Setup
             $viewPath   = substr($temp[0], strlen(base_path() . '/'));
 
 			// variables
-            $assets = $paths->publish('assets/');
 			$app    = app();
 			$data   = app(Sketchpad::class)->getVariables();
 			$vars   =
 			[
+                'assets' => '/sketchpad/:assets/',
 				'settings' =>
 				[
 					'route'             => $config->route,

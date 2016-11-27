@@ -14,14 +14,36 @@
 
 			<article id="summary">
 
-                <h2 class="text-info">Installation</h2>
-                <p>Copy the script below and run it in the terminal to complete the installation:</p>
-<pre>cd "{{ settings.basepath }}"
-php artisan sketchpad:install
-composer dump-autoload
-</pre>
-                <p>Once complete, click Next to test everything worked...</p>
+                <h2 class="text-info">Summary</h2>
 
+                <p>Sketchpad will run in the following route:</p>
+<pre>
+{{ options.route }}
+</pre>
+
+                <p>Sketchpad will install to these folders under <code>{{ settings.basename }}</code>:</p>
+
+<pre>
+controllers  : {{ options.controllers }}
+views        : {{ options.views }}
+assets       : public/{{ options.assets }}
+</pre>
+
+                <template v-if="options.autoloader">
+                    <p>Your site's Composer PSR-4 autoloader will be updated with the following entry:</p>
+<pre>
+"{{ options.namespace}}" : "{{ options.basedir}}"
+</pre>
+
+                </template>
+
+                <p>Click <strong>Next</strong> to start the install.</p>
+			</article>
+
+			<article id="install">
+
+                <h2 class="text-info">Installing</h2>
+                <p>One moment please...</p>
 			</article>
 
 			<article id="error">
@@ -34,7 +56,7 @@ composer dump-autoload
                         <th>Operation</th>
                     </thead>
                     <tbody>
-                        <tr v-for="log in logs" :class="['log', log.state ? 'pass' : 'fail']">
+                        <tr v-for="log in results.data" :class="['log', log.state ? 'pass' : 'fail']">
                             <td class="state">
                                 <i v-if="log.state" class="fa fa-check"></i>
                                 <i v-else class="fa fa-times"></i>
@@ -47,15 +69,25 @@ composer dump-autoload
                     </tbody>
                 </table>
 
-                <p>If you think you made a mistake with the paths, restart, edit the details, and repeat the installation process.</p>
-				<p>If you think you can repair the errors yourself, do that, then click Next to check the installation again.</p>
+                <p>Actions:</p>
+                <ul>
+                    <li>Click <strong>Back</strong> to edit your settings and try again</li>
+                    <li>Click <strong>Next</strong> if you think this is an external issue (perhaps permissions) and you are ready to try installation again</li>
+                </ul>
+
+                <p>To run the installation manually, run the following code in the terminal:</p>
+                <pre>cd "{{ settings.basepath }}"
+php artisan sketchpad:install
+composer dump-autoload
+</pre>
+
 			</article>
 
 			<article id="complete">
 				<h2 class="text-success">Installation complete</h2>
 				<p>The config file is located at:</p>
                 <pre><code>{{ settings.configpath }}</code></pre>
-				<p>Click Finish to start using Sketchpad!</p>
+				<p>Click <strong>Next</strong> to start using Sketchpad!</p>
 			</article>
 
 		</section>
@@ -63,11 +95,8 @@ composer dump-autoload
 		<hr>
 
 		<div id="controls" class="form-group">
-			<template v-if="! isLast">
-				<button name="back" class="btnPrev btn">Back</button>
-				<button name="next" class="btnNext btn btn-primary">Next</button>
-			</template>
-			<button v-else class="btn btn-primary btnNext">Finish</button>
+            <button name="back"  class="btnPrev btn">Back</button>
+            <button name="next"  class="btnNext btn btn-primary">Next</button>
 		</div>
 
 	</div>
@@ -78,33 +107,38 @@ composer dump-autoload
 
 import {setup, scrollTop} from './scripts'
 import Config from './Config.vue';
-import StateMachine from '../../js/lib/state-machine';
+import StateMachine from 'state-machine/lib/StateMachine';
+import StateHelper from 'state-machine/lib/StateHelper';
 
-var state =
+var data =
 {
+    // install settings
     settings:{
 
     },
 
+    // form data
     config:{
 
     },
 
-    logs:[
+    // installation results
+    results: {
 
-    ]
+    }
 };
 
 export default
 {
-	components:{
+	components:
+	{
 		Config
 	},
 
 	data:() =>
 	{
-	    state.settings = JSON.parse($('#settings').text() || '{}');
-		return state;
+	    data.settings = JSON.parse($('#settings').text() || '{}');
+		return data;
 	},
 
 	computed:
@@ -128,59 +162,50 @@ export default
 
 		    transitions:
 		    [
-		        'next    : config > summary > install > complete',
-		        'back    : config < summary',
-		        'error   :                    install >            error',
-		        'next    :                    install            < error',
-		        'back    : config                                < error',
-		        'next    :                              complete >         exit'
+		        // user
+		        'next     : config > summary > install                   < error',
+		        'next   :                                complete > exit',
+		        'back     : config < summary                             < error',
+
+		        // internal
+		        'complete :                    install > complete',
+		        'error    :                    install >                   error'
 		    ],
 
 		    handlers:
 		    {
-		        ':leave':function(event, fsm)
+		        ':leave'(event, fsm)
 		        {
-		            fsm.pause();
-		            scrollTop(fsm.resume.bind(fsm));
+		            scrollTop();
 		        },
 
-                summary(event, fsm)
+                install(event, fsm)
                 {
                     console.log(this.options);
                     jQuery
-                        .post(this.route + ':setup', this.options, data => console.log('Options saved: ', data) )
-                        .fail( data => console.error(data || 'Options could not be saved') );
-                },
-
-		        install(event, fsm)
-                {
-                    fsm.pause();
-                    jQuery.get(this.route + ':setup/test', (data) =>
-                    {
-                        console.log('Installation succeeded!', data);
-                        fsm.go('complete', true);
-                    })
-                    .fail(response =>
-                    {
-                        this.logs   = response.responseJSON.data;
-                        fsm.go('error', true);
-                    });
-                },
-
-                complete(event, fsm)
-                {
-                    $('button[name=next]').text('Finish');
+                        .post(this.route + ':setup', this.options)
+                        .then(data => {
+                            this.results = data;
+                            if(data.success)
+                            {
+                                fsm.do('complete');
+                            }
+                            else
+                            {
+                                fsm.go('error');
+                            }
+                        });
                 },
 
                 exit(event, fsm)
                 {
-                    fsm.cancel();
+                    fsm.cancel(); // don't show final state screen
                     location.href = '/' + this.$refs.config.cleanOptions.route;
                 }
             }
 		});
 
-		setup(fsm, '#steps', '#controls', '> *');
+		StateHelper.jQuery(fsm, '#steps', '#controls', '> *');
 	}
 
 }

@@ -6,6 +6,7 @@
   "main": "gulpfile.js",
   "dependencies": {
     "jquery": "^3.1.0",
+    "state-machine": "git+https://github.com/davestewart/javascript-state-machine.git",
     "underscore": "^1.8.3",
     "vue": "^1.0.25",
     "vue-bootstrap-modal": "git+https://github.com/Coffcer/vue-bootstrap-modal.git"
