@@ -169,7 +169,7 @@ export default
 				}
 
 				this.transition	= this.state.method !== this.oldMethod;
-				this.loading	= true;
+                this.loading = ! this.deferred;
 
 				// load
 				if( ! this.deferred )

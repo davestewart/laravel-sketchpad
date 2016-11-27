@@ -62,7 +62,7 @@
 
         created()
         {
-			this.router 	= new Router();
+			this.router 	= new Router(); // global: slim-router
             this.server     = server;
             window.app      = this;
         },
