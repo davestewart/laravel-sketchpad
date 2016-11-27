@@ -142,11 +142,11 @@ class Sketchpad
 			// set up the router, but don't scan
 			$this->init();
 
-			//vd([$route, $params]);
-            //exit;
-
 			/** @var CallReference $ref */
 			$ref = $this->router->getCall($this->config->route . $route, $params);
+
+			//vd([$ref, $route, $params]);
+            //exit;
 
 			// controller has method
 			if($ref instanceof CallReference)
