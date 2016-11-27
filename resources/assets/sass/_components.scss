@@ -222,11 +222,29 @@
 				padding:3px 6px;
 			}
 
-			input:not([type="checkbox"]){
-				width:100px;
+			input[type="checkbox"]{
+				width:auto;
 			}
 
-		}
+            input[type="number"]{
+              width:65px;
+            }
+
+            input[type="date"]{
+              width:160px;
+            }
+
+            input[type="text"],
+            input[type="string"],
+            input[type="email"]{
+              width:200px;
+            }
+
+            input:focus {
+              color: rgb(204, 0, 0);
+              outline: none;
+            }
+        }
 	}
 
 	#params nav .loader{
