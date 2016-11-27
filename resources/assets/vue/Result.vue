@@ -21,7 +21,7 @@
 							<li v-for="param in params">
 								<param :param="param"></param>
 							</li>
-							<!--<li v-if="! deferred && params.length == 0"><span>No parameters</span></li>-->
+							<!--<li v-if="! defer && params.length == 0"><span>No parameters</span></li>-->
 						</ul>
 					</nav>
 
@@ -101,12 +101,12 @@ export default
 				: null;
 		},
 
-		deferred:function()
+		defer:function()
 		{
 			if(this.state.method)
 			{
 				var tags = this.state.method.tags;
-				return tags.deferred || tags.warning;
+				return tags.defer || tags.warning;
 			}
 			return false;
 		},
@@ -169,10 +169,10 @@ export default
 				}
 
 				this.transition	= this.state.method !== this.oldMethod;
-                this.loading = ! this.deferred;
+                this.loading = ! this.defer;
 
 				// load
-				if( ! this.deferred )
+				if( ! this.defer )
 				{
 					this._load(transition);
 				}

@@ -57,9 +57,9 @@ export default
 			if(tags.css) {
 				data[tags.css] = true;
 			}
-			if(tags.deferred) {
+			if(tags.defer) {
 				data.icon = true;
-				data['deferred'] = true;
+				data['defer'] = true;
 			}
 			if(tags.warning) {
 				data.icon = true;

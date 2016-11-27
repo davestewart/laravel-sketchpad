@@ -250,12 +250,12 @@ li.fancy{
 	 *
 	 * @group Behaviour
 	 *
-	 * @deferred
+	 * @defer
 	 */
-	public function deferred()
+	public function defer()
 	{
 		p('This method was called on ' . date(DATE_RFC850));
-		pr('@deferred');
+		pr('@defer');
 	}
 
 	/**
