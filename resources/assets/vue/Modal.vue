@@ -27,7 +27,7 @@ export default
 
 	methods:
 	{
-		load:function(url)
+		load (url)
 		{
 
 			$.get(url, function (html)
@@ -40,13 +40,13 @@ export default
 			}.bind(this))
 		},
 
-		show:function()
+		show ()
 		{
 			console.log('show');
 			$('#modal').modal('show');
 		},
 
-		hide:function()
+		hide ()
 		{
 			$('#modal').modal('hide');
 		}

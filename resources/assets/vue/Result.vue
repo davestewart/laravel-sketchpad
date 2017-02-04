@@ -30,7 +30,7 @@
 		</section>
 
 		<!-- output -->
-		<section id="output" data-format="{{ format }}"></section>
+		<section id="output" :data-format="format"></section>
 
 	</div>
 
@@ -55,9 +55,9 @@ export default
 		Param
 	},
 
-	data:function(){
-
-		return{
+	data ()
+	{
+		return {
 			format		:'',
 			loading		:false,
 			transition	:false,
@@ -74,7 +74,7 @@ export default
 
 	computed:
 	{
-		title:function()
+		title ()
 		{
 			var state = this.state;
 			return state.method && state.method.name != 'index'
@@ -84,7 +84,7 @@ export default
 						: 'Sketchpad';
 		},
 
-		info:function()
+		info ()
 		{
 			var state = this.state;
 			return state.method && state.method.name != 'index'
@@ -94,14 +94,14 @@ export default
 						: '';
 		},
 
-		params:function()
+		params ()
 		{
 			return this.state.method
 				? this.state.method.params
 				: null;
 		},
 
-		defer:function()
+		defer ()
 		{
 			if(this.state.method)
 			{
@@ -111,12 +111,12 @@ export default
 			return false;
 		},
 
-		alert:function()
+		alert ()
 		{
 			return this.warning || this.archived;
 		},
 
-		warning:function()
+		warning ()
 		{
 			if(this.state.method)
 			{
@@ -126,7 +126,7 @@ export default
 			return false;
 		},
 
-		archived:function()
+		archived ()
 		{
 			if(this.state.method)
 			{
@@ -136,7 +136,7 @@ export default
 			return false;
 		},
 
-		method:function()
+		method ()
 		{
 			return this.state.method;
 		}
@@ -148,7 +148,7 @@ export default
 		humanize	:Helpers.humanize
 	},
 
-	ready:function()
+	ready ()
 	{
 		this.$output 	= $('#output');
 		this.timer 		= new Timer();
@@ -160,7 +160,7 @@ export default
 		// ------------------------------------------------------------------------------------------------
 		// load methods
 
-			load:function(transition)
+			load (transition)
 			{
 				if ( ! this.state.method )
 				{
@@ -186,7 +186,7 @@ export default
 				}
 			},
 
-			_load:function(transition)
+			_load (transition)
 			{
 				// time load process
 				this.timer.start();
@@ -195,12 +195,12 @@ export default
 					.call(this.state.method, this.onLoad, this.onFail, this.onComplete);
 			},
 
-			clear:function()
+			clear ()
 			{
 				return this.$output.empty();
 			},
 
-			loadIframe:function(xhr)
+			loadIframe (xhr)
 			{
 				var text	= xhr.responseText;
 				var type	= xhr.getResponseHeader('Content-Type');
@@ -216,7 +216,7 @@ export default
 		// ------------------------------------------------------------------------------------------------
 		// events
 
-			onLoad:function(data, status, xhr)
+			onLoad (data, status, xhr)
 			{
 				// variables
 				var method = this.state.method;
@@ -298,14 +298,14 @@ export default
 
 			},
 
-			onFail:function(xhr, status, message)
+			onFail (xhr, status, message)
 			{
 				this.format = 'error';
 				this.state.method.error = 1;
 				this.loadIframe(xhr);
 			},
 
-			onComplete:function(loaded)
+			onComplete (loaded)
 			{
 				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
 				this.loading 	= false;

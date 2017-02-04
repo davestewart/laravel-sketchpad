@@ -21,9 +21,9 @@
 							:class="{ controller:true, active:isActive(controller.route) }"
 							>
 							<a
-								data-name="{{ controller.class }}"
-								data-path="{{ controller.path }}"
-								href="{{ controller.route }}"
+								:data-name="controller.class"
+								:data-path="controller.path"
+								:href="controller.route"
 								>
 								{{{ getLabel(controller) }}}
 							</a>
@@ -37,8 +37,7 @@
 			<section id="methods" class="col-xs-6">
 				<ul v-if="state.controller" class="nav nav-pills nav-stacked">
 					<method
-						v-if="method && method.name != 'index' "
-						v-for="method in state.controller.methods"
+						v-for="method in methods"
 						:method="method"
 						:state="state"
 					></method>
@@ -74,7 +73,7 @@ export default
 		humanize:Helpers.humanize
 	},
 
-	ready:function()
+	ready ()
 	{
 		this.$watch('state.controller', function ()
 		{
@@ -83,14 +82,23 @@ export default
 
 	},
 
+	computed:
+	{
+	    methods ()
+	    {
+	        return this.state.controller.methods.filter(method => method.name != 'index')
+	    }
+
+	},
+
 	methods:
 	{
-		getLabel:function(obj)
+		getLabel (obj)
 		{
 			return Helpers.getControllerLabel(obj);
 		},
 
-		getLinkHtml:function(route)
+		getLinkHtml (route)
 		{
 			var name 	= '<span class="name">';
 			var divider	= '<span class="divider">&#9656;</span> ';
@@ -103,7 +111,7 @@ export default
 				.join(close + divider + name) + close;
 		},
 
-		isActive:function(route)
+		isActive (route)
 		{
 			return this.state.route && this.state.route.indexOf(route) == 0;
 		}

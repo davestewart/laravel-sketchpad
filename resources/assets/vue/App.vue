@@ -51,7 +51,7 @@
 			Modal
 		},
 
-		data()
+		data ()
 		{
 			return {
 				settings	:settings,
@@ -60,14 +60,14 @@
 			};
 		},
 
-        created()
+        created ()
         {
 			this.router 	= new Router(); // global: slim-router
             this.server     = server;
             window.app      = this;
         },
 
-		ready()
+		ready ()
 		{
 			// reloading
 			this.store.$on('load', this.onStoreLoad);
@@ -98,7 +98,7 @@
 			// ------------------------------------------------------------------------------------------------
 			// methods
 
-				run(route)
+				run (route)
 				{
 					this.unwatch();
 					this.state.setRoute(route);
@@ -112,7 +112,7 @@
 					});
 				},
 
-				update()
+				update ()
 				{
 					if(this.$refs.result)
 					{
@@ -120,12 +120,12 @@
 					}
 				},
 
-				watch()
+				watch ()
 				{
 					this.unwatch = this.$watch('state.method.params', this.onParamsChange, {deep:true});
 				},
 
-				unwatch()
+				unwatch ()
 				{
 					// will be populate by $watch
 				},
@@ -134,7 +134,7 @@
 			// ------------------------------------------------------------------------------------------------
 			// handlers
 
-				onLinkClick(event)
+				onLinkClick (event)
 				{
 					// variables
 					var meta 	= event.ctrlKey || event.metaKey;
@@ -172,22 +172,22 @@
 					}
 				},
 
-				onRoute(route)
+				onRoute (route)
 				{
 					this.run(this.state.baseUrl + route);
 				},
 
-				onParamsChange()
+				onParamsChange ()
 				{
 					this.router.navigate(this.state.route, false, true);
 				},
 
-				onHome()
+				onHome ()
 				{
 					this.onView('welcome');
 				},
 
-				onView(type)
+				onView (type)
 				{
 					document.title 	= 'Sketchpad - ' + type;
 					this.state.reset();
@@ -197,7 +197,7 @@
 					});
 				},
 
-				onStoreLoad(event)
+				onStoreLoad (event)
 				{
 					if(this.state.controller && this.state.controller.relpath == event.path)
 					{

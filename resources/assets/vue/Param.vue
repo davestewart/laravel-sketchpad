@@ -1,7 +1,7 @@
 <template>
 
 	<label
-		for="{{ id }}"
+		:for="id"
 		:title="param.text"
 	>{{ param.name }}</label>
 	<input
@@ -20,14 +20,14 @@ export default
 {
 	props:['param'],
 
-	ready:function()
+	ready ()
 	{
 		//console.log(this.param);
 	},
 
 	computed:
 	{
-		type:function()
+		type ()
 		{
 			if(/^bool/.test(this.param.type))
 			{
@@ -42,7 +42,7 @@ export default
 
 		value:
 		{
-			get:function()
+			get ()
 			{
 				if(/^bool/.test(this.param.type))
 				{
@@ -54,20 +54,20 @@ export default
 				}
 				return this.param.value;
 			},
-			set:function(value)
+			set (value)
 			{
 				this.param.value = value;
 			}
 		},
 
-		fields:function()
+		fields ()
 		{
 			// http://www.w3schools.com/html/html_form_input_types.asp
 			var types		= 'text,number,date,select';
 			var attributes 	= 'min,max,step,size,maxlength,pattern,options';
 		},
 
-		id:function()
+		id ()
 		{
 			return 'param-' + this.param.name;
 		}

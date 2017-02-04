@@ -11,8 +11,8 @@
 		<a
 			:class="{method:true, error:error}"
 			:style="linkStyle"
-			title="{{ comment.intro }}"
-			href="{{ state.makeRoute(method) }}"
+			:title="comment.intro"
+			:href="state.makeRoute(method)"
 			>
 			{{{ label }}}
 		</a>
@@ -32,7 +32,7 @@ import settings 	from '../js/services/settings.js';
 export default
 {
 
-	data:function()
+	data ()
 	{
 		return {
 			settings:settings
@@ -43,7 +43,7 @@ export default
 
 	computed:
 	{
-		listClass:function()
+		listClass ()
 		{
 			var tags 	= this.tags;
 			var state 	= this.state;
@@ -75,7 +75,7 @@ export default
 			return data;
 		},
 
-		listStyle:function()
+		listStyle ()
 		{
 			var tags	= this.tags;
 			var data 	= {};
@@ -89,7 +89,7 @@ export default
 			return data;
 		},
 
-		linkStyle:function()
+		linkStyle ()
 		{
 			var tags	= this.tags;
 			var data 	= {};
@@ -99,12 +99,12 @@ export default
 			return data;
 		},
 
-		name:function() { return this.method.name; },
-		label:function() { return Helpers.getMethodLabel(this.method); },
-		route:function() { return this.method.route; },
-		error:function() { return this.method.error; },
-		comment:function() { return this.method.comment; },
-		tags:function() { return this.method.tags; }
+		name () { return this.method.name; },
+		label () { return Helpers.getMethodLabel(this.method); },
+		route () { return this.method.route; },
+		error () { return this.method.error; },
+		comment () { return this.method.comment; },
+		tags () { return this.method.tags; }
 	}
 
 }
