@@ -105,10 +105,11 @@ composer dump-autoload
 
 <script>
 
-import {setup, scrollTop} from './scripts'
-import Config from './Config.vue';
 import StateMachine from 'state-machine/lib/StateMachine';
 import StateHelper from 'state-machine/lib/StateHelper';
+
+import {scrollTop} from '../../js/services/utils'
+import Config from './Config.vue';
 
 var data =
 {

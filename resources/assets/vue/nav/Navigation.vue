@@ -52,8 +52,9 @@
 
 <script>
 
+import Helpers		from '../../js/classes/helpers.js';
+
 import Method		from './Method.vue';
-import Helpers		from '../js/classes/helpers.js';
 
 export default
 {

@@ -29,15 +29,15 @@
 // imports
 
 	// services
-	import server		from '../js/services/server/server.js';
-	import store		from '../js/services/store.js';
-	import state		from '../js/services/state.js';
-	import settings		from '../js/services/settings.js';
+	import server       from '../js/services/server/server.js';
+	import store        from '../js/services/store.js';
+	import state        from '../js/services/state.js';
+	import settings     from '../js/services/settings.js';
 
 	// components
-	import Navigation	from './Navigation.vue';
-	import Result		from './Result.vue';
-	import Modal		from './Modal.vue';
+	import Navigation 	from './nav/Navigation.vue';
+	import Result 		from './content/Result.vue';
+	import Modal        from './components/Modal.vue';
 
 // ------------------------------------------------------------------------------------------------
 // objects

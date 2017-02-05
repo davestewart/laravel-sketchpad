@@ -26,8 +26,8 @@
 
 <script>
 
-import Helpers		from '../js/classes/helpers.js';
-import settings 	from '../js/services/settings.js';
+import Helpers		from '../../js/classes/helpers.js';
+import settings 	from '../../js/services/settings.js';
 
 export default
 {
