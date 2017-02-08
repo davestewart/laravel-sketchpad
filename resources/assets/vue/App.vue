@@ -1,24 +1,28 @@
 <template>
 
-	<div id="app" class="row">
+	<div id="app">
 
-		<div class="col-xs-4">
-			<navigation v-ref:navigation :controllers="store.controllers" :state="state" >
-				Navigation
-			</navigation>
-		</div>
+		<top-nav :route="state.baseUrl"></top-nav>
 
-		<div class="col-xs-8">
-			<result v-if="state.controller" v-ref:result :state="state">
-				Result
-			</result>
-			<div id="content" v-else>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-4">
+					<navigation v-ref:navigation :controllers="store.controllers" :state="state" >
+						Navigation
+					</navigation>
+				</div>
+				<div class="col-xs-8">
+					<result v-if="state.controller" v-ref:result :state="state">
+						Result
+					</result>
+					<div id="content" v-else>
 
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<modal v-ref:modal></modal>
-
 	</div>
 
 </template>
@@ -38,6 +42,7 @@
 	import Navigation 	from './nav/Navigation.vue';
 	import Result 		from './content/Result.vue';
 	import Modal        from './components/Modal.vue';
+	import TopNav       from './components/TopNav.vue';
 
 // ------------------------------------------------------------------------------------------------
 // objects
@@ -48,7 +53,8 @@
 		{
 			Navigation,
 			Result,
-			Modal
+			Modal,
+			TopNav
 		},
 
 		data ()
