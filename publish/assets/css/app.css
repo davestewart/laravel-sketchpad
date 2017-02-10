@@ -287,16 +287,6 @@ form .form-group:last-child {
   font-size: inherit;
   height: 40px; }
 
-input[type="date"] {
-  min-width: 150px !important; }
-
-input[type="email"] {
-  min-width: 200px !important; }
-
-input:focus {
-  color: #cc0000;
-  outline: none; }
-
 /*
 	button{
 		color:#666;
@@ -316,6 +306,9 @@ p.note {
 
 #setup {
   width: 600px; }
+
+#top-nav.navbar {
+  border-radius: 0; }
 
 body:after {
   padding-bottom: 100px;
@@ -386,7 +379,7 @@ section#controllers {
   #nav li.favourite:before {
     content: "\f005";
     color: #FFCC00; }
-  #nav li.deferred:before {
+  #nav li.defer:before {
     content: "\f017"; }
   #nav li.warning:before {
     content: "\f12a";
@@ -440,8 +433,19 @@ section#controllers {
       border-radius: 3px;
       border: none;
       padding: 3px 6px; }
-    #info nav input:not([type="checkbox"]) {
-      width: 100px; }
+    #info nav input[type="checkbox"] {
+      width: auto; }
+    #info nav input[type="number"] {
+      width: 65px; }
+    #info nav input[type="date"] {
+      width: 160px; }
+    #info nav input[type="text"],
+    #info nav input[type="string"],
+    #info nav input[type="email"] {
+      width: 200px; }
+    #info nav input:focus {
+      color: #cc0000;
+      outline: none; }
 
 #params nav .loader {
   position: absolute;
@@ -450,7 +454,7 @@ section#controllers {
   height: 16px;
   right: 0;
   margin: 8px 12px;
-  background-image: url("images/ajax-loader.gif");
+  background-image: url("../../images/ajax-loader.gif");
   background-repeat: no-repeat;
   transition: opacity 0.1s;
   opacity: 0; }
