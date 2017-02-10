@@ -39,7 +39,7 @@
 <script>
 
 // objects
-import settings		from '../../js/services/settings.js';
+import settings		from '../../js/state/settings.js';
 import server		from '../../js/services/server/server.js';
 import Helpers		from '../../js/classes/helpers.js';
 import Timer		from '../../js/classes/timer.js';

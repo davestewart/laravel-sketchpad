@@ -108,8 +108,25 @@ composer dump-autoload
 import StateMachine from 'state-machine/lib/StateMachine';
 import StateHelper from 'state-machine/lib/StateHelper';
 
-import {scrollTop} from '../../js/services/utils'
 import Config from './Config.vue';
+
+function scrollTop(callback)
+{
+    callback = callback || function() { }
+    const top  = $(window).scrollTop();
+    if(top > 0)
+    {
+        $('body').animate({scrollTop:0}, function(){
+            setTimeout(function(){
+                callback();
+            }, 250);
+        });
+    }
+    else
+    {
+        callback();
+    }
+}
 
 var data =
 {
@@ -165,7 +182,7 @@ export default
 		    [
 		        // user
 		        'next     : config > summary > install                   < error',
-		        'next   :                                complete > exit',
+		        'next     :                              complete > exit',
 		        'back     : config < summary                             < error',
 
 		        // internal

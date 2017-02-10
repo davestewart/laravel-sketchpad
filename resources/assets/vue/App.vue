@@ -35,8 +35,10 @@
 	// services
 	import server       from '../js/services/server/server.js';
 	import store        from '../js/services/store.js';
-	import state        from '../js/services/state.js';
-	import settings     from '../js/services/settings.js';
+
+	// state
+	import state        from '../js/state/state.js';
+	import settings     from '../js/state/settings.js';
 
 	// components
 	import Navigation 	from './nav/Navigation.vue';

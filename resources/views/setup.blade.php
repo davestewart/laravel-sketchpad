@@ -17,8 +17,8 @@
 	<link  href="{{ $assets }}lib.css" rel="stylesheet">
 
     <!-- app -->
-	<link  href="{{ $assets }}app.css" rel="stylesheet">
-	<link  href="{{ $assets }}setup.css" rel="stylesheet">
+	<link  href="{{ $assets }}css/app.css" rel="stylesheet">
+	<link  href="{{ $assets }}css/setup.css" rel="stylesheet">
 
 	<script type="application/json" id="settings">
 {!! json_encode($settings, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
@@ -35,13 +35,13 @@
 		</div>
 	</div>
 
-	<div class="container">
+	<div class="container" id="app">
 		<div class="row">
 			<setup></setup>
 		</div>
 	</div>
 
-	<script src="{{ $assets }}app.js"></script>
+	<script src="{{ $assets }}js/setup.js"></script>
 
 </body>
 </html>

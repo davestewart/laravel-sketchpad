@@ -71,6 +71,15 @@
 
 	elixir(function(mix){
 
+		var options = {
+			debug:true,
+			paths:[
+				'../resources/assets/js',
+				'./node_modules',
+				'./build'
+			]
+		}
+
 		mix
 
 			// lib scripts
@@ -78,25 +87,18 @@
 			[
 				rootPath + 'resources/lib/jquery-1.12.3.min.js',
 				rootPath + 'resources/lib/**/*.js'
-			], '../publish/assets/lib.js')
+			], '../publish/assets/js/lib.js')
 
 			// lib styles
-			.combine(rootPath + 'resources/lib/**/*.css', '../publish/assets/lib.css')
+			.combine(rootPath + 'resources/lib/**/*.css', '../publish/assets/css/lib.css')
 
 			// app styles
-			.sass('app.scss')
+			.sass('app.scss', '../publish/assets/css/app.css')
 
 			// app scripts
 			.browserify(
-				'resources/assets/js/main.js',
-				'../publish/assets/app.js',
+				'resources/assets/js/app.js',
+				'../publish/assets/js/app.js',
 				'../',
-				{
-					debug:true,
-					paths:[
-						'../resources/assets/js',
-						'./node_modules',
-						'./build'
-					]
-				});
+				options)
 	});
