@@ -199,7 +199,7 @@
 				{
 					document.title 	= 'Sketchpad - ' + type;
 					this.state.reset();
-					this.server.load(':page/' + type, function(html)
+					this.server.load('view/' + type, function(html)
 					{
 						$('#content').html(html);
 					});

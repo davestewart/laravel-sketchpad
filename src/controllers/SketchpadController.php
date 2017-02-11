@@ -11,18 +11,18 @@ use Illuminate\Support\Facades\Input;
  */
 class SketchpadController extends Controller
 {
-	
+
 	// ------------------------------------------------------------------------------------------------
 	// properties
-	
+
 		/**
 		 * Sketchpad service
 		 *
 		 * @var Sketchpad
 		 */
 		protected $sketchpad;
-	
-	
+
+
 	// ------------------------------------------------------------------------------------------------
 	// instantiation
 
@@ -35,71 +35,73 @@ class SketchpadController extends Controller
 		{
 			$this->sketchpad = $sketchpad;
 		}
-	
-	
+
+
 	// ------------------------------------------------------------------------------------------------
 	// main entry point
 
-        public function action($action)
+        public function index(Request $request)
         {
-            $data = Input::get('data');
-            switch($action)
+            // is installed
+            if($this->sketchpad->isInstalled())
             {
-                case 'install':
-                    $this->install();
-                    break;
-
-                case 'view':
-                    return $this->sketchpad->getPage($data);
-                    break;
-
-                case 'call':
-                    $this->run();
-                    break;
-
-                case 'create':
-                    $this->create();
-                    break;
-
-                case 'settings':
-                    $this->settings();
-                    break;
-
+                return $this->sketchpad->index();
             }
+
+            // run setup
+            $setup = new Setup();
+            return $setup->index();
         }
 
         /**
-		 * Main entry point for any non :command URIs
 		 *
-		 * Will trigger index or a controller/method call
-		 *
+         * Run a method
+         *
 		 * @param   Request     $request
 		 * @param   string      $path
 		 * @return  \Illuminate\View\View|mixed|string
 		 */
-		public function call(Request $request, $path = '')
+		public function run(Request $request, $path = '')
 		{
-			// return a view
-			if(file_exists(config_path('sketchpad.php')))
-			{
-				if(Input::get('_call') || $request->isMethod('POST'))
-				{
-				    $request->query->remove('_call');
-					return $this->sketchpad->call($path, $request->all());
-				}
-				return $this->sketchpad->index();
-			}
-
-			//dump($path);
-
-			// no config
-			$setup = new Setup();
-			return $setup->index();
+            $request->query->remove('_call');
+            return $this->sketchpad->run($path, $request->all());
 		}
 
+        /**
+         * Returns the JSON for a single controller
+         *
+         * @param $path
+         * @return mixed
+         */
+        public function load($path)
+        {
+            return response()->json($this->sketchpad->getController($path));
+		}
 
-	// ------------------------------------------------------------------------------------------------
-	// main app methods
+        public function view($page)
+        {
+            return $this->sketchpad->getPage($page);
+		}
+
+		/**
+		 * Creates a new controller
+		 *
+		 * @method  POST
+		 * @param   Request     $request
+		 */
+		public function create(Request $request)
+		{
+			// get input
+			$input      = $request->all();
+
+			// extract variables
+			$name       = $input['name'];
+			$path       = $input['path'];
+			$members    = $input['members'];
+			$options    = $input['options'];
+
+			// create
+		}
 
 		/**
 		 * Handles commands from the main UI
@@ -115,44 +117,13 @@ class SketchpadController extends Controller
 			{
 				return $this->sketchpad->getPage($data);
 			}
-			
+
 			// loads controller data
 			if($type == 'load')
 			{
 
 			}
 		}
-
-        public function controller($data)
-        {
-            return response()->json($this->sketchpad->getController($data));
-		}
-
-        public function view($data)
-        {
-            return $this->sketchpad->getPage($data);
-		}
-
-		/**
-		 * Creates a new controller
-		 *
-		 * @method  POST
-		 * @param   Request     $request
-		 */
-		public function create(Request $request)
-		{
-			// get input
-			$input      = $request->all();
-			
-			// extract variables
-			$name       = $input['name'];
-			$path       = $input['path'];
-			$members    = $input['members'];
-			$options    = $input['options'];
-	
-			// create
-		}
-	
 
 }
 

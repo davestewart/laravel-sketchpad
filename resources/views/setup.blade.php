@@ -7,7 +7,7 @@
     @include('sketchpad::head')
 
     <!-- setup -->
-    <link  href="/{{ $assets }}css/setup.css" rel="stylesheet">
+    <link  href="{{ $assets }}css/setup.css" rel="stylesheet">
 
 	<script type="application/json" id="settings">{!! json_encode($settings, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}</script>
 
@@ -28,7 +28,7 @@
 		</div>
 	</div>
 
-	<script src="/{{ $assets }}js/setup.js"></script>
+	<script src="{{ $assets }}js/setup.js"></script>
 
 </body>
 </html>

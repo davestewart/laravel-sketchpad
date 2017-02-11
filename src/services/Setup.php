@@ -86,7 +86,7 @@ class Setup
 			$data   = app(Sketchpad::class)->getVariables();
 			$vars   =
 			[
-                'assets' => '/sketchpad/:assets/',
+                'assets' => $config->route . 'assets/',
 				'settings' =>
 				[
 					'route'             => $config->route,

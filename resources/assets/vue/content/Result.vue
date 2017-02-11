@@ -192,7 +192,7 @@ export default
 				this.timer.start();
 
 				server
-					.call(this.state.method, this.onLoad, this.onFail, this.onComplete);
+					.run(this.state.method, this.onLoad, this.onFail, this.onComplete);
 			},
 
 			clear ()

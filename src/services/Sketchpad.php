@@ -72,10 +72,15 @@ class Sketchpad
 			$data =
 			[
 				'route'     => $this->config->route,
-				'assets'    => $this->config->assets,
+				'assets'    => $this->config->route . 'assets/',
 			];
 			return $data;
 		}
+
+		public function isInstalled ()
+        {
+            return file_exists(config_path('sketchpad.php'));
+        }
 	
 
 	// ------------------------------------------------------------------------------------------------
@@ -137,7 +142,7 @@ class Sketchpad
          * @param array $params
          * @return mixed|string
          */
-		public function call($route = '', array $params)
+		public function run($route = '', array $params)
 		{
 			// set up the router, but don't scan
 			$this->init();

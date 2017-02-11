@@ -8,8 +8,8 @@
     @include('sketchpad::head')
 
     <!-- user -->
-    <link  href="/{{ $assets }}user/user.css" rel="stylesheet">
-    <script src="/{{ $assets }}user/user.js"></script>
+    <link  href="{{ $assets }}user/user.css" rel="stylesheet">
+    <script src="{{ $assets }}user/user.js"></script>
 
     <!-- custom head -->
     @yield('head')
@@ -22,7 +22,7 @@
     </div>
 
 	<script id="data" type="text/plain">{!! json_encode($data, JSON_UNESCAPED_SLASHES) !!}</script>
-    <script src="/{{ $assets }}js/app.js"></script>
+    <script src="{{ $assets }}js/app.js"></script>
 
     @if ( Config::get('app.debug') )
     <script src="//localhost:35729/livereload.js?snipver=1" type="text/javascript"></script>

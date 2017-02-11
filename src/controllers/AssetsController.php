@@ -23,12 +23,14 @@ class AssetsController extends Controller
         [
             'js'    => 'application/javascript',
             'css'   => 'text/css',
+            'gif'   => 'image/gif',
+            'png'   => 'image/png',
             'woff'  => 'application/font-woff',
             'ttf'   => 'application/x-font-ttf',
         ];
         $mime = isset($mimes[$ext])
             ? $mimes[$ext]
-            : 'text/html';
+            : 'application/octet-stream'; //'text/html';
 
         // serve file
         $response = new BinaryFileResponse($path);
