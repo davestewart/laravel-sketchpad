@@ -94,6 +94,7 @@
 
 			// app styles
 			.sass('app.scss', '../publish/assets/css/app.css')
+			.sass('setup.scss', '../publish/assets/css/setup.css')
 
 			// app scripts
 			.browserify(

@@ -2,10 +2,6 @@
 // layout
 // ------------------------------------------------------------------------------------------------
 
-	#setup{
-		width:600px;
-	}
-
 	#top-nav.navbar{
       border-radius: 0;
 	}
@@ -254,7 +250,7 @@
 		height:16px;
 		right:0;
 		margin:8px 12px;
-		background-image:url('../../images/ajax-loader.gif');
+		background-image:url('../images/ajax-loader.gif');
 		background-repeat: no-repeat;
 		transition: opacity 0.1s;
 		opacity: 0;
