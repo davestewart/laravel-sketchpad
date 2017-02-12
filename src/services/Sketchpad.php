@@ -105,9 +105,12 @@ class Sketchpad
 		 * @param   string      $path   The absolute file path to the controller
 		 * @return  Controller          The Controller
 		 */
-		public function getController($path)
+		public function getController($path = null)
 		{
-			return $this->init()->router->getController($path);
+		    $router = $this->init($path == null)->router;
+			return $path
+                ? $router->getController($path)
+                : $router->getControllers();
 		}
 
 

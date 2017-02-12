@@ -73,9 +73,9 @@ class SketchpadController extends Controller
          * @param $path
          * @return mixed
          */
-        public function load($path)
+        public function load($path = null)
         {
-            return response()->json($this->sketchpad->getController($path));
+            return response($this->sketchpad->getController($path));
 		}
 
         public function view($page)
