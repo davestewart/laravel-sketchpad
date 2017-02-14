@@ -70,6 +70,7 @@
         created ()
         {
             window.app      = this;
+			this.root		= location.origin + $('meta[name="route"]').attr('content'),
             this.server     = server;
             this.loader 	= loader;
             loader.state 	= this.state;
@@ -104,7 +105,7 @@
 			})
 
 			// links
-			//$('body').on('click', '#content a', this.onLink);
+			$('#content').on('click', 'a[href]', this.onLinkClick);
 
 			// ui
 			//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
@@ -176,48 +177,15 @@
 					}
 				},
 
-			// ------------------------------------------------------------------------------------------------
-			// handlers
-
 				onLinkClick (event)
 				{
-					console.log(event)
-					event.preventDefault();
-					return
 
-					// variables
-					var meta 	= event.ctrlKey || event.metaKey;
-					var route	= this.state.getLink(event.target.href);
-					var $target	= $(event.target);
-					var path	= $target.data('path');
-					var href	= $target.attr('href');
-
-					// skip # links
-					if(href && href.indexOf('#') == 0)
-					{
-						return;
-					}
-
-					// resolve ~ links
-                    if(href.indexOf('~') == 0)
-                    {
-                        debugger;
-                    }
-
-					// controller
-					if(path && meta)
+					var run = this.root + 'run/';
+					if(event.target.href.indexOf(run) === 0)
 					{
 						event.preventDefault();
-						this.server.loadController(path);
-					}
-
-					// method
-					if(route)
-					{
-						event.preventDefault();
-						meta
-							? this.server.open(route)
-							: this.router.navigate(route);
+						const path = event.target.href.substr(run.length);
+						router.go('/run/' + decodeURI(path))
 					}
 				}
 
