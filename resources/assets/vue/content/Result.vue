@@ -17,7 +17,7 @@
 					<nav v-if="params" class="navbar navbar-default">
 						<span class="loader"></span>
 						<ul class="nav navbar-nav">
-							<li><button @click="$emit('run')" class="btn btn-xs" style="outline:none">Run</button></li>
+							<li><button @click="loader.load()" class="btn btn-xs" style="outline:none">Run</button></li>
 							<template v-for="param in params">
 								<param :param="param"></param>
 							</template>
@@ -41,6 +41,7 @@
 // objects
 import settings		from '../../js/state/settings.js';
 import server		from '../../js/services/server/server.js';
+import loader		from '../../js/services/loader';
 import Helpers		from '../../js/classes/helpers.js';
 
 // components
@@ -147,11 +148,51 @@ export default
 
 	ready ()
 	{
-		this.$output 	= $('#output');
+		// output
+		this.$output 		= $('#output');
+
+		// loader
+		this.loader 		= loader;
+		this.loader.state 	= this.state;
+		this.loader.$on('start', this.onLoaderStart);
+		this.loader.$on('load', this.onLoaderLoad);
+		this.loader.$on('error', this.onLoaderError);
+		this.loader.$on('params', this.onParamsChange);
+
+		// routing
+		this.loader.load()
 	},
 
 	methods:
 	{
+		// ------------------------------------------------------------------------------------------------
+		// loading
+
+			onLoaderStart (clear)
+			{
+				this.loading = true;
+				if(clear)
+				{
+					this.transition = true
+					this.clear()
+				}
+			},
+
+			onLoaderLoad (data, type)
+			{
+				this.setContent(data, type)
+			},
+
+			onLoaderError (data, type)
+			{
+				this.setError(data, type)
+			},
+
+			onParamsChange ()
+			{
+				router.replace('/run/' + this.state.makeRoute(this.state.method));
+			},
+
 
 		// ------------------------------------------------------------------------------------------------
 		// content methods

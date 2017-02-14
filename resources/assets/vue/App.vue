@@ -32,7 +32,6 @@
 
 	// services
 	import server       from '../js/services/server/server.js';
-	import loader		from '../js/services/loader';
 
 	// state
 	import store        from '../js/state/store.js';
@@ -72,8 +71,6 @@
             window.app      = this;
 			this.root		= location.origin + $('meta[name="route"]').attr('content'),
             this.server     = server;
-            this.loader 	= loader;
-            loader.state 	= this.state;
         },
 
 		ready ()
@@ -81,31 +78,18 @@
 			// reloading
 			this.store.$on('load', this.onStoreLoad);
 
-			// reloading
-			this.loader.$on('params', this.onParamsChange);
-			this.loader.$on('start', this.onLoaderStart);
-			this.loader.$on('load', this.onLoaderLoad);
-			this.loader.$on('error', this.onLoaderError);
+			// links
+			$('#content').on('click', 'a[href]', this.onLinkClick);
 
 			// routing
 			router.afterEach(transition => {
 				const route = transition.to;
 				if(route.path.indexOf('/run/') === 0)
 				{
-					// set state
 					this.state.setRoute(route.params.route, route.query);
-
-					// update loader
-					this.loader.load()
-				}
-				else
-				{
-					//this.state.reset();
+					this.$nextTick( () => this.$refs.content.loader.load())
 				}
 			})
-
-			// links
-			$('#content').on('click', 'a[href]', this.onLinkClick);
 
 			// ui
 			//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
@@ -114,80 +98,39 @@
 
 		methods:
 		{
-			// ------------------------------------------------------------------------------------------------
-			// loading
-
-				onLoaderStart (clear)
+			onStoreLoad (event)
+			{
+				if(this.state.controller && this.state.controller.relpath == event.path)
 				{
-					if(clear && this.$refs.content && app.$refs.content.setContent)
+					var cIndex 	= event.index;
+					var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
+					if(cIndex !== -1)
 					{
-						app.$refs.content.clear()
-					}
-				},
-
-				onLoaderLoad (data, type)
-				{
-					if(this.$refs.content && app.$refs.content.setContent)
-					{
-						app.$refs.content.setContent(data, type)
-					}
-				},
-
-				onLoaderLoad (data, type)
-				{
-					if(this.$refs.content && app.$refs.content.setContent)
-					{
-						app.$refs.content.setContent(data, type)
-					}
-				},
-
-				onLoaderError (data, type)
-				{
-					if(this.$refs.content && app.$refs.content.setContent)
-					{
-						app.$refs.content.setError(data, type)
-					}
-				},
-
-				onParamsChange ()
-				{
-					const route = '/run/' + this.state.makeRoute(this.state.method);
-					this.$router.replace(route);
-				},
-
-				onStoreLoad (event)
-				{
-					if(this.state.controller && this.state.controller.relpath == event.path)
-					{
-						var cIndex 	= event.index;
-						var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
-						if(cIndex !== -1)
+						this.unwatch();
+						this.state.controller = this.store.controllers[cIndex];
+						if(mIndex !== -1)
 						{
-							this.unwatch();
-							this.state.controller = this.store.controllers[cIndex];
-							if(mIndex !== -1)
-							{
-								this.state.method = this.state.controller.methods[mIndex];
-							}
-							this.watch();
+							this.state.method = this.state.controller.methods[mIndex];
 						}
-
-						// reload
-						this.update();
+						this.watch();
 					}
-				},
 
-				onLinkClick (event)
-				{
-
-					var run = this.root + 'run/';
-					if(event.target.href.indexOf(run) === 0)
-					{
-						event.preventDefault();
-						const path = event.target.href.substr(run.length);
-						router.go('/run/' + decodeURI(path))
-					}
+					// reload
+					this.update();
 				}
+			},
+
+			onLinkClick (event)
+			{
+
+				var run = this.root + 'run/';
+				if(event.target.href.indexOf(run) === 0)
+				{
+					event.preventDefault();
+					const path = event.target.href.substr(run.length);
+					router.go('/run/' + decodeURI(path))
+				}
+			}
 
 		}
 	}
