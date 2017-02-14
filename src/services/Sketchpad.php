@@ -57,7 +57,7 @@ class Sketchpad
 
 		public function init($scan = false)
 		{
-			$this->router = new Router($this->config->route, $this->config->paths);
+			$this->router = new Router($this->config->paths);
 			if($scan)
 			{
 				//pr($this->router);
@@ -151,7 +151,7 @@ class Sketchpad
 			$this->init();
 
 			/** @var CallReference $ref */
-			$ref = $this->router->getCall($this->config->route . $route, $params);
+			$ref = $this->router->getCall($route, $params);
 
 			//vd([$ref, $route, $params]);
             //exit;

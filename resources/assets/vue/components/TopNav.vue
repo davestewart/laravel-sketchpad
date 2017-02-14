@@ -5,7 +5,7 @@
 		<div class="container">
 
 			<div class="navbar-header">
-				<a href="{{ route }}" class="navbar-brand">Sketchpad</a>
+				<a v-link="'/'" class="navbar-brand">Sketchpad</a>
 				<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -25,8 +25,8 @@
 					<!--
 					<li><a href="{{ $route }}~/new" title="New Controller">New</a></li>
 					-->
-					<li><a href="{{ route }}settings" title="Settings">Settings</a></li>
-					<li><a target="_blank" href="{{ route }}help" title="Help">Help</a></li>
+					<li><a v-link="'/settings'" title="Settings">Settings</a></li>
+					<li><a v-link="'/help'" title="Help">Help</a></li>
 				</ul>
 
 			</div>

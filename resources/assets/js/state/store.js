@@ -1,18 +1,24 @@
 import Vue 		from 'vue';
-import server	from './server/server';
-
+import server	from '../services/server/server';
+/**
+ * The controllers store
+ *
+ * - loads controller data
+ * - stores controller data
+ * - hooks into live reloading
+ */
 var Store = Vue.extend({
 
-	data:function()
+	data ()
 	{
 		// object with single controllers property
 		var data = $('#data').text();
 		return data ? JSON.parse(data) : {};
 	},
 
-	created:function()
+	created ()
 	{
-		var self = this;
+		const self = this;
 
 		if(window.LiveReload)
 		{
@@ -20,7 +26,7 @@ var Store = Vue.extend({
 			this.server = server;
 
 			// proxies
-			var reload 	= LiveReload.reloader.reload;
+			const reload 	= LiveReload.reloader.reload;
 
 			// monkeypatch livereloader
 			LiveReload.reloader.reload = function(file, options)
@@ -56,12 +62,12 @@ var Store = Vue.extend({
 			 * @param path
 			 * @returns {boolean}
 			 */
-			reload:function(path)
+			reload (path)
 			{
 				// intercept controller updates
 				if (/Controller\.php$/.test(path))
 				{
-					var controller = this.getControllerByPath(path);
+					const controller = this.getControllerByPath(path);
 					if(controller)
 					{
 						this.server.loadController(path, this.onLoad);
@@ -72,7 +78,7 @@ var Store = Vue.extend({
 				// php file
 				if(/\.php$/.test(path))
 				{
-					this.dispatch('file');
+					this.emit('file');
 					return true;
 				}
 
@@ -85,13 +91,13 @@ var Store = Vue.extend({
 			 *
 			 * @param data
 			 */
-			onLoad:function(data)
+			onLoad (data)
 			{
 				if(data && data.path)
 				{
 					// check for existing controller
-					var controller = this.getControllerByPath(data.path);
-					var index;
+					const controller = this.getControllerByPath(data.path);
+					let index;
 
 					// insert if the controller exists
 					if(controller)
@@ -110,11 +116,11 @@ var Store = Vue.extend({
 						this.controllers.push(data);
 						this.controllers.sort(function(a, b)
 						{
-							if(a.path < b.path)
+							if (a.path < b.path)
 							{
 								return -1;
 							}
-							if(a.path > b.path)
+							if (a.path > b.path)
 							{
 								return 1;
 							}
@@ -122,8 +128,8 @@ var Store = Vue.extend({
 						});
 					}
 
-					// dispatch
-					this.dispatch('controller', data.path, index);
+					// emit
+					this.emit('controller', data.path, index);
 				}
 			},
 
@@ -131,14 +137,14 @@ var Store = Vue.extend({
 		// ------------------------------------------------------------------------------------------------
 		// utilities
 
-			getControllerByPath:function(path)
+			getControllerByPath (path)
 			{
 				return this.controllers.filter( c => c.path == path ).shift();
 			},
 
-			dispatch:function(type, path, index)
+			emit (type, path, index)
 			{
-				this.$dispatch('load', {type:type, path:path, index:index});
+				this.$emit('load', {type:type, path:path, index:index});
 			}
 
 	}

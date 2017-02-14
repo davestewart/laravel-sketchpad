@@ -51,12 +51,12 @@ class Method implements JsonSerializable
 			// params
 			$params			= $method->getParameters();
 			$this->params	= [];
-			foreach($params as /** @var ReflectionParameter */ $p)
+			foreach($params as /** @var ReflectionParameter */ $param)
 			{
-				if($p->isOptional())
+				if($param->isOptional())
 				{
-					$tag    = $this->comment->getParam($p->name);
-					$param  = new Parameter($p, $tag);
+					$tag    = $this->comment->getParam($param->name);
+					$param  = new Parameter($param, $tag);
 					array_push($this->params, $param);
 				}
 			}

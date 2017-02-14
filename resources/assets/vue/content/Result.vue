@@ -17,10 +17,10 @@
 					<nav v-if="params" class="navbar navbar-default">
 						<span class="loader"></span>
 						<ul class="nav navbar-nav">
-							<li><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
-							<li v-for="param in params">
+							<li><button @click="$emit('run')" class="btn btn-xs" style="outline:none">Run</button></li>
+							<template v-for="param in params">
 								<param :param="param"></param>
-							</li>
+							</template>
 							<!--<li v-if="! defer && params.length == 0"><span>No parameters</span></li>-->
 						</ul>
 					</nav>
@@ -42,7 +42,6 @@
 import settings		from '../../js/state/settings.js';
 import server		from '../../js/services/server/server.js';
 import Helpers		from '../../js/classes/helpers.js';
-import Timer		from '../../js/classes/timer.js';
 
 // components
 import Param		from './Param.vue';
@@ -62,8 +61,7 @@ export default
 			loading		:false,
 			transition	:false,
 			title		:'Sketchpad',
-			info		:'',
-			oldMethod	:null
+			info		:''
 		}
 	},
 
@@ -151,91 +149,28 @@ export default
 	ready ()
 	{
 		this.$output 	= $('#output');
-		this.timer 		= new Timer();
 	},
 
 	methods:
 	{
 
 		// ------------------------------------------------------------------------------------------------
-		// load methods
+		// content methods
 
-			load (transition)
+			setContent (data, contentType = '')
 			{
-				if ( ! this.state.method )
-				{
-					this.clear();
-					return;
-				}
-
-				this.transition	= this.state.method !== this.oldMethod;
-                this.loading = ! this.defer;
-
-				// load
-				if( ! this.defer )
-				{
-					this._load(transition);
-				}
-				else
-				{
-					this.clear();
-					if(this.state.method.tags.warning)
-					{
-						//alert(this.state.method.tags.warning || 'Be careful when running this method!');
-					}
-				}
-			},
-
-			_load (transition)
-			{
-				// time load process
-				this.timer.start();
-
-				server
-					.run(this.state.method, this.onLoad, this.onFail, this.onComplete);
-			},
-
-			clear ()
-			{
-				return this.$output.empty();
-			},
-
-			loadIframe (xhr)
-			{
-				var text	= xhr.responseText;
-				var type	= xhr.getResponseHeader('Content-Type');
-				var src		= 'data:' + type + ',' + encodeURIComponent(text);
-				var $iframe = $('<iframe class="error" frameborder="0">');
-				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</scr' + 'ipt>';
-
-				this.clear().append($iframe.attr('src', src));
-			},
-
-
-
-		// ------------------------------------------------------------------------------------------------
-		// events
-
-			onLoad (data, status, xhr)
-			{
-				// variables
-				var method = this.state.method;
-
-				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
 				// properties
 				this.transition 	= false;
-				if(method)
-				{
-					method.error = 0;
-				}
+				this.loading 		= false;
+
+				// variables
+				var method 			= this.state.method;
 
 				// format
-				if(method.tags.iframe)
+				if(method && method.tags.iframe)
 				{
-					return this.loadIframe(xhr);
+					return this.loadIframe(data, contentType);
 				}
-
-				var contentType = xhr.getResponseHeader('Content-Type');
 
 				var $data = $('<div class="data">' + data + '</div>');
 
@@ -256,13 +191,13 @@ export default
 				}
 
 				// clear
-				if(! settings.appendResult && method.tags.append && method !== this.oldMethod)
+				if(! settings.appendResult && method && method.tags.append && method !== this.oldMethod) // need this to clear things
 				{
 					this.$output.empty();
 				}
 
 				// add content
-				settings.appendResult || method.tags.append
+				settings.appendResult || (method && method.tags.append)
 					? this.$output.prepend($data.append('<hr>'))
 					: this.$output.html($data);
 
@@ -298,18 +233,24 @@ export default
 
 			},
 
-			onFail (xhr, status, message)
+			setError (text, type)
 			{
-				this.format = 'error';
-				this.state.method.error = 1;
-				this.loadIframe(xhr);
+				this.transition 	= false;
+				this.loading 		= false;
+				this.format 		= 'error';
+				this.loadIframe (text, type);
 			},
 
-			onComplete (loaded)
+			clear ()
 			{
-				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
-				this.loading 	= false;
-				this.oldMethod 	= this.state.method;
+				return this.$output.empty();
+			},
+
+			loadIframe (text, type)
+			{
+				var src		= 'data:' + type + ',' + encodeURIComponent(text);
+				var $iframe = $('<iframe class="error" frameborder="0">');
+				this.clear().append($iframe.attr('src', src));
 			}
 
 	}

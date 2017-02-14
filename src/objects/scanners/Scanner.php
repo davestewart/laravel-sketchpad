@@ -64,7 +64,7 @@ class Scanner extends AbstractScanner
 		{
 			// parameters
 			$this->path         = $path;
-			$this->route        = '/' . trim($route, '/') . '/';
+			$this->route        = trim($route, '/') . '/';
 
 			// properties
 			$this->routes       = [];
@@ -98,6 +98,7 @@ class Scanner extends AbstractScanner
 			$root               = AbstractScanner::folderize($this->path . $path);
 			$files              = array_diff(scandir($root), ['.', '..']);
 
+			//pd($this->route, $root, $path, $files);
 			// folders
 			$this->addFolder($path);
 

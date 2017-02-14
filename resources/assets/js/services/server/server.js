@@ -29,8 +29,8 @@ Server.prototype =
 		 */
 		run(method, done, fail, always)
 		{
-			var route	= method.route.replace('/sketchpad/', '/sketchpad/run/');
-			var data	= method.params.map( function(param)
+			const route	= this.base + 'run/' + method.route;
+			const data	= method.params.map( function(param)
 			{
 				let {name, type, value } = param;
 				return {name, type, value}

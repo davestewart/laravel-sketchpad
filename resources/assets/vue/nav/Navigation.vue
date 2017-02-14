@@ -1,6 +1,6 @@
 <template>
 
-	<div id="nav">
+	<div id="nav" :class="{comments:settings.showComments}">
 
 		<div class="sticky">
 
@@ -23,7 +23,8 @@
 							<a
 								:data-name="controller.class"
 								:data-path="controller.path"
-								:href="controller.route"
+								:data-route="controller.route"
+								v-link="'/run/' + controller.route"
 								>
 								{{{ getLabel(controller) }}}
 							</a>
@@ -65,6 +66,7 @@ export default
 
 	props:
 	[
+		'settings',
 		'controllers',
 		'state'
 	],
@@ -106,7 +108,6 @@ export default
 			var close	= '</span> ';
 
 			return name + route
-				.replace('/sketchpad/', '')
 				.replace(/\/$/, '')
 				.split('/')
 				.join(close + divider + name) + close;

@@ -1,16 +1,18 @@
 <template>
 
-	<label
-		:for="id"
-		:title="param.text"
-	>{{ param.name }}</label>
-	<input
+	<li>
+		<label
+			:for="id"
+			:title="param.text"
+		>{{ param.name }}</label>
+		<input
 
-		:id="id"
-		:type="type"
-		v-model="value"
-		debounce="400"
-	>
+			:id="id"
+			:type="type"
+			v-model="value"
+			debounce="400"
+		>
+	</li>
 
 </template>
 

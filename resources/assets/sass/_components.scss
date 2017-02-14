@@ -45,6 +45,15 @@
 
 	#nav{
 
+        &.comments p.comment {
+            height:17px;
+        }
+
+        p.comment {
+            transition: 0.5s all;
+            height:0;
+        }
+
 		// position
 		margin-top: 113px;
 

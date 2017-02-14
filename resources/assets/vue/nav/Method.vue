@@ -12,12 +12,12 @@
 			:class="{method:true, error:error}"
 			:style="linkStyle"
 			:title="comment.intro"
-			:href="state.makeRoute(method)"
+			v-link="'/run/' + state.makeRoute(method)"
 			>
 			{{{ label }}}
 		</a>
 		<p
-			v-if="comment.intro && settings.showComments"
+			v-if="comment.intro"
 			class="comment"
 			>{{ comment.intro }}</p>
 	</li>
@@ -54,21 +54,21 @@ export default
 				icon		:tags.favourite || tags.icon
 			};
 
-			if(tags.css) {
+			if (tags.css) {
 				data[tags.css] = true;
 			}
-			if(tags.defer) {
+			if (tags.defer) {
 				data.icon = true;
-				data['defer'] = true;
+				data.defer = true;
 			}
-			if(tags.warning) {
+			if (tags.warning) {
 				data.icon = true;
-				data['warning'] = true;
+				data.warning = true;
 			}
-			if(tags.archived) {
-				data['archived'] = true;
+			if (tags.archived) {
+				data.archived = true;
 			}
-			if(tags.icon) {
+			if (tags.icon) {
 				var parts = tags.icon.split(/\s+/);
 				data['fa-' + parts.pop()] = true;
 			}
@@ -93,7 +93,7 @@ export default
 		{
 			var tags	= this.tags;
 			var data 	= {};
-			if(tags.color){
+			if (tags.color){
 				data.color = tags.color;
 			}
 			return data;

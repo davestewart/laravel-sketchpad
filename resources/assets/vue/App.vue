@@ -1,22 +1,20 @@
 <template>
 
-	<div id="app">
+	<div id="test">
 
 		<top-nav :route="state.baseUrl"></top-nav>
 
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-4">
-					<navigation v-ref:navigation :controllers="store.controllers" :state="state" >
-						Navigation
-					</navigation>
+					<navigation v-ref:navigation :controllers="store.controllers" :state="state" :settings="settings"></navigation>
 				</div>
 				<div class="col-xs-8">
-					<result v-if="state.controller" v-ref:result :state="state">
-						Result
-					</result>
-					<div id="content" v-else>
-
+					<!--
+					<result v-if="state.controller" v-ref:result :state="state"></result>
+					-->
+					<div id="content" class="view">
+						<router-view v-ref:content :state="state" :settings="settings" :loader="loader"></router-view>
 					</div>
 				</div>
 			</div>
@@ -34,17 +32,18 @@
 
 	// services
 	import server       from '../js/services/server/server.js';
-	import store        from '../js/services/store.js';
+	import loader		from '../js/services/loader';
 
 	// state
+	import store        from '../js/state/store.js';
 	import state        from '../js/state/state.js';
 	import settings     from '../js/state/settings.js';
 
 	// components
 	import Navigation 	from './nav/Navigation.vue';
 	import Result 		from './content/Result.vue';
-	import Modal        from './components/Modal.vue';
 	import TopNav       from './components/TopNav.vue';
+	import Modal        from './components/Modal.vue';
 
 // ------------------------------------------------------------------------------------------------
 // objects
@@ -70,9 +69,10 @@
 
         created ()
         {
-			this.router 	= new Router(); // global: slim-router
-            this.server     = server;
             window.app      = this;
+            this.server     = server;
+            this.loader 	= loader;
+            loader.state 	= this.state;
         },
 
 		ready ()
@@ -80,20 +80,31 @@
 			// reloading
 			this.store.$on('load', this.onStoreLoad);
 
+			// reloading
+			this.loader.$on('params', this.onParamsChange);
+			this.loader.$on('start', this.onLoaderStart);
+			this.loader.$on('load', this.onLoaderLoad);
+			this.loader.$on('error', this.onLoaderError);
+
+			// routing
+			router.afterEach(transition => {
+				const route = transition.to;
+				if(route.path.indexOf('/run/') === 0)
+				{
+					// set state
+					this.state.setRoute(route.params.route, route.query);
+
+					// update loader
+					this.loader.load()
+				}
+				else
+				{
+					//this.state.reset();
+				}
+			})
+
 			// links
-			//$('body').on('click', 'a[href^="/sketchpad/"]', this.onLinkClick);
-			$('body').on('click', 'a', this.onLinkClick);
-
-			// routes
-			var url 		= this.state.baseUrl;
-
-			this.router.route(url, this.onHome);
-			this.router.route(url + '~/*view', this.onView);
-			this.router.route(url + '*path', this.onRoute);
-
-			// seems to be a small bug with router on home route, so trigger home then start as normal
-			this.onHome();
-			this.router.start();
+			//$('body').on('click', '#content a', this.onLink);
 
 			// ui
 			//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
@@ -102,48 +113,78 @@
 
 		methods:
 		{
-
 			// ------------------------------------------------------------------------------------------------
-			// methods
+			// loading
 
-				run (route)
+				onLoaderStart (clear)
 				{
-					this.unwatch();
-					this.state.setRoute(route);
-					this.$nextTick(function()
+					if(clear && this.$refs.content && app.$refs.content.setContent)
 					{
-						this.update();
-						if(this.state.method)
-						{
-							this.watch();
-						}
-					});
-				},
-
-				update ()
-				{
-					if(this.$refs.result)
-					{
-						this.$refs.result.load();
+						app.$refs.content.clear()
 					}
 				},
 
-				watch ()
+				onLoaderLoad (data, type)
 				{
-					this.unwatch = this.$watch('state.method.params', this.onParamsChange, {deep:true});
+					if(this.$refs.content && app.$refs.content.setContent)
+					{
+						app.$refs.content.setContent(data, type)
+					}
 				},
 
-				unwatch ()
+				onLoaderLoad (data, type)
 				{
-					// will be populate by $watch
+					if(this.$refs.content && app.$refs.content.setContent)
+					{
+						app.$refs.content.setContent(data, type)
+					}
 				},
 
+				onLoaderError (data, type)
+				{
+					if(this.$refs.content && app.$refs.content.setContent)
+					{
+						app.$refs.content.setError(data, type)
+					}
+				},
+
+				onParamsChange ()
+				{
+					const route = '/run/' + this.state.makeRoute(this.state.method);
+					this.$router.replace(route);
+				},
+
+				onStoreLoad (event)
+				{
+					if(this.state.controller && this.state.controller.relpath == event.path)
+					{
+						var cIndex 	= event.index;
+						var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
+						if(cIndex !== -1)
+						{
+							this.unwatch();
+							this.state.controller = this.store.controllers[cIndex];
+							if(mIndex !== -1)
+							{
+								this.state.method = this.state.controller.methods[mIndex];
+							}
+							this.watch();
+						}
+
+						// reload
+						this.update();
+					}
+				},
 
 			// ------------------------------------------------------------------------------------------------
 			// handlers
 
 				onLinkClick (event)
 				{
+					console.log(event)
+					event.preventDefault();
+					return
+
 					// variables
 					var meta 	= event.ctrlKey || event.metaKey;
 					var route	= this.state.getLink(event.target.href);
@@ -178,59 +219,13 @@
 							? this.server.open(route)
 							: this.router.navigate(route);
 					}
-				},
-
-				onRoute (route)
-				{
-					this.run(this.state.baseUrl + route);
-				},
-
-				onParamsChange ()
-				{
-					this.router.navigate(this.state.route, false, true);
-				},
-
-				onHome ()
-				{
-					this.onView('welcome');
-				},
-
-				onView (type)
-				{
-					document.title 	= 'Sketchpad - ' + type;
-					this.state.reset();
-					this.server.load('view/' + type, function(html)
-					{
-						$('#content').html(html);
-					});
-				},
-
-				onStoreLoad (event)
-				{
-					if(this.state.controller && this.state.controller.relpath == event.path)
-					{
-						var cIndex 	= event.index;
-						var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
-						if(cIndex > -1)
-						{
-							this.unwatch();
-							this.state.controller = this.store.controllers[cIndex];
-							if(mIndex > -1)
-							{
-								this.state.method = this.state.controller.methods[mIndex];
-							}
-							this.watch();
-						}
-
-						// reload
-						this.update();
-					}
 				}
+
 		}
 	}
 
 </script>
 
 <style lang="scss">
-	
+
 </style>
