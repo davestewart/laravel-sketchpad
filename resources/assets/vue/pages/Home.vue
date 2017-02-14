@@ -19,7 +19,7 @@
 
 		<h3>Next steps...</h3>
 
-		<p>Navigate the menu on the left, or view the <a href="{{ $route }}help">help</a> for more info.</p>
+		<p>Navigate the menu on the left, or view the <a v-link="'/help'">help</a> for more info.</p>
 	</article>
 
 </template>

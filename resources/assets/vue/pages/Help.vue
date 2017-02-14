@@ -21,11 +21,11 @@
 		<h3>Features</h3>
 		<p>Sketchpad provides a variety of features and functionality to make testing code easier, such as:</p>
 		<ul>
-			<li>Output functions such as <a href="/sketchpad/demo/output/ls">list</a>, <a href="/sketchpad/demo/output/table">table</a> and <a href="/sketchpad/demo/output/alert">alert</a></li>
-			<li>Support for <a href="/sketchpad/demo/output/json">json</a>, <a href="/sketchpad/demo/output/markdown">markdown</a> and <a href="/sketchpad/demo/output/vue">vue</a></li>
-			<li>Built-in <a href="/sketchpad/demo/basics/exception">exception handling</a></li>
-			<li>Custom <a href="/sketchpad/demo/basics/indexpage">index pages</a>, <a href="/sketchpad/demo/basics/userassets">custom CSS</a> and transparent ajax <a href="/sketchpad/demo/basics/forms">form submission</a></li>
-			<li>Custom <a href="/sketchpad/demo/tags/label">tags</a> to modify presentation and behaviour</li>
+			<li>Output functions such as <a href="/sketchpad/run/demo/output/ls">list</a>, <a href="/sketchpad/run/demo/output/table">table</a> and <a href="/sketchpad/run/demo/output/alert">alert</a></li>
+			<li>Support for <a href="/sketchpad/run/demo/output/json">json</a>, <a href="/sketchpad/run/demo/output/markdown">markdown</a> and <a href="/sketchpad/run/demo/output/vue">vue</a></li>
+			<li>Built-in <a href="/sketchpad/run/demo/basics/exception">exception handling</a></li>
+			<li>Custom <a href="/sketchpad/run/demo/basics/indexpage">index pages</a>, <a href="/sketchpad/run/demo/basics/userassets">custom CSS</a> and transparent ajax <a href="/sketchpad/run/demo/basics/forms">form submission</a></li>
+			<li>Custom <a href="/sketchpad/run/demo/tags/label">tags</a> to modify presentation and behaviour</li>
 		</ul>
 
 

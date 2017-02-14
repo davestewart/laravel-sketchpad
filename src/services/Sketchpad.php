@@ -87,19 +87,6 @@ class Sketchpad
 	// GETTERS
 
 		/**
-		 * Returns a view for a single "page" type
-		 *
-		 * @param $page
-		 * @return \Illuminate\View\View
-		 */
-		public function getPage($page)
-		{
-			$data               = $this->getVariables();
-			$data['folders']    = $this->init(true)->router->getFolders();
-			return view('sketchpad::pages.' . $page, $data);
-		}
-
-		/**
 		 * Returns a sketchpad\objects\reflection\Controller that can be converted to JSON
 		 *
 		 * @param   string      $path   The absolute file path to the controller

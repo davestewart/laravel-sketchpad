@@ -78,11 +78,6 @@ class SketchpadController extends Controller
             return response($this->sketchpad->getController($path));
 		}
 
-        public function view($page)
-        {
-            return $this->sketchpad->getPage($page);
-		}
-
 		/**
 		 * Creates a new controller
 		 *

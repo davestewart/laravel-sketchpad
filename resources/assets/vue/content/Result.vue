@@ -60,7 +60,6 @@ export default
 			format		:'',
 			loading		:false,
 			transition	:false,
-			title		:'Sketchpad',
 			info		:''
 		}
 	},
