@@ -80,6 +80,9 @@
 			]
 		}
 
+		var resources = 'resources/';
+		var assets = '../publish/assets/';
+
 		mix
 
 			// lib scripts
@@ -87,19 +90,19 @@
 			[
 				rootPath + 'resources/lib/jquery-1.12.3.min.js',
 				rootPath + 'resources/lib/**/*.js'
-			], '../publish/assets/js/lib.js')
+			], assets + 'js/lib.js')
 
 			// lib styles
-			.combine(rootPath + 'resources/lib/**/*.css', '../publish/assets/css/lib.css')
+			.combine(rootPath + 'resources/lib/**/*.css', assets + 'css/lib.css')
 
 			// app styles
-			.sass('app.scss', '../publish/assets/css/app.css')
-			.sass('setup.scss', '../publish/assets/css/setup.css')
+			.sass('app.scss',   assets + 'css/app.css')
+			.sass('setup.scss', assets + 'css/setup.css')
 
 			// app scripts
 			.browserify(
 				'resources/assets/js/app.js',
-				'../publish/assets/js/app.js',
+				assets + 'js/app.js',
 				'../',
 				options)
 	});
