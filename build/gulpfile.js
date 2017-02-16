@@ -3,7 +3,7 @@
 
 	var gulp			= require('gulp'),
 		gutil			= require('gulp-util'),
-		log 			= require('gulp-util').log,
+		argv            = require('yargs'),
 		path			= require('path'),
 		elixir			= require('laravel-elixir'),
 		es2015			= require('babel-preset-es2015'),
@@ -80,8 +80,10 @@
 			]
 		}
 
-		var resources = 'resources/';
-		var assets = '../publish/assets/';
+		var resources   = 'resources/';
+		var assets      = '../publish/assets/';
+		var file        = argv.setup ? 'setup' : 'app';
+		file            = 'app'
 
 		mix
 
@@ -100,9 +102,10 @@
 			.sass('setup.scss', assets + 'css/setup.css')
 
 			// app scripts
+			// currently, call gulp watch --setup to run setup
 			.browserify(
-				'resources/assets/js/app.js',
-				assets + 'js/app.js',
+				'resources/assets/js/' +file+ '.js',
+				assets + 'js/' +file+ '.js',
 				'../',
 				options)
 	});
