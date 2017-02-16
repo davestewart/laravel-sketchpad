@@ -1,19 +1,30 @@
 {
-	"useLabels": true,
-	"formatCode": false,
-	"showComments": true,
-	"appendResult": false,
-	"organisation": "flat",
-	"homepage": "intro",
-	"updateOn": "input",
-	"paths": [
-		{
-			"name": "project",
-			"enabled": true
-		},
-		{
-			"name": "demo",
-			"enabled": true
-		}
-	]
+	"config": {
+		"basedir": "",
+		"route": "",
+		"paths": [
+			{
+				"name": "project",
+				"path": "",
+				"enabled": true
+			},
+			{
+				"name": "demo",
+				"path": "vendor/davestewart/sketchpad/src/demo/",
+				"enabled": true
+			}
+		],
+		"views": "",
+		"assets": ""
+	},
+	"settings": {
+		"useLabels": true,
+		"formatCode": false,
+		"showComments": true,
+		"appendResult": false,
+		"homepage": "intro",
+		"navigation": "flat",
+		"updateOn": "input",
+		"head": ""
+	}
 }

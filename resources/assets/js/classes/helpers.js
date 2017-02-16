@@ -1,4 +1,4 @@
-import settings from '../services/settings.js';
+import settings from '../state/settings.js';
 
 export default
 {

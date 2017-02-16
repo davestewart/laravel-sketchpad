@@ -30,11 +30,6 @@ class Router
 	// PROPERTIES
 
 		/**
-		 * @var string
-		 */
-		protected $route;
-	
-		/**
 		 * @var string[]
 		 */
 		protected $paths;
@@ -64,12 +59,10 @@ class Router
 		 *
 		 * Parameters are all from the Sketchpad config file
 		 *
-		 * @param   string      $route      the base route for all controllers
 		 * @param   string[]    $paths      an array of paths
 		 */
-		public function __construct($route, $paths)
+		public function __construct($paths)
 		{
-			$this->route = $route;
 			$this->paths = (array) $paths;
 		}
 
@@ -87,7 +80,7 @@ class Router
 			foreach ($this->paths as $name => $path)
 			{
 				$root               = strpos($path, '/') === 0 ? $path : base_path($path);
-				$scanner            = new Scanner($root, $this->route . $name . '/');
+				$scanner            = new Scanner($root, $name);
 				$scanner->start();
 				$this->routes       = array_merge($this->routes, $scanner->routes);
 				$this->controllers  = array_merge($this->controllers, $scanner->controllers);

@@ -11,13 +11,13 @@
 		<a
 			:class="{method:true, error:error}"
 			:style="linkStyle"
-			title="{{ comment.intro }}"
-			href="{{ state.makeRoute(method) }}"
+			:title="comment.intro"
+			v-link="'/run/' + state.makeRoute(method)"
 			>
 			{{{ label }}}
 		</a>
 		<p
-			v-if="comment.intro && settings.showComments"
+			v-if="comment.intro"
 			class="comment"
 			>{{ comment.intro }}</p>
 	</li>
@@ -26,13 +26,13 @@
 
 <script>
 
-import Helpers		from '../js/classes/helpers.js';
-import settings 	from '../js/services/settings.js';
+import Helpers		from '../../js/classes/helpers.js';
+import settings 	from '../../js/state/settings.js';
 
 export default
 {
 
-	data:function()
+	data ()
 	{
 		return {
 			settings:settings
@@ -43,7 +43,7 @@ export default
 
 	computed:
 	{
-		listClass:function()
+		listClass ()
 		{
 			var tags 	= this.tags;
 			var state 	= this.state;
@@ -54,28 +54,28 @@ export default
 				icon		:tags.favourite || tags.icon
 			};
 
-			if(tags.css) {
+			if (tags.css) {
 				data[tags.css] = true;
 			}
-			if(tags.defer) {
+			if (tags.defer) {
 				data.icon = true;
-				data['defer'] = true;
+				data.defer = true;
 			}
-			if(tags.warning) {
+			if (tags.warning) {
 				data.icon = true;
-				data['warning'] = true;
+				data.warning = true;
 			}
-			if(tags.archived) {
-				data['archived'] = true;
+			if (tags.archived) {
+				data.archived = true;
 			}
-			if(tags.icon) {
+			if (tags.icon) {
 				var parts = tags.icon.split(/\s+/);
 				data['fa-' + parts.pop()] = true;
 			}
 			return data;
 		},
 
-		listStyle:function()
+		listStyle ()
 		{
 			var tags	= this.tags;
 			var data 	= {};
@@ -89,22 +89,22 @@ export default
 			return data;
 		},
 
-		linkStyle:function()
+		linkStyle ()
 		{
 			var tags	= this.tags;
 			var data 	= {};
-			if(tags.color){
+			if (tags.color){
 				data.color = tags.color;
 			}
 			return data;
 		},
 
-		name:function() { return this.method.name; },
-		label:function() { return Helpers.getMethodLabel(this.method); },
-		route:function() { return this.method.route; },
-		error:function() { return this.method.error; },
-		comment:function() { return this.method.comment; },
-		tags:function() { return this.method.tags; }
+		name () { return this.method.name; },
+		label () { return Helpers.getMethodLabel(this.method); },
+		route () { return this.method.route; },
+		error () { return this.method.error; },
+		comment () { return this.method.comment; },
+		tags () { return this.method.tags; }
 	}
 
 }

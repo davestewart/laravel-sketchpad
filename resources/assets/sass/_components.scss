@@ -2,12 +2,8 @@
 // layout
 // ------------------------------------------------------------------------------------------------
 
-	#setup{
-		width:600px;
-	}
-
-	#nav{
-
+	#top-nav.navbar{
+      border-radius: 0;
 	}
 
 	body:after{
@@ -48,6 +44,15 @@
 	}
 
 	#nav{
+
+        &.comments p.comment {
+            height:17px;
+        }
+
+        p.comment {
+            transition: 0.5s all;
+            height:0;
+        }
 
 		// position
 		margin-top: 113px;
@@ -254,7 +259,7 @@
 		height:16px;
 		right:0;
 		margin:8px 12px;
-		background-image:url('images/ajax-loader.gif');
+		background-image:url('../images/ajax-loader.gif');
 		background-repeat: no-repeat;
 		transition: opacity 0.1s;
 		opacity: 0;
@@ -279,6 +284,10 @@
 		}
 
 	}
+
+    #settings ul {
+        list-style: none;
+    }
 
 
 	.table.debug{

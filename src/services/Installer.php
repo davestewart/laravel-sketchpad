@@ -35,10 +35,7 @@ class Installer
         /** @var JSON */
         public $composer;
 
-        /** @var Template $config */
-        public $config;
-
-        /** @var Copier */
+        /** @var JSON */
         public $prefs;
 
         /** @var Folder */
@@ -53,9 +50,6 @@ class Installer
         /** @var Copier */
         public $view;
 
-        /** @var Copier */
-        public $assets;
-
 
     // -----------------------------------------------------------------------------------------------------------------
     // INSTANTIATION
@@ -63,7 +57,7 @@ class Installer
         public function __construct()
         {
             $this->state        = true;
-            $this->settings     = new InstallerSettings();
+            $this->prefs        = new InstallerSettings();
             $this->paths        = new Paths();
             $this->initialize();
         }
@@ -71,25 +65,21 @@ class Installer
         protected function initialize()
         {
             // variables
-            $settings           = $this->settings;
+            $settings           = $this->prefs;
             $publish            = $this->paths->publish();
 
             // update compose
-            if($this->settings->autoloader)
+            if($this->prefs->autoloader)
             {
                 $this->composer = new JSON('composer.json');
             }
 
             // objects
-            //$this->config       = new Template( $publish . 'templates/config.txt', 'custom/config/sketchpad.php');
-            $this->config       = new Template( $publish . 'templates/config.txt', config_path('sketchpad.php'));
-            $this->prefs        = new Copier(   $publish . 'config/settings.json', storage_path('vendor/sketchpad/'));
+            $this->settings     = new JSON(     $publish . 'config/settings.json', $this->paths->storage());
             $this->controllers  = new Folder(   $settings->controllers);
             $this->controller   = new ClassTemplate( $publish . 'resources/ExampleController.txt', $settings->controllers . '{filename}.php');
             $this->views        = new Folder(   $settings->views);
             $this->view         = new Copier(   $publish . 'resources/example.blade.php', $settings->views);
-            $this->assets       = new Copier(   $publish . 'assets', public_path($settings->assets));
-
         }
 
 
@@ -98,17 +88,18 @@ class Installer
 
         public function install()
         {
-            $this->config
-                ->set($this->settings)
-                ->create();
-
-            $this->prefs
+            $this->settings
+                ->set('config.route', $this->prefs->route)
+                ->set('config.basedir', $this->prefs->basedir)
+                ->set('config.paths.0.path', $this->prefs->controllers)
+                ->set('config.views', $this->prefs->views)
+                ->set('config.assets', $this->prefs->assets)
                 ->create();
 
             if($this->composer)
             {
                 $this->composer
-                    ->set("autoload.psr-4.{$this->settings->namespace}", "{$this->settings->basedir}")
+                    ->set("autoload.psr-4.{$this->prefs->namespace}", $this->prefs->basedir)
                     ->create();
             }
 
@@ -117,7 +108,7 @@ class Installer
 
             $this->controller
                 ->setNamespace()
-                ->set($this->settings)
+                ->set($this->prefs)
                 ->create();
 
             $this->views
@@ -126,8 +117,8 @@ class Installer
             $this->view
                 ->create();
 
-            $this->assets
-                ->create();
+            //$this->assets
+                //->create();
         }
 
         /**
@@ -137,18 +128,14 @@ class Installer
 		{
 		    $this->logs = [];
 
-		    $this->config->exists()
-                ? $this->pass('Config created')
-                : $this->fail('The sketchpad config file could not be found', "Copy it from <code>{$this->config->src}</code>");
-
-		    $this->prefs->exists()
+		    $this->settings->exists()
                 ? $this->pass('Settings created')
-                : $this->fail('The sketchpad settings file could not be found', "Copy it from <code>{$this->prefs->src}</code>");
+                : $this->fail('The sketchpad settings file could not be found', "Copy it from <code>{$this->settings->src}</code>");
 
             if($this->composer)
             {
-                $key    = $this->settings->namespace;
-                $value  = $this->settings->basedir;
+                $key    = $this->prefs->namespace;
+                $value  = $this->prefs->basedir;
                 $this->composer->has('autoload.psr-4.' . $key)
                     ? $this->pass('Composer autoload config updated')
                     : $this->fail('The PSR-4 autoload entry was not added to your composer.json', "Add a new entry in <code>autoload.psr-4</code>: <code>\"$key\" : \"$value\"</code>");
@@ -174,9 +161,11 @@ class Installer
                 ? $this->pass('Example view copied')
                 : $this->fail('The sketchpad example view was not found', "Create it at <code>{$this->view->trg}</code>");
 
+            /*
             $this->assets->exists()
                 ? $this->pass('Assets copied')
                 : $this->fail('The sketchpad assets folder was not copied', "Copy it from <code>{$this->assets->src}</code>");
+            */
 
             $this->saveLogs();
 

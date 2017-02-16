@@ -25,7 +25,7 @@
 							<div class="col-sm-9">
 								<div v-for="(key, option) in getOptions()" class="radio">
 									<label class="radio">
-										<input type="radio" name="type" v-model="type" value="{{ key }}"/>
+										<input type="radio" name="type" v-model="type" :value="key"/>
 										{{ option.type | capitalize }}
 									</label>
 								</div>
@@ -65,6 +65,7 @@
 							</div>
 						</div>
 
+						<!--
                         <div id="assets" :class="getClass('assets')">
 							<label for="assets" class="control-label col-sm-3">Assets</label>
 							<div class="col-sm-9">
@@ -77,6 +78,7 @@
 								<p class="help-block hint">{{ hints.assets }}</p>
 							</div>
 						</div>
+						-->
 
                         <div id="route" :class="getClass('route')">
 							<label for="route" class="control-label col-sm-3">Route</label>
@@ -205,7 +207,7 @@ export default
 {
 	props:['settings', 'validate'],
 
-	data()
+	data ()
 	{
 		return {
 			type        :'separate',
@@ -220,7 +222,7 @@ export default
 
     computed:
     {
-        isValid()
+        isValid ()
         {
             this.isComplete = false;
             return this.options.controllers !== ''
@@ -228,7 +230,7 @@ export default
                 && this.options.views !== '';
         },
 
-        cleanOptions()
+        cleanOptions ()
         {
             var options  = this.options;
 
@@ -253,7 +255,7 @@ export default
 
     },
 
-    created()
+    created ()
     {
         // update options with actual values
         options.integrated.controllers  = this.settings.controllerpath + '/Sketchpad';
@@ -264,7 +266,7 @@ export default
         options.application.namespace   = this.settings.namespace;
     },
 
-    ready()
+    ready ()
     {
         // update help prompts on focus/blur
         $(this.$el)
@@ -281,17 +283,17 @@ export default
 
 	methods:
 	{
-	    getOptions()
+	    getOptions ()
         {
             return options;
         },
 
-		getPlaceholder(key)
+		getPlaceholder (key)
 		{
 			return options[this.type][key];
 		},
 
-        getClass(key, required)
+        getClass (key, required)
         {
             var value = String(this.options[key]).replace(/^[\s\/]+|\s\/+$/g, '');
             return {
@@ -300,7 +302,7 @@ export default
             };
         },
 
-        updateHints:function()
+        updateHints ()
         {
             var options  = this.cleanOptions;
             var settings = this.settings;
@@ -321,7 +323,7 @@ export default
             };
         },
 
-        checkAutoloader()
+        checkAutoloader ()
         {
             // variables
             var path        = this.options.controllers;
@@ -340,7 +342,7 @@ export default
             this.dirty = true;
         },
 
-        validate()
+        validate ()
         {
             if(this.isValid)
             {
@@ -354,7 +356,7 @@ export default
 
 	watch:
 	{
-		type(value)
+		type (value)
 		{
             this.dirty      = false;
             this.options    = copy(options[value] || options.application);
@@ -367,7 +369,7 @@ export default
 
         options:
         {
-            handler()
+            handler ()
             {
                 this.updateHints()
             },

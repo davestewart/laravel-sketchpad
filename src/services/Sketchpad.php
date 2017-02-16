@@ -48,7 +48,7 @@ class Sketchpad
 	
 		public function __construct()
 		{
-			$this->config = new SketchpadConfig();
+			$this->config = app(SketchpadConfig::class);
 		}
 
 
@@ -57,7 +57,7 @@ class Sketchpad
 
 		public function init($scan = false)
 		{
-			$this->router = new Router($this->config->route, $this->config->paths);
+			$this->router = new Router($this->config->paths);
 			if($scan)
 			{
 				//pr($this->router);
@@ -72,27 +72,19 @@ class Sketchpad
 			$data =
 			[
 				'route'     => $this->config->route,
-				'assets'    => $this->config->assets,
+				'assets'    => $this->config->route . 'assets/',
 			];
 			return $data;
 		}
+
+		public function isInstalled ()
+        {
+            return file_exists($this->config->settings);
+        }
 	
 
 	// ------------------------------------------------------------------------------------------------
 	// GETTERS
-
-		/**
-		 * Returns a view for a single "page" type
-		 *
-		 * @param $page
-		 * @return \Illuminate\View\View
-		 */
-		public function getPage($page)
-		{
-			$data               = $this->getVariables();
-			$data['folders']    = $this->init(true)->router->getFolders();
-			return view('sketchpad::pages.' . $page, $data);
-		}
 
 		/**
 		 * Returns a sketchpad\objects\reflection\Controller that can be converted to JSON
@@ -100,9 +92,12 @@ class Sketchpad
 		 * @param   string      $path   The absolute file path to the controller
 		 * @return  Controller          The Controller
 		 */
-		public function getController($path)
+		public function getController($path = null)
 		{
-			return $this->init()->router->getController($path);
+		    $router = $this->init($path == null)->router;
+			return $path
+                ? $router->getController($path)
+                : $router->getControllers();
 		}
 
 
@@ -137,13 +132,13 @@ class Sketchpad
          * @param array $params
          * @return mixed|string
          */
-		public function call($route = '', array $params)
+		public function run($route = '', array $params)
 		{
 			// set up the router, but don't scan
 			$this->init();
 
 			/** @var CallReference $ref */
-			$ref = $this->router->getCall($this->config->route . $route, $params);
+			$ref = $this->router->getCall($route, $params);
 
 			//vd([$ref, $route, $params]);
             //exit;

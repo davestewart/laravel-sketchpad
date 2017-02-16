@@ -3,7 +3,7 @@
 
 	var gulp			= require('gulp'),
 		gutil			= require('gulp-util'),
-		log 			= require('gulp-util').log,
+		argv            = require('yargs'),
 		path			= require('path'),
 		elixir			= require('laravel-elixir'),
 		es2015			= require('babel-preset-es2015'),
@@ -22,7 +22,7 @@
 
 	// elixir input
 	elixir.config.assetsPath		= '../' + elixir.config.assetsPath;
-	elixir.config.sourcemaps		= true;
+	//elixir.config.sourcemaps		= true;
 
 	// elixir output
 	elixir.config.publicPath		= '../publish/assets';
@@ -38,7 +38,7 @@
 	bConfig.plugins.push({
 		name: 'vueify-extract-css',
 		options: {
-			out: assetsPath + 'components.css'
+			out: assetsPath + 'css/components.css'
 		}
 	});
 
@@ -71,6 +71,20 @@
 
 	elixir(function(mix){
 
+		var options = {
+			debug:true,
+			paths:[
+				'../resources/assets/js',
+				'./node_modules',
+				'./build'
+			]
+		}
+
+		var resources   = 'resources/';
+		var assets      = '../publish/assets/';
+		var file        = argv.setup ? 'setup' : 'app';
+		file            = 'app'
+
 		mix
 
 			// lib scripts
@@ -78,25 +92,20 @@
 			[
 				rootPath + 'resources/lib/jquery-1.12.3.min.js',
 				rootPath + 'resources/lib/**/*.js'
-			], '../publish/assets/lib.js')
+			], assets + 'js/lib.js')
 
 			// lib styles
-			.combine(rootPath + 'resources/lib/**/*.css', '../publish/assets/lib.css')
+			.combine(rootPath + 'resources/lib/**/*.css', assets + 'css/lib.css')
 
 			// app styles
-			.sass('app.scss')
+			.sass('app.scss',   assets + 'css/app.css')
+			.sass('setup.scss', assets + 'css/setup.css')
 
 			// app scripts
+			// currently, call gulp watch --setup to run setup
 			.browserify(
-				'resources/assets/js/main.js',
-				'../publish/assets/app.js',
+				'resources/assets/js/' +file+ '.js',
+				assets + 'js/' +file+ '.js',
 				'../',
-				{
-					debug:true,
-					paths:[
-						'../resources/assets/js',
-						'./node_modules',
-						'./build'
-					]
-				});
+				options)
 	});

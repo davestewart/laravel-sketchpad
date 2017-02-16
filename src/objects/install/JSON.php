@@ -24,8 +24,38 @@ class JSON extends Copier
 
     public function load()
     {
-        $text       = file_get_contents($this->src);
-        $this->data = json_decode($text, JSON_OBJECT_AS_ARRAY);
+        if(file_exists($this->src))
+        {
+            $text       = file_get_contents($this->src);
+            $this->data = json_decode($text, JSON_OBJECT_AS_ARRAY);
+            $error      = json_last_error();
+
+            if ($error !== JSON_ERROR_NONE)
+            {
+                switch ($error) {
+                    case JSON_ERROR_DEPTH:
+                        $error = 'Maximum stack depth exceeded';
+                        break;
+                    case JSON_ERROR_STATE_MISMATCH:
+                        $error = 'Underflow or the modes mismatch';
+                        break;
+                    case JSON_ERROR_CTRL_CHAR:
+                        $error = 'Unexpected control character found';
+                        break;
+                    case JSON_ERROR_SYNTAX:
+                        $error = 'Syntax error, malformed JSON';
+                        break;
+                    case JSON_ERROR_UTF8:
+                        $error = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                        break;
+                    default:
+                        $error = 'Unknown error';
+                        break;
+                }
+                throw new \Exception("$error decoding file '{$this->src}'");
+            }
+        }
+
         return $this;
     }
 
@@ -35,7 +65,7 @@ class JSON extends Copier
         return $this;
     }
 
-    public function get($key)
+    public function get($key = '')
     {
         return array_get($this->data, $key);
     }

@@ -19,7 +19,7 @@ Server.prototype =
 	// methods
 
 		/**
-		 * Calls a sketchpad method and returns the result
+		 * Runs a sketchpad method and returns the result
 		 *
 		 * @param 	{Object}	method		A Method object with route and params properties
 		 * @param 	{Function}	done
@@ -27,10 +27,10 @@ Server.prototype =
 		 * @param 	{Function}	always
 		 * @returns {Request}
 		 */
-		call(method, done, fail, always)
+		run(method, done, fail, always)
 		{
-			var route	= method.route;
-			var data	= method.params.map( function(param)
+			const route	= this.base + 'run/' + method.route;
+			const data	= method.params.map( function(param)
 			{
 				let {name, type, value } = param;
 				return {name, type, value}
@@ -67,7 +67,7 @@ Server.prototype =
 
 		loadController(path, onSuccess)
 		{
-			var url = ':load/' + path;
+			var url = 'load/' + path;
 			return onSuccess
 				? this.load(url, onSuccess)
 				: window.open(this.base + url);

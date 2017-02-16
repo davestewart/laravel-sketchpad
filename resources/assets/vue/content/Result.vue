@@ -17,10 +17,10 @@
 					<nav v-if="params" class="navbar navbar-default">
 						<span class="loader"></span>
 						<ul class="nav navbar-nav">
-							<li><button @click="_load()" class="btn btn-xs" style="outline:none">Run</button></li>
-							<li v-for="param in params">
+							<li><button @click="loader.load()" class="btn btn-xs" style="outline:none">Run</button></li>
+							<template v-for="param in params">
 								<param :param="param"></param>
-							</li>
+							</template>
 							<!--<li v-if="! defer && params.length == 0"><span>No parameters</span></li>-->
 						</ul>
 					</nav>
@@ -30,7 +30,7 @@
 		</section>
 
 		<!-- output -->
-		<section id="output" data-format="{{ format }}"></section>
+		<section id="output" :data-format="format"></section>
 
 	</div>
 
@@ -39,10 +39,10 @@
 <script>
 
 // objects
-import settings		from '../js/services/settings.js';
-import server		from '../js/services/server/server.js';
-import Helpers		from '../js/classes/helpers.js';
-import Timer		from '../js/classes/timer.js';
+import settings		from '../../js/state/settings.js';
+import server		from '../../js/services/server/server.js';
+import loader		from '../../js/services/loader';
+import Helpers		from '../../js/classes/helpers.js';
 
 // components
 import Param		from './Param.vue';
@@ -55,15 +55,13 @@ export default
 		Param
 	},
 
-	data:function(){
-
-		return{
+	data ()
+	{
+		return {
 			format		:'',
 			loading		:false,
 			transition	:false,
-			title		:'Sketchpad',
-			info		:'',
-			oldMethod	:null
+			info		:''
 		}
 	},
 
@@ -74,7 +72,7 @@ export default
 
 	computed:
 	{
-		title:function()
+		title ()
 		{
 			var state = this.state;
 			return state.method && state.method.name != 'index'
@@ -84,7 +82,7 @@ export default
 						: 'Sketchpad';
 		},
 
-		info:function()
+		info ()
 		{
 			var state = this.state;
 			return state.method && state.method.name != 'index'
@@ -94,14 +92,14 @@ export default
 						: '';
 		},
 
-		params:function()
+		params ()
 		{
 			return this.state.method
 				? this.state.method.params
 				: null;
 		},
 
-		defer:function()
+		defer ()
 		{
 			if(this.state.method)
 			{
@@ -111,12 +109,12 @@ export default
 			return false;
 		},
 
-		alert:function()
+		alert ()
 		{
 			return this.warning || this.archived;
 		},
 
-		warning:function()
+		warning ()
 		{
 			if(this.state.method)
 			{
@@ -126,7 +124,7 @@ export default
 			return false;
 		},
 
-		archived:function()
+		archived ()
 		{
 			if(this.state.method)
 			{
@@ -136,7 +134,7 @@ export default
 			return false;
 		},
 
-		method:function()
+		method ()
 		{
 			return this.state.method;
 		}
@@ -148,94 +146,83 @@ export default
 		humanize	:Helpers.humanize
 	},
 
-	ready:function()
+	ready ()
 	{
-		this.$output 	= $('#output');
-		this.timer 		= new Timer();
+		// output
+		this.$output 		= $('#output');
+
+		// loader
+		this.loader 		= loader;
+		this.loader.state 	= this.state;
+		this.loader.$on('start', this.onLoaderStart);
+		this.loader.$on('load', this.onLoaderLoad);
+		this.loader.$on('error', this.onLoaderError);
+		this.loader.$on('params', this.onParamsChange);
+
+		// routing
+		this.loader.load()
 	},
 
 	methods:
 	{
+		// ------------------------------------------------------------------------------------------------
+		// loading
+
+			onLoaderStart (clear)
+			{
+				this.loading = true;
+				if(clear)
+				{
+					this.transition = true
+					this.clear()
+				}
+			},
+
+			onLoaderLoad (data, type)
+			{
+				this.setContent(data, type)
+			},
+
+			onLoaderError (data, type)
+			{
+				this.setError(data, type)
+			},
+
+			onParamsChange ()
+			{
+				router.replace('/run/' + this.state.makeRoute(this.state.method));
+			},
+
 
 		// ------------------------------------------------------------------------------------------------
-		// load methods
+		// content methods
 
-			load:function(transition)
+			load ()
 			{
-				if ( ! this.state.method )
-				{
-					this.clear();
-					return;
-				}
-
-				this.transition	= this.state.method !== this.oldMethod;
-                this.loading = ! this.defer;
-
-				// load
-				if( ! this.defer )
-				{
-					this._load(transition);
-				}
-				else
-				{
-					this.clear();
-					if(this.state.method.tags.warning)
-					{
-						//alert(this.state.method.tags.warning || 'Be careful when running this method!');
-					}
-				}
+				this.state.method
+					? this.loader.load()
+					: this.clear()
 			},
 
-			_load:function(transition)
-			{
-				// time load process
-				this.timer.start();
-
-				server
-					.call(this.state.method, this.onLoad, this.onFail, this.onComplete);
-			},
-
-			clear:function()
+			clear ()
 			{
 				return this.$output.empty();
 			},
 
-			loadIframe:function(xhr)
+			setContent (data, contentType = '')
 			{
-				var text	= xhr.responseText;
-				var type	= xhr.getResponseHeader('Content-Type');
-				var src		= 'data:' + type + ',' + encodeURIComponent(text);
-				var $iframe = $('<iframe class="error" frameborder="0">');
-				//var script	= '<script>var b=document.body,h=document.documentElement;parent.setIframeHeight(Math.max(b.scrollHeight,b.offsetHeight,h.clientHeight,h.scrollHeight,h.offsetHeight));</scr' + 'ipt>';
-
-				this.clear().append($iframe.attr('src', src));
-			},
-
-
-
-		// ------------------------------------------------------------------------------------------------
-		// events
-
-			onLoad:function(data, status, xhr)
-			{
-				// variables
-				var method = this.state.method;
-
-				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
 				// properties
 				this.transition 	= false;
-				if(method)
-				{
-					method.error = 0;
-				}
+				this.loading 		= false;
+
+				// variables
+				var method 			= this.state.method;
 
 				// format
-				if(method.tags.iframe)
+				if(method && method.tags.iframe)
 				{
-					return this.loadIframe(xhr);
+					return this.loadIframe(data, contentType);
 				}
-
-				var contentType = xhr.getResponseHeader('Content-Type');
 
 				var $data = $('<div class="data">' + data + '</div>');
 
@@ -256,13 +243,13 @@ export default
 				}
 
 				// clear
-				if(! settings.appendResult && method.tags.append && method !== this.oldMethod)
+				if(! settings.appendResult && method && method.tags.append && method !== this.oldMethod) // need this to clear things
 				{
 					this.$output.empty();
 				}
 
 				// add content
-				settings.appendResult || method.tags.append
+				settings.appendResult || (method && method.tags.append)
 					? this.$output.prepend($data.append('<hr>'))
 					: this.$output.html($data);
 
@@ -281,7 +268,7 @@ export default
 					var result = this;
 					$form
 						.attr('action', '')
-						.on('submit', function(event)
+						.on('submit', event =>
 						{
 							event.preventDefault();
 							var data =
@@ -292,24 +279,25 @@ export default
 							};
 							$
 								.post(data)
-								.done(result.onLoad.bind(this));
+								.done(this.loader.onLoad);
 						});
 				}
 
 			},
 
-			onFail:function(xhr, status, message)
+			setError (text, type)
 			{
-				this.format = 'error';
-				this.state.method.error = 1;
-				this.loadIframe(xhr);
+				this.transition 	= false;
+				this.loading 		= false;
+				this.format 		= 'error';
+				this.loadIframe (text, type);
 			},
 
-			onComplete:function(loaded)
+			loadIframe (text, type)
 			{
-				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
-				this.loading 	= false;
-				this.oldMethod 	= this.state.method;
+				var src		= 'data:' + type + ',' + encodeURIComponent(text);
+				var $iframe = $('<iframe class="error" frameborder="0">');
+				this.clear().append($iframe.attr('src', src));
 			}
 
 	}

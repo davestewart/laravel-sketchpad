@@ -39,7 +39,7 @@ class Setup
 		{
 		    // variables
             $request = app(Request::class);
-		    $path = 'sketchpad/:setup';
+		    $path = 'sketchpad/setup';
 
             // redirect
 			return $request->path() !== $path
@@ -62,15 +62,9 @@ class Setup
             $finder = new Finder();
             $finder->start();
 
-            // paths
-            $paths  = new Paths();
-            $config = new SketchpadConfig();
-
-            // functions
-            function path($path)
-            {
-                return trim(str_replace(base_path(), '', $path), '/');
-            }
+            // config
+            $paths  = app(Paths::class);
+            $config = app(SketchpadConfig::class);
 
             // base name
             $basePath   = base_path() . '/';
@@ -86,14 +80,14 @@ class Setup
 			$data   = app(Sketchpad::class)->getVariables();
 			$vars   =
 			[
-                'assets' => '/sketchpad/:assets/',
+                'assets' => $config->route . 'assets/',
 				'settings' =>
 				[
 					'route'             => $config->route,
 					'basepath'          => $basePath,
 					'basename'          => $baseName,
                     'viewpath'          => $viewPath,
-					'configpath'        => $paths->relative(config_path('sketchpad.php')),
+                    'storagepath'       => $paths->relative($config->settings),
                     'controllerpath'    => trim($paths->relative($finder->path), '/'),
 					'namespace'         => method_exists($app, 'getNamespace')
                                             ? trim($app->getNamespace(), '\\')

@@ -3,35 +3,28 @@
 // ------------------------------------------------------------------------------------------------
 // assets
 
-    // setup assets
-    Route::get  ($config->route . ':assets/{file}', 'AssetsController@asset')->where(['file' => '.*']);
+    Route::get  ($config->route . 'assets/{file}',  'AssetsController@asset')->where(['file' => '.*']);
 
 
 // ------------------------------------------------------------------------------------------------
 // setup
 
-    // setup view
-    Route::get  ($config->route . ':setup', 'SetupController@index');
-
-    // post setup data
-    Route::post ($config->route . ':setup', 'SetupController@submit');
-
-    // test setup has worked correctly
-    Route::get  ($config->route . ':setup/install', 'SetupController@install');
+    Route::get  ($config->route . 'setup',          'SetupController@index');
+    Route::get  ($config->route . 'setup/install',  'SetupController@install');
+    Route::post ($config->route . 'setup/install',  'SetupController@submit');
+    Route::get  ($config->route . 'setup/test',     'SetupController@test');
 
 
 // ------------------------------------------------------------------------------------------------
 // other
 
-    // load content
-    Route::get  ($config->route . ':load/{data?}', 'SketchpadController@controller')->where('data', '.*');
-    Route::get  ($config->route . ':page/{data?}', 'SketchpadController@view')->where('data', '.*');
+    // data
+    Route::get  ($config->route . 'load/{path?}',   'SketchpadController@load')->where('path', '.*');
 
-    // create a new sketchpad controller
-    Route::post ($config->route . ':create', 'SketchpadController@create');
+    // tools
+    Route::post ($config->route . 'run/{params?}',  'SketchpadController@run')->where('params', '.*');
+    Route::post ($config->route . 'settings',       'SketchpadController@settings');
+    Route::post ($config->route . 'create',         'SketchpadController@create');
 
-    // catch-all command
-    //Route::get  ($config->route . ':{command}/{data?}', 'SketchpadController@command')->where('data', '.*');
-
-    // catch-call route
-    Route::match(['GET', 'POST'], $config->route . '{params?}', 'SketchpadController@call')->where('params', '.*');
+    // catch all
+    Route::get  ($config->route . '{params?}',      'SketchpadController@index')->where('params', '.*');

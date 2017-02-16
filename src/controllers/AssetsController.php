@@ -16,22 +16,32 @@ class AssetsController extends Controller
         $paths  = new Paths();
         $path   = $paths->publish("assets/$file");
 
+        // 404
+        if(!file_exists($path))
+        {
+            header("HTTP/1.0 404 Not Found");
+            exit;
+        }
+
         // mimetype
-        $info   = pathinfo($file);
+        $info   = pathinfo($path);
         $ext    = $info['extension'];
         $mimes  =
         [
             'js'    => 'application/javascript',
             'css'   => 'text/css',
+            'gif'   => 'image/gif',
+            'png'   => 'image/png',
             'woff'  => 'application/font-woff',
             'ttf'   => 'application/x-font-ttf',
         ];
         $mime = isset($mimes[$ext])
             ? $mimes[$ext]
-            : 'text/html';
+            : 'application/octet-stream'; //'text/html';
 
         // serve file
         $response = new BinaryFileResponse($path);
+        $response->mustRevalidate();
         $response->headers->set('Content-type', $mime);
         $response->headers->set('Content-length', filesize($path));
         return $response;

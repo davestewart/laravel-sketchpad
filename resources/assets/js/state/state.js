@@ -1,6 +1,9 @@
 import Vue 		from 'vue';
 import store	from './store.js';
 
+/**
+ * Stores the current controller > method > params
+ */
 var State = Vue.extend({
 
 	// ------------------------------------------------------------------------------------------------
@@ -11,7 +14,6 @@ var State = Vue.extend({
 		data ()
 		{
 			return {
-				baseUrl		:$('meta[name="route"]').attr('content'),
 				store		:store,
 				controller	:null,
 				method		:null
@@ -30,7 +32,7 @@ var State = Vue.extend({
 
 		created ()
 		{
-			//console.log(this);
+			console.log(this);
 		},
 
 
@@ -44,24 +46,27 @@ var State = Vue.extend({
 			// public methods
 
 				/**
-				 * Set values from route string
+				 * Update current values from route string and params object
 				 *
-				 * @param route
+				 * @param {string}  route       A route string that matches a controller route (so, not including /sketchpad/run/ prefix)
+				 * @param {Object}  params      A POJO containing name:value pairs
 				 */
-				setRoute (route)
+				setRoute (route, params)
 				{
-					// data
-					var data 				= this.parseRoute(route);
+					// variables
+					let {controller, method} = this.parseRoute(route);
 
 					// state
-					this.controller 		= data.controller;
-					this.method 			= data.method;
-					if(data.method && data.params)
+					this.controller 		= controller;
+					this.method 			= method;
+
+					// update parameters
+					if(method && params)
 					{
-						data.method.params.forEach(function (param, index)
+						method.params.forEach(function (param, index)
 						{
-							var name    = param.name;
-							var value   = data.params[name];
+							const name      = param.name;
+							const value     = params[name];
 							if (typeof value !== 'undefined')
 							{
 								param.value = value;
@@ -70,9 +75,9 @@ var State = Vue.extend({
 					}
 
 					// index fallback
-					if(this.controller && ! this.method)
+					if(controller && ! this.method)
 					{
-						var methods = this.controller.methods.filter(function(m){ return m.name == 'index'; });
+						const methods = controller.methods.filter(function(m){ return m.name == 'index'; });
 						if(methods.length)
 						{
 							this.method = methods.shift();
@@ -80,8 +85,7 @@ var State = Vue.extend({
 					}
 
 					// page
-					var title		= 'Sketchpad - ' + this.route.replace(this.baseUrl, '');
-					document.title 	= title.replace(/\/$/, '').replace(/\//g, ' ▸ ');
+					document.title 	= 'Sketchpad - ' + route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
 				},
 
 				/**
@@ -93,14 +97,6 @@ var State = Vue.extend({
 					this.method 	= null;
 				},
 
-				getLink (url)
-				{
-					url = String(url).replace(location.origin, '');
-					return url.indexOf(this.baseUrl) === 0
-						? url
-						: null;
-				},
-
 
 			// ------------------------------------------------------------------------------------------------
 			// private methods
@@ -108,45 +104,41 @@ var State = Vue.extend({
 				/**
 				 * Gets a Route instance from a route string
 				 *
-				 * @param 	{string}	[route]
+				 * @param 	{string}	route
 				 * @returns {object}
 				 */
 				parseRoute (route)
 				{
-					// parameters
-					route = this.getLink(route || location.href);
-
 					// variables
-					var controller, method, params;
+					let controller, method;
 
 					// assignments
-					controller = this.store.controllers.filter(function(c) { return route.indexOf(c.route) == 0; }).shift();
+					route       = cap(route);
+					controller  = this.store.controllers.filter(function(c) { return route.indexOf(cap(c.route)) === 0; }).shift();
 					if(controller)
 					{
-						method = controller.methods.filter(function(m) { return route.indexOf(m.route) == 0; }).shift();
-					}
-					if(method)
-					{
-						params = location.search.substr(1).split('&')
-							.reduce( function (params, p) {
-								let [name, value] = p.split('=');
-								params[name] = decodeURI(value);
-								return params;
-							}, {});
+						method  = controller.methods.filter(function(m) { return route === cap(m.route); }).shift();
 					}
 
 					// return
-					return {controller, method, params};
+					return {controller, method};
 				},
 
+				/**
+				 * Make a route string from a controller and method
+				 *
+				 * @param   {Object}    method
+				 * @param   {Object}    controller
+				 * @returns {string}
+				 */
 				makeRoute (method, controller)
 				{
 					if(method)
 					{
-						var route = method.route;
+						let route = method.route;
 						if(method.params.length)
 						{
-							var params = method.params.map( p => p.name + '=' + (p.value || '') );
+							let params = method.params.map( p => p.name + '=' + (p.value || '') );
 							route += '?' + params.join('&');
 						}
 						return route;
@@ -154,19 +146,14 @@ var State = Vue.extend({
 					return controller
 						? controller.route
 						: '';
-				},
-
-				getRoute (route)
-				{
-
-				},
-
-				parseQuery ()
-				{
-
 				}
 		}
 
 });
+
+function cap (route)
+{
+	return route.replace(/^\/*|\/*$/g, '/');
+}
 
 export default new State;
