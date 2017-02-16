@@ -87,7 +87,11 @@
 				if(route.path.indexOf('/run/') === 0)
 				{
 					this.state.setRoute(route.params.route, route.query);
-					this.$nextTick( () => this.$refs.content.loader.load())
+					this.$nextTick( () => this.$refs.content.load())
+				}
+				else
+				{
+					this.state.reset()
 				}
 			})
 
@@ -124,7 +128,7 @@
 			{
 
 				var run = this.root + 'run/';
-				if(event.target.href.indexOf(run) === 0)
+				if(event.target.href && event.target.href.indexOf(run) === 0)
 				{
 					event.preventDefault();
 					const path = event.target.href.substr(run.length);

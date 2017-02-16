@@ -46,7 +46,7 @@ const Loader = Vue.extend({
 			{
 				if (!this.state.method)
 				{
-					this.$emit('error', 'No such method');
+					//this.$emit('error', 'No such method');
 					return;
 				}
 

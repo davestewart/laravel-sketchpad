@@ -197,6 +197,18 @@ export default
 		// ------------------------------------------------------------------------------------------------
 		// content methods
 
+			load ()
+			{
+				this.state.method
+					? this.loader.load()
+					: this.clear()
+			},
+
+			clear ()
+			{
+				return this.$output.empty();
+			},
+
 			setContent (data, contentType = '')
 			{
 				// properties
@@ -279,11 +291,6 @@ export default
 				this.loading 		= false;
 				this.format 		= 'error';
 				this.loadIframe (text, type);
-			},
-
-			clear ()
-			{
-				return this.$output.empty();
 			},
 
 			loadIframe (text, type)
