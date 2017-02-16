@@ -65,6 +65,7 @@
 							</div>
 						</div>
 
+						<!--
                         <div id="assets" :class="getClass('assets')">
 							<label for="assets" class="control-label col-sm-3">Assets</label>
 							<div class="col-sm-9">
@@ -77,6 +78,7 @@
 								<p class="help-block hint">{{ hints.assets }}</p>
 							</div>
 						</div>
+						-->
 
                         <div id="route" :class="getClass('route')">
 							<label for="route" class="control-label col-sm-3">Route</label>

@@ -1,45 +1,56 @@
 <template>
 
-	<article>
+	<article id="settings">
 
 		<h1>Settings</h1>
 		<form class="form">
 
 
 			<p>Homepage</p>
-			<li><label><input type="radio" v-model="settings.homepage" value="intro"> Intro</label></li>
-			<li><label><input type="radio" v-model="settings.homepage" value="favourites"> Favourites</label></li>
-			<li><label><input type="radio" v-model="settings.homepage" value="view"> View: ______________________</label></li>
+			<ul>
+				<li><label><input type="radio" v-model="settings.homepage" value="intro"> Intro</label></li>
+				<li><label><input type="radio" v-model="settings.homepage" value="favourites"> Favourites</label></li>
+				<li><label><input type="radio" v-model="settings.homepage" value="view"> View: ______________________</label></li>
+			</ul>
 
 			<p>Paths</p>
-			<li><label><input type="checkbox" v-model="settings.paths"> Project</label></li>
-			<li><label><input type="checkbox" v-model="settings.paths"> Help</label></li>
+			<ul>
+				<li><label><input type="checkbox" v-model="settings.paths"> Project</label></li>
+				<li><label><input type="checkbox" v-model="settings.paths"> Help</label></li>
+			</ul>
 
-			<p>Controllers / Methods</p>
-			<li><label><input type="checkbox" v-model="settings.humanizeNames"> Humanize names</label></li>
-			<li><label><input type="checkbox" v-model="settings.showComments"> Show comments</label></li>
-			<li><label><input type="checkbox" v-model="settings.showArchived"> Show archived</label></li>
+			<p>Navigation</p>
+			<ul>
+				<li><label><input type="checkbox" v-model="settings.humanizeNames"> Humanize names</label></li>
+				<li><label><input type="checkbox" v-model="settings.showComments"> Show comments</label></li>
+				<li><label><input type="checkbox" v-model="settings.showArchived"> Show archived</label></li>
+			</ul>
 
 			<p>Organisation:</p>
-			<li><label><input type="radio" v-model="settings.organisation" value="flat"> Flat</label></li>
-			<li><label><input type="radio" v-model="settings.organisation" value="organise.indented"> Indented</label></li>
-			<li><label><input type="radio" v-model="settings.organisation" value="organise.tree"> Tree</label></li>
+			<ul>
+				<li><label><input type="radio" v-model="settings.organisation" value="flat"> Flat</label></li>
+				<li><label><input type="radio" v-model="settings.organisation" value="organise.indented"> Indented</label></li>
+				<li><label><input type="radio" v-model="settings.organisation" value="organise.tree"> Tree</label></li>
+			</ul>
 
 			<p>Parameters</p>
 
 			<p>Update on:</p>
-			<li><label><input type="radio" v-model="settings.update" value="input"> input</label></li>
-			<li><label><input type="radio" v-model="settings.update" value="change"> change</label></li>
+			<ul>
+				<li><label><input type="radio" v-model="settings.update" value="input"> input</label></li>
+				<li><label><input type="radio" v-model="settings.update" value="change"> change</label></li>
+			</ul>
 
 			<fieldset>
 				<div class="form-group">
-					<label for="inputEmail" class="col-lg-2 control-label"> Email</label>
+					<label for="inputEmail" class="col-lg-2 control-label"> Input</label>
 					<div class="col-lg-10">
 						<input type="text" class="form-control" id="inputEmail" placeholder="Email">
 					</div>
 				</div>
+
 				<div class="form-group">
-					<label for="textArea" class="col-lg-2 control-label"> Textarea</label>
+					<label for="textArea" class="col-lg-2 control-label"> Paths</label>
 					<div class="col-lg-10">
 						<textarea class="form-control" rows="3" id="textArea"></textarea>
 						<span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>

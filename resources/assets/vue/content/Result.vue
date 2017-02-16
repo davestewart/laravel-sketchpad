@@ -256,7 +256,7 @@ export default
 					var result = this;
 					$form
 						.attr('action', '')
-						.on('submit', function(event)
+						.on('submit', event =>
 						{
 							event.preventDefault();
 							var data =
@@ -267,7 +267,7 @@ export default
 							};
 							$
 								.post(data)
-								.done(result.onLoad.bind(this));
+								.done(this.loader.onLoad);
 						});
 				}
 
