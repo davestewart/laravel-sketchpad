@@ -48,7 +48,7 @@ class Sketchpad
 	
 		public function __construct()
 		{
-			$this->config = new SketchpadConfig();
+			$this->config = app(SketchpadConfig::class);
 		}
 
 
@@ -79,7 +79,7 @@ class Sketchpad
 
 		public function isInstalled ()
         {
-            return file_exists(config_path('sketchpad.php'));
+            return file_exists($this->config->settings);
         }
 	
 

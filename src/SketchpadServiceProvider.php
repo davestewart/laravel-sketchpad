@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad;
 
+use davestewart\sketchpad\objects\settings\Paths;
 use davestewart\sketchpad\objects\SketchpadConfig;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Support\ServiceProvider;
@@ -20,7 +21,10 @@ class SketchpadServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
+	    // singletons
+		$this->app->singleton(SketchpadConfig::class);
 		$this->app->singleton(Sketchpad::class);
+		$this->app->singleton(Paths::class);
 
 		// install command
         $this->commands([
@@ -39,14 +43,7 @@ class SketchpadServiceProvider extends ServiceProvider
 
 			$root           = realpath(__DIR__ . '/../') . '/';
 			$views          = $root . 'resources/views';
-            $publish        = $root . 'publish/';
-
-
-        // ------------------------------------------------------------------------------------------------
-        // config
-
-            $this->mergeConfigFrom($publish . 'config/config.php', 'sketchpad');
-            $config         = new SketchpadConfig();
+            $config         = app(SketchpadConfig::class);
 
 
         // ------------------------------------------------------------------------------------------------
@@ -62,11 +59,8 @@ class SketchpadServiceProvider extends ServiceProvider
 			// middleware
 			$parameters =
 			[
-				'namespace'     => 'davestewart\sketchpad\controllers',
-				'middleware'    => $config->middleware,
+				'namespace'     => 'davestewart\sketchpad\controllers'
 			];
-
-            //dd($config);
 
 			// routes
 			Route::group($parameters, function ($router) use ($config)

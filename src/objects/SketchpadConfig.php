@@ -1,4 +1,6 @@
 <?php namespace davestewart\sketchpad\objects;
+use davestewart\sketchpad\objects\install\JSON;
+use davestewart\sketchpad\objects\settings\Paths;
 
 /**
  * Class SketchpadConfig
@@ -14,11 +16,9 @@ class SketchpadConfig
 		/**
 		 * The base route to all Sketchpad calls
 		 *
-		 * @example /sketchpad/
-		 *
 		 * @var string $route
 		 */
-		public $route;
+		public $route   = '/sketchpad/';
 
 		/**
 		 * An array of paths to controller folders
@@ -42,11 +42,11 @@ class SketchpadConfig
 		public $views;
 
 		/**
-		 * An optional array of middleware
+		 * The settings file
 		 *
-		 * @var array $middleware
+		 * @var JSON $settings
 		 */
-		public $middleware;
+		public $settings;
 
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -54,26 +54,30 @@ class SketchpadConfig
 
 		public function __construct()
 		{
-			$config = config('sketchpad');
-			if($config)
-			{
-				foreach($config as $key => $value)
-				{
-					$this->$key = $value;
-				}
+		    $paths              = app(Paths::class);
+		    $settings           = new JSON($paths->storage('settings.json'));
+            $this->settings     = $settings->src;
 
-				// update trailing slash on paths
-                if(is_array($this->paths))
+            if ($settings->exists())
+            {
+                // values
+                $this->route    = $settings->get('config.route');
+                $this->assets   = $settings->get('config.assets');
+                $this->views    = $settings->get('config.views');
+
+                // paths
+                $paths          = $settings->get('config.paths');
+                foreach($paths as $obj)
                 {
-                    $this->paths = array_map(function ($path)
+                    if($obj['enabled'])
                     {
-                        return rtrim($path, '/') . '/';
-                    }, $this->paths);
+                        $this->paths[$obj['name']] = rtrim($obj['path'], '/') . '/';
+                    }
                 }
 
-				// ensure route is bounded by slashes to prevent concatenation issue later
-				$this->route    = '/' . trim($this->route, '/') . '/';
-			}
+                // ensure route is bounded by slashes to prevent concatenation issue later
+                $this->route    = '/' . trim($this->route, '/') . '/';
+            }
 		}
 
 }

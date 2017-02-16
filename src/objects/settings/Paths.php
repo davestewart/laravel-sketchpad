@@ -21,7 +21,7 @@ class Paths
 
         public function __construct()
         {
-            $this->_install  = $this->folder(base_path(config('sketchpad.install')));
+            $this->_install  = $this->folder(base_path('vendor/davestewart/sketchpad/'));
             $this->_storage  = storage_path('vendor/sketchpad/');
         }
 
@@ -91,7 +91,7 @@ class Paths
          */
         public function relative($path)
         {
-            return $this->fix(str_replace(base_path(), '', $path));
+            return $this->fix(str_replace(base_path() . '/', '', $path));
         }
 
         /**

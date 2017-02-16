@@ -26,7 +26,6 @@
 <pre>
 controllers  : {{ options.controllers }}
 views        : {{ options.views }}
-assets       : public/{{ options.assets }}
 </pre>
 
                 <template v-if="options.autoloader">
@@ -85,8 +84,8 @@ composer dump-autoload
 
 			<article id="complete">
 				<h2 class="text-success">Installation complete</h2>
-				<p>The config file is located at:</p>
-                <pre><code>{{ settings.configpath }}</code></pre>
+				<p>The settings file is located at:</p>
+                <pre><code>{{ settings.storagepath }}</code></pre>
 				<p>Click <strong>Next</strong> to start using Sketchpad!</p>
 			</article>
 
@@ -163,7 +162,9 @@ export default
 	{
 	    options()
 	    {
-	        return this.$refs.config.cleanOptions;
+	        return this.$refs.config
+	        	? this.$refs.config.cleanOptions
+	        	: {};
 	    },
 
 	    route()
@@ -172,7 +173,12 @@ export default
 	    }
 	},
 
-	ready()
+	created ()
+	{
+		window.app = this;
+	},
+
+	ready ()
 	{
 		fsm = new StateMachine({
 
@@ -199,9 +205,9 @@ export default
 
                 install(event, fsm)
                 {
-                    console.log(this.options);
+                    console.log(this.options, this.route);
                     jQuery
-                        .post(this.route + ':setup', this.options)
+                        .post(this.route + 'setup/install', this.options)
                         .then(data => {
                             this.results = data;
                             if(data.success)
