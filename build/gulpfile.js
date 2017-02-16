@@ -22,7 +22,7 @@
 
 	// elixir input
 	elixir.config.assetsPath		= '../' + elixir.config.assetsPath;
-	elixir.config.sourcemaps		= true;
+	//elixir.config.sourcemaps		= true;
 
 	// elixir output
 	elixir.config.publicPath		= '../publish/assets';

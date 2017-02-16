@@ -1,3 +1,3 @@
 /.idea
 /build/node_modules
-/publish/assets/*.map
+/publish/assets/**/*.map
