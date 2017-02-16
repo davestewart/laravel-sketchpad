@@ -10,8 +10,9 @@
 // setup
 
     Route::get  ($config->route . 'setup',          'SetupController@index');
-    Route::post ($config->route . 'setup',          'SetupController@submit');
     Route::get  ($config->route . 'setup/install',  'SetupController@install');
+    Route::post ($config->route . 'setup/install',  'SetupController@submit');
+    Route::get  ($config->route . 'setup/test',     'SetupController@test');
 
 
 // ------------------------------------------------------------------------------------------------
