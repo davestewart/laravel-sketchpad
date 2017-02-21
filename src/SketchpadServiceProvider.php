@@ -1,7 +1,7 @@
 <?php namespace davestewart\sketchpad;
 
-use davestewart\sketchpad\objects\settings\Paths;
-use davestewart\sketchpad\objects\SketchpadConfig;
+use davestewart\sketchpad\config\Paths;
+use davestewart\sketchpad\config\SketchpadConfig;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Support\ServiceProvider;
 use Route;

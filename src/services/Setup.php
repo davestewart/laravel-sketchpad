@@ -1,11 +1,11 @@
 <?php namespace davestewart\sketchpad\services;
 
 use Config;
-use davestewart\sketchpad\objects\SketchpadConfig;
+use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Http\Request;
 use davestewart\sketchpad\objects\install\JSON;
-use davestewart\sketchpad\objects\settings\Paths;
-use davestewart\sketchpad\objects\settings\InstallerSettings;
+use davestewart\sketchpad\config\Paths;
+use davestewart\sketchpad\config\InstallerSettings;
 use davestewart\sketchpad\objects\scanners\Finder;
 
 

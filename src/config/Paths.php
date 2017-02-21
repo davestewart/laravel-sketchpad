@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\objects\settings;
+<?php namespace davestewart\sketchpad\config;
 
 /**
  * Paths class
@@ -22,7 +22,7 @@ class Paths
         public function __construct()
         {
             $this->_install  = $this->folder(base_path('vendor/davestewart/sketchpad/'));
-            $this->_storage  = storage_path('vendor/sketchpad/');
+            $this->_storage  = storage_path('sketchpad/');
         }
 
 

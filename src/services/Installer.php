@@ -5,8 +5,8 @@ use davestewart\sketchpad\objects\install\Copier;
 use davestewart\sketchpad\objects\install\Folder;
 use davestewart\sketchpad\objects\install\JSON;
 use davestewart\sketchpad\objects\install\Template;
-use davestewart\sketchpad\objects\settings\Paths;
-use davestewart\sketchpad\objects\settings\InstallerSettings;
+use davestewart\sketchpad\config\Paths;
+use davestewart\sketchpad\config\InstallerSettings;
 
 /**
  * Installs Sketchpad according to the settings saved by the GUI form

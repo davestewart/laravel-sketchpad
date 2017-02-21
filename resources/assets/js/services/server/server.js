@@ -29,7 +29,7 @@ Server.prototype =
 		 */
 		run(method, done, fail, always)
 		{
-			const route	= this.base + 'run/' + method.route;
+			const route	= this.getUrl('api/run/' + method.route);
 			const data	= method.params.map( function(param)
 			{
 				let {name, type, value } = param;
@@ -55,14 +55,20 @@ Server.prototype =
 		 *
 		 * Mainly used for :page/
 		 *
-		 * @param 	{string}	route			The partial route, from '/sketchpad/' onwards
+		 * @param 	{string}	path			The partial route, from '/sketchpad/' onwards
 		 * @param	{Function}	done
-		 * @returns {*}
+		 * @returns {Promise}
 		 */
-		load(route, done)
+		load(path, done)
 		{
-			var url = this.base + route;
+			var url = this.getUrl(path);
 			return $.get(url, done);
+		},
+
+		post(path, data, done)
+		{
+			const url	= this.getUrl(path);
+			return $.post(url, data, done);
 		},
 
 		loadController(path, onSuccess)
@@ -71,6 +77,11 @@ Server.prototype =
 			return onSuccess
 				? this.load(url, onSuccess)
 				: window.open(this.base + url);
+		},
+
+		getUrl(path)
+		{
+			return this.base + path;
 		}
 };
 

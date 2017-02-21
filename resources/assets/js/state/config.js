@@ -9,7 +9,7 @@ export default function ()
 
 	// token
 	const csrf = $('meta[name="csrf-token"]').attr('content');
-	const root = $('meta[name="app-url"]').attr('content');
+	const root = $('meta[name="route"]').attr('content');
 
 	// resource
 	Vue.use(require('vue-resource'));

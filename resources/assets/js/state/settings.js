@@ -1,8 +1,1 @@
-export default
-{
-	useLabels		:true,
-	formatCode		:false,
-	showComments	:true,
-	appendResult	:false
-};
-
+export default JSON.parse($('#settings').text());

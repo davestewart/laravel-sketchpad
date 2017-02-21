@@ -152,7 +152,7 @@ export default
 		Config
 	},
 
-	data:() =>
+	data ()
 	{
 	    data.settings = JSON.parse($('#settings').text() || '{}');
 		return data;

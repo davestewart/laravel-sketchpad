@@ -60,8 +60,7 @@ export default
 		return {
 			format		:'',
 			loading		:false,
-			transition	:false,
-			info		:''
+			transition	:false
 		}
 	},
 
@@ -211,12 +210,13 @@ export default
 
 			setContent (data, contentType = '')
 			{
+				// variables
+				var method 			= this.state.method;
+				var transition      = this.loader.transition;
+
 				// properties
 				this.transition 	= false;
 				this.loading 		= false;
-
-				// variables
-				var method 			= this.state.method;
 
 				// format
 				if(method && method.tags.iframe)
@@ -243,18 +243,18 @@ export default
 				}
 
 				// clear
-				if(! settings.appendResult && method && method.tags.append && method !== this.oldMethod) // need this to clear things
+				if(transition)
 				{
-					this.$output.empty();
+					this.clear();
 				}
 
 				// add content
-				settings.appendResult || (method && method.tags.append)
+				(method && method.tags.append) || settings.ui.appendResult
 					? this.$output.prepend($data.append('<hr>'))
 					: this.$output.html($data);
 
 				// format code blocks
-				if(settings.formatCode)
+				if(settings.ui.formatCode)
 				{
 					$data.find('pre.code, pre > code').each(function(i, block) {
 						hljs.highlightBlock(block);

@@ -5,121 +5,54 @@
 		<h1>Settings</h1>
 		<form class="form">
 
-
-			<p>Homepage</p>
-			<ul>
-				<li><label><input type="radio" v-model="settings.homepage" value="intro"> Intro</label></li>
-				<li><label><input type="radio" v-model="settings.homepage" value="favourites"> Favourites</label></li>
-				<li><label><input type="radio" v-model="settings.homepage" value="view"> View: ______________________</label></li>
-			</ul>
-
-			<p>Paths</p>
-			<ul>
-				<li><label><input type="checkbox" v-model="settings.paths"> Project</label></li>
-				<li><label><input type="checkbox" v-model="settings.paths"> Help</label></li>
-			</ul>
-
-			<p>Navigation</p>
-			<ul>
-				<li><label><input type="checkbox" v-model="settings.humanizeNames"> Humanize names</label></li>
-				<li><label><input type="checkbox" v-model="settings.showComments"> Show comments</label></li>
-				<li><label><input type="checkbox" v-model="settings.showArchived"> Show archived</label></li>
-			</ul>
-
-			<p>Organisation:</p>
-			<ul>
-				<li><label><input type="radio" v-model="settings.organisation" value="flat"> Flat</label></li>
-				<li><label><input type="radio" v-model="settings.organisation" value="organise.indented"> Indented</label></li>
-				<li><label><input type="radio" v-model="settings.organisation" value="organise.tree"> Tree</label></li>
-			</ul>
-
-			<p>Parameters</p>
-
-			<p>Update on:</p>
-			<ul>
-				<li><label><input type="radio" v-model="settings.update" value="input"> input</label></li>
-				<li><label><input type="radio" v-model="settings.update" value="change"> change</label></li>
-			</ul>
-
-			<fieldset>
-				<div class="form-group">
-					<label for="inputEmail" class="col-lg-2 control-label"> Input</label>
-					<div class="col-lg-10">
-						<input type="text" class="form-control" id="inputEmail" placeholder="Email">
-					</div>
-				</div>
-
-				<div class="form-group">
-					<label for="textArea" class="col-lg-2 control-label"> Paths</label>
-					<div class="col-lg-10">
-						<textarea class="form-control" rows="3" id="textArea"></textarea>
-						<span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
-					</div>
-				</div>
-
-
-				<div class="form-group">
-					<label class="col-lg-2 control-label"> Radios</label>
-
-					<div class="col-lg-10">
-						<div class="radio">
-							<label>
-								<input type="radio" v-model=""> Option two can be something else
-							</label>
-						</div>
-					</div>
-
-
-				</div>
-
-				<div class="form-group">
-					<label class="col-lg-2 control-label"> Checkboxes</label>
-
-					<div class="col-lg-10">
-						<div class="checkbox">
-							<label>
-								<input type="radio" v-model=""> Option two can be something else
-							</label>
-						</div>
-					</div>
-
-
-				</div>
-
-				<div class="form-group">
-					<label for="select" class="col-lg-2 control-label"> Selects</label>
-					<div class="col-lg-10">
-						<select class="form-control" id="select">
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-						</select>
-						<br>
-						<select multiple="" class="form-control">
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-lg-10 col-lg-offset-2">
-						<button type="reset" class="btn btn-default">Cancel</button>
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</div>
-				</div>
+			<fieldset name="homepage">
+				<h3>Homepage</h3>
+				<ul>
+					<li><label><input type="radio" v-model="ui.homepage" value="intro"> Intro</label></li>
+					<li><label><input type="radio" v-model="ui.homepage" value="favourites"> Favourites</label></li>
+				</ul>
 			</fieldset>
+
+			<fieldset name="paths">
+				<legend>Paths</legend>
+				<ul class="form-inline" v-sortable="{handle: '.handle', onUpdate: onUpdate}">
+					<li v-for="path in settings.config.paths" class="form-group">
+						<input class="form-control" name="checkbox" type="checkbox" v-model="path.enabled">
+						<input class="form-control" name="name" type="input" v-model="path.name">
+						<input class="form-control" name="path" type="input" v-model="path.path">
+						<i class="handle fa fa-arrows" aria-hidden="true"></i>
+					</li>
+				</ul>
+			</fieldset>
+
+			<fieldset name="ui">
+				<legend>UI</legend>
+				<p>Navigation</p>
+				<ul>
+					<li><label><input type="checkbox" v-model="settings.ui.useLabels"> Use labels</label></li>
+					<li><label><input type="checkbox" v-model="settings.ui.showComments"> Show comments</label></li>
+					<li><label><input type="checkbox" v-model="settings.ui.showArchived"> Show archived</label></li>
+				</ul>
+
+				<p>Output</p>
+				<ul>
+					<li><label><input type="checkbox" v-model="settings.ui.formatCode"> Format code</label></li>
+					<li><label><input type="checkbox" v-model="settings.ui.appendResult"> Append result</label></li>
+				</ul>
+
+			</fieldset>
+
+			<pre>{{ settings | json }}</pre>
+
 		</form>
 	</article>
 
 </template>
 
 <script>
-	
+
+import server from '../../js/services/server/server';
+
 export default
 {
 	props: ['settings'],
@@ -127,6 +60,24 @@ export default
 	data:
 	{
 
+	},
+
+	created ()
+	{
+		this.$watch('settings', this.onChange, {deep:true})
+	},
+
+	methods:
+	{
+		onUpdate: function (event) {
+	        const list = this.settings.config.paths
+	        list.splice(event.newIndex, 0, list.splice(event.oldIndex, 1)[0])
+	    },
+
+		onChange (value, old)
+		{
+			server.post('api/settings', {settings:JSON.stringify(this.settings)}, console.log)
+		}
 	}
 }
 

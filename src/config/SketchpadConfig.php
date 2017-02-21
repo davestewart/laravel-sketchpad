@@ -1,6 +1,6 @@
-<?php namespace davestewart\sketchpad\objects;
+<?php namespace davestewart\sketchpad\config;
 use davestewart\sketchpad\objects\install\JSON;
-use davestewart\sketchpad\objects\settings\Paths;
+use davestewart\sketchpad\config\Paths;
 
 /**
  * Class SketchpadConfig

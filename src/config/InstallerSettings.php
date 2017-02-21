@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\objects\settings;
+<?php namespace davestewart\sketchpad\config;
 
 /**
  * Installer settings
@@ -34,7 +34,7 @@ class InstallerSettings
             $this->path = $storage . 'install.json';
             if( ! file_exists($storage) )
             {
-                mkdir($storage, null, true);
+                mkdir($storage, 0777, true);
             }
             $this->load();
         }

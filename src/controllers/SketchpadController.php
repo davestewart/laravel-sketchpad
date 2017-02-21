@@ -1,5 +1,8 @@
 <?php namespace davestewart\sketchpad\controllers;
 
+use davestewart\sketchpad\objects\install\JSON;
+use davestewart\sketchpad\config\SketchpadSettings;
+use davestewart\sketchpad\config\SketchpadConfig;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
@@ -76,6 +79,25 @@ class SketchpadController extends Controller
         public function load($path = null)
         {
             return response($this->sketchpad->getController($path));
+		}
+
+		/**
+		 * Creates a new controller
+		 *
+		 * @method  POST
+		 * @method  GET
+		 * @param   Request $request
+		 * @return  JSON
+		 */
+		public function settings(Request $request, SketchpadConfig $config)
+		{
+			$settings = new SketchpadSettings();
+			if($request->isMethod('post'))
+			{
+				$data = json_decode($request->get('settings'));
+				$settings->save($data);
+			}
+			return $settings;
 		}
 
 		/**

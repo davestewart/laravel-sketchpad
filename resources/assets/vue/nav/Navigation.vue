@@ -1,6 +1,6 @@
 <template>
 
-	<div id="nav" :class="{comments:settings.showComments}">
+	<div id="nav" :class="{comments:settings.ui.showComments}">
 
 		<div class="sticky">
 

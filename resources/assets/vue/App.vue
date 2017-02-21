@@ -69,7 +69,6 @@
         created ()
         {
             window.app      = this;
-			this.root		= location.origin + $('meta[name="route"]').attr('content'),
             this.server     = server;
         },
 
@@ -126,8 +125,7 @@
 
 			onLinkClick (event)
 			{
-
-				var run = this.root + 'run/';
+				var run = location.origin + server.getUrl('run/');
 				if(event.target.href && event.target.href.indexOf(run) === 0)
 				{
 					event.preventDefault();

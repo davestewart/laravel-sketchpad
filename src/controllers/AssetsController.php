@@ -1,6 +1,6 @@
 <?php namespace davestewart\sketchpad\controllers;
 
-use davestewart\sketchpad\objects\settings\Paths;
+use davestewart\sketchpad\config\Paths;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 

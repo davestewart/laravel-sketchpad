@@ -5,7 +5,7 @@
  *
  * Takes a source template and target file location
  */
-class JSON extends Copier
+class JSON extends Copier implements \JsonSerializable
 {
 
     protected $data;
@@ -59,9 +59,20 @@ class JSON extends Copier
         return $this;
     }
 
-    public function set($key, $value)
+	public function __get($name)
+	{
+		if($name === 'data')
+		{
+			return $this->data;
+		}
+    }
+
+    public function set($key, $value = null)
     {
-        array_set($this->data, $key, $value);
+    	if (is_string($key))
+	    {
+	        array_set($this->data, $key, $value);
+	    }
         return $this;
     }
 
@@ -81,4 +92,8 @@ class JSON extends Copier
         return (bool) file_put_contents($this->trg, $text);
     }
 
+	function jsonSerialize()
+	{
+		return $this->data;
+	}
 }

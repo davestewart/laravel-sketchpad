@@ -1,10 +1,11 @@
 <?php namespace davestewart\sketchpad\services;
 
 use App;
+use davestewart\sketchpad\config\SketchpadSettings;
 use davestewart\sketchpad\objects\reflection\Controller;
 use davestewart\sketchpad\objects\route\CallReference;
 use davestewart\sketchpad\objects\route\ControllerReference;
-use davestewart\sketchpad\objects\SketchpadConfig;
+use davestewart\sketchpad\config\SketchpadConfig;
 use davestewart\sketchpad\traits\GetterTrait;
 use ReflectionMethod;
 
@@ -73,6 +74,7 @@ class Sketchpad
 			[
 				'route'     => $this->config->route,
 				'assets'    => $this->config->route . 'assets/',
+				'settings'  => new SketchpadSettings(),
 			];
 			return $data;
 		}
