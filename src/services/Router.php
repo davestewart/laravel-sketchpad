@@ -201,27 +201,25 @@ class Router
 			return $this->controllers;
 		}
 
-		public function getController($path)
+		public function getController($route)
 		{
-		    $abspath = base_path($path);
-            if(file_exists($abspath))
-            {
-				// variables
-				$path   = strtolower($path);
-				$routes = $this->getRoutes();
+			// variables
+			$route   = strtolower($route);
+			$routes = $this->getRoutes();
 
-				// filter
-				foreach($routes as /** @var ControllerReference */$ref)
+			// filter
+			foreach($routes as /** @var ControllerReference */$ref)
+			{
+				//pr($ref);
+				if(strtolower($ref->route) == $route)
 				{
-					if(strtolower($ref->path) == $path)
-					{
-						$controller = new Controller($ref->abspath, $ref->route);
-						ParamTypeManager::create()->saveOne($controller);
-						return $controller;
-					}
+					$controller = new Controller($ref->abspath, $ref->route);
+					ParamTypeManager::create()->saveOne($controller);
+					return $controller;
 				}
 			}
-			return null;
+
+			throw new \Exception("Invalid controller route '$route'");
 		}
 	
 }
