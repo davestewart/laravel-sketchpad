@@ -57,8 +57,7 @@ class SketchpadController extends Controller
         }
 
         /**
-		 *
-         * Run a method
+         * Run a controller method
          *
 		 * @param   Request     $request
 		 * @param   string      $path
@@ -82,64 +81,22 @@ class SketchpadController extends Controller
 		}
 
 		/**
-		 * Creates a new controller
+		 * Loads or saves settings data
 		 *
 		 * @method  POST
 		 * @method  GET
 		 * @param   Request $request
-		 * @return  JSON
+		 * @param   SketchpadConfig $config
+		 * @return  SketchpadSettings
 		 */
 		public function settings(Request $request, SketchpadConfig $config)
 		{
-			$settings = new SketchpadSettings();
 			if($request->isMethod('post'))
 			{
 				$data = json_decode($request->get('settings'));
-				$settings->save($data);
+				$config->settings->save($data);
 			}
-			return $settings;
-		}
-
-		/**
-		 * Creates a new controller
-		 *
-		 * @method  POST
-		 * @param   Request     $request
-		 */
-		public function create(Request $request)
-		{
-			// get input
-			$input      = $request->all();
-
-			// extract variables
-			$name       = $input['name'];
-			$path       = $input['path'];
-			$members    = $input['members'];
-			$options    = $input['options'];
-
-			// create
-		}
-
-		/**
-		 * Handles commands from the main UI
-		 *
-		 * @param   string      $type
-		 * @param   null        $data
-		 * @return  \Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
-		 */
-		public function command($type, $data = null)
-		{
-			// shows an html page
-			if($type == 'page')
-			{
-				return $this->sketchpad->getPage($data);
-			}
-
-			// loads controller data
-			if($type == 'load')
-			{
-
-			}
+			return $config->settings;
 		}
 
 }

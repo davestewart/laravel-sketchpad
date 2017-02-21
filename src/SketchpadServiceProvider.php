@@ -22,9 +22,9 @@ class SketchpadServiceProvider extends ServiceProvider
 	public function register()
 	{
 	    // singletons
+		$this->app->singleton(Paths::class);
 		$this->app->singleton(SketchpadConfig::class);
 		$this->app->singleton(Sketchpad::class);
-		$this->app->singleton(Paths::class);
 
 		// install command
         $this->commands([

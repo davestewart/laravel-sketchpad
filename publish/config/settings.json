@@ -17,7 +17,7 @@
 		"views": "",
 		"assets": ""
 	},
-	"settings": {
+	"ui": {
 		"useLabels": true,
 		"formatCode": false,
 		"showComments": true,

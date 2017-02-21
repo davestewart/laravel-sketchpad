@@ -56,7 +56,7 @@ Server.prototype =
 		 * Mainly used for :page/
 		 *
 		 * @param 	{string}	path			The partial route, from '/sketchpad/' onwards
-		 * @param	{Function}	done
+		 * @param	{Function}	[done]          An optional onLoad handler
 		 * @returns {Promise}
 		 */
 		load(path, done)

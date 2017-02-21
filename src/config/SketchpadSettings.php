@@ -17,8 +17,8 @@ class SketchpadSettings extends JSON
 
 		public function __construct()
 		{
-			$config = app(SketchpadConfig::class);
-			parent::__construct($config->settings);
+			$paths = app(Paths::class);
+			parent::__construct($paths->storage('settings.json'));
 		}
 
 

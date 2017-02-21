@@ -74,14 +74,14 @@ class Sketchpad
 			[
 				'route'     => $this->config->route,
 				'assets'    => $this->config->route . 'assets/',
-				'settings'  => new SketchpadSettings(),
+				'settings'  => $this->config->settings->data,
 			];
 			return $data;
 		}
 
 		public function isInstalled ()
         {
-            return file_exists($this->config->settings);
+            return $this->config->settings->exists();
         }
 	
 

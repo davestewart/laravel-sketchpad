@@ -1,5 +1,6 @@
 import Vue 		from 'vue';
 import server	from '../services/server/server';
+
 /**
  * The controllers store
  *
@@ -19,12 +20,10 @@ var Store = Vue.extend({
 	created ()
 	{
 		const self = this;
+		this.server = server;
 
 		if(window.LiveReload)
 		{
-			// server
-			this.server = server;
-
 			// proxies
 			const reload 	= LiveReload.reloader.reload;
 
@@ -55,6 +54,18 @@ var Store = Vue.extend({
 
 		// ------------------------------------------------------------------------------------------------
 		// loading
+
+			reloadAll ()
+			{
+				this.server
+					.load('api/load')
+					.then(this.setControllers)
+			},
+
+			setControllers (data)
+			{
+				this.controllers = data
+			},
 
 			/**
 			 * Delegated livereload function

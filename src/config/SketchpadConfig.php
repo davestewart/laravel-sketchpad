@@ -1,6 +1,7 @@
 <?php namespace davestewart\sketchpad\config;
+
 use davestewart\sketchpad\objects\install\JSON;
-use davestewart\sketchpad\config\Paths;
+use davestewart\sketchpad\config\SketchpadSettings;
 
 /**
  * Class SketchpadConfig
@@ -11,7 +12,7 @@ class SketchpadConfig
 {
 
 	// -----------------------------------------------------------------------------------------------------------------
-	// PROPERTIES
+	// properties
 
 		/**
 		 * The base route to all Sketchpad calls
@@ -42,42 +43,50 @@ class SketchpadConfig
 		public $views;
 
 		/**
-		 * The settings file
+		 * The settings file as a JSON class
 		 *
-		 * @var JSON $settings
+		 * @var SketchpadSettings $settings
 		 */
 		public $settings;
 
 
 	// -----------------------------------------------------------------------------------------------------------------
-	// INSTANTIATION
+	// instantiation
 
 		public function __construct()
 		{
-		    $paths              = app(Paths::class);
-		    $settings           = new JSON($paths->storage('settings.json'));
-            $this->settings     = $settings->src;
+		    $this->settings     = new SketchpadSettings();
+			$this->load();
+		}
 
-            if ($settings->exists())
-            {
-                // values
-                $this->route    = $settings->get('config.route');
-                $this->assets   = $settings->get('config.assets');
-                $this->views    = $settings->get('config.views');
+	// -----------------------------------------------------------------------------------------------------------------
+	// methods
 
-                // paths
-                $paths          = $settings->get('config.paths');
-                foreach($paths as $obj)
-                {
-                    if($obj['enabled'])
-                    {
-                        $this->paths[$obj['name']] = rtrim($obj['path'], '/') . '/';
-                    }
-                }
+		public function load()
+		{
+			if ($this->settings->exists())
+			{
+				$settings       = $this->settings;
 
-                // ensure route is bounded by slashes to prevent concatenation issue later
-                $this->route    = '/' . trim($this->route, '/') . '/';
-            }
+				// values
+				$this->route    = $settings->get('config.route');
+				$this->assets   = $settings->get('config.assets');
+				$this->views    = $settings->get('config.views');
+				$paths          = $settings->get('config.paths');
+
+				// ensure route is bounded by slashes to prevent concatenation issue later
+				$this->route    = '/' . trim($this->route, '/') . '/';
+
+				// paths
+				foreach($paths as $obj)
+				{
+					if($obj['enabled'])
+					{
+						$this->paths[$obj['name']] = rtrim($obj['path'], '/') . '/';
+					}
+				}
+			}
+
 		}
 
 }

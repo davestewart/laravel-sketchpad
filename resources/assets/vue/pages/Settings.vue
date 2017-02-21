@@ -8,14 +8,14 @@
 			<fieldset name="homepage">
 				<h3>Homepage</h3>
 				<ul>
-					<li><label><input type="radio" v-model="ui.homepage" value="intro"> Intro</label></li>
-					<li><label><input type="radio" v-model="ui.homepage" value="favourites"> Favourites</label></li>
+					<li><label><input type="radio" v-model="settings.ui.homepage" value="intro"> Intro</label></li>
+					<li><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> Favourites</label></li>
 				</ul>
 			</fieldset>
 
 			<fieldset name="paths">
 				<legend>Paths</legend>
-				<ul class="form-inline" v-sortable="{handle: '.handle', onUpdate: onUpdate}">
+				<ul class="form-inline" v-sortable="{handle: '.handle', onUpdate: onPathsReorder}">
 					<li v-for="path in settings.config.paths" class="form-group">
 						<input class="form-control" name="checkbox" type="checkbox" v-model="path.enabled">
 						<input class="form-control" name="name" type="input" v-model="path.name">
@@ -64,20 +64,29 @@ export default
 
 	created ()
 	{
-		this.$watch('settings', this.onChange, {deep:true})
+		this.$watch('settings', this.onSettingsChange, {deep:true})
+		this.$watch('settings.config.paths', this.onPathsChange, {deep:true})
 	},
 
 	methods:
 	{
-		onUpdate: function (event) {
-	        const list = this.settings.config.paths
-	        list.splice(event.newIndex, 0, list.splice(event.oldIndex, 1)[0])
-	    },
-
-		onChange (value, old)
+		onSettingsChange (value, old)
 		{
 			server.post('api/settings', {settings:JSON.stringify(this.settings)}, console.log)
-		}
+		},
+
+		onPathsChange (value, old)
+		{
+			server
+				.post('api/settings', {settings:JSON.stringify(this.settings)})
+				.then(data => app.store.reloadAll())
+		},
+
+		onPathsReorder: function (event) {
+	        const list = this.settings.config.paths
+	        list.splice(event.newIndex, 0, list.splice(event.oldIndex, 1)[0])
+	    }
+
 	}
 }
 
