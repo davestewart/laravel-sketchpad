@@ -107,7 +107,7 @@
 
 	}
 
-	.form-control{
+	.form-control {
 		background-color:rgba(220,228,236,0.4);
 		border:none;
 		padding:9px 10px;
@@ -115,20 +115,26 @@
 		height:40px;
 	}
 
-    /*
-	button{
-		color:#666;
+	input[type="radio"],
+	input[type="checkbox"] {
+		width:20px;
 	}
 
-	button:active{
-		background:#666;
-		color:#FFF;
-	}
 
-	button:hover{
-		color:#FFF;
-	}
-    */
+/*
+button{
+	color:#666;
+}
+
+button:active{
+	background:#666;
+	color:#FFF;
+}
+
+button:hover{
+	color:#FFF;
+}
+*/
 
 
 // ------------------------------------------------------------------------------------------------

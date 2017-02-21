@@ -285,10 +285,51 @@
 
 	}
 
-    #settings ul {
-        list-style: none;
+    #settings {
+
+	    form {
+		    margin-top: 1.5em;
+	    }
+
+	    ul {
+		    list-style: none;
+		    margin-left: 15px;
+		    padding: 0;
+	    }
+
+	    li {
+		    width: 100%;
+	    }
+
+	    fieldset[name="paths"] {
+
+		    .handle {
+			    color:#CCC;
+			    text-align: center;
+			    width: 15px;
+		    }
+
+		    input[type="input"][name="name"] {
+			    width:20%;
+		    }
+
+		    input[type="input"][name="path"] {
+			    width:70%;
+		    }
+
+	    }
+
     }
 
+    .sortable-chosen {
+	    opacity: .9;
+	    z-index: 100;
+	    background: #FFF;
+    }
+
+    .sortable-ghost {
+	    opacity: .3;
+    }
 
 	.table.debug{
 
