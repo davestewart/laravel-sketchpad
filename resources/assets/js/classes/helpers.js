@@ -4,14 +4,14 @@ export default
 {
 	getMethodLabel:function(method)
 	{
-		return settings.useLabels
+		return settings.ui.useLabels
 			? this.humanize(method.label)
 			: method.label + '()';
 	},
 
 	getControllerLabel:function(method)
 	{
-		return settings.useLabels
+		return settings.ui.useLabels
 			? this.humanize(method.label)
 			: method.label;
 	},

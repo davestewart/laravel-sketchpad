@@ -1,7 +1,12 @@
 import Vue          from 'vue'
 import VueRouter    from 'vue-router'
+import Sortable     from 'vue-sortable'
+
+Vue.use(Sortable);
+Vue.use(VueRouter);
 
 import config       from './state/config'
+config();
 
 import Run          from '../vue/content/Result.vue'
 import Home         from '../vue/pages/Home.vue'
@@ -9,10 +14,6 @@ import Help         from '../vue/pages/Help.vue'
 import Settings     from '../vue/pages/Settings.vue'
 
 import App          from '../vue/App.vue'
-
-Vue.use(VueRouter);
-
-config();
 
 window.router = new VueRouter({
 	root: $('meta[name="route"]').attr('content'),
