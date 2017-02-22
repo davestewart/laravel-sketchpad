@@ -2,7 +2,7 @@
 
 	<header id="top-nav" class="navbar navbar-default">
 
-		<div class="container">
+		<div class="container-fluid">
 
 			<div class="navbar-header">
 				<a v-link="'/'" class="navbar-brand">Sketchpad</a>

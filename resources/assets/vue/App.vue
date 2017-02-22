@@ -4,7 +4,7 @@
 
 		<top-nav :route="state.baseUrl"></top-nav>
 
-		<div class="container">
+		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-4">
 					<navigation v-ref:navigation :controllers="store.controllers" :state="state" :settings="settings"></navigation>
