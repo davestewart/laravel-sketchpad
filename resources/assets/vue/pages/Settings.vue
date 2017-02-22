@@ -1,22 +1,14 @@
 <template>
 
 	<article id="settings">
-
-		<h1>Settings</h1>
-		<form class="form">
-
-			<fieldset name="homepage">
-				<h3>Homepage</h3>
-				<ul>
-					<li><label><input type="radio" v-model="settings.ui.homepage" value="intro"> Intro</label></li>
-					<li><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> Favourites</label></li>
-				</ul>
-			</fieldset>
-
+		<header>
+			<h1>Settings</h1>
+		</header>
+		<section>
 			<fieldset name="paths">
 				<legend>Paths</legend>
 				<ul class="form-inline" v-sortable="{handle: '.handle', onUpdate: onPathsReorder}">
-					<li v-for="path in settings.config.paths" class="form-group">
+					<li v-for="path in settings.config.paths" class="form-group form-group-sm">
 						<input class="form-control" name="checkbox" type="checkbox" v-model="path.enabled">
 						<input class="form-control" name="name" type="input" v-model="path.name">
 						<input class="form-control" name="path" type="input" v-model="path.path">
@@ -27,24 +19,34 @@
 
 			<fieldset name="ui">
 				<legend>UI</legend>
-				<p>Navigation</p>
-				<ul>
-					<li><label><input type="checkbox" v-model="settings.ui.useLabels"> Use labels</label></li>
-					<li><label><input type="checkbox" v-model="settings.ui.showComments"> Show comments</label></li>
-					<li><label><input type="checkbox" v-model="settings.ui.showArchived"> Show archived</label></li>
-				</ul>
 
-				<p>Output</p>
-				<ul>
-					<li><label><input type="checkbox" v-model="settings.ui.formatCode"> Format code</label></li>
-					<li><label><input type="checkbox" v-model="settings.ui.appendResult"> Append result</label></li>
-				</ul>
+				<section style="margin-left:25px">
+
+					<label>Homepage</label>
+					<ul>
+						<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="welcome"> Welcome</label></li>
+						<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> Favourites</label></li>
+						<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="search"> Search</label></li>
+					</ul>
+
+					<label>Navigation</label>
+					<ul>
+						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.humanizeText"> Humanize text</label></li>
+						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.showComments"> Show comments</label></li>
+						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.showArchived"> Show archived</label></li>
+					</ul>
+
+					<label>Output</label>
+					<ul>
+						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.formatCode"> Format code</label></li>
+						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.appendOutput"> Append output</label></li>
+					</ul>
+
+				</section>
 
 			</fieldset>
+		</section>
 
-			<pre>{{ settings | json }}</pre>
-
-		</form>
 	</article>
 
 </template>

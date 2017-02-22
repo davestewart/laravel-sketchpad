@@ -14,24 +14,20 @@
 
 	section#output {
 		body[data-mode="home"] &,
-		body[data-mode="help"] &{
+		body[data-mode="help"] & {
 			// max-width: 700px;
 		}
 	}
 
 	section#controllers,
-	section#methods{
+	section#methods {
 		height:100%;
 		padding-bottom:100px;
 		border-right:1px solid #eee;
 	}
 
-	section#controllers{
+	section#controllers {
 		border-right:0;
-	}
-
-	#content{
-		max-width:700px;
 	}
 
 
@@ -39,27 +35,34 @@
 // formatting
 // ------------------------------------------------------------------------------------------------
 
-	#welcome{
-		display:none;
+	#content header {
+		height: 110px;
 	}
 
-	#nav{
+	#nav {
+		margin-top: 113px;
+	}
 
+	#favourites {
+		margin: 25px 0 0 15px;
+	}
+
+	.controller-list {
+
+		// state
+		transition: opacity 0.3s;
         &.comments p.comment {
+	        margin-bottom: 1em;
             height:17px;
         }
 
         p.comment {
             transition: 0.5s all;
+	        margin-bottom: 0;
             height:0;
         }
 
-		// position
-		margin-top: 113px;
-
-		// state
-		transition: opacity 0.3s;
-
+		// stuff
 		body[data-mode="help"] &{
 			opacity: 0.2;
 		}
@@ -70,7 +73,7 @@
 
 		li.folder {
 			&:first-child{
-				margin-top:-30px !important;
+				margin-top:-28px !important;
 			}
 			padding: 3px 5px;
 			border-bottom: 1px dashed #EEE;
@@ -252,7 +255,11 @@
         }
 	}
 
-	#params nav .loader{
+	#params {
+		margin-top: 2px;
+	}
+
+	#params .loader{
 		position: absolute;
 		display: block;
 		width:16px;
@@ -297,11 +304,11 @@
 		    padding: 0;
 	    }
 
-	    li {
-		    width: 100%;
-	    }
-
 	    fieldset[name="paths"] {
+
+		    li {
+			    width: 100%;
+		    }
 
 		    .handle {
 			    color:#CCC;

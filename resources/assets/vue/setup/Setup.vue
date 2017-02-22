@@ -2,7 +2,9 @@
 
 	<div id="setup">
 
-		<h1>Setup</h1>
+		<header>
+			<h1>Setup</h1>
+		</header>
 
 		<section id="steps">
 

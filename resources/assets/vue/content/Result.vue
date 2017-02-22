@@ -249,7 +249,7 @@ export default
 				}
 
 				// add content
-				(method && method.tags.append) || settings.ui.appendResult
+				(method && method.tags.append) || settings.ui.appendOutput
 					? this.$output.prepend($data.append('<hr>'))
 					: this.$output.html($data);
 

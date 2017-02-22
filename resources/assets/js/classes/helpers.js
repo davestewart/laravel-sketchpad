@@ -2,16 +2,28 @@ import settings from '../state/settings.js';
 
 export default
 {
+	getFolderHtml (route)
+	{
+		var name 	= '<span class="name">';
+		var divider	= '<span class="divider">&#9656;</span> ';
+		var close	= '</span> ';
+
+		return name + route
+				.replace(/\/$/, '')
+				.split('/')
+				.join(close + divider + name) + close;
+	},
+
 	getMethodLabel:function(method)
 	{
-		return settings.ui.useLabels
+		return settings.ui.humanizeText
 			? this.humanize(method.label)
 			: method.label + '()';
 	},
 
 	getControllerLabel:function(method)
 	{
-		return settings.ui.useLabels
+		return settings.ui.humanizeText
 			? this.humanize(method.label)
 			: method.label;
 	},

@@ -1,6 +1,6 @@
 <template>
 
-	<div id="nav" :class="{comments:settings.ui.showComments}">
+	<div id="nav" :class="{'controller-list':true, comments:settings.ui.showComments}">
 
 		<div class="sticky">
 
@@ -15,7 +15,8 @@
 							v-if="! $index || controllers[$index -1].folder !== controllers[$index].folder"
 							class="folder"
 							>
-							{{{ getLinkHtml(controller.folder) }}}
+							{{{ controller.methods[0].name }}}
+							{{{ getFolderHtml(controller.folder) }}}
 						</li>
 						<li
 							:class="{ controller:true, active:isActive(controller.route) }"
@@ -78,11 +79,13 @@ export default
 
 	ready ()
 	{
+		/*
 		this.$watch('state.controller', function ()
 		{
-			//$(this.$el).find('a[title]').tooltip({container:'body', trigger:'hover', placement:'right', delay: { "show": 500, "hide": 100 }})
+			$(this.$el).find('a[title]').tooltip({container:'body', trigger:'hover', placement:'right', delay: { "show": 500, "hide": 100 }})
 		});
-
+		*/
+		//this.$watch('controllers', value => this.$forceUpdate())
 	},
 
 	computed:
@@ -101,16 +104,9 @@ export default
 			return Helpers.getControllerLabel(obj);
 		},
 
-		getLinkHtml (route)
+		getFolderHtml (route)
 		{
-			var name 	= '<span class="name">';
-			var divider	= '<span class="divider">&#9656;</span> ';
-			var close	= '</span> ';
-
-			return name + route
-				.replace(/\/$/, '')
-				.split('/')
-				.join(close + divider + name) + close;
+			return Helpers.getFolderHtml(route);
 		},
 
 		isActive (route)

@@ -1,7 +1,9 @@
 <template>
 
 	<article>
-		<h1>New Controller</h1>
+		<header>
+			<h1>New Controller</h1>
+		</header>
 
 		<form class="form-horizontal">
 

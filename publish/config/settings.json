@@ -18,13 +18,14 @@
 		"assets": ""
 	},
 	"ui": {
-		"useLabels": true,
-		"formatCode": false,
+		"homepage": "welcome",
+		"humanizeText": true,
 		"showComments": true,
-		"appendResult": false,
-		"homepage": "intro",
-		"navigation": "flat",
-		"updateOn": "input",
+		"showArchived": true,
+		"appendOutput": false,
+		"formatCode": false
+	},
+	"assets" : {
 		"head": ""
 	}
 }
