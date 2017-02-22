@@ -4,6 +4,8 @@
  * File templating class
  *
  * Takes a source template and target file location
+ *
+ * @property \StdClass $data
  */
 class JSON extends Copier implements \JsonSerializable
 {
@@ -43,7 +45,7 @@ class JSON extends Copier implements \JsonSerializable
                         $error = 'Unexpected control character found';
                         break;
                     case JSON_ERROR_SYNTAX:
-                        $error = 'Syntax error, malformed JSON';
+                        $error = 'Malformed JSON';
                         break;
                     case JSON_ERROR_UTF8:
                         $error = 'Malformed UTF-8 characters, possibly incorrectly encoded';
@@ -52,7 +54,7 @@ class JSON extends Copier implements \JsonSerializable
                         $error = 'Unknown error';
                         break;
                 }
-                throw new \Exception("$error decoding file '{$this->src}'");
+                throw new \Exception("$error in '{$this->src}'");
             }
         }
 

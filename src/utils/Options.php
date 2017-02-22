@@ -1,9 +1,9 @@
 <?php namespace davestewart\sketchpad\utils;
 
 /**
- * Options class
+ * Utility class to covert to and from string based options, similar to Laravel validation
  *
- * ${CARET}
+ * See parse() method for more information
  */
 class Options
 {

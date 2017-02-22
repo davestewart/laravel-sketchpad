@@ -157,8 +157,8 @@ class Sketchpad
 				{
 					if($e instanceof \ReflectionException)
 					{
-						$sketchpad = str_replace($this->config->route, '', $ref->route) . $ref->method . '/';
-						$this->abort($sketchpad, 'method');
+						//$sketchpad = str_replace($this->config->route, '', $ref->route) . $ref->method . '/';
+						$this->abort($ref->route . '::' . $ref->method . '()', 'method');
 					}
 				}
 

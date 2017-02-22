@@ -87,7 +87,7 @@ class Setup
 					'basepath'          => $basePath,
 					'basename'          => $baseName,
                     'viewpath'          => $viewPath,
-                    'storagepath'       => $paths->relative($config->settings),
+                    'storagepath'       => $paths->relative($config->settings->src),
                     'controllerpath'    => trim($paths->relative($finder->path), '/'),
 					'namespace'         => method_exists($app, 'getNamespace')
                                             ? trim($app->getNamespace(), '\\')
