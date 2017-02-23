@@ -1,22 +1,18 @@
 <?php
 
 // ------------------------------------------------------------------------------------------------
-// assets
-
-    Route::get  ($config->route . 'assets/{file}',      'AssetsController@asset')->where(['file' => '.*']);
-
-
-// ------------------------------------------------------------------------------------------------
 // api
 
-    // data
-    Route::post ($config->route . 'api/run/{params?}',  'SketchpadController@run')->where('params', '.*');
-    Route::get  ($config->route . 'api/load/{path?}',   'SketchpadController@load')->where('path', '.*');
+    // api
+    Route::post ($config->route . 'api/run/{params?}',  'ApiController@run')->where('params', '.*');
+    Route::get  ($config->route . 'api/load/{path?}',   'ApiController@load')->where('path', '.*');
 
-    // other
-    Route::get  ($config->route . 'api/settings',       'SketchpadController@settings');
-    Route::post ($config->route . 'api/settings',       'SketchpadController@settings');
-    Route::post ($config->route . 'api/create',         'SketchpadController@create');
+    // settings
+    Route::get  ($config->route . 'api/settings',       'ApiController@settings');
+    Route::post ($config->route . 'api/settings',       'ApiController@settings');
+
+    // tools
+    Route::post ($config->route . 'api/create',         'ApiController@create');
 
 
 // ------------------------------------------------------------------------------------------------
@@ -29,6 +25,7 @@
 
 
 // ------------------------------------------------------------------------------------------------
-// catch all
+// sketchpad
 
+    Route::get  ($config->route . 'assets/{file}',      'SketchpadController@asset')->where(['file' => '.*']);
     Route::get  ($config->route . '{params?}',          'SketchpadController@index')->where('params', '.*');
