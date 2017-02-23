@@ -29,7 +29,7 @@ Server.prototype =
 		 */
 		run(method, done, fail, always)
 		{
-			const route	= this.getUrl('api/run/' + method.route);
+			const route	= this.getRunUrl(method);
 			const data	= method.params.map( function(param)
 			{
 				let {name, type, value } = param;
@@ -71,12 +71,17 @@ Server.prototype =
 			return $.post(url, data, done);
 		},
 
-		loadController(path, onSuccess)
+		loadController(route, onSuccess)
 		{
-			var url = 'load/' + path;
+			var url = 'api/load/' + route;
 			return onSuccess
 				? this.load(url, onSuccess)
 				: window.open(this.base + url);
+		},
+
+		getRunUrl(method)
+		{
+			return this.getUrl('api/run/' + method.route);
 		},
 
 		getUrl(path)

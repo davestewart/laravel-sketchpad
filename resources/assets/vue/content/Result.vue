@@ -262,7 +262,7 @@ export default
 				}
 
 				// handle forms
-				var $form = $data.find('form[action=""]');
+				var $form = $data.find('form[action=""],form:not([action])');
 				if($form.length)
 				{
 					var result = this;
@@ -274,7 +274,7 @@ export default
 							var data =
 							{
 								type        : 'POST',
-								url         : window.location.href,
+								url         : server.getRunUrl(method),
 								data        : $form.serialize()
 							};
 							$
