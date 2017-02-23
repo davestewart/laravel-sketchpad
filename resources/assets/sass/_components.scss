@@ -36,7 +36,12 @@
 // ------------------------------------------------------------------------------------------------
 
 	#content header {
-		height: 110px;
+		min-height: 110px;
+
+		p {
+			margin-bottom: 0;
+			padding: 0;
+		}
 	}
 
 	#nav {
@@ -184,7 +189,7 @@
 			border-left: 5px solid #ecf0f1;
 			*/
 
-			padding: 3px 0px;
+			// padding: 3px 0px;
 			//margin: 0 0 10px;
 			//border-left: 5px solid #ecf0f1;
 		}
@@ -257,6 +262,10 @@
 
 	#params {
 		margin-top: 2px;
+
+		.navbar {
+			//margin-bottom :0;
+		}
 	}
 
 	#params .loader{
