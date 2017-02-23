@@ -14,7 +14,7 @@
 
 <script>
 
-import Controllers  from '../../components/ControllerList.vue'
+import Controllers  from './components/ControllerList.vue'
 
 export default
 {

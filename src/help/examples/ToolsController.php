@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\demo;
+<?php namespace davestewart\sketchpad\help\examples;
 
 use App\data\entities\User;
 use Illuminate\Http\Request;
@@ -155,7 +155,7 @@ class ToolsController extends Controller
 			];
 		}
 
-		echo vue('sketchpad::demo.vue.routes', ['data' => $array]);
+		echo vue('sketchpad::help.vue.routes', ['data' => $array]);
 	}
 
     /**
@@ -202,7 +202,7 @@ class ToolsController extends Controller
                 $files          = array_filter($objects, function($f) use ($path) { return is_file($path . '/' . $f); });
                 $path           = rtrim($path, '/') . '/';
 
-                return view('sketchpad::demo.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
+                return view('sketchpad::help.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
             }
             catch(\Exception $e)
             {

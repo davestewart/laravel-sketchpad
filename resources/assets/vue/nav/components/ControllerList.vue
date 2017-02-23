@@ -20,9 +20,9 @@
 
 <script>
 
-import store    from '../../js/state/store'
-import settings from '../../js/state/settings'
-import Helpers  from '../../js/classes/helpers'
+import store    from '../../../js/state/store'
+import settings from '../../../js/state/settings'
+import Helpers  from '../../../js/classes/helpers'
 	
 export default
 {

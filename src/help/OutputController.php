@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\demo;
+<?php namespace davestewart\sketchpad\help;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Translation\Translator;
@@ -162,7 +162,7 @@ class OutputController extends Controller
 	 */
 	public function markdown()
 	{
-		echo md('sketchpad::demo.md.text');
+		echo md('sketchpad::help.md.text');
 	}
 
 	/**
@@ -170,7 +170,7 @@ class OutputController extends Controller
 	 */
 	public function vue()
 	{
-		echo vue('sketchpad::demo.vue.form', ['name' => 'World']);
+		echo vue('sketchpad::help.vue.form', ['name' => 'World']);
 	}
 
 	protected function data()

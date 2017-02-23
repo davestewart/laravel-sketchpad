@@ -9,8 +9,8 @@
 				"enabled": true
 			},
 			{
-				"name": "demo",
-				"path": "vendor/davestewart/sketchpad/src/demo/",
+				"name": "help",
+				"path": "vendor/davestewart/sketchpad/src/help/",
 				"enabled": true
 			}
 		],
@@ -18,12 +18,12 @@
 		"assets": ""
 	},
 	"ui": {
-		"homepage": "welcome",
 		"humanizeText": true,
 		"showComments": true,
 		"showArchived": true,
 		"appendOutput": false,
-		"formatCode": false
+		"formatCode": false,
+		"homepage": "welcome"
 	},
 	"assets" : {
 		"head": ""

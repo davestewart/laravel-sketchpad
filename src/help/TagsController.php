@@ -1,6 +1,5 @@
-<?php namespace davestewart\sketchpad\demo;
+<?php namespace davestewart\sketchpad\help;
 
-use davestewart\sketchpad\objects\SketchpadConfig;
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
 use Illuminate\View\View;
@@ -68,7 +67,7 @@ li.fancy{
     left:-3px;
     top:-3px;
 }</pre>
-<p>See the <a href="/sketchpad/demo/basics/userassets/">user assets</a> section for more information.</p>
+<p>See the <a href="../basics/userassets">user assets</a> section for more information.</p>
 <script>function toggleUserStyles()
 {
 	var $link = $('link[href$="user.css"]');
