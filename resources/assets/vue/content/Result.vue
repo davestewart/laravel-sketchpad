@@ -51,6 +51,7 @@ import Param		from './Param.vue';
 
 export default
 {
+	name: 'Result',
 
 	components:
 	{

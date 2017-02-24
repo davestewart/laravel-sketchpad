@@ -13,6 +13,8 @@ import Welcome      from './Welcome.vue'
 
 export default
 {
+	name: 'Home',
+
 	data ()
 	{
 		return {homepage: settings.ui.homepage}

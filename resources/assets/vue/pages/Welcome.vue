@@ -31,7 +31,7 @@
 	
 export default
 {
-
+	name: 'Welcome'
 }
 
 </script>

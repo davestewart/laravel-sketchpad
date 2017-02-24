@@ -20,6 +20,8 @@
 	
 export default
 {
+	name: 'Param',
+
 	props:['param'],
 
 	ready ()

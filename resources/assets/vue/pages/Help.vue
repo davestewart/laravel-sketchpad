@@ -46,7 +46,7 @@
 	
 export default
 {
-
+	name: 'Help'
 }
 
 </script>

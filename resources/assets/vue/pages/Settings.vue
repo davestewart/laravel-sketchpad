@@ -62,6 +62,8 @@ import server       from '../../js/services/server/server.js';
 
 export default
 {
+	name: 'Settings',
+
 	data()
 	{
 		return { settings }

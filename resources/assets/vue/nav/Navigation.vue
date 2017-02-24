@@ -53,6 +53,8 @@ import Method		from './components/Method.vue';
 
 export default
 {
+	name:'Navigation',
+
 	components:
 	{
 		Folder,

@@ -17,6 +17,8 @@ import ControllerList  from './components/ControllerList.vue'
 
 export default
 {
+	name: 'Favourites',
+
 	components:
 	{
 		ControllerList
