@@ -52,7 +52,7 @@
 		components:
 		{
 			Navigation,
-			Result,
+			//Result,
 			Modal,
 			TopNav
 		},
@@ -74,9 +74,6 @@
 
 		ready ()
 		{
-			// reloading
-			this.store.$on('load', this.onStoreLoad);
-
 			// links
 			$('#content').on('click', 'a[href]', this.onLinkClick);
 
@@ -85,12 +82,12 @@
 				const route = transition.to;
 				if(route.path.indexOf('/run/') === 0)
 				{
-					this.state.setRoute(route.params.route, route.query);
+					state.setRoute(route.params.route, route.query);
 					this.$nextTick( () => this.$refs.content.load())
 				}
 				else
 				{
-					this.state.reset()
+					state.reset()
 				}
 			})
 
@@ -101,28 +98,6 @@
 
 		methods:
 		{
-			onStoreLoad (event)
-			{
-				if(this.state.controller && this.state.controller.relpath == event.path)
-				{
-					var cIndex 	= event.index;
-					var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
-					if(cIndex !== -1)
-					{
-						this.unwatch();
-						this.state.controller = this.store.controllers[cIndex];
-						if(mIndex !== -1)
-						{
-							this.state.method = this.state.controller.methods[mIndex];
-						}
-						this.watch();
-					}
-
-					// reload
-					this.update();
-				}
-			},
-
 			onLinkClick (event)
 			{
 				var run = location.origin + server.getUrl('run/');
@@ -131,6 +106,7 @@
 					event.preventDefault();
 					const path = event.target.href.substr(run.length);
 					router.go('/run/' + decodeURI(path))
+					//router.replace('/run/' + decodeURI(path))
 				}
 			}
 

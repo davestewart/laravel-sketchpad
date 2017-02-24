@@ -1,5 +1,6 @@
 import Vue 		from 'vue';
 import server	from '../services/server/server';
+import state    from '../state/state'
 
 /**
  * The controllers store
@@ -14,7 +15,9 @@ var Store = Vue.extend({
 	{
 		// object with single controllers property
 		var data = $('#data').text();
-		return data ? JSON.parse(data) : {};
+		data = JSON.parse(data)
+		//console.log(data)
+		return data ? data : {};
 	},
 
 	created ()
@@ -25,14 +28,14 @@ var Store = Vue.extend({
 		if(window.LiveReload)
 		{
 			// proxies
-			const reload 	= LiveReload.reloader.reload;
+			const reload = LiveReload.reloader.reload;
 
 			// monkeypatch livereloader
 			LiveReload.reloader.reload = function(file, options)
 			{
 				if(self.reload(file))
 				{
-					return;
+					return true;
 				}
 				return reload.call(this, file, options);
 			};
@@ -46,7 +49,6 @@ var Store = Vue.extend({
 				self.reload(event.file)
 			})
 		}
-
 	},
 
 	methods:
@@ -81,7 +83,8 @@ var Store = Vue.extend({
 					const controller = this.getControllerByPath(path);
 					if(controller)
 					{
-						this.server.loadController(path, this.onLoad);
+						console.log('controller changed:', event)
+						this.server.loadController(controller.route, this.onLoad);
 					}
 					return true;
 				}
@@ -104,6 +107,7 @@ var Store = Vue.extend({
 			 */
 			onLoad (data)
 			{
+				console.log('onLoad called', data)
 				if(data && data.path)
 				{
 					// check for existing controller
@@ -113,12 +117,27 @@ var Store = Vue.extend({
 					// insert if the controller exists
 					if(controller)
 					{
-						// debug
-						console.log('Updating controller: ' + data.name);
+						// index
+						index = this.controllers.indexOf(controller);
+						console.log('Updating controller: ', index);
 
 						// update store
-						index = this.controllers.indexOf(controller);
-						this.controllers.$set(index, data);
+
+						console.log('Updating controller: ', controller.path);
+						console.log('Old method: ', controller.methods[0].label);
+						console.log('New method: ', data.methods[0].label);
+						this.controllers[index] = data;
+
+						console.log('Controller updated: ' + this.controllers[index].methods[0].label);
+						//Vue.set(app.store.controllers, index, data);
+
+						// update state
+						if (state.controller.path === data.path) {
+							var mIndex = state.controller.methods.indexOf(state.method);
+							state.controller = data;
+							state.method = data.methods[mIndex];
+						}
+
 					}
 
 					// append and sort if not
@@ -150,7 +169,7 @@ var Store = Vue.extend({
 
 			getControllerByPath (path)
 			{
-				return this.controllers.filter( c => c.path == path ).shift();
+				return this.controllers.find( c => c.path === path );
 			},
 
 			emit (type, path, index)

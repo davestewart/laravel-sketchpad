@@ -1,8 +1,9 @@
 import Vue 		from 'vue';
 
 // objects
-import server		from './server/server.js';
-import Timer		from '../classes/timer.js';
+import server	from './server/server.js';
+import Timer	from '../classes/timer.js';
+import state    from '../state/state'
 
 const Loader = Vue.extend({
 
@@ -15,15 +16,15 @@ const Loader = Vue.extend({
 		}
 	},
 
-	props: ['state', 'active'],
+	props: ['active'],
 
 	computed:
 	{
 		defer ()
 		{
-			if(this.state.method)
+			if(state.method)
 			{
-				const tags = this.state.method.tags;
+				const tags = state.method.tags;
 				return tags.defer || tags.warning;
 			}
 			return false;
@@ -34,7 +35,6 @@ const Loader = Vue.extend({
 	created ()
 	{
 		this.timer = new Timer();
-		this.state = app.state;
 	},
 
 	methods:
@@ -44,14 +44,14 @@ const Loader = Vue.extend({
 
 			load ()
 			{
-				if (!this.state.method)
+				if (!state.method)
 				{
 					//this.$emit('error', 'No such method');
 					return;
 				}
 
 				// properties
-				this.transition	= this.state.method !== this.method;
+				this.transition	= state.method !== this.method;
 				this.loading = ! this.defer;
 
 				// load
@@ -61,9 +61,9 @@ const Loader = Vue.extend({
 				}
 				else
 				{
-					if(this.state.method.tags.warning)
+					if(state.method.tags.warning)
 					{
-						//alert(this.state.method.tags.warning || 'Be careful when running this method!');
+						//alert(state.method.tags.warning || 'Be careful when running this method!');
 					}
 				}
 			},
@@ -75,8 +75,8 @@ const Loader = Vue.extend({
 				this.$nextTick(() =>
 				{
 					this.timer.start();
-					server.run(this.state.method, this.onLoad, this.onFail, this.onComplete);
-					if(this.state.method)
+					server.run(state.method, this.onLoad, this.onFail, this.onComplete);
+					if(state.method)
 					{
 						this.watch();
 					}
@@ -85,7 +85,7 @@ const Loader = Vue.extend({
 
 			watch ()
 			{
-				this.unwatch = this.$watch('state.method.params', this.onParamsChange, {deep:true});
+				this.unwatch = this.$watch('state.method', this.onParamsChange, {deep:true});
 			},
 
 			unwatch ()
@@ -99,7 +99,7 @@ const Loader = Vue.extend({
 
 			onParamsChange ()
 			{
-				if(this.state.method)
+				if(state.method)
 				{
 					this.$emit('params');
 				}
@@ -112,18 +112,18 @@ const Loader = Vue.extend({
 
 				// variables
 				const type = xhr.getResponseHeader('Content-Type');
-				if (this.state.method)
+				if (state.method)
 				{
-					this.state.method.error = 0;
+					state.method.error = 0;
 				}
 				this.$emit('load', data, type);
 			},
 
 			onFail (xhr, status, message)
 			{
-				if (this.state.method)
+				if (state.method)
 				{
-					this.state.method.error = 1;
+					state.method.error = 1;
 				}
 				var data	= xhr.responseText;
 				var type	= xhr.getResponseHeader('Content-Type');
@@ -132,8 +132,8 @@ const Loader = Vue.extend({
 
 			onComplete ()
 			{
-				console.info('Ran "%s" in %d ms', this.state.route, this.timer.stop().time);
-				this.method 	= this.state.method;
+				console.info('Ran "%s" in %d ms', state.route, this.timer.stop().time);
+				this.method 	= state.method;
 			},
 
 		// ------------------------------------------------------------------------------------------------
@@ -141,17 +141,17 @@ const Loader = Vue.extend({
 
 			onStoreLoad (event)
 			{
-				if(this.state.controller && this.state.controller.relpath == event.path)
+				if(state.controller && state.controller.relpath == event.path)
 				{
 					var cIndex 	= event.index;
-					var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
+					var mIndex	= state.method ? state.controller.methods.indexOf(state.method) : -1;
 					if(cIndex > -1)
 					{
 						this.unwatch();
-						this.state.controller = this.store.controllers[cIndex];
+						state.controller = this.store.controllers[cIndex];
 						if(mIndex > -1)
 						{
-							this.state.method = this.state.controller.methods[mIndex];
+							state.method = state.controller.methods[mIndex];
 						}
 						this.watch();
 					}
