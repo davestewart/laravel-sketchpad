@@ -5,7 +5,7 @@
 			<h1>Favourites</h1>
 		</header>
 		<section id="favourites">
-			<controllers :filter="filter"></controllers>
+			<controller-list :filter="filter"></controller-list>
 		</section>
 	</article>
 
@@ -13,13 +13,13 @@
 
 <script>
 
-import Controllers  from './components/ControllerList.vue'
+import ControllerList  from './components/ControllerList.vue'
 
 export default
 {
 	components:
 	{
-		Controllers
+		ControllerList
 	},
 
 	data ()
