@@ -12,8 +12,6 @@ export default
 {
 	props: ['route'],
 
-	data () { return {} },
-
 	methods:
 	{
 		getLabel ()

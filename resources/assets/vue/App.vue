@@ -1,20 +1,20 @@
 <template>
 
-	<div id="test">
+	<div id="app" :class="{'show-comments':settings.ui.showComments}">
 
-		<top-nav :route="state.baseUrl"></top-nav>
+		<top-nav></top-nav>
 
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-4">
-					<navigation v-ref:navigation :controllers="store.controllers" :state="state" :settings="settings"></navigation>
+					<navigation v-ref:navigation></navigation>
 				</div>
 				<div class="col-xs-8">
 					<!--
 					<result v-if="state.controller" v-ref:result :state="state"></result>
 					-->
 					<div id="content" class="view">
-						<router-view v-ref:content :state="state" :settings="settings" :loader="loader"></router-view>
+						<router-view v-ref:content></router-view>
 					</div>
 				</div>
 			</div>

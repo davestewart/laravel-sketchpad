@@ -11,7 +11,7 @@
 			</header>
 
 			<!-- parameters -->
-			<div id="params" v-if="state.method && state.method.name != 'index'">
+			<div id="params" v-if="method && method.name !== 'index'">
 				<div class="sticky">
 
 					<nav v-if="params" class="navbar navbar-default">
@@ -39,7 +39,9 @@
 <script>
 
 // objects
+import state		from '../../js/state/state.js';
 import settings		from '../../js/state/settings.js';
+
 import server		from '../../js/services/server/server.js';
 import loader		from '../../js/services/loader';
 import Helpers		from '../../js/classes/helpers.js';
@@ -64,17 +66,11 @@ export default
 		}
 	},
 
-	props:
-	[
-		'state'
-	],
-
 	computed:
 	{
 		title ()
 		{
-			var state = this.state;
-			return state.method && state.method.name != 'index'
+			return state && state.method && state.method.name != 'index'
 					? Helpers.getMethodLabel(state.method)
 					: state.controller
 						? state.controller.label
@@ -83,8 +79,7 @@ export default
 
 		info ()
 		{
-			var state = this.state;
-			return state.method && state.method.name != 'index'
+			return state && state.method && state.method.name != 'index'
 					? state.method.comment.intro || '&hellip;'
 					: state.controller
 						? state.controller.methods.length + ' methods'
@@ -93,16 +88,16 @@ export default
 
 		params ()
 		{
-			return this.state.method
-				? this.state.method.params
+			return state && state.method
+				? state.method.params
 				: null;
 		},
 
 		defer ()
 		{
-			if(this.state.method)
+			if(state && state.method)
 			{
-				var tags = this.state.method.tags;
+				var tags = state.method.tags;
 				return tags.defer || tags.warning;
 			}
 			return false;
@@ -115,9 +110,9 @@ export default
 
 		warning ()
 		{
-			if(this.state.method)
+			if(state && state.method)
 			{
-				var tags = this.state.method.tags;
+				var tags = state.method.tags;
 				return tags.warning;
 			}
 			return false;
@@ -125,9 +120,9 @@ export default
 
 		archived ()
 		{
-			if(this.state.method)
+			if(state && state.method)
 			{
-				var tags = this.state.method.tags;
+				var tags = state.method.tags;
 				return tags.archived;
 			}
 			return false;
@@ -135,7 +130,7 @@ export default
 
 		method ()
 		{
-			return this.state.method;
+			return state && state.method;
 		}
 	},
 
@@ -152,7 +147,7 @@ export default
 
 		// loader
 		this.loader 		= loader;
-		this.loader.state 	= this.state;
+		this.loader.state 	= state;
 		this.loader.$on('start', this.onLoaderStart);
 		this.loader.$on('load', this.onLoaderLoad);
 		this.loader.$on('error', this.onLoaderError);
@@ -189,7 +184,7 @@ export default
 
 			onParamsChange ()
 			{
-				router.replace('/run/' + this.state.makeRoute(this.state.method));
+				router.replace('/run/' + state.makeRoute(state.method));
 			},
 
 
@@ -198,7 +193,7 @@ export default
 
 			load ()
 			{
-				this.state.method
+				state.method
 					? this.loader.load()
 					: this.clear()
 			},
@@ -211,7 +206,7 @@ export default
 			setContent (data, contentType = '')
 			{
 				// variables
-				var method 			= this.state.method;
+				var method 			= state.method;
 				var transition      = this.loader.transition;
 
 				// properties

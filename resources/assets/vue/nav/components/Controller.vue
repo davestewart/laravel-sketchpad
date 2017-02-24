@@ -23,12 +23,6 @@ import state 	    from '../../../js/state/state.js';
 
 export default
 {
-
-	data ()
-	{
-		return {};
-	},
-
 	props:['controller'],
 
 	methods:
