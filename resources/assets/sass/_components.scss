@@ -12,13 +12,6 @@
 		content:"."
 	}
 
-	section#output {
-		body[data-mode="home"] &,
-		body[data-mode="help"] & {
-			// max-width: 700px;
-		}
-	}
-
 	section#controllers,
 	section#methods {
 		height:100%;
@@ -52,11 +45,24 @@
 		margin: 25px 0 0 15px;
 	}
 
+	#controllers{
+		padding-right:40px;
+	}
+
 	.controller-list {
 
-		// state
+		// fade controller list when help shows
 		transition: opacity 0.3s;
-        &.comments p.comment {
+		#app[data-mode="help"] &{
+			opacity: 0.2;
+		}
+
+		#app[data-mode="help"] &:hover{
+			opacity:1;
+		}
+
+		// comments
+        #app.show-comments & p.comment {
 	        margin-bottom: 1em;
             height:17px;
         }
@@ -67,38 +73,29 @@
             height:0;
         }
 
-		// stuff
-		body[data-mode="help"] &{
-			opacity: 0.2;
-		}
-
-		body[data-mode="help"] &:hover{
-			opacity:1;
-		}
-
+		// folder elements
 		li.folder {
-			&:first-child{
-				margin-top:-28px !important;
-			}
 			padding: 3px 5px;
 			border-bottom: 1px dashed #EEE;
 			margin-bottom: 4px;
 		}
 
-		#controllers{
-			padding-right:40px;
+		#controllers li.folder:first-child {
+			margin-top:-28px !important;
 		}
 
 		// list elements
 		li {
 
-			a {
+			// links
+			> a {
 				padding: 4px 9px;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 				overflow: hidden;
 			}
 
+			// folders
 			&.folder,
 			p {
 				padding-left: 9px;
@@ -111,10 +108,6 @@
 				//margin-bottom:0.3em;
 			}
 
-			p.comment{
-
-			}
-
 			&.folder{
 				margin-top:10px;
 				margin-left:-20px;
@@ -124,6 +117,7 @@
 				}
 			}
 
+			// icons
 			&.icon:before{
 				color:#CCC;
 				position: absolute;
@@ -331,6 +325,16 @@
 
 		    input[type="input"][name="path"] {
 			    width:70%;
+		    }
+
+	    }
+
+	    fieldset[name="ui"] {
+
+		    article {
+			    width: 33%;
+			    max-width: 210px;
+			    float: left;
 		    }
 
 	    }
