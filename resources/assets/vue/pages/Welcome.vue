@@ -17,7 +17,7 @@
 
 			<p>You can navigate to, and run any controller method, even modify parameter values, all from a friendly UI.</p>
 
-			<p>It comes with a whole bunch of useful tools to make it easy to rattle out quick coding tests.</p>
+			<p>It comes with a bunch of useful tools and PHP functions to make it easy to rattle out quick coding tests.</p>
 
 			<h3>Next steps...</h3>
 

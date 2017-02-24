@@ -23,17 +23,17 @@
 			<h3>Features</h3>
 			<p>Sketchpad provides a variety of features and functionality to make testing code easier, such as:</p>
 			<ul>
-				<li>Output functions such as <a href="/sketchpad/run/demo/output/ls">list</a>, <a href="/sketchpad/run/demo/output/table">table</a> and <a href="/sketchpad/run/demo/output/alert">alert</a></li>
-				<li>Support for <a href="/sketchpad/run/demo/output/json">json</a>, <a href="/sketchpad/run/demo/output/markdown">markdown</a> and <a href="/sketchpad/run/demo/output/vue">vue</a></li>
-				<li>Built-in <a href="/sketchpad/run/demo/basics/exception">exception handling</a></li>
-				<li>Custom <a href="/sketchpad/run/demo/basics/indexpage">index pages</a>, <a href="/sketchpad/run/demo/basics/userassets">custom CSS</a> and transparent ajax <a href="/sketchpad/run/demo/basics/forms">form submission</a></li>
-				<li>Custom <a href="/sketchpad/run/demo/tags/label">tags</a> to modify presentation and behaviour</li>
+				<li>Output functions such as <a href="run/help/output/ls">list</a>, <a href="run/help/output/table">table</a> and <a href="run/help/output/alert">alert</a></li>
+				<li>Support for <a href="run/help/output/json">json</a>, <a href="run/help/output/markdown">markdown</a> and <a href="run/help/output/vue">vue</a></li>
+				<li>Built-in <a href="run/help/basics/exception">exception handling</a></li>
+				<li>Custom <a href="run/help/basics/indexpage">index pages</a>, <a href="run/help/basics/userassets">custom CSS</a> and transparent ajax <a href="run/help/basics/forms">form submission</a></li>
+				<li>Custom <a href="run/help/tags/label">tags</a> to modify presentation and behaviour</li>
 			</ul>
 
 
 			<h3>Learn by example</h3>
-			<p>The demo code which runs when you click the links on the left is all written in, and runs from standard Laravel controllers.
-				You can check out the code at <code>vendor/davestewart/sketchpad/src/demo/</code>.</p>
+			<p>The examples that ship with Sketchpad are all just standard Laravel controllers.
+				You can check out the code at <code>vendor/davestewart/sketchpad/src/help/</code>.</p>
 
 			<h3>More...</h3>
 			<p>See the <a href="http://github.com/davestewart/laravel-sketchpad/wiki">Sketchpad Wiki</a> for more information.</p>
