@@ -2,6 +2,10 @@
 // BOOTSTRAP
 // ------------------------------------------------------------------------------------------------
 
+	.navbar-toggle {
+		padding: 6px 10px;
+	}
+
 	// override stupid bootstrap modal animation
 	.modal{
 		top:0% !important;
