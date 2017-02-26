@@ -213,8 +213,17 @@ class Router
 				//pr($ref);
 				if(strtolower($ref->route) == $route)
 				{
+					// check if exists
+					if(!file_exists($ref->abspath))
+					{
+						return (object) ["error" => "deleted"];
+					}
+
 					$controller = new Controller($ref->abspath, $ref->route);
-					ParamTypeManager::create()->saveOne($controller);
+					if(!$controller->error)
+					{
+						ParamTypeManager::create()->saveOne($controller);
+					}
 					return $controller;
 				}
 			}

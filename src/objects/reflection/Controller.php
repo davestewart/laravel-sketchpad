@@ -37,6 +37,13 @@ class Controller extends File implements Arrayable, JsonSerializable
 		 * @var Method[]
 		 */
 		public $methods;
+
+		/**
+		 * Any error message created during instantiation
+		 *
+		 * @var string
+		 */
+		public $error;
 	
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -54,21 +61,39 @@ class Controller extends File implements Arrayable, JsonSerializable
 			// parent
 			parent::__construct($path, $route);
 
-			// class
-			$class              = $this->getClassPath($path);
-			$this->ref          = new ReflectionClass($class);
-	
-			// properties
-			$this->classname    = $this->ref->getShortName();
-			$this->classpath    = $this->ref->getName();
-			$this->label        = $this->getLabel($this->classname);
-			$this->comment      = $this->getDocComment();
-			$this->methods      = [];
-
-			// methods
-			if($process)
+			// check file exists
+			if(!$this->exists())
 			{
-				$this->process();
+				$this->error = 'file does not exist';
+			}
+
+			// class
+			else
+			{
+				$class = $this->getClassPath($path);
+				try
+				{
+					// reference
+					$this->ref          = new ReflectionClass($class);
+
+					// properties
+					$this->classname    = $this->ref->getShortName();
+					$this->classpath    = $this->ref->getName();
+					$this->label        = $this->getLabel($this->classname);
+					$this->comment      = $this->getDocComment();
+					$this->methods      = [];
+
+					// methods
+					if($process)
+					{
+						$this->process();
+					}
+				}
+				catch(\Exception $error)
+				{
+					$this->error = 'could not create controller';
+					return;
+				}
 			}
 		}
 

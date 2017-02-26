@@ -29,7 +29,8 @@ class ParamTypeManager
     public function saveAll($controllers)
     {
         $types = [];
-        foreach ($controllers as $controller) {
+        foreach ($controllers as $controller)
+        {
             $types = array_merge($types, $this->get($controller));
         }
         Session::forget('sketchpad.types');

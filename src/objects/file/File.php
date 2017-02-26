@@ -50,6 +50,11 @@ class File
 			$this->path     = $path;
 			$this->route    = $route;
 		}
+
+		public function exists()
+		{
+			return file_exists($this->path);
+		}
 		
 	}
 

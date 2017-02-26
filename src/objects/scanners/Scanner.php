@@ -149,9 +149,12 @@ class Scanner extends AbstractScanner
 			$controller     = new Controller($abspath, $route);
 			$ref            = new ControllerReference($route, $controller->path, $controller->classpath);
 
-			// assign objects
-			$this->controllers[] = $controller;
-			$this->addRoute($route, $ref);
+			// add
+			if(!$controller->error)
+			{
+				$this->controllers[] = $controller;
+				$this->addRoute($route, $ref);
+			}
 		}
 
 		/**
