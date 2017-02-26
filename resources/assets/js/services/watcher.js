@@ -17,7 +17,7 @@ class Watcher {
 				// default type
 				let type = 'change';
 
-				// detect custom types for add, delete and change
+				// parse custom types add, delete, change
 				let matches = file.match(/^(add|change|delete):(.+)/);
 				if(matches)
 				{
@@ -37,7 +37,7 @@ class Watcher {
 		// listen to browsersync
 		if(window.___browserSync___)
 		{
-			___browserSync___.socket.on('sketchpad.udpate', event =>
+			___browserSync___.socket.on('sketchpad.update', event =>
 			{
 				console.log(arguments);
 				this.handle(event.file, event.type); // TODO check this is the proper call
@@ -65,6 +65,9 @@ class Watcher {
 	 */
 	handle (file, type)
 	{
+		// debug
+		console.info(type, file);
+
 		// get matching handlers
 		let handlers = this.handlers
 			.filter(handler => handler.rx.test(file));
