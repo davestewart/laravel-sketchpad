@@ -1,8 +1,8 @@
 import Vue 		from 'vue';
 
 // objects
-import server	from './server/server.js';
 import watcher	from './watcher';
+import server	from './server';
 import state    from '../state/state'
 
 const Loader = Vue.extend({

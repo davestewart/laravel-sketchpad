@@ -1,5 +1,5 @@
 import Vue 		    from 'vue';
-import server	    from '../services/server/server';
+import server	    from '../services/server';
 import state        from '../state/state'
 import watcher      from '../services/watcher'
 

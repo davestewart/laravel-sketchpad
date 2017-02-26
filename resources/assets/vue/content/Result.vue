@@ -42,9 +42,9 @@
 import state		from '../../js/state/state.js';
 import settings		from '../../js/state/settings.js';
 
-import server		from '../../js/services/server/server.js';
-import loader		from '../../js/services/loader';
 import Helpers		from '../../js/classes/helpers.js';
+import server		from '../../js/services/server.js';
+import loader		from '../../js/services/loader';
 
 // components
 import Param		from './Param.vue';

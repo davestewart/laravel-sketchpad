@@ -55,10 +55,10 @@
 
 <script>
 
+import server       from '../../js/services/server.js';
+import settings     from '../../js/state/settings.js';
 import store        from '../../js/state/store.js';
 import state        from '../../js/state/state.js';
-import settings     from '../../js/state/settings.js';
-import server       from '../../js/services/server/server.js';
 
 export default
 {

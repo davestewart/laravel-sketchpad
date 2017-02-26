@@ -1,5 +1,5 @@
-import Queue from './queue';
-import Request from './request';
+import Queue from './server/queue';
+import Request from './server/request';
 
 function Server()
 {
@@ -65,18 +65,18 @@ Server.prototype =
 			return $.get(url, done);
 		},
 
-		post(path, data, done)
-		{
-			const url	= this.getUrl(path);
-			return $.post(url, data, done);
-		},
-
 		loadController(route, onSuccess)
 		{
 			var url = 'api/load/' + route;
 			return onSuccess
 				? this.load(url, onSuccess)
 				: window.open(this.base + url);
+		},
+
+		post(path, data, done)
+		{
+			const url	= this.getUrl(path);
+			return $.post(url, data, done);
 		},
 
 		getRunUrl(method)

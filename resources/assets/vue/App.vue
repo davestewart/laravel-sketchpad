@@ -31,7 +31,7 @@
 // imports
 
 	// services
-	import server       from '../js/services/server/server.js';
+	import server       from '../js/services/server.js';
 
 	// state
 	import store        from '../js/state/store.js';
