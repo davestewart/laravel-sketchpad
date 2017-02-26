@@ -1,5 +1,5 @@
 import Vue          from  'vue'
-import config       from './state/config'
+import config       from './functions/config'
 import Setup		from '../vue/setup/Setup.vue';
 
 config();

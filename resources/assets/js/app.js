@@ -5,7 +5,7 @@ import Sortable     from 'vue-sortable'
 Vue.use(Sortable);
 Vue.use(VueRouter);
 
-import config       from './state/config'
+import config       from './functions/config'
 config();
 
 import Run          from '../vue/content/Result.vue'

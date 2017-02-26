@@ -18,7 +18,7 @@
 
 import store    from '../../../js/state/store'
 import settings from '../../../js/state/settings'
-import Helpers  from '../../../js/classes/helpers'
+import Helpers  from '../../../js/functions/helpers'
 
 import Folder   from './Folder.vue'
 import Method   from './Method.vue'

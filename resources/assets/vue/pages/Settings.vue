@@ -79,7 +79,7 @@ export default
 	{
 		onSettingsChange (value, old)
 		{
-			server.post('api/settings', {settings:JSON.stringify(this.settings)}, console.log)
+			server.post('api/settings', {settings:JSON.stringify(this.settings)})
 		},
 
 		onPathsChange (value, old)

@@ -146,9 +146,9 @@ var Store = Vue.extend({
 			},
 
 			/**
-			 * Update the state obeject once new controllers have been added
+			 * Update the state object after controller update
 			 *
-			 * @param controller
+			 * @param {Object}  controller
 			 */
 			updateState (controller)
 			{
@@ -157,7 +157,10 @@ var Store = Vue.extend({
 
 				// replace controller and method
 				state.controller = controller;
-				state.method = controller.methods[index];
+				if (controller.methods)
+				{
+					state.method = controller.methods[index];
+				}
 			},
 
 

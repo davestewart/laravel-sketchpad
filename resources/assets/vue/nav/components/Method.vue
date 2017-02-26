@@ -22,7 +22,7 @@
 
 <script>
 
-import Helpers		from '../../../js/classes/helpers.js';
+import Helpers		from '../../../js/functions/helpers.js';
 
 import settings 	from '../../../js/state/settings.js';
 import state 	    from '../../../js/state/state.js';

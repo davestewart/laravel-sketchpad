@@ -29,13 +29,13 @@ Server.prototype =
 		 */
 		run(method, done, fail, always)
 		{
-			const route	= this.getRunUrl(method);
+			const url	= this.getRunUrl(method);
 			const data	= method.params.map( function(param)
 			{
 				let {name, type, value } = param;
 				return {name, type, value}
 			});
-			return this.queue.add(new Request(route, data, done, fail, always));
+			return this.queue.add(new Request(url, data, done, fail, always));
 		},
 
 		/**

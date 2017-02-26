@@ -42,7 +42,7 @@
 import state		from '../../js/state/state.js';
 import settings		from '../../js/state/settings.js';
 
-import Helpers		from '../../js/classes/helpers.js';
+import Helpers		from '../../js/functions/helpers.js';
 import server		from '../../js/services/server.js';
 import loader		from '../../js/services/loader';
 
