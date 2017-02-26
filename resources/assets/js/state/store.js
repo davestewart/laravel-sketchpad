@@ -1,7 +1,7 @@
 import Vue 		    from 'vue';
 import server	    from '../services/server/server';
 import state        from '../state/state'
-import livereload   from '../services/livereload'
+import watcher      from '../services/watcher'
 
 /**
  * The controllers store
@@ -23,56 +23,94 @@ var Store = Vue.extend({
 
 	created ()
 	{
-		livereload(this)
+		watcher.addHandler(/Controller\.php$/, this.onControllerChange);
 	},
 
 	methods:
 	{
-
 		// ------------------------------------------------------------------------------------------------
-		// loading
+		// load
 
-			reloadAll ()
+			loadAll ()
 			{
 				server
 					.load('api/load')
 					.then(this.onLoadAll)
 			},
 
-			/**
-			 * Delegated livereload function
-			 *
-			 * @param   {string}    path    A rootrelative path; i.e. sketchpad/controllers/ExampleController.php
-			 * @returns {boolean}           A
-			 */
-			reload (path)
+			load (route)
 			{
-				// intercept controller updates
-				if (/Controller\.php$/.test(path))
+				server
+					.load('api/load/' + route)
+					.then(this.onLoad)
+			},
+
+
+		// ------------------------------------------------------------------------------------------------
+		// handlers
+
+			/**
+			 * Update controller data when a controller is changed, requested, and data reloaded
+			 *
+			 * @param   {Object[]}  data    An array of controller data
+			 */
+			onLoadAll (data)
+			{
+				this.setControllers(data);
+			},
+
+			/**
+			 * Handles a watcher file change
+			 *
+			 * @param   {string}    path   The absolute path to a controller file (possibly loaded)
+			 * @returns {boolean}
+			 */
+			onControllerChange (path, type)
+			{
+				const controller = this.getControllerByPath(path);
+				if(controller)
 				{
-					const controller = this.getControllerByPath(path);
-					if(controller)
-					{
-						// console.log('controller changed:', event);
-						server.loadController(controller.route, this.onLoad);
-					}
+					this.load(controller.route);
 					return true;
 				}
-
-				// php file
-				if(/\.php$/.test(path))
+				else if (type === 'add' || type === 'delete')
 				{
-					this.emit('file');
+					this.loadAll();
 					return true;
 				}
-
-				// let LiveReload handle the load
 				return false;
 			},
 
-		// ------------------------------------------------------------------------------------------------
-		// loading
+			/**
+			 * Single controller load handler
+			 *
+			 * @param   {Object}    data    Controller data
+			 */
+			onLoad (data)
+			{
+				if(data)
+				{
+					if(data.path)
+					{
+						this.setController(data)
+					}
+					if (data.error)
+					{
+						console.log(data.error);
+						this.loadAll();
+					}
+				}
+			},
 
+
+		// ------------------------------------------------------------------------------------------------
+		// update
+
+			/**
+			 * Update all controllers
+			 *
+			 * @param   {Object[]}  data        An array of controllers
+			 */
 			setControllers (data)
 			{
 				this.controllers = data;
@@ -83,22 +121,35 @@ var Store = Vue.extend({
 				}
 			},
 
-			replaceController (old, controller)
+			setController (data)
 			{
-				const index = this.controllers.indexOf(old);
-				this.controllers[index] = controller;
-				if (state.controller.path === controller.path)
+				// see if the same controller is already loaded
+				const controller = this.getControllerByPath(data.path);
+
+				// if so, replace it
+				if(controller)
 				{
-					this.updateState(controller)
+					const index = this.controllers.indexOf(controller);
+					this.controllers[index] = data;
+					if (state.controller.path === data.path)
+					{
+						this.updateState(data)
+					}
+				}
+
+				// if not, add it
+				else
+				{
+					this.controllers.push(controller);
+					this.controllers.sort(fnSort);
 				}
 			},
 
-			addController (controller)
-			{
-				this.controllers.push(controller);
-				this.controllers.sort(fnSort);
-			},
-
+			/**
+			 * Update the state obeject once new controllers have been added
+			 *
+			 * @param controller
+			 */
 			updateState (controller)
 			{
 				// index of existing method on existing controller
@@ -107,32 +158,6 @@ var Store = Vue.extend({
 				// replace controller and method
 				state.controller = controller;
 				state.method = controller.methods[index];
-			},
-
-
-		// ------------------------------------------------------------------------------------------------
-		// handlers
-
-			/**
-			 * Update controller data when a controller is changed, requested, and data reloaded
-			 *
-			 * @param data
-			 */
-			onLoad (data)
-			{
-				// console.log('onLoad called', data)
-				if(data && data.path)
-				{
-					const controller = this.getControllerByPath(data.path);
-					controller
-						? this.replaceController(controller, data)
-						: this.addController(data)
-				}
-			},
-
-			onLoadAll (data)
-			{
-				this.setControllers(data);
 			},
 
 
@@ -152,13 +177,9 @@ export default new Store();
 
 function fnSort (a, b)
 {
-	if (a.path < b.path)
-	{
-		return -1;
-	}
-	if (a.path > b.path)
-	{
-		return 1;
-	}
-	return 0;
+	return  a.path < b.path
+		? -1
+		: (a.path > b.path
+			? 1
+			: 0);
 }

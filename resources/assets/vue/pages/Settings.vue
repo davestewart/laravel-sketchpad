@@ -86,7 +86,7 @@ export default
 		{
 			server
 				.post('api/settings', {settings:JSON.stringify(this.settings)})
-				.then(data => store.reloadAll())
+				.then(data => store.loadAll())
 		},
 
 		onPathsReorder: function (event) {

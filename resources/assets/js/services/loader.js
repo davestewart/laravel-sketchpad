@@ -2,7 +2,7 @@ import Vue 		from 'vue';
 
 // objects
 import server	from './server/server.js';
-import Timer	from '../classes/timer.js';
+import watcher	from './watcher';
 import state    from '../state/state'
 
 const Loader = Vue.extend({
@@ -34,7 +34,12 @@ const Loader = Vue.extend({
 
 	created ()
 	{
-		this.timer = new Timer();
+		watcher.addHandler(/\.php$/, this.onFileChange)
+	},
+
+	ready ()
+	{
+		this.load();
 	},
 
 	methods:
@@ -74,7 +79,6 @@ const Loader = Vue.extend({
 				this.unwatch();
 				this.$nextTick(() =>
 				{
-					this.timer.start();
 					server.run(state.method, this.onLoad, this.onFail, this.onComplete);
 					if(state.method)
 					{
@@ -96,6 +100,12 @@ const Loader = Vue.extend({
 
 		// ------------------------------------------------------------------------------------------------
 		// events
+
+			onFileChange (file)
+			{
+				this.load();
+				return true;
+			},
 
 			onParamsChange ()
 			{
@@ -132,33 +142,7 @@ const Loader = Vue.extend({
 
 			onComplete ()
 			{
-				console.info('Ran "%s" in %d ms', state.route, this.timer.stop().time);
 				this.method 	= state.method;
-			},
-
-		// ------------------------------------------------------------------------------------------------
-		// events
-
-			onStoreLoad (event)
-			{
-				if(state.controller && state.controller.relpath == event.path)
-				{
-					var cIndex 	= event.index;
-					var mIndex	= state.method ? state.controller.methods.indexOf(state.method) : -1;
-					if(cIndex > -1)
-					{
-						this.unwatch();
-						state.controller = this.store.controllers[cIndex];
-						if(mIndex > -1)
-						{
-							state.method = state.controller.methods[mIndex];
-						}
-						this.watch();
-					}
-
-					// reload
-					this.update();
-				}
 			}
 
 	}
