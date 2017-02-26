@@ -29,7 +29,7 @@ class RouteReference
 		$this->type     = $type;
 		$this->route    = $route;
         $this->abspath  = $path;
-        $this->path     = str_replace(base_path(), '', $path);
+        $this->path     = str_replace(base_path() . '/', '', $path);
 
     }
 	

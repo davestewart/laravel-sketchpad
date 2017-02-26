@@ -1,7 +1,9 @@
 <?php namespace davestewart\sketchpad\services;
 
 use davestewart\sketchpad\objects\reflection\Controller;
+use davestewart\sketchpad\objects\reflection\ControllerError;
 use davestewart\sketchpad\objects\route\CallReference;
+use davestewart\sketchpad\objects\route\ControllerErrorReference;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\objects\route\FolderReference;
 use davestewart\sketchpad\objects\route\ParamTypeManager;
@@ -210,23 +212,31 @@ class Router
 			// filter
 			foreach($routes as /** @var ControllerReference */$ref)
 			{
-				//pr($ref);
 				if(strtolower($ref->route) == $route)
 				{
-					// check if exists
+					// check if the file still exists
 					if(!file_exists($ref->abspath))
 					{
-						return (object) ["error" => "deleted"];
+						return (object) ["error" => "The file '{$ref->path}' does not exist"];
 					}
 
-					$controller = new Controller($ref->abspath, $ref->route);
-					if(!$controller->error)
+					// check for malformed controller
+					if($ref instanceof ControllerErrorReference)
+					{
+						return (object) ["error" => $ref->error];
+					}
+
+					// otherwise, we should have a valid controller
+					$controller = Controller::fromPath($ref->abspath, $ref->route);
+					if(!($controller instanceof ControllerError))
 					{
 						ParamTypeManager::create()->saveOne($controller);
 					}
 					return $controller;
 				}
 			}
+
+			return (object) ["error" => "Invalid controller route '$route'"];
 
 			throw new \Exception("Invalid controller route '$route'");
 		}
