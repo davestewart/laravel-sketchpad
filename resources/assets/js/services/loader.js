@@ -101,7 +101,7 @@ const Loader = Vue.extend({
 		// ------------------------------------------------------------------------------------------------
 		// events
 
-			onFileChange (file)
+			onFileChange (file, type)
 			{
 				this.load();
 				return true;

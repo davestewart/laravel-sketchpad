@@ -52,7 +52,7 @@
 		components:
 		{
 			Navigation,
-			//Result,
+			Result,
 			Modal,
 			TopNav
 		},
@@ -74,9 +74,6 @@
 
 		ready ()
 		{
-			// links
-			$('#content').on('click', 'a[href]', this.onLinkClick);
-
 			// routing
 			router.afterEach(transition => {
 				const route = transition.to;
@@ -90,6 +87,9 @@
 					state.reset()
 				}
 			})
+
+			// links
+			$('#content').on('click', 'a[href]', this.onLinkClick);
 
 			// ui
 			//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
