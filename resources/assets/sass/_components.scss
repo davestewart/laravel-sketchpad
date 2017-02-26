@@ -80,6 +80,7 @@
 			margin-bottom: 4px;
 		}
 
+		#methods li.folder:first-child,
 		#controllers li.folder:first-child {
 			margin-top:-28px !important;
 		}
@@ -108,7 +109,7 @@
 				//margin-bottom:0.3em;
 			}
 
-			&.folder{
+			&.folder {
 				margin-top:10px;
 				margin-left:-20px;
 

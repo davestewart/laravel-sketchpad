@@ -1,5 +1,5 @@
 <template>
-	<li class="folder group">{{{ group }}}</li>
+	<li class="folder group"><span class="name">{{{ group }}}</span></li>
 </template>
 
 <script>
