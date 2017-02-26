@@ -14,7 +14,19 @@ class Watcher {
 			// decorate
 			LiveReload.reloader.reload = (file, options) =>
 			{
-				if(this.handle(file))
+				// default type
+				let type = 'change';
+
+				// detect custom types for add, delete and change
+				let matches = file.match(/^(add|change|delete):(.+)/);
+				if(matches)
+				{
+					type = matches[1];
+					file = matches[2];
+				}
+
+				// handle event
+				if(this.handle(file, type))
 				{
 					return true;
 				}
@@ -28,7 +40,7 @@ class Watcher {
 			___browserSync___.socket.on('sketchpad.udpate', event =>
 			{
 				console.log(arguments);
-				this.handle(event.file); // TODO check this is the proper call
+				this.handle(event.file, event.type); // TODO check this is the proper call
 			})
 		}
 	}
@@ -48,21 +60,11 @@ class Watcher {
 	 * Delegated livereload function
 	 *
 	 * @param   {string}    file    A root-relative path; i.e. sketchpad/controllers/ExampleController.php
+	 * @param   {string}    type    The type of change; will be one of "add", "change", "delete"
 	 * @returns {boolean}           A flag indicating whether Sketchpad will intercept the load (true) or allow LiveReload to handle it (false)
 	 */
-	handle (file)
+	handle (file, type)
 	{
-		// default type
-		let type = 'change';
-
-		// detect custom types for add, delete and change
-		let matches = file.match(/^(add|change|delete):(.+)/);
-		if(matches)
-		{
-			type = matches[1];
-			file = matches[2];
-		}
-
 		// get matching handlers
 		let handlers = this.handlers
 			.filter(handler => handler.rx.test(file));
