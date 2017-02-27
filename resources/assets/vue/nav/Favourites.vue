@@ -1,7 +1,7 @@
 <template>
 
 	<article>
-		<header>
+		<header id="header">
 			<h1>Favourites</h1>
 		</header>
 		<section id="favourites">

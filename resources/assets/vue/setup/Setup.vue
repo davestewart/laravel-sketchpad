@@ -2,7 +2,7 @@
 
 	<div id="setup">
 
-		<header>
+		<header id="header">
 			<h1>Setup</h1>
 		</header>
 

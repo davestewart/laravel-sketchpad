@@ -1,7 +1,7 @@
 <template>
 
 	<article>
-		<header>
+		<header id="header">
 			<h1>Search</h1>
 			<input class="form-control" v-model="term" placeholder="Start typing to filter">
 		</header>

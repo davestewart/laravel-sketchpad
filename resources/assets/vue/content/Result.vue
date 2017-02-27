@@ -5,7 +5,7 @@
 		<!-- info -->
 		<section id="info">
 
-			<header>
+			<header id="header">
 				<h1>{{ title }}</h1>
 				<div :class="{info:true, alert:alert, 'alert-danger':warning, 'alert-info':archived }">{{{ info | marked }}}</div>
 			</header>
