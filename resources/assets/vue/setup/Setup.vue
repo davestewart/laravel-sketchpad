@@ -28,6 +28,7 @@
 <pre>
 controllers  : {{ options.controllers }}
 views        : {{ options.views }}
+assets       : {{ options.assets }}
 </pre>
 
                 <template v-if="options.autoloader">

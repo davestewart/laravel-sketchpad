@@ -50,8 +50,12 @@ class Installer
         /** @var Copier */
         public $view;
 
+        /** @var Copier */
+		public $assets;
 
-    // -----------------------------------------------------------------------------------------------------------------
+
+
+	// -----------------------------------------------------------------------------------------------------------------
     // INSTANTIATION
 
         public function __construct()
@@ -75,11 +79,12 @@ class Installer
             }
 
             // objects
-            $this->settings     = new JSON(     $publish . 'config/settings.json', $this->paths->storage());
+            $this->settings     = new JSON(     $publish . 'setup/config/settings.json', $this->paths->storage());
             $this->controllers  = new Folder(   $settings->controllers);
-            $this->controller   = new ClassTemplate( $publish . 'resources/ExampleController.txt', $settings->controllers . '{filename}.php');
+            $this->controller   = new ClassTemplate( $publish . 'setup/controllers/ExampleController.txt', $settings->controllers . '{filename}.php');
             $this->views        = new Folder(   $settings->views);
-            $this->view         = new Copier(   $publish . 'resources/example.blade.php', $settings->views);
+            $this->view         = new Copier(   $publish . 'setup/views/example.blade.php', $settings->views);
+	        $this->assets       = new Copier(   $publish . 'setup/assets', base_path($settings->assets));
         }
 
 
@@ -117,8 +122,8 @@ class Installer
             $this->view
                 ->create();
 
-            //$this->assets
-                //->create();
+            $this->assets
+                ->create();
         }
 
         /**
@@ -161,11 +166,9 @@ class Installer
                 ? $this->pass('Example view copied')
                 : $this->fail('The sketchpad example view was not found', "Create it at <code>{$this->view->trg}</code>");
 
-            /*
             $this->assets->exists()
                 ? $this->pass('Assets copied')
                 : $this->fail('The sketchpad assets folder was not copied', "Copy it from <code>{$this->assets->src}</code>");
-            */
 
             $this->saveLogs();
 
