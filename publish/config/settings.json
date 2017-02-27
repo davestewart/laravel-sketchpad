@@ -21,8 +21,8 @@
 		"humanizeText": true,
 		"showComments": true,
 		"showArchived": true,
+		"formatCode": true,
 		"appendOutput": false,
-		"formatCode": false,
 		"homepage": "welcome"
 	},
 	"assets" : {

@@ -80,7 +80,7 @@ class BasicsController extends Controller
 		<p>Relative paths run other methods:</p>
 		<ul>
 			<li>This links to the <a href="forms">forms</a> method in the same controller</li>
-			<li>This links to one of the <a href="../examples/tools/viewsession">sample tools</a> in the tools controller</li>
+			<li>This links to one of the <a href="../examples/tools/dumpapp">sample tools</a> in the tools controller</li>
 		</ul>
 
 		<p>Absolute paths (outside of sketchpad) run as normal:</p>

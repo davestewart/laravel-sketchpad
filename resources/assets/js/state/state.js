@@ -94,7 +94,7 @@ var State = Vue.extend({
 			// private methods
 
 				/**
-				 * Gets a Route instance from a route string
+				 * Parse a route into a controller and method
 				 *
 				 * @param 	{string}	route
 				 * @returns {object}
@@ -117,7 +117,7 @@ var State = Vue.extend({
 				},
 
 				/**
-				 * Make a route string with query from a method or controller
+				 * Make a FQ route from a method or controller
 				 *
 				 * @param   {Object}    obj
 				 * @returns {string}
