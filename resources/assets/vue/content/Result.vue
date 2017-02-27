@@ -39,12 +39,13 @@
 <script>
 
 // objects
-import state		from '../../js/state/state.js';
-import settings		from '../../js/state/settings.js';
+import state		    from '../../js/state/state.js';
+import settings		    from '../../js/state/settings.js';
 
-import Helpers		from '../../js/functions/helpers.js';
-import server		from '../../js/services/server.js';
-import loader		from '../../js/services/loader';
+import Helpers		    from '../../js/functions/helpers.js';
+import server		    from '../../js/services/server.js';
+import loader           from '../../js/services/loader';
+import {LoaderEvent}    from '../../js/services/loader';
 
 // components
 import Param		from './Param.vue';
@@ -141,27 +142,73 @@ export default
 		humanize	:Helpers.humanize
 	},
 
+	created ()
+	{
+		this.loader 		= loader;
+		this.loader.$on(LoaderEvent.START, this.onLoaderStart);
+		this.loader.$on(LoaderEvent.LOAD, this.onLoaderLoad);
+		this.loader.$on(LoaderEvent.ERROR, this.onLoaderError);
+	},
+
 	ready ()
 	{
-		// output
 		this.$output 		= $('#output');
+	},
 
-		// loader
-		this.loader 		= loader;
-		this.loader.state 	= state;
-		this.loader.$on('start', this.onLoaderStart);
-		this.loader.$on('load', this.onLoaderLoad);
-		this.loader.$on('error', this.onLoaderError);
-		this.loader.$on('params', this.onParamsChange);
+	route:
+	{
+		activate (transition)
+		{
+			//console.log('activate')
+			this.unwatch = state.$watch('method', this.onParamsChange, {deep:true});
+			transition.next();
+		},
 
-		// routing
-		this.loader.load()
+		data (transition)
+		{
+			const route = transition.to;
+			//console.log('data', route.params)
+
+			state.setRoute(route.params.route, route.query);
+			transition.next();
+
+			this.load()
+		},
+
+		deactivate (transition)
+		{
+			// console.log('deactivate', this.unwatch)
+			this.unwatch()
+			this.$nextTick(() => {
+				state.reset()
+				transition.next()
+			})
+		},
+
+		canReuse ()
+		{
+			return true;
+		}
 	},
 
 	methods:
 	{
 		// ------------------------------------------------------------------------------------------------
 		// loading
+
+			unwatch ()
+			{
+				console.log('unwatch not yet implemented');
+			},
+
+			onParamsChange (method)
+			{
+				// console.log('params:', (method ? clone(method.params) : 'no method'));
+				if(method)
+				{
+					router.replace('/run/' + state.makeRoute(state.method));
+				}
+			},
 
 			onLoaderStart (clear)
 			{
@@ -183,11 +230,6 @@ export default
 				this.setError(data, type)
 			},
 
-			onParamsChange ()
-			{
-				router.replace('/run/' + state.makeRoute(state.method));
-			},
-
 
 		// ------------------------------------------------------------------------------------------------
 		// content methods
@@ -201,7 +243,7 @@ export default
 
 			clear ()
 			{
-				return this.$output.empty();
+				return this.$output && this.$output.empty();
 			},
 
 			setContent (data, contentType = '')

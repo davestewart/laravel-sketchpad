@@ -5,7 +5,13 @@ import watcher	from './watcher';
 import server	from './server';
 import state    from '../state/state'
 
-const Loader = Vue.extend({
+export const LoaderEvent = {
+	START    : 'start',
+	LOAD     : 'load',
+	ERROR    : 'error',
+};
+
+export const Loader = Vue.extend({
 
 	data ()
 	{
@@ -15,8 +21,6 @@ const Loader = Vue.extend({
 			method	    :null
 		}
 	},
-
-	props: ['active'],
 
 	computed:
 	{
@@ -34,12 +38,7 @@ const Loader = Vue.extend({
 
 	created ()
 	{
-		watcher.addHandler(/\.php$/, this.onFileChange)
-	},
-
-	ready ()
-	{
-		this.load();
+		watcher.addHandler(/\.php$/, this.onFileChange);
 	},
 
 	methods:
@@ -51,7 +50,6 @@ const Loader = Vue.extend({
 			{
 				if (!state.method)
 				{
-					//this.$emit('error', 'No such method');
 					return;
 				}
 
@@ -75,26 +73,8 @@ const Loader = Vue.extend({
 
 			run ()
 			{
-				this.$emit('start', this.transition);
-				this.unwatch();
-				this.$nextTick(() =>
-				{
-					server.run(state.method, this.onLoad, this.onFail, this.onComplete);
-					if(state.method)
-					{
-						this.watch();
-					}
-				});
-			},
-
-			watch ()
-			{
-				this.unwatch = this.$watch('state.method', this.onParamsChange, {deep:true});
-			},
-
-			unwatch ()
-			{
-				// will be populate by $watch
+				this.$emit(LoaderEvent.START, this.transition);
+				server.run(state.method, this.onLoad, this.onFail, this.onComplete);
 			},
 
 
@@ -107,26 +87,20 @@ const Loader = Vue.extend({
 				return true;
 			},
 
-			onParamsChange ()
+			onParamsChange (method)
 			{
-				if(state.method)
-				{
-					this.$emit('params');
-				}
+				//console.log('PARAM!', method);
+				//router.replace('/run/' + state.makeRoute(state.method));
 			},
 
 			onLoad (data, status, xhr)
 			{
-				// debug
-				//console.log([data, status, xhr.getAllResponseHeaders(), xhr]);
-
-				// variables
 				const type = xhr.getResponseHeader('Content-Type');
 				if (state.method)
 				{
 					state.method.error = 0;
 				}
-				this.$emit('load', data, type);
+				this.$emit(LoaderEvent.LOAD, data, type);
 			},
 
 			onFail (xhr, status, message)
@@ -137,7 +111,7 @@ const Loader = Vue.extend({
 				}
 				var data	= xhr.responseText;
 				var type	= xhr.getResponseHeader('Content-Type');
-				this.$emit('error', data, type);
+				this.$emit(LoaderEvent.ERROR, data, type);
 			},
 
 			onComplete ()

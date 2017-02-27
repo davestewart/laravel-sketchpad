@@ -74,20 +74,6 @@
 
 		ready ()
 		{
-			// routing
-			router.afterEach(transition => {
-				const route = transition.to;
-				if(route.path.indexOf('/run/') === 0)
-				{
-					state.setRoute(route.params.route, route.query);
-					this.$nextTick( () => this.$refs.content.load())
-				}
-				else
-				{
-					state.reset()
-				}
-			})
-
 			// links
 			$('#content').on('click', 'a[href]', this.onLinkClick);
 

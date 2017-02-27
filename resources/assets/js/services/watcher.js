@@ -75,13 +75,11 @@ class Watcher {
 		// handle
 		let handled = false;
 		handlers
-			.some(handler =>
+			.forEach(handler =>
 			{
-				const state = handler.fn(file, type);
-				if (state === true)
+				if(handler.fn(file, type))
 				{
 					handled = true;
-					return true;
 				}
 			});
 
