@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\controllers;
 
+use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Input;
@@ -56,11 +57,12 @@ class SketchpadController extends Controller
 	        return $setup->index();
 	    }
 
-	    public function asset($file)
+	    public function asset(SketchpadConfig $config, Paths $paths, $file)
 	    {
-	        // absolute path
-	        $paths  = new Paths();
-	        $path   = $paths->publish("assets/$file");
+	        // path
+		    $path = strpos($file, 'user/') === 0
+		        ? base_path($config->assets . substr($file, 5))
+		        : $paths->publish("assets/$file");
 
 	        // 404
 	        if(!file_exists($path))
