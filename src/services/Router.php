@@ -1,12 +1,10 @@
 <?php namespace davestewart\sketchpad\services;
 
 use davestewart\sketchpad\objects\reflection\Controller;
-use davestewart\sketchpad\objects\reflection\ControllerError;
 use davestewart\sketchpad\objects\route\CallReference;
 use davestewart\sketchpad\objects\route\ControllerErrorReference;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\objects\route\FolderReference;
-use davestewart\sketchpad\objects\route\ParamTypeManager;
 use davestewart\sketchpad\objects\route\RouteReference;
 use davestewart\sketchpad\objects\scanners\AbstractScanner;
 use davestewart\sketchpad\objects\scanners\Scanner;
@@ -92,7 +90,7 @@ class Router
 			Session::put('sketchpad.routes', $this->routes);
 
 			// save method parameter types
-			ParamTypeManager::create()->saveAll($this->controllers);
+			//ParamTypeManager::create()->saveAll($this->controllers);
 
 			// return
 			return $this;
@@ -116,7 +114,7 @@ class Router
 			$routes     = $this->getRoutes();
 
 			// debug
-			//pr($route, $routes);
+			// pr($route, $routes);
 
 			// first, attempt to find an exact match
 			// an exact match will either be a controller or a folder
@@ -132,7 +130,6 @@ class Router
 				// variables
 				/** @var CallReference $ref */
 				$ref    = null;
-				$match  = '';
 
 				// loop over routes and grab matches
 				// the last full match will be the one that we want
@@ -141,29 +138,19 @@ class Router
 					//pr('KEY', $key, $value);
 					if(strpos($route, $key) === 0)
 					{
-						$match      = $key;
 						$ref        = $value;
 					}
 				}
 
 				// debug
-				//pr('REF', $ref);
+				// pr('REF', $ref);
 
 				// if we got a matching route, update the ref with method and params
 				if($ref instanceof ControllerReference)
                 {
-                    $call           = CallReference::fromControllerRef($ref);
-
-					// variables
-					$methodUri      = trim(substr($route, strlen($match)), '/');
-                    $segments       = explode(',', $methodUri);
-
-					// properties
-					$call->method    = array_shift($segments);
-					$call->params    = ParamTypeManager::create()->convert($call->route . '/' . $call->method, $params);
-
-					// return
-					return $call;
+                    return CallReference::fromControllerRef($ref)
+	                    ->setMethod($route)
+	                    ->setParams($params);
 				}
 
 			}
@@ -227,12 +214,7 @@ class Router
 					}
 
 					// otherwise, we should have a valid controller
-					$controller = Controller::fromPath($ref->abspath, $ref->route);
-					if(!($controller instanceof ControllerError))
-					{
-						ParamTypeManager::create()->saveOne($controller);
-					}
-					return $controller;
+					return Controller::fromPath($ref->abspath, $ref->route);
 				}
 			}
 

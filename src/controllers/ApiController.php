@@ -52,7 +52,7 @@ class ApiController extends Controller
 		public function run(Request $request, $path = '')
 		{
             $request->query->remove('_call');
-            return $this->sketchpad->run($path, $request->all());
+            return $this->sketchpad->run($path, $request->get('data', []));
 		}
 
         /**

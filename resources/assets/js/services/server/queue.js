@@ -10,7 +10,7 @@
  *
  * @constructor
  */
-export default function Queue(method = 'get')
+export default function Queue(method = 'post')
 {
 	this.method = method;
 	this.requests = [];
@@ -19,7 +19,7 @@ export default function Queue(method = 'get')
 
 Queue.prototype =
 {
-	method  :'get',
+	method  :'post',
 
 	requests: null,
 
@@ -47,7 +47,8 @@ Queue.prototype =
 		let request = this.requests[0];
 		if(request)
 		{
-			request.deferred = $[this.method](request.url, request.data)
+			const method = $[this.method];
+			request.deferred = method(request.url, {data:request.data})
 				.done( (data, status, xhr) =>
 				{
 					this.requests.shift();
