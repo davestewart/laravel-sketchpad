@@ -160,9 +160,9 @@ class ToolsController extends Controller
      */
 	public function phpInfo($key = 'all')
 	{
-
 		$sections =
 		[
+			'all' => -1,
 			'general' => 1,
 			'credits' => 2,
 			'configuration' => 4,
@@ -170,7 +170,6 @@ class ToolsController extends Controller
 			'environment' => 16,
 			'variables' => 32,
 			'license' => 64,
-			'all' => -1,
 		];
 		$section = isset($sections[$key])
 			? $sections[$key]
@@ -184,23 +183,24 @@ class ToolsController extends Controller
 
 		?>
 		<style type="text/css">
-			#output pre {margin: 0; font-family: monospace;}
-			#output table a:hover {text-decoration: underline;}
-			#output table a:link {color: #009; text-decoration: none; background-color: #fff;}
-			#output table {border-collapse: collapse; border: 0; width: 100%; box-shadow: 1px 2px 3px #ccc;}
-			#output .center {text-align: center;}
-			#output .center th {text-align: center !important;}
-			#output td, th {border: 1px solid #666; font-size: 75%; vertical-align: baseline; padding: 4px 5px;}
+            #output .links{ padding: 10px; padding-top:0; border-bottom:1px solid #EEE; margin-bottom:10px; }
+
 			#output h1 {font-size: 150%;}
 			#output h2 {font-size: 125%;}
-			#output .p {text-align: left;}
-			#output .e {background-color: #ccf; width: 300px; font-weight: bold;}
-			#output .h {background-color: #99c; font-weight: bold;}
-			#output .v {background-color: #ddd; max-width: 300px; overflow-x: auto;}
-			#output .v i {color: #999;}
-			#output img {float: right; border: 0;}
+			#output pre {margin: 0; font-family: monospace;}
 			#output hr {background-color: #ccc; border: 0; height: 1px;}
-            #output .links{ padding: 10px; padding-top:0; border-bottom:1px solid #EEE; margin-bottom:10px; }
+			#output img {float: right; border: 0;}
+
+			#output .phpinfo table a:hover {text-decoration: underline;}
+			#output .phpinfo table a:link {color: #009; text-decoration: none; background-color: #fff;}
+			#output .phpinfo table {border-collapse: collapse; border: 0; width: 100%; box-shadow: 1px 2px 3px #ccc;}
+			#output .phpinfo td, th {border: 1px solid #666 !important; font-size: 75%; vertical-align: baseline; padding: 4px 5px;}
+			#output .phpinfo .p {text-align: left;}
+			#output .phpinfo .e {background-color: #ccf; width: 300px; font-weight: bold;}
+			#output .phpinfo .h {background-color: #99c; font-weight: bold;}
+			#output .phpinfo .v {background-color: #FBFBFB; max-width: 300px; overflow-x: auto;}
+			#output .phpinfo .v i {color: #999; }
+			#output .phpinfo .v pre { font-size:10px !important; }
 		</style>
 		<?php
 
@@ -212,8 +212,7 @@ class ToolsController extends Controller
 		$contents   = preg_replace('/^[\s\S]+?body>/', '', $contents);
 		$contents   = preg_replace('/<\/body>[\s\S]+$/', '', $contents);
         echo '<div class="links">' . implode( ' | ', $links) . '</div>';
-		echo $contents;
-
+        echo '<div class="phpinfo">' . $contents . '</div>';
 	}
 
 
