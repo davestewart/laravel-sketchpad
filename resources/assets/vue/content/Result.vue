@@ -11,7 +11,7 @@
 			</header>
 
 			<!-- parameters -->
-			<div id="params" v-if="state.method && state.method.name != 'index'">
+			<div id="params" v-if="method && method.name !== 'index'">
 				<div class="sticky">
 
 					<nav v-if="params" class="navbar navbar-default">
@@ -39,16 +39,20 @@
 <script>
 
 // objects
-import settings		from '../../js/state/settings.js';
-import server		from '../../js/services/server/server.js';
-import loader		from '../../js/services/loader';
-import Helpers		from '../../js/classes/helpers.js';
+import state		    from '../../js/state/state.js';
+import settings		    from '../../js/state/settings.js';
+
+import Helpers		    from '../../js/functions/helpers.js';
+import server		    from '../../js/services/server.js';
+import loader           from '../../js/services/loader';
+import {LoaderEvent}    from '../../js/services/loader';
 
 // components
 import Param		from './Param.vue';
 
 export default
 {
+	name: 'Result',
 
 	components:
 	{
@@ -64,17 +68,11 @@ export default
 		}
 	},
 
-	props:
-	[
-		'state'
-	],
-
 	computed:
 	{
 		title ()
 		{
-			var state = this.state;
-			return state.method && state.method.name != 'index'
+			return state && state.method && state.method.name != 'index'
 					? Helpers.getMethodLabel(state.method)
 					: state.controller
 						? state.controller.label
@@ -83,8 +81,7 @@ export default
 
 		info ()
 		{
-			var state = this.state;
-			return state.method && state.method.name != 'index'
+			return state && state.method && state.method.name != 'index'
 					? state.method.comment.intro || '&hellip;'
 					: state.controller
 						? state.controller.methods.length + ' methods'
@@ -93,16 +90,16 @@ export default
 
 		params ()
 		{
-			return this.state.method
-				? this.state.method.params
+			return state && state.method
+				? state.method.params
 				: null;
 		},
 
 		defer ()
 		{
-			if(this.state.method)
+			if(state && state.method)
 			{
-				var tags = this.state.method.tags;
+				var tags = state.method.tags;
 				return tags.defer || tags.warning;
 			}
 			return false;
@@ -115,9 +112,9 @@ export default
 
 		warning ()
 		{
-			if(this.state.method)
+			if(state && state.method)
 			{
-				var tags = this.state.method.tags;
+				var tags = state.method.tags;
 				return tags.warning;
 			}
 			return false;
@@ -125,9 +122,9 @@ export default
 
 		archived ()
 		{
-			if(this.state.method)
+			if(state && state.method)
 			{
-				var tags = this.state.method.tags;
+				var tags = state.method.tags;
 				return tags.archived;
 			}
 			return false;
@@ -135,7 +132,7 @@ export default
 
 		method ()
 		{
-			return this.state.method;
+			return state && state.method;
 		}
 	},
 
@@ -145,27 +142,73 @@ export default
 		humanize	:Helpers.humanize
 	},
 
+	created ()
+	{
+		this.loader 		= loader;
+		this.loader.$on(LoaderEvent.START, this.onLoaderStart);
+		this.loader.$on(LoaderEvent.LOAD, this.onLoaderLoad);
+		this.loader.$on(LoaderEvent.ERROR, this.onLoaderError);
+	},
+
 	ready ()
 	{
-		// output
 		this.$output 		= $('#output');
+	},
 
-		// loader
-		this.loader 		= loader;
-		this.loader.state 	= this.state;
-		this.loader.$on('start', this.onLoaderStart);
-		this.loader.$on('load', this.onLoaderLoad);
-		this.loader.$on('error', this.onLoaderError);
-		this.loader.$on('params', this.onParamsChange);
+	route:
+	{
+		activate (transition)
+		{
+			//console.log('activate')
+			this.unwatch = state.$watch('method', this.onParamsChange, {deep:true});
+			transition.next();
+		},
 
-		// routing
-		this.loader.load()
+		data (transition)
+		{
+			const route = transition.to;
+			//console.log('data', route.params)
+
+			state.setRoute(route.params.route, route.query);
+			transition.next();
+
+			this.load()
+		},
+
+		deactivate (transition)
+		{
+			// console.log('deactivate', this.unwatch)
+			this.unwatch()
+			this.$nextTick(() => {
+				state.reset()
+				transition.next()
+			})
+		},
+
+		canReuse ()
+		{
+			return true;
+		}
 	},
 
 	methods:
 	{
 		// ------------------------------------------------------------------------------------------------
 		// loading
+
+			unwatch ()
+			{
+				console.log('unwatch not yet implemented');
+			},
+
+			onParamsChange (method)
+			{
+				// console.log('params:', (method ? clone(method.params) : 'no method'));
+				if(method)
+				{
+					router.replace('/run/' + state.makeRoute(state.method));
+				}
+			},
 
 			onLoaderStart (clear)
 			{
@@ -187,31 +230,26 @@ export default
 				this.setError(data, type)
 			},
 
-			onParamsChange ()
-			{
-				router.replace('/run/' + this.state.makeRoute(this.state.method));
-			},
-
 
 		// ------------------------------------------------------------------------------------------------
 		// content methods
 
 			load ()
 			{
-				this.state.method
+				state.method
 					? this.loader.load()
 					: this.clear()
 			},
 
 			clear ()
 			{
-				return this.$output.empty();
+				return this.$output && this.$output.empty();
 			},
 
 			setContent (data, contentType = '')
 			{
 				// variables
-				var method 			= this.state.method;
+				var method 			= state.method;
 				var transition      = this.loader.transition;
 
 				// properties
@@ -262,7 +300,7 @@ export default
 				}
 
 				// handle forms
-				var $form = $data.find('form[action=""]');
+				var $form = $data.find('form[action=""],form:not([action])');
 				if($form.length)
 				{
 					var result = this;
@@ -274,7 +312,7 @@ export default
 							var data =
 							{
 								type        : 'POST',
-								url         : window.location.href,
+								url         : server.getRunUrl(method),
 								data        : $form.serialize()
 							};
 							$

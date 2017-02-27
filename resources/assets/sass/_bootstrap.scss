@@ -2,6 +2,10 @@
 // BOOTSTRAP
 // ------------------------------------------------------------------------------------------------
 
+	.navbar-toggle {
+		padding: 6px 10px;
+	}
+
 	// override stupid bootstrap modal animation
 	.modal{
 		top:0% !important;
@@ -48,20 +52,6 @@
 
 		&.in{
 			opacity: 0.8;
-		}
-	}
-
-	.sketchpad-container {
-		max-width: 1570px;
-		padding-left: 15px;
-		padding-right: 15px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	@media (min-width: 1600px){
-		.container {
-			width: 1570px;
 		}
 	}
 

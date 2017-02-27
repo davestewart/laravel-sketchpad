@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\demo;
+<?php namespace davestewart\sketchpad\help;
 
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
@@ -60,7 +60,7 @@ class BasicsController extends Controller
 @param  int      $number   This is a number field
 @param  boolean  $boolean  This is a checkbox
 @param  mixed    $mixed    This is a text field (but will be converted to the correct type)
-</pre><?
+</pre><?php
 	}
 
 	/**
@@ -77,16 +77,21 @@ class BasicsController extends Controller
 	public function links()
 	{
 		?>
-		<p>These links resolve to other internal methods:</p>
+		<p>Relative paths run other methods:</p>
 		<ul>
 			<li>This links to the <a href="forms">forms</a> method in the same controller</li>
-			<li>This links to one of the <a href="../tools/viewsession">sample tools</a> in the tools controller</li>
+			<li>This links to one of the <a href="../examples/tools/dumpapp">sample tools</a> in the tools controller</li>
 		</ul>
 
-		<p>These links resolve normally, as they don't:</p>
+		<p>Absolute paths (outside of sketchpad) run as normal:</p>
+		<ul>
+			<li>This loads the <a href="/">main app</a></li>
+		</ul>
+
+		<p>External links run as normal:</p>
 		<ul>
 			<li>This links to <a href="http://google.com" target="_blank">Google</a> in a new window</li>
-			<li>This runs some <a href="javascript:alert('Well, hello there!')">JavaScript</a></li>
+			<li>This runs some <a href="javascript:alert('Sketchpad rocks!')">JavaScript</a></li>
 		</ul>
 
 		<?php
@@ -100,9 +105,10 @@ class BasicsController extends Controller
 		?>
 		
 		<p>Type something below and submit the form back to the same URL:</p>
-		<form class="form" action="" method="post">
-			<input type="text" name="text">
-			<button type="submit">Submit</button>
+		<!-- any form with an empty or missing "action" attribute will be intercepted and submitted by sketchpad -->
+		<form class="form form-inline">
+			<input  class="form-control" type="text" name="text" placeholder="Type something here...">
+			<button class="form-control" type="submit">Submit</button>
 		</form>
 		<?php
 
@@ -152,7 +158,7 @@ class SomeController extends Controller
 }</pre>
 <p>When the controller is selected in the left hand menu, it will show an index page.</p>
 
-<p>See the <a href="/sketchpad/demo/output/markdown/">markdown</a> example for more info about the <code>md()</code> method.</p>
+<p>See the <a href="../output/markdown">markdown</a> example for more info about the <code>md()</code> method.</p>
 <?php
 	}
 
@@ -167,7 +173,7 @@ class SomeController extends Controller
 <ul>
 	<li>Add your own styles for custom output</li>
 	<li>Override any of the default Sketchpad or Bootstrap styles</li>
-	<li>Individually <a href="/sketchpad/demo/tags/css/">target and style</a> controller and method menu items</li>
+	<li>Individually <a href="../tags/css">target and style</a> controller and method menu items</li>
 </ul>
 
 <h3>Scripts</h3>
@@ -177,7 +183,7 @@ class SomeController extends Controller
 	<li>Inject and call <code>Sketchpad::addScript()</code> in your controller methods</li>
 </ol>
 <p>Here's an example of injecting the script via the constructor, so it will available in all methods:</p>
-<pre>
+<pre class="code php">
 public function()
 {
     public function __construct(Sketchpad $sketchpad)

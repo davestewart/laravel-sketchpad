@@ -5,6 +5,7 @@
 			<h1>Settings</h1>
 		</header>
 		<section>
+
 			<fieldset name="paths">
 				<legend>Paths</legend>
 				<ul class="form-inline" v-sortable="{handle: '.handle', onUpdate: onPathsReorder}">
@@ -19,29 +20,30 @@
 
 			<fieldset name="ui">
 				<legend>UI</legend>
-
 				<section style="margin-left:25px">
-
-					<label>Homepage</label>
-					<ul>
-						<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="welcome"> Welcome</label></li>
-						<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> Favourites</label></li>
-						<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="search"> Search</label></li>
-					</ul>
-
-					<label>Navigation</label>
-					<ul>
-						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.humanizeText"> Humanize text</label></li>
-						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.showComments"> Show comments</label></li>
-						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.showArchived"> Show archived</label></li>
-					</ul>
-
-					<label>Output</label>
-					<ul>
-						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.formatCode"> Format code</label></li>
-						<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.appendOutput"> Append output</label></li>
-					</ul>
-
+					<article>
+						<label>Homepage</label>
+						<ul>
+							<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="welcome"> Welcome</label></li>
+							<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> Favourites</label></li>
+							<li class="radio"><label><input type="radio" v-model="settings.ui.homepage" value="search"> Search</label></li>
+						</ul>
+					</article>
+					<article>
+						<label>Navigation</label>
+						<ul>
+							<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.humanizeText"> Humanize text</label></li>
+							<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.showComments"> Show comments</label></li>
+							<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.showArchived"> Show archived</label></li>
+						</ul>
+					</article>
+					<article>
+						<label>Output</label>
+						<ul>
+							<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.formatCode"> Format code</label></li>
+							<li class="checkbox"><label><input type="checkbox" v-model="settings.ui.appendOutput"> Append output</label></li>
+						</ul>
+					</article>
 				</section>
 
 			</fieldset>
@@ -53,15 +55,18 @@
 
 <script>
 
-import server from '../../js/services/server/server';
+import server       from '../../js/services/server.js';
+import settings     from '../../js/state/settings.js';
+import store        from '../../js/state/store.js';
+import state        from '../../js/state/state.js';
 
 export default
 {
-	props: ['settings'],
+	name: 'Settings',
 
-	data:
+	data()
 	{
-
+		return { settings }
 	},
 
 	created ()
@@ -74,14 +79,14 @@ export default
 	{
 		onSettingsChange (value, old)
 		{
-			server.post('api/settings', {settings:JSON.stringify(this.settings)}, console.log)
+			server.post('api/settings', {settings:JSON.stringify(this.settings)})
 		},
 
 		onPathsChange (value, old)
 		{
 			server
 				.post('api/settings', {settings:JSON.stringify(this.settings)})
-				.then(data => app.store.reloadAll())
+				.then(data => store.loadAll())
 		},
 
 		onPathsReorder: function (event) {

@@ -2,6 +2,7 @@
 
 use davestewart\sketchpad\objects\reflection\Controller;
 use davestewart\sketchpad\objects\route\ControllerReference;
+use davestewart\sketchpad\objects\route\ControllerErrorReference;
 use davestewart\sketchpad\objects\route\FolderReference;
 use davestewart\sketchpad\traits\GetterTrait;
 
@@ -146,12 +147,21 @@ class Scanner extends AbstractScanner
 			$route          = strtolower($this->route . $route . $segment);
 
 			// objects
-			$controller     = new Controller($abspath, $route);
-			$ref            = new ControllerReference($route, $controller->path, $controller->classpath);
+			$instance       = Controller::fromPath($abspath, $route);
 
-			// assign objects
-			$this->controllers[] = $controller;
-			$this->addRoute($route, $ref);
+			// add
+			if($instance instanceof Controller)
+			{
+				$ref                    = new ControllerReference($route, $instance->path, $instance->classpath);
+				$this->controllers[]    = $instance;
+				$this->addRoute($route, $ref);
+			}
+
+			else
+			{
+				$ref        = new ControllerErrorReference($route, $instance->path, $instance->error);
+				$this->addRoute($route, $ref);
+			}
 		}
 
 		/**

@@ -3,10 +3,10 @@
 	<article>
 		<header>
 			<h1>Search</h1>
-			<input class="form-control" v-model="term">
+			<input class="form-control" v-model="term" placeholder="Start typing to filter">
 		</header>
 		<section id="favourites">
-			<controllers :filter="filter"></controllers>
+			<controller-list :filter="filter"></controller-list>
 		</section>
 	</article>
 
@@ -14,13 +14,15 @@
 
 <script>
 
-import Controllers  from '../../components/ControllerList.vue'
+import ControllerList  from './components/ControllerList.vue'
 
 export default
 {
+	name: 'Search',
+
 	components:
 	{
-		Controllers
+		ControllerList
 	},
 
 	data ()
@@ -30,8 +32,7 @@ export default
 			filter: method =>
 			{
 				const term = this.term.toLowerCase().replace(/^\s*|\s$/g, '');
-				if (term === '*') return true;
-				if (term === '') return false;
+				if (term === '') return true;
 				return (method.label + method.comment.intro)
 					.toLowerCase()
 					.indexOf(this.term) > -1

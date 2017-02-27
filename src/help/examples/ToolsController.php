@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\demo;
+<?php namespace davestewart\sketchpad\help\examples;
 
 use App\data\entities\User;
 use Illuminate\Http\Request;
@@ -16,6 +16,8 @@ class ToolsController extends Controller
 
 	/**
 	 * View the app state
+	 *
+	 * @group Application
 	 */
 	public function dumpApp()
 	{
@@ -23,8 +25,127 @@ class ToolsController extends Controller
 	}
 	
 	/**
+	 * Show users in a table
+	 */
+	public function viewUsers()
+	{
+		$classes =
+		[
+			'\User',
+			'\App\User',
+			'\App\Models\User',
+			'\App\Models\Entities\User',
+			'\App\data\entities\User',
+		];
+		$users = null;
+		foreach($classes as $class)
+		{
+			if(class_exists($class))
+			{
+				p("Using user class <code>$class</code> and fetching users...");
+				$users = $class::all();
+				break;
+			}
+		}
+
+		if($users)
+		{
+			$data = $users->toArray();
+			return count($data)
+				? tb($data)
+				: p('There are no users in the database', 'note');
+		}
+		else
+		{
+			p('Could not find User class in the following array:');
+			pr($classes);
+		}
+
+	}
+
+	/**
+	 * Example tool with a Vue version of the `artisan route:list` command, plus filtering functionality
+	 */
+	public function viewRoutes()
+	{
+		// variables
+		$routes = \Route::getRoutes();
+		$array  = [];
+		foreach ($routes as /** @var Route */ $route)
+		{
+			$action = $route->getAction()['uses'];
+			$array[] =
+			[
+				'method'    => implode('|', $route->getMethods()),
+				'uri'       => $route->getUri(),
+				'name'      => $route->getName(),
+				'action'    => $action instanceof \Closure ? 'Closure' : $action,
+				'middleware'=> implode(', ', $route->middleware()),
+			];
+		}
+
+		echo vue('sketchpad::help.vue.routes', ['data' => $array]);
+	}
+
+    /**
+     * Browse your local filesystem
+     *
+     * @param $path
+     * @return View|string
+     */
+    public function browseFilesystem($path = '')
+    {
+
+        // parameters
+        if( ! $path )
+        {
+            $path = base_path($path);
+        }
+
+        // paths
+        $_path      = $path;
+        $path       = realpath($path);
+        $parent     = $path == '' ? null : realpath($path . '/../');
+
+        // found
+        if($path)
+        {
+            function getBreadcrumbs($path)
+            {
+                $segments   = array_flip(explode('/', $path));
+                $lastPath   = '';
+                foreach($segments as $key => $value)
+                {
+                    $path = $lastPath . $key . '/';
+                    $segments[$key] = $path;
+                    $lastPath = $path;
+                }
+                return $segments;
+            }
+
+            try
+            {
+                $objects        = array_diff(scandir($path), ['.','..']);
+                $breadcrumbs    = getBreadcrumbs($path);
+                $folders        = array_filter($objects, function($f) use ($path) { return is_dir($path . '/' . $f); });
+                $files          = array_filter($objects, function($f) use ($path) { return is_file($path . '/' . $f); });
+                $path           = rtrim($path, '/') . '/';
+
+                return view('sketchpad::help.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
+            }
+            catch(\Exception $e)
+            {
+                return "Unable to read folder '$path'";
+            }
+        }
+
+        // not found
+        return "Path '$_path' not found";
+	}
+
+	/**
 	 * See what's in the session
-	 *
+	 * @group Environment
 	 */
 	public function viewSession()
 	{
@@ -95,129 +216,11 @@ class ToolsController extends Controller
 
 	}
 
-	/**
-	 * Show users in a table
-	 */
-	public function viewUsers()
-	{
-		$classes =
-		[
-			'\User',
-			'\App\User',
-			'\App\Models\User',
-			'\App\Models\Entities\User',
-			'\App\data\entities\User',
-		];
-		$users = null;
-		foreach($classes as $class)
-		{
-			if(class_exists($class))
-			{
-				p("Using user class <code>$class</code> and fetching users...");
-				$users = $class::all();
-				break;
-			}
-		}
-
-		if($users)
-		{
-			$data = $users->toArray();
-			return count($data)
-				? tb($data)
-				: p('There are no users in the database', 'note');
-		}
-		else
-		{
-			p('Could not find User class in the following array:');
-			pr($classes);
-		}
-
-	}
-
-	/**
-	 * Example tool with a Vue version of the `artisan route:list` command, plus filtering functionality
-	 */
-	public function viewRoutes()
-	{
-		// variables
-		$routes = \Route::getRoutes();
-		$array  = [];
-		foreach ($routes as /** @var Route */ $route)
-		{
-			$action = $route->getAction()['uses'];
-			$array[] =
-			[
-				'method'    => implode('|', $route->getMethods()),
-				'uri'       => $route->getUri(),
-				'name'      => $route->getName(),
-				'action'    => $action instanceof \Closure ? 'Closure' : $action,
-				'middleware'=> implode(', ', $route->middleware()),
-			];
-		}
-
-		echo vue('sketchpad::demo.vue.routes', ['data' => $array]);
-	}
-
-    /**
-     * Browse your local filesystem
-     *
-     * @param $path
-     * @return View|string
-     */
-    public function browseFilesystem($path = '')
-    {
-
-        // parameters
-        if( ! $path )
-        {
-            $path = base_path($path);
-        }
-
-        // paths
-        $_path      = $path;
-        $path       = realpath($path);
-        $parent     = $path == '' ? null : realpath($path . '/../');
-
-        // found
-        if($path)
-        {
-            function getBreadcrumbs($path)
-            {
-                $segments   = array_flip(explode('/', $path));
-                $lastPath   = '';
-                foreach($segments as $key => $value)
-                {
-                    $path = $lastPath . $key . '/';
-                    $segments[$key] = $path;
-                    $lastPath = $path;
-                }
-                return $segments;
-            }
-
-            try
-            {
-                $objects        = array_diff(scandir($path), ['.','..']);
-                $breadcrumbs    = getBreadcrumbs($path);
-                $folders        = array_filter($objects, function($f) use ($path) { return is_dir($path . '/' . $f); });
-                $files          = array_filter($objects, function($f) use ($path) { return is_file($path . '/' . $f); });
-                $path           = rtrim($path, '/') . '/';
-
-                return view('sketchpad::demo.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
-            }
-            catch(\Exception $e)
-            {
-                return "Unable to read folder '$path'";
-            }
-        }
-
-        // not found
-        return "Path '$_path' not found";
-	}
 
     /**
      * Just for fun!
      *
-     * @return string
+     * @group Other
      */
 	public function randomCat()
     {

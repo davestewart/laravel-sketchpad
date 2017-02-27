@@ -1,57 +1,151 @@
 <?php namespace davestewart\sketchpad\objects\route;
 
 /**
- * Controller Reference object
+ * Call Reference object
  *
- * Proxy for a full reflection controller object
+ * Extends ControllerReference to manage values needed for a HTTP call to a controller method
  *
- * Used in 2 places:
- *
- *  1.  When scanning all the folders at the start.
- *
- *      The references are saved to the session so no need to re-scan later.
- *      At this point, only the path, class and route are saved
- *
- *  2.  When a method is called from the app
- *
- *      At this point, method and params are populated, and within Sketchpad
- *      to determine how to call the actual Controller method via App::call()
  */
 class CallReference extends ControllerReference
 {
-    /**
-     * A string method for the called method (only populated in phase 2)
-     * @var string
-     */
-    public $method;
+	// ------------------------------------------------------------------------------------------------
+	// properties
 
-    /**
-     * An array of strings for the called parameters (only populated in phase 2)
-     * @var string[]
-     */
-    public $params;
+	    /**
+	     * A string method for the called method
+	     *
+	     * @var string
+	     */
+	    public $method;
 
-    /**
-	 * CallReference constructor
-	 *
-	 * @param   string  $route
-	 * @param   string  $path
-	 * @param   string  $class
-	 */
-	public function __construct($route, $path, $class = null)
-	{
-		parent::__construct('call', $route, $path);
-		$this->class    = $class;
-	}
+	    /**
+	     * An array of values for the called parameters
+	     *
+	     * @var mixed[]
+	     */
+	    public $params;
 
-	public static function fromControllerRef(ControllerReference $c)
-    {
-        $call = new self($c->route, $c->path, $c->class);
-        foreach($c as $key => $value)
-        {
-            $call->$key = $value;
-        }
-        return $call;
-    }
 
+	// ------------------------------------------------------------------------------------------------
+	// instantiation
+
+		public static function fromControllerRef(ControllerReference $controller)
+	    {
+	        $call = new self($controller->route, $controller->path, $controller->class);
+	        foreach($controller as $key => $value)
+	        {
+	            $call->$key = $value;
+	        }
+	        return $call;
+	    }
+
+	    /**
+		 * CallReference constructor
+		 *
+		 * @param   string  $route
+		 * @param   string  $path
+		 * @param   string  $class
+		 */
+		public function __construct($route, $path, $class = null)
+		{
+			parent::__construct('call', $route, $path);
+			$this->class = $class;
+		}
+
+
+	// ------------------------------------------------------------------------------------------------
+	// methods
+
+		/**
+		 * Determines the method to call
+		 *
+		 * @param $route
+		 * @return $this
+		 */
+		public function setMethod($route)
+		{
+			// variables
+			$methodUri      = trim(substr($route, strlen($this->route)), '/');
+			$segments       = explode(',', $methodUri);
+
+			// properties
+			$this->method    = array_shift($segments);
+
+			// return
+			return $this;
+		}
+
+		/**
+		 * Sets the calling parameters from the submitted front end data
+		 *
+		 * @param   \StdClass[]     $params
+		 * @return                  $this
+		 */
+		public function setParams($params)
+		{
+			$this->params = [];
+			foreach ($params as $param)
+			{
+				// variables
+				$name = $param['name'];
+				$type = $param['type'];
+				$value = $param['value'];
+
+				// properties
+				$this->params[$name] = $this->convert($type, $value);
+			}
+
+			// return
+			return $this;
+		}
+
+
+	// ------------------------------------------------------------------------------------------------
+	// utilities
+
+		/**
+		 * Utility used to convert values to the correct type
+		 *
+		 * @param   string  $type
+		 * @param   mixed   $value
+		 * @return  mixed
+		 */
+		protected function convert ($type, $value)
+		{
+			switch ($type)
+			{
+				case 'string':
+					return (string) $value;
+
+				case 'number':
+					return is_float($value)
+						? (float) $value
+						: (int) $value;
+
+				case 'boolean':
+					return $value === true || $value === 'true' || $value === '1' || $value === 'on';
+
+				default:
+					if (is_float($value))
+					{
+						return $this->convert('number', $value);
+					}
+					if (is_numeric($value))
+					{
+						return strpos($value, '.') !== FALSE
+							? (float) $value
+							: (int) $value;
+					}
+					if ($value === 'true' || $value === 'false')
+					{
+						return $value === 'true';
+					}
+					if ($value === '')
+					{
+						return null;
+					}
+			}
+			return $value;
+		}
 }
+

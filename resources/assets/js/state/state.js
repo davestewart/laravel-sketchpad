@@ -9,12 +9,9 @@ var State = Vue.extend({
 	// ------------------------------------------------------------------------------------------------
 	// properties
 
-		el: () => document.createElement('div'),
-
 		data ()
 		{
 			return {
-				store		:store,
 				controller	:null,
 				method		:null
 			};
@@ -24,15 +21,8 @@ var State = Vue.extend({
 		{
 			route ()
 			{
-				return this.makeRoute(this.method, this.controller);
+				return this.makeRoute(this.method || this.controller);
 			}
-		},
-
-		//props:['store'],
-
-		created ()
-		{
-			console.log(this);
 		},
 
 
@@ -53,14 +43,16 @@ var State = Vue.extend({
 				 */
 				setRoute (route, params)
 				{
+					// don't update if route is the same
+					if(this.method && route === this.method.route)
+					{
+						return
+					}
+
 					// variables
 					let {controller, method} = this.parseRoute(route);
 
-					// state
-					this.controller 		= controller;
-					this.method 			= method;
-
-					// update parameters
+					// if we have a method, update its parameters
 					if(method && params)
 					{
 						method.params.forEach(function (param, index)
@@ -74,18 +66,18 @@ var State = Vue.extend({
 						});
 					}
 
-					// index fallback
-					if(controller && ! this.method)
+					// if no method, fall back to index
+					if(controller && ! method)
 					{
-						const methods = controller.methods.filter(function(m){ return m.name == 'index'; });
-						if(methods.length)
-						{
-							this.method = methods.shift();
-						}
+						method      = controller.methods.find(function(m){ return m.name == 'index'; });
 					}
 
-					// page
+					// page title
 					document.title 	= 'Sketchpad - ' + route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
+
+					// state
+					this.controller = controller;
+					this.method 	= method;
 				},
 
 				/**
@@ -102,7 +94,7 @@ var State = Vue.extend({
 			// private methods
 
 				/**
-				 * Gets a Route instance from a route string
+				 * Parse a route into a controller and method
 				 *
 				 * @param 	{string}	route
 				 * @returns {object}
@@ -114,7 +106,7 @@ var State = Vue.extend({
 
 					// assignments
 					route       = cap(route);
-					controller  = this.store.controllers.filter(function(c) { return route.indexOf(cap(c.route)) === 0; }).shift();
+					controller  = store.controllers.filter(function(c) { return route.indexOf(cap(c.route)) === 0; }).shift();
 					if(controller)
 					{
 						method  = controller.methods.filter(function(m) { return route === cap(m.route); }).shift();
@@ -125,27 +117,25 @@ var State = Vue.extend({
 				},
 
 				/**
-				 * Make a route string from a controller and method
+				 * Make a FQ route from a method or controller
 				 *
-				 * @param   {Object}    method
-				 * @param   {Object}    controller
+				 * @param   {Object}    obj
 				 * @returns {string}
 				 */
-				makeRoute (method, controller)
+				makeRoute (obj)
 				{
-					if(method)
+					if (obj)
 					{
-						let route = method.route;
-						if(method.params.length)
+						let route = obj.route;
+						if(obj.params && obj.params.length)
 						{
-							let params = method.params.map( p => p.name + '=' + (p.value || '') );
-							route += '?' + params.join('&');
+							return route + '?' + obj.params
+									.map( p => p.name + '=' + (p.value || '') )
+									.join('&');
 						}
 						return route;
 					}
-					return controller
-						? controller.route
-						: '';
+					return '';
 				}
 		}
 

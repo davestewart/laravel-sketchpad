@@ -23,6 +23,8 @@
 	
 export default
 {
+	name: 'Modal',
+
 	props:['title', 'body', 'save'],
 
 	methods:

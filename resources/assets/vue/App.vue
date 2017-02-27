@@ -1,20 +1,20 @@
 <template>
 
-	<div id="test">
+	<div id="app" :class="{'show-comments':settings.ui.showComments}">
 
-		<top-nav :route="state.baseUrl"></top-nav>
+		<top-nav></top-nav>
 
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-4">
-					<navigation v-ref:navigation :controllers="store.controllers" :state="state" :settings="settings"></navigation>
+					<navigation v-ref:navigation></navigation>
 				</div>
 				<div class="col-xs-8">
 					<!--
 					<result v-if="state.controller" v-ref:result :state="state"></result>
 					-->
 					<div id="content" class="view">
-						<router-view v-ref:content :state="state" :settings="settings" :loader="loader"></router-view>
+						<router-view v-ref:content></router-view>
 					</div>
 				</div>
 			</div>
@@ -31,7 +31,7 @@
 // imports
 
 	// services
-	import server       from '../js/services/server/server.js';
+	import server       from '../js/services/server.js';
 
 	// state
 	import store        from '../js/state/store.js';
@@ -74,25 +74,8 @@
 
 		ready ()
 		{
-			// reloading
-			this.store.$on('load', this.onStoreLoad);
-
 			// links
 			$('#content').on('click', 'a[href]', this.onLinkClick);
-
-			// routing
-			router.afterEach(transition => {
-				const route = transition.to;
-				if(route.path.indexOf('/run/') === 0)
-				{
-					this.state.setRoute(route.params.route, route.query);
-					this.$nextTick( () => this.$refs.content.load())
-				}
-				else
-				{
-					this.state.reset()
-				}
-			})
 
 			// ui
 			//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
@@ -101,28 +84,6 @@
 
 		methods:
 		{
-			onStoreLoad (event)
-			{
-				if(this.state.controller && this.state.controller.relpath == event.path)
-				{
-					var cIndex 	= event.index;
-					var mIndex	= this.state.method ? this.state.controller.methods.indexOf(this.state.method) : -1;
-					if(cIndex !== -1)
-					{
-						this.unwatch();
-						this.state.controller = this.store.controllers[cIndex];
-						if(mIndex !== -1)
-						{
-							this.state.method = this.state.controller.methods[mIndex];
-						}
-						this.watch();
-					}
-
-					// reload
-					this.update();
-				}
-			},
-
 			onLinkClick (event)
 			{
 				var run = location.origin + server.getUrl('run/');
@@ -131,6 +92,7 @@
 					event.preventDefault();
 					const path = event.target.href.substr(run.length);
 					router.go('/run/' + decodeURI(path))
+					//router.replace('/run/' + decodeURI(path))
 				}
 			}
 

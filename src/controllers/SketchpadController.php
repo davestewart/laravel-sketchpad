@@ -1,13 +1,13 @@
 <?php namespace davestewart\sketchpad\controllers;
 
-use davestewart\sketchpad\objects\install\JSON;
-use davestewart\sketchpad\config\SketchpadSettings;
-use davestewart\sketchpad\config\SketchpadConfig;
-use davestewart\sketchpad\services\Setup;
-use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Input;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
+use davestewart\sketchpad\config\Paths;
+use davestewart\sketchpad\services\Setup;
+use davestewart\sketchpad\services\Sketchpad;
 
 /**
  * Class SketchpadController
@@ -41,7 +41,7 @@ class SketchpadController extends Controller
 
 
 	// ------------------------------------------------------------------------------------------------
-	// main entry point
+	// endpoints
 
         public function index(Request $request)
         {
@@ -51,53 +51,47 @@ class SketchpadController extends Controller
                 return $this->sketchpad->index();
             }
 
-            // run setup
-            $setup = new Setup();
-            return $setup->index();
-        }
+	        // run setup
+	        $setup = new Setup();
+	        return $setup->index();
+	    }
 
-        /**
-         * Run a controller method
-         *
-		 * @param   Request     $request
-		 * @param   string      $path
-		 * @return  \Illuminate\View\View|mixed|string
-		 */
-		public function run(Request $request, $path = '')
-		{
-            $request->query->remove('_call');
-            return $this->sketchpad->run($path, $request->all());
-		}
+	    public function asset($file)
+	    {
+	        // absolute path
+	        $paths  = new Paths();
+	        $path   = $paths->publish("assets/$file");
 
-        /**
-         * Returns the JSON for a single controller
-         *
-         * @param $path
-         * @return mixed
-         */
-        public function load($path = null)
-        {
-            return response($this->sketchpad->getController($path));
-		}
+	        // 404
+	        if(!file_exists($path))
+	        {
+	            header("HTTP/1.0 404 Not Found");
+	            exit;
+	        }
 
-		/**
-		 * Loads or saves settings data
-		 *
-		 * @method  POST
-		 * @method  GET
-		 * @param   Request $request
-		 * @param   SketchpadConfig $config
-		 * @return  SketchpadSettings
-		 */
-		public function settings(Request $request, SketchpadConfig $config)
-		{
-			if($request->isMethod('post'))
-			{
-				$data = json_decode($request->get('settings'));
-				$config->settings->save($data);
-			}
-			return $config->settings;
-		}
+	        // mimetype
+	        $info   = pathinfo($path);
+	        $ext    = $info['extension'];
+	        $mimes  =
+	        [
+	            'js'    => 'application/javascript',
+	            'css'   => 'text/css',
+	            'gif'   => 'image/gif',
+	            'png'   => 'image/png',
+	            'woff'  => 'application/font-woff',
+	            'ttf'   => 'application/x-font-ttf',
+	        ];
+	        $mime = isset($mimes[$ext])
+	            ? $mimes[$ext]
+	            : 'application/octet-stream'; //'text/html';
+
+	        // serve file
+	        $response = new BinaryFileResponse($path);
+	        $response->mustRevalidate();
+	        $response->headers->set('Content-type', $mime);
+	        $response->headers->set('Content-length', filesize($path));
+	        return $response;
+	    }
 
 }
 

@@ -1,5 +1,7 @@
-import Vue 		from 'vue';
-import server	from '../services/server/server';
+import Vue 		    from 'vue';
+import server	    from '../services/server';
+import state        from '../state/state'
+import watcher      from '../services/watcher'
 
 /**
  * The controllers store
@@ -12,135 +14,152 @@ var Store = Vue.extend({
 
 	data ()
 	{
-		// object with single controllers property
-		var data = $('#data').text();
-		return data ? JSON.parse(data) : {};
+		const text = $('#data').text();
+		const data = JSON.parse(text);
+		data.controller = data.controllers[0];
+		data.method = data.controller.methods[0];
+		return data;
 	},
 
 	created ()
 	{
-		const self = this;
-		this.server = server;
-
-		if(window.LiveReload)
-		{
-			// proxies
-			const reload 	= LiveReload.reloader.reload;
-
-			// monkeypatch livereloader
-			LiveReload.reloader.reload = function(file, options)
-			{
-				if(self.reload(file))
-				{
-					return;
-				}
-				return reload.call(this, file, options);
-			};
-		}
-
-		if(window.___browserSync___)
-		{
-			___browserSync___.socket.on('sketchpad.udpate', function(event) {
-				console.log(arguments);
-				// TODO check this is the proper call
-				self.reload(event.file)
-			})
-		}
-
+		watcher.addHandler(/Controller\.php$/, this.onControllerChange);
 	},
 
 	methods:
 	{
+		// ------------------------------------------------------------------------------------------------
+		// load
+
+			loadAll ()
+			{
+				server
+					.load('api/load')
+					.then(this.onLoadAll)
+			},
+
+			load (route)
+			{
+				server
+					.load('api/load/' + route)
+					.then(this.onLoad)
+			},
+
 
 		// ------------------------------------------------------------------------------------------------
-		// loading
-
-			reloadAll ()
-			{
-				this.server
-					.load('api/load')
-					.then(this.setControllers)
-			},
-
-			setControllers (data)
-			{
-				this.controllers = data
-			},
-
-			/**
-			 * Delegated livereload function
-			 *
-			 * @param path
-			 * @returns {boolean}
-			 */
-			reload (path)
-			{
-				// intercept controller updates
-				if (/Controller\.php$/.test(path))
-				{
-					const controller = this.getControllerByPath(path);
-					if(controller)
-					{
-						this.server.loadController(path, this.onLoad);
-					}
-					return true;
-				}
-
-				// php file
-				if(/\.php$/.test(path))
-				{
-					this.emit('file');
-					return true;
-				}
-
-				// let LiveReload handle the load
-				return false;
-			},
+		// handlers
 
 			/**
 			 * Update controller data when a controller is changed, requested, and data reloaded
 			 *
-			 * @param data
+			 * @param   {Object[]}  data    An array of controller data
+			 */
+			onLoadAll (data)
+			{
+				this.setControllers(data);
+			},
+
+			/**
+			 * Handles a watcher file change
+			 *
+			 * @param   {string}    path   The absolute path to a controller file (possibly loaded)
+			 * @returns {boolean}
+			 */
+			onControllerChange (path, type)
+			{
+				const controller = this.getControllerByPath(path);
+				if(controller)
+				{
+					this.load(controller.route);
+					return true;
+				}
+				else if (type === 'add' || type === 'delete')
+				{
+					this.loadAll();
+					return true;
+				}
+				return false;
+			},
+
+			/**
+			 * Single controller load handler
+			 *
+			 * @param   {Object}    data    Controller data
 			 */
 			onLoad (data)
 			{
-				if(data && data.path)
+				if(data)
 				{
-					// check for existing controller
-					const controller = this.getControllerByPath(data.path);
-					let index;
-
-					// insert if the controller exists
-					if(controller)
+					if(data.path)
 					{
-						// debug
-						console.log('Updating controller: ' + data.name);
-
-						// update store
-						index = this.controllers.indexOf(controller);
-						this.controllers.$set(index, data);
+						this.setController(data)
 					}
-
-					// append and sort if not
-					else
+					if (data.error)
 					{
-						this.controllers.push(data);
-						this.controllers.sort(function(a, b)
-						{
-							if (a.path < b.path)
-							{
-								return -1;
-							}
-							if (a.path > b.path)
-							{
-								return 1;
-							}
-							return 0;
-						});
+						console.log(data.error);
+						this.loadAll();
 					}
+				}
+			},
 
-					// emit
-					this.emit('controller', data.path, index);
+
+		// ------------------------------------------------------------------------------------------------
+		// update
+
+			/**
+			 * Update all controllers
+			 *
+			 * @param   {Object[]}  data        An array of controllers
+			 */
+			setControllers (data)
+			{
+				this.controllers = data;
+				const controller = this.getControllerByPath(state.controller.path);
+				if (controller)
+				{
+					this.updateState(controller)
+				}
+			},
+
+			setController (data)
+			{
+				// see if the same controller is already loaded
+				const controller = this.getControllerByPath(data.path);
+
+				// if so, replace it
+				if(controller)
+				{
+					const index = this.controllers.indexOf(controller);
+					this.controllers[index] = data;
+					if (state.controller.path === data.path)
+					{
+						this.updateState(data);
+					}
+				}
+
+				// if not, add it
+				else
+				{
+					this.controllers.push(controller);
+					this.controllers.sort(fnSort);
+				}
+			},
+
+			/**
+			 * Update the state object after controller update
+			 *
+			 * @param {Object}  controller
+			 */
+			updateState (controller)
+			{
+				// index of existing method on existing controller
+				const index = state.controller.methods.indexOf(state.method);
+
+				// replace controller and method
+				state.controller = controller;
+				if (controller.methods)
+				{
+					state.method = controller.methods[index];
 				}
 			},
 
@@ -150,12 +169,7 @@ var Store = Vue.extend({
 
 			getControllerByPath (path)
 			{
-				return this.controllers.filter( c => c.path == path ).shift();
-			},
-
-			emit (type, path, index)
-			{
-				this.$emit('load', {type:type, path:path, index:index});
+				return this.controllers.find( c => c.path === path );
 			}
 
 	}
@@ -163,3 +177,12 @@ var Store = Vue.extend({
 });
 
 export default new Store();
+
+function fnSort (a, b)
+{
+	return  a.path < b.path
+		? -1
+		: (a.path > b.path
+			? 1
+			: 0);
+}

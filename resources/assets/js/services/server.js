@@ -1,11 +1,12 @@
-import Queue from './queue';
-import Request from './request';
+import Queue from './server/queue';
+import Request from './server/request';
+import _ from 'underscore'
 
 function Server()
 {
 	// setup base route
 	this.base   = $('meta[name="route"]').attr('content');
-	this.queue  = new Queue('post');
+	this.queue  = new Queue();
 }
 
 Server.prototype =
@@ -29,13 +30,9 @@ Server.prototype =
 		 */
 		run(method, done, fail, always)
 		{
-			const route	= this.getUrl('api/run/' + method.route);
-			const data	= method.params.map( function(param)
-			{
-				let {name, type, value } = param;
-				return {name, type, value}
-			});
-			return this.queue.add(new Request(route, data, done, fail, always));
+			const url	= this.getRunUrl(method);
+			const data	= method.params.map(param => _.pick(param, 'name', 'type', 'value'));
+			return this.queue.add(new Request(url, data, done, fail, always));
 		},
 
 		/**
@@ -65,18 +62,23 @@ Server.prototype =
 			return $.get(url, done);
 		},
 
+		loadController(route, onSuccess)
+		{
+			var url = 'api/load/' + route;
+			return onSuccess
+				? this.load(url, onSuccess)
+				: window.open(this.base + url);
+		},
+
 		post(path, data, done)
 		{
 			const url	= this.getUrl(path);
 			return $.post(url, data, done);
 		},
 
-		loadController(path, onSuccess)
+		getRunUrl(method)
 		{
-			var url = 'load/' + path;
-			return onSuccess
-				? this.load(url, onSuccess)
-				: window.open(this.base + url);
+			return this.getUrl('api/run/' + method.route);
 		},
 
 		getUrl(path)
