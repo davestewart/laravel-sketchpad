@@ -175,7 +175,7 @@
 
 	}
 
-	#info{
+	#info {
 
 		.info p{
 			/*
@@ -218,6 +218,7 @@
 					margin:0;
 				}
 			}
+
 			label:after{
 				content:' : ';
 			}
@@ -235,7 +236,7 @@
 			}
 
             input[type="number"]{
-              width:65px;
+              min-width:65px;
             }
 
             input[type="date"]{
@@ -245,13 +246,35 @@
             input[type="text"],
             input[type="string"],
             input[type="email"]{
-              width:200px;
+				z-index: 1;
+	            box-sizing: border-box;
+                min-width:100px;
+                max-width:300px;
+                //transition: width 0.3s;
             }
 
             input:focus {
               color: rgb(204, 0, 0);
               outline: none;
             }
+
+			.field {
+				position: relative;
+				display: inline-block;
+				z-index: 0;
+			}
+
+			.sizer {
+	            box-sizing: border-box;
+				position: absolute;
+				padding:0 5px;
+				overflow-y: hidden;
+				height:1px;
+				top:0;
+				left:0;
+				width:auto;
+				transform: scaleX(0);
+			}
         }
 	}
 
