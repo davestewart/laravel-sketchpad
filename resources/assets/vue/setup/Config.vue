@@ -20,7 +20,7 @@
 
                         <legend>Presets</legend>
 
-						<div id="type" class="form-group inline">
+						<div class="form-group inline">
 							<label class="control-label col-sm-3">Type</label>
 							<div class="col-sm-9">
 								<div v-for="(key, option) in getOptions()" class="radio">
@@ -39,8 +39,8 @@
 
                         <legend>Paths</legend>
 
-						<div id="controllers" :class="getClass('controllers', true)">
-							<label for="controllers" class="control-label col-sm-3">Controllers</label>
+						<div :class="getClass('controllers', true)">
+							<label class="control-label col-sm-3">Controllers</label>
 							<div class="col-sm-9">
 								<input type="text"
 									   v-model="options.controllers"
@@ -52,8 +52,8 @@
 							</div>
 						</div>
 
-                        <div id="views" :class="getClass('views', true)">
-							<label for="views" class="control-label col-sm-3">Views</label>
+                        <div :class="getClass('views', true)">
+							<label class="control-label col-sm-3">Views</label>
 							<div class="col-sm-9">
 								<input type="text"
 									   v-model="options.views"
@@ -65,9 +65,8 @@
 							</div>
 						</div>
 
-						<!--
-                        <div id="assets" :class="getClass('assets')">
-							<label for="assets" class="control-label col-sm-3">Assets</label>
+                        <div :class="getClass('assets')">
+							<label class="control-label col-sm-3">Assets</label>
 							<div class="col-sm-9">
 								<input type="text"
 									   v-model="options.assets"
@@ -78,10 +77,11 @@
 								<p class="help-block hint">{{ hints.assets }}</p>
 							</div>
 						</div>
+						<!--
 						-->
 
-                        <div id="route" :class="getClass('route')">
-							<label for="route" class="control-label col-sm-3">Route</label>
+                        <div :class="getClass('route')">
+							<label class="control-label col-sm-3">Route</label>
 							<div class="col-sm-9">
 								<input type="text"
 									   v-model="options.route"
@@ -99,8 +99,8 @@
 
                         <legend>Autoloader</legend>
 
-						<div id="namespace" :class="getClass('namespace', true)">
-							<label for="controllers" class="control-label col-sm-3">Namespace prefix</label>
+						<div :class="getClass('namespace', true)">
+							<label class="control-label col-sm-3">Namespace prefix</label>
 							<div class="col-sm-9">
 								<input type="text"
 									   v-model="options.namespace"
@@ -112,8 +112,8 @@
 							</div>
 						</div>
 
-						<div id="basedir" :class="getClass('basedir', true)">
-							<label for="controllers" class="control-label col-sm-3">Base directory</label>
+						<div :class="getClass('basedir', true)">
+							<label class="control-label col-sm-3">Base directory</label>
 							<div class="col-sm-9">
 								<input type="text"
 									   v-model="options.basedir"
@@ -156,7 +156,7 @@ var options = {
         desc        :'Sketchpad functions separately from your app; easiest for version control',
 		controllers	:'sketchpad/controllers',
 		views		:'sketchpad/views',
-		assets		:'vendor/sketchpad',
+		assets		:'sketchpad/assets',
 		route		:'sketchpad',
 		namespace	:'sketchpad',
         basedir     :'sketchpad'
@@ -166,7 +166,7 @@ var options = {
         desc        :'Integrates Sketchpad into your app; code lives inside Laravel subfolders',
 		controllers	:'app/Http/Controllers/Sketchpad',
 		views		:'resources/views/sketchpad',
-		assets		:'vendor/sketchpad',
+		assets		:'public/vendor/sketchpad',
 		route		:'sketchpad',
 		namespace	:'App',
         basedir     :'app'
@@ -176,7 +176,7 @@ var options = {
         desc        :'Sketchpad becomes your app; useful if you want a quick front-end UI',
 		controllers	:'app/Http/Controllers',
 		views		:'resources/views',
-		assets		:'assets',
+		assets		:'public/assets',
 		route		:'',
 		namespace	:'App',
         basedir     :'app'
@@ -186,7 +186,7 @@ var options = {
         desc        :'Full control over the installation; choose your own folders, paths, routes, etc.',
 		controllers	:'custom/src/Controllers',
 		views		:'custom/resources/views',
-		assets		:'vendor/custom',
+		assets		:'custom/resources/assets',
 		route		:'custom',
 		namespace	:'Custom',
 		basedir	    :'custom/src'
@@ -316,7 +316,7 @@ export default
             {
                 controllers	:path(options.controllers),
                 views		:path(options.views),
-                assets		:path('public/' + options.assets),
+                assets		:path(options.assets),
                 route		:options.route,
                 namespace	:options.namespace,
                 basedir     :path(options.basedir)

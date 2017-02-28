@@ -1,7 +1,7 @@
 <template>
 
 	<article>
-		<header>
+		<header id="header">
 			<h1>Help</h1>
 		</header>
 		<section>

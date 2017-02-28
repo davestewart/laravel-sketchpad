@@ -1,0 +1,23 @@
+#output {
+
+	// headings
+	h1:first-child,
+	h2:first-child,
+	h3:first-child,
+	h4:first-child{
+		margin-top:0;
+	}
+
+	h1:not(:first-child){ margin-top:1.0em; }
+	h2:not(:first-child){ margin-top:1.0em; }
+	h3:not(:first-child){ margin-top:1.3em; }
+	h4:not(:first-child){ margin-top:1.5em; }
+	h5:not(:first-child){ margin-top:1.6em; }
+
+	// special
+	p.note {
+		color:#e74c3c;
+	}
+
+}
+

@@ -1,12 +1,12 @@
-// ------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 // layout
-// ------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 
-	#top-nav.navbar{
-      border-radius: 0;
+	#top-nav.navbar {
+        border-radius: 0;
 	}
 
-	body:after{
+	body:after {
 		padding-bottom: 100px;
 		clear:both;
 		content:"."
@@ -24,9 +24,13 @@
 	}
 
 
-// ------------------------------------------------------------------------------------------------
-// formatting
-// ------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+// header
+// ---------------------------------------------------------------------------------------------------------------------
+
+	#header h1{
+		font-size:60px;
+	}
 
 	#content header {
 		min-height: 110px;
@@ -36,6 +40,10 @@
 			padding: 0;
 		}
 	}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// navigation
+// ---------------------------------------------------------------------------------------------------------------------
 
 	#nav {
 		margin-top: 113px;
@@ -175,7 +183,11 @@
 
 	}
 
-	#info{
+// ---------------------------------------------------------------------------------------------------------------------
+// info
+// ---------------------------------------------------------------------------------------------------------------------
+
+	#info {
 
 		.info p{
 			/*
@@ -183,10 +195,6 @@
 			margin: 0 0 10px;
 			border-left: 5px solid #ecf0f1;
 			*/
-
-			// padding: 3px 0px;
-			//margin: 0 0 10px;
-			//border-left: 5px solid #ecf0f1;
 		}
 
 		/*
@@ -194,12 +202,21 @@
 			visibility: hidden;
 		}
 		*/
+	}
 
-		nav{
+// ---------------------------------------------------------------------------------------------------------------------
+// params
+// ---------------------------------------------------------------------------------------------------------------------
+
+	#params {
+
+		margin-top: 2px;
+
+		nav {
 			min-height: 39px;
 			padding:4px;
 
-			li{
+			li {
 				padding:2px 6px;
 				padding-right:10px;
 				border-right:1px dotted rgba(0, 0, 0, 0.1);
@@ -218,67 +235,95 @@
 					margin:0;
 				}
 			}
-			label:after{
-				content:' : ';
-			}
-			li span{
-				opacity: 0.2;
-			}
-			input{
-				border-radius: 3px;
-				border:none;
-				padding:3px 6px;
-			}
 
-			input[type="checkbox"]{
-				width:auto;
-			}
-
-            input[type="number"]{
-              width:65px;
-            }
-
-            input[type="date"]{
-              width:160px;
-            }
-
-            input[type="text"],
-            input[type="string"],
-            input[type="email"]{
-              width:200px;
-            }
-
-            input:focus {
-              color: rgb(204, 0, 0);
-              outline: none;
-            }
         }
+
+		.loader {
+			position: absolute;
+			display: block;
+			width: 16px;
+			height: 16px;
+			right: 0;
+			margin: 8px 12px;
+			background-image: url('../images/ajax-loader.gif');
+			background-repeat: no-repeat;
+			transition: opacity 0.1s;
+			opacity: 0;
+
+			#result.loading & {
+				opacity: 1;
+			}
+		}
 	}
 
 	#params {
-		margin-top: 2px;
 
-		.navbar {
-			//margin-bottom :0;
+		label:after{
+			content:' : ';
 		}
+
+		// inputs
+		input{
+			border-radius: 3px;
+			border:none;
+			padding:3px 6px;
+		}
+
+		input:focus {
+			color: rgb(204, 0, 0);
+			outline: none;
+		}
+
+		input[type="checkbox"]{
+			width:auto;
+		}
+
+		input[type="number"]{
+			min-width:65px;
+		}
+
+		input[type="date"]{
+			width:160px;
+		}
+
+		input[type="text"],
+		input[type="string"],
+		input[type="email"]{
+			z-index: 1;
+			box-sizing: border-box;
+			min-width:100px;
+			max-width:300px;
+			//transition: width 0.3s;
+		}
+
+		// auto input sizing
+		.field {
+			position: relative;
+			display: inline-block;
+			z-index: 0;
+
+			.sizer {
+				position: absolute;
+				top:0;
+				left:0;
+				padding:0 5px;
+				overflow-y: hidden;
+				width:auto;
+				box-sizing: border-box;
+				white-space: nowrap;
+
+				// debugging
+				//outline: 1px solid red;
+				height:0px;
+				transform: scaleX(0);
+			}
+		}
+
 	}
 
-	#params .loader{
-		position: absolute;
-		display: block;
-		width:16px;
-		height:16px;
-		right:0;
-		margin:8px 12px;
-		background-image:url('../images/ajax-loader.gif');
-		background-repeat: no-repeat;
-		transition: opacity 0.1s;
-		opacity: 0;
-
-		#result.loading &{
-			opacity: 1;
-		}
-	}
+// ---------------------------------------------------------------------------------------------------------------------
+// output
+// ---------------------------------------------------------------------------------------------------------------------
 
 	#output{
 
@@ -296,7 +341,11 @@
 
 	}
 
-    #settings {
+// ---------------------------------------------------------------------------------------------------------------------
+// settings
+// ---------------------------------------------------------------------------------------------------------------------
+
+	#settings {
 
 	    form {
 		    margin-top: 1.5em;
@@ -352,29 +401,3 @@
 	    opacity: .3;
     }
 
-	.table.debug{
-
-		th, td{
-			font-size: 13px;
-			padding:5px 8px;
-		}
-
-		thead th{
-			font-weight: bold !important;
-		}
-
-		thead tr {
-			background: inherit;
-		}
-
-		tbody th{
-			min-width: 50px;
-			color:#e74c3c !important;
-		}
-
-		tbody td{
-			white-space: pre;
-			overflow-x:auto
-		}
-
-	}

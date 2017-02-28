@@ -186,9 +186,11 @@ class Html
 		 */
 		public static function md($path)
 		{
-			$path = \View::getFinder()->find($path);
+			$abspath = preg_match('%^(/|[a-z]:)%i', $path) === 1
+				? $path
+				: \View::getFinder()->find($path);
 			header('Content-Type: text/markdown');
-			return file_get_contents($path);
+			return file_get_contents($abspath);
 		}
 			
 	

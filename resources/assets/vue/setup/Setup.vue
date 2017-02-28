@@ -2,7 +2,7 @@
 
 	<div id="setup">
 
-		<header>
+		<header id="header">
 			<h1>Setup</h1>
 		</header>
 
@@ -28,6 +28,7 @@
 <pre>
 controllers  : {{ options.controllers }}
 views        : {{ options.views }}
+assets       : {{ options.assets }}
 </pre>
 
                 <template v-if="options.autoloader">

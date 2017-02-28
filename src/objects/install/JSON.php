@@ -78,9 +78,9 @@ class JSON extends Copier implements \JsonSerializable
         return $this;
     }
 
-    public function get($key = '')
+    public function get($key = '', $default = null)
     {
-        return array_get($this->data, $key);
+    	return array_get($this->data, $key, $default);
     }
 
     public function has($key)

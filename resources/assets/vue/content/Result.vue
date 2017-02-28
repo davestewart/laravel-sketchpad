@@ -5,7 +5,7 @@
 		<!-- info -->
 		<section id="info">
 
-			<header>
+			<header id="header">
 				<h1>{{ title }}</h1>
 				<div :class="{info:true, alert:alert, 'alert-danger':warning, 'alert-info':archived }">{{{ info | marked }}}</div>
 			</header>
@@ -37,6 +37,9 @@
 </template>
 
 <script>
+
+// libs
+import _                from 'underscore'
 
 // objects
 import state		    from '../../js/state/state.js';
@@ -73,19 +76,21 @@ export default
 		title ()
 		{
 			return state && state.method && state.method.name != 'index'
-					? Helpers.getMethodLabel(state.method)
-					: state.controller
-						? state.controller.label
-						: 'Sketchpad';
+				? Helpers.getMethodLabel(state.method)
+				: state.controller
+					? state.controller.label
+					: 'Sketchpad';
 		},
 
 		info ()
 		{
 			return state && state.method && state.method.name != 'index'
-					? state.method.comment.intro || '&hellip;'
-					: state.controller
-						? state.controller.methods.length + ' methods'
-						: '';
+				? state.method.comment.intro || '&hellip;'
+				: state.controller
+					? state.controller.comment.intro
+						? state.controller.comment.intro
+						: state.controller.methods.length + ' methods'
+					: '';
 		},
 
 		params ()
@@ -144,7 +149,7 @@ export default
 
 	created ()
 	{
-		this.loader 		= loader;
+		this.loader = loader;
 		this.loader.$on(LoaderEvent.START, this.onLoaderStart);
 		this.loader.$on(LoaderEvent.LOAD, this.onLoaderLoad);
 		this.loader.$on(LoaderEvent.ERROR, this.onLoaderError);
@@ -152,7 +157,7 @@ export default
 
 	ready ()
 	{
-		this.$output 		= $('#output');
+		this.$output = $('#output');
 	},
 
 	route:
@@ -160,16 +165,17 @@ export default
 		activate (transition)
 		{
 			//console.log('activate')
-			this.unwatch = state.$watch('method', this.onParamsChange, {deep:true});
 			transition.next();
 		},
 
 		data (transition)
 		{
-			const route = transition.to;
-			//console.log('data', route.params)
+			this.unwatch();
 
-			state.setRoute(route.params.route, route.query);
+			const route = transition.to;
+			//console.log('data', route.params, route.query)
+
+			let updated = state.setRoute(route.params.route, route.query);
 			transition.next();
 
 			this.load()
@@ -196,19 +202,24 @@ export default
 		// ------------------------------------------------------------------------------------------------
 		// loading
 
+			watch ()
+			{
+				this.unwatch = state.$watch('method', this.onParamsChange, {deep:true});
+			},
+
 			unwatch ()
 			{
 				console.log('unwatch not yet implemented');
 			},
 
-			onParamsChange (method)
+			onParamsChange:_.debounce(method =>
 			{
-				// console.log('params:', (method ? clone(method.params) : 'no method'));
+				//console.log('params:', (method ? clone(method.params) : 'no method'));
 				if(method)
 				{
 					router.replace('/run/' + state.makeRoute(state.method));
 				}
-			},
+			}, 400),
 
 			onLoaderStart (clear)
 			{
@@ -236,6 +247,7 @@ export default
 
 			load ()
 			{
+				this.watch();
 				state.method
 					? this.loader.load()
 					: this.clear()
@@ -255,6 +267,12 @@ export default
 				// properties
 				this.transition 	= false;
 				this.loading 		= false;
+
+				// clear
+				if(transition)
+				{
+					this.clear();
+				}
 
 				// format
 				if(method && method.tags.iframe)
@@ -277,13 +295,6 @@ export default
 					var html		= marked(data);
 					this.format 	= 'markdown';
 					$data.html(html);
-					//return;
-				}
-
-				// clear
-				if(transition)
-				{
-					this.clear();
 				}
 
 				// add content

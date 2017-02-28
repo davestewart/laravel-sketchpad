@@ -25,7 +25,8 @@
 		"appendOutput": false,
 		"homepage": "welcome"
 	},
-	"assets" : {
-		"head": ""
-	}
+	"head" : [
+		"/sketchpad/assets/user/user.js",
+		"/sketchpad/assets/user/user.css"
+	]
 }

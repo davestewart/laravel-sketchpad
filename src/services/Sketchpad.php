@@ -68,22 +68,11 @@ class Sketchpad
 			return $this;
 		}
 
-		public function getVariables()
-		{
-			$data =
-			[
-				'route'     => $this->config->route,
-				'assets'    => $this->config->route . 'assets/',
-				'settings'  => $this->config->settings->data,
-			];
-			return $data;
-		}
-
 		public function isInstalled ()
         {
             return $this->config->settings->exists();
         }
-	
+
 
 	// ------------------------------------------------------------------------------------------------
 	// GETTERS
@@ -105,27 +94,6 @@ class Sketchpad
 
 	// ------------------------------------------------------------------------------------------------
 	// ROUTING METHODS
-
-		/**
-		 * Index route, shows the main Sketchpad UI
-		 *
-		 * @return \Illuminate\View\View
-		 */
-		public function index()
-		{
-			// set up the router and rescan to get all data
-			$this->init(true);
-
-			// build the index page
-			$data           = $this->getVariables();
-			$data['data']   =
-			[
-				'controllers'   => $this->router->getControllers(),
-			];
-
-			// return
-			return view('sketchpad::index', $data);
-		}
 
         /**
          * Initial function that works out the controller, method and parameters to call from the URI string
@@ -180,7 +148,7 @@ class Sketchpad
 				$headers = implode(' ', headers_list());
 				if(strstr($headers, 'Content-type: text/markdown') !== false)
 				{
-					die($content);
+					die($response);
 				}
 
 				// otherwise, return response

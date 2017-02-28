@@ -39,14 +39,15 @@ var State = Vue.extend({
 				 * Update current values from route string and params object
 				 *
 				 * @param {string}  route       A route string that matches a controller route (so, not including /sketchpad/run/ prefix)
-				 * @param {Object}  params      A POJO containing name:value pairs
+				 * @param {Object}  params      A POJO of name:value properties
 				 */
 				setRoute (route, params)
 				{
 					// don't update if route is the same
 					if(this.method && route === this.method.route)
 					{
-						return
+						this.setParams(params);
+						return false;
 					}
 
 					// variables
@@ -55,15 +56,7 @@ var State = Vue.extend({
 					// if we have a method, update its parameters
 					if(method && params)
 					{
-						method.params.forEach(function (param, index)
-						{
-							const name      = param.name;
-							const value     = params[name];
-							if (typeof value !== 'undefined')
-							{
-								param.value = value;
-							}
-						});
+						this.setParams(params, method)
 					}
 
 					// if no method, fall back to index
@@ -78,6 +71,25 @@ var State = Vue.extend({
 					// state
 					this.controller = controller;
 					this.method 	= method;
+
+					// return
+					return true;
+				},
+
+				setParams (params)
+				{
+					if (this.method)
+					{
+						this.method.params.forEach(param =>
+						{
+							const name      = param.name;
+							const value     = params[name];
+							if (typeof value !== 'undefined')
+							{
+								param.value = value;
+							}
+						});
+					}
 				},
 
 				/**

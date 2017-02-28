@@ -1,15 +1,28 @@
-### This is a markdown document
+# This is an H1
+## This is an H2
+### This is an H3
+#### This is an H4
+##### This is an H5
 
-It's useful when you want to add documentation to your controllers and methods.
 
-Render:
+This is a paragraph
 
-- lists
-- of
-- items
+- this
+- is
+- a
+- list
 
 ```
-// code examples
+// this is some code
+for(var i = 0; i < 10 ; i++)
+{
+	print(i);
+}
 ```
 
-> **all** *the* [things](http://www.google.com) ...
+> this is a block indent
+
+Here are **some** *formatting* [examples](http://www.google.com) ...
+
+---
+
