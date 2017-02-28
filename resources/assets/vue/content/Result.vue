@@ -76,19 +76,21 @@ export default
 		title ()
 		{
 			return state && state.method && state.method.name != 'index'
-					? Helpers.getMethodLabel(state.method)
-					: state.controller
-						? state.controller.label
-						: 'Sketchpad';
+				? Helpers.getMethodLabel(state.method)
+				: state.controller
+					? state.controller.label
+					: 'Sketchpad';
 		},
 
 		info ()
 		{
 			return state && state.method && state.method.name != 'index'
-					? state.method.comment.intro || '&hellip;'
-					: state.controller
-						? state.controller.methods.length + ' methods'
-						: '';
+				? state.method.comment.intro || '&hellip;'
+				: state.controller
+					? state.controller.comment.intro
+						? state.controller.comment.intro
+						: state.controller.methods.length + ' methods'
+					: '';
 		},
 
 		params ()
