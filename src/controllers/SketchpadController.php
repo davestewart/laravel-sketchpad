@@ -46,15 +46,45 @@ class SketchpadController extends Controller
 
         public function index(Request $request)
         {
-            // is installed
-            if($this->sketchpad->isInstalled())
+            // not installed
+            if(!$this->sketchpad->isInstalled())
             {
-                return $this->sketchpad->index();
+		        // run setup
+		        $setup = new Setup();
+		        return $setup->index();
             }
 
-	        // run setup
-	        $setup = new Setup();
-	        return $setup->index();
+			// set up the router and rescan to get all data
+			$config     = $this->sketchpad->init(true)->config;
+
+			// build resources
+			$resources  = $config->settings->get('assets') ?: [];
+			$resources  = array_map(function ($file) {
+				$file = trim($file);
+				return preg_match('/.js$/', $file) === 1
+					? '<script src="' . $file . '"></script>'
+					: '<link  href="' . $file . '" rel="stylesheet">';
+			}, $resources);
+
+			// livereload
+	        $livereload = $config->settings->get('livereload');
+
+			// variables
+			$data =
+			[
+				'route'         => $config->route,
+				'assets'        => $config->route . 'assets/',
+				'settings'      => $config->settings->data,
+				'resources'     => implode("\n\t", $resources),
+				'livereload'    => $livereload ? '<script src="' .$livereload. '" type="text/javascript"></script>' : '',
+				'data'          =>
+				[
+					'controllers'   => $this->sketchpad->getController(),
+				]
+			];
+
+			// view
+			return view('sketchpad::index', $data);
 	    }
 
 	    public function asset(SketchpadConfig $config, Paths $paths, $file)
