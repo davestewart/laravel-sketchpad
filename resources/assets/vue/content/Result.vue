@@ -266,6 +266,12 @@ export default
 				this.transition 	= false;
 				this.loading 		= false;
 
+				// clear
+				if(transition)
+				{
+					this.clear();
+				}
+
 				// format
 				if(method && method.tags.iframe)
 				{
@@ -287,13 +293,6 @@ export default
 					var html		= marked(data);
 					this.format 	= 'markdown';
 					$data.html(html);
-					//return;
-				}
-
-				// clear
-				if(transition)
-				{
-					this.clear();
 				}
 
 				// add content

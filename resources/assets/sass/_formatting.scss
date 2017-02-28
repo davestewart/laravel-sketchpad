@@ -31,39 +31,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 
 	// headings
-
-		h1, h2, h3, h4, h5, h6{
-			color:#2c3e50;
-		}
-
-
-		h1:first-child,
-		h2:first-child,
-		h3:first-child,
-		h4:first-child{
-			margin-top:0;
-		}
-
-		h3:not(:first-child),
-		h4:not(:first-child){
-			margin-top:1.5em;
-		}
-
-		#header h1{
-			font-size:60px;
-		}
-
-
-	// code
-
-		code {
-			font-size: 0.8em;
-		}
-
-		.error{
-
-		}
-
+	h1, h2, h3, h4, h5, h6{
+		color:#2c3e50;
+	}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // forms
