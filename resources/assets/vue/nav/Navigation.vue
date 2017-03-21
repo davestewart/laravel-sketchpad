@@ -5,7 +5,7 @@
 		<div class="sticky">
 
 			<!-- controllers -->
-			<section id="controllers" class="col-xs-6">
+			<section id="controllers" class="col-xs-5">
 				<ul class="nav nav-pills nav-stacked">
 					<template v-for="result in controllers">
 						<folder :route="result.route"></folder>
@@ -18,7 +18,7 @@
 			</section>
 
 			<!-- methods -->
-			<section id="methods" class="col-xs-6">
+			<section id="methods" class="col-xs-7">
 				<ul class="nav nav-pills nav-stacked">
 					<template v-for="result in methods">
 						<group
