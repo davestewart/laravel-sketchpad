@@ -12,6 +12,10 @@ use Illuminate\Translation\Translator;
 class OutputController extends Controller
 {
 
+	public function index()
+	{
+		return md(__DIR__ . '/output.md');
+	}
 
 	/**
 	 * No need to return data or views; just `echo` directly to the page

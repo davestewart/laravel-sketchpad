@@ -107,6 +107,7 @@ li.fancy{
 	 */
 	public function order()
 	{
+		alert('Not yet implemented', false);
 		?>
 		<p>The tag takes a single numeric integer:</p>
 		<pre>@order 1</pre>
@@ -250,10 +251,11 @@ li.fancy{
 	 * @group Behaviour
 	 *
 	 * @defer
+	 * @param int $foo
 	 */
-	public function defer()
+	public function defer($foo = 1)
 	{
-		p('This method was called on ' . date(DATE_RFC850));
+		p('Value <code>$foo</code> was set to ' .$foo. ' at ' . date('H:i:s'));
 		pr('@defer');
 	}
 
