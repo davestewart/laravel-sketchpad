@@ -54,7 +54,7 @@
 	}
 
 	#controllers{
-		padding-right:40px;
+		padding-right:5%;
 	}
 
 	.controller-list {
@@ -250,13 +250,26 @@
 			transition: opacity 0.1s;
 			opacity: 0;
 
-			#result.loading & {
+			#console.loading & {
 				opacity: 1;
 			}
 		}
 	}
 
 	#params {
+
+		* {
+			vertical-align: middle;
+		}
+
+		ul {
+			margin: 0;
+			padding: 0;
+		}
+
+		li {
+			height: 31px;
+		}
 
 		label:after{
 			content:' : ';
@@ -329,14 +342,24 @@
 
 		iframe.error {
 			width:100%;
-			height:2000px;
+			min-height:2000px;
 			outline:1px solid #DDD;
 		}
 
 		transition: opacity 0.2s;
 
-		#result.transition.loading & {
+		#console.transition.loading & {
 			opacity: 0;
+		}
+
+		#console.pending & {
+			opacity: 0.3;
+		}
+
+		> .data:not(:last-child) {
+			padding-bottom: 21px;
+			margin-bottom: 21px;
+			border-bottom: 1px solid #ecf0f1;
 		}
 
 	}
