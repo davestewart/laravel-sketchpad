@@ -40,7 +40,6 @@
 
 	// components
 	import Navigation 	from './nav/Navigation.vue';
-	import Result 		from './content/Result.vue';
 	import TopNav       from './components/TopNav.vue';
 	import Modal        from './components/Modal.vue';
 
@@ -52,7 +51,6 @@
 		components:
 		{
 			Navigation,
-			Result,
 			Modal,
 			TopNav
 		},
@@ -76,6 +74,8 @@
 		{
 			// links
 			$('#content').on('click', 'a[href]', this.onLinkClick);
+
+			console.log('App ready')
 
 			// ui
 			//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});

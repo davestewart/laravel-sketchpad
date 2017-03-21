@@ -5,17 +5,21 @@ import Sortable     from 'vue-sortable'
 Vue.use(Sortable);
 Vue.use(VueRouter);
 
+import store        from './state/store'
 import config       from './functions/config'
 config();
 
-import Run          from '../vue/content/Result.vue'
+
 import Home         from '../vue/pages/Home.vue'
 import Help         from '../vue/pages/Help.vue'
 import Settings     from '../vue/pages/Settings.vue'
 import Favourites   from '../vue/nav/Favourites.vue'
 import Search       from '../vue/nav/Search.vue'
+import Console      from '../vue/console/Console.vue'
 
 import App          from '../vue/App.vue'
+
+window.store = store
 
 window.router = new VueRouter({
 	root: $('meta[name="route"]').attr('content'),
@@ -29,7 +33,7 @@ const routes = {
 		component: Home
 	},
 	'/run/*route': {
-		component: Run,
+		component: Console,
 		canReuse:false
 	},
 	'/favourites' : {
