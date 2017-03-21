@@ -1,5 +1,5 @@
 <template>
-	<section id="output" :data-format="format"></section>
+	<section id="output" class="content" :data-format="format"></section>
 </template>
 
 <script>

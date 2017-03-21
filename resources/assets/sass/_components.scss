@@ -4,6 +4,7 @@
 
 	#top-nav.navbar {
         border-radius: 0;
+		margin-bottom: 40px;
 	}
 
 	body:after {
@@ -29,10 +30,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 
 	#header h1{
-		font-size:60px;
+		font-size: 60px;
+		margin: 0;
 	}
 
-	#content header {
+	#main header {
 		min-height: 110px;
 
 		p {
@@ -187,21 +189,12 @@
 // info
 // ---------------------------------------------------------------------------------------------------------------------
 
-	#info {
+	#console #header{
 
-		.info p{
-			/*
-			padding: 3px 10px;
-			margin: 0 0 10px;
-			border-left: 5px solid #ecf0f1;
-			*/
+		h1 {
+			margin-bottom: 5px;
 		}
 
-		/*
-		.info:empty:after{
-			visibility: hidden;
-		}
-		*/
 	}
 
 // ---------------------------------------------------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 		<header id="header">
 			<h1>Help</h1>
 		</header>
-		<section>
+		<section class="content">
 			<h3>Setup</h3>
 			<p>To properly configure your Sketchpad setup, consider:</p>
 			<ul>
