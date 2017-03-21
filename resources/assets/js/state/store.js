@@ -8,7 +8,6 @@ import watcher      from '../services/watcher'
  *
  * - loads controller data
  * - stores controller data
- * - hooks into live reloading
  */
 var Store = Vue.extend({
 

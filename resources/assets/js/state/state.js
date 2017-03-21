@@ -1,10 +1,11 @@
 import Vue 		from 'vue';
 import store	from './store.js';
+import {clone}	from '../functions/utils';
 
 /**
  * Stores the current controller > method > params
  */
-var State = Vue.extend({
+const State = Vue.extend({
 
 	// ------------------------------------------------------------------------------------------------
 	// properties
@@ -12,8 +13,8 @@ var State = Vue.extend({
 		data ()
 		{
 			return {
-				controller	:null,
-				method		:null
+				controller	: null,
+				method		: null
 			};
 		},
 
@@ -39,44 +40,41 @@ var State = Vue.extend({
 				 * Update current values from route string and params object
 				 *
 				 * @param {string}  route       A route string that matches a controller route (so, not including /sketchpad/run/ prefix)
-				 * @param {Object}  params      A POJO of name:value properties
+				 * @param {Object}  query       A POJO of name:value properties
 				 */
-				setRoute (route, params)
+				setRoute (route, query)
 				{
-					// don't update if route is the same
+					// if method is the same, update query only
 					if(this.method && route === this.method.route)
 					{
-						this.setParams(params);
+						this.setQuery(query);
 						return false;
 					}
 
-					// variables
+					// otherwise, get new objects
 					let {controller, method} = this.parseRoute(route);
 
-					// if we have a method, update its parameters
-					if(method && params)
-					{
-						this.setParams(params, method)
-					}
-
 					// if no method, fall back to index
-					if(controller && ! method)
+					if(!method && controller)
 					{
-						method      = controller.methods.find(function(m){ return m.name == 'index'; });
+						method = controller.methods.find(function(m){ return m.name == 'index'; });
 					}
-
-					// page title
-					document.title 	= 'Sketchpad - ' + route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
 
 					// state
-					this.controller = controller;
-					this.method 	= method;
+					if (controller !== this.controller)
+					{
+						this.controller = controller;
+					}
+					this.method = method;
+
+					// if we have a method, update its parameters
+					this.setQuery(query);
 
 					// return
 					return true;
 				},
 
-				setParams (params)
+				setQuery (params)
 				{
 					if (this.method)
 					{
@@ -90,15 +88,26 @@ var State = Vue.extend({
 							}
 						});
 					}
+					return this;
+				},
+
+				setParams (params)
+				{
+					if (this.method)
+					{
+						this.method.params = params;
+					}
+					return this;
 				},
 
 				/**
-				 * Rest all values
+				 * Reset all values
 				 */
 				reset ()
 				{
 					this.controller = null;
 					this.method 	= null;
+					return this
 				},
 
 

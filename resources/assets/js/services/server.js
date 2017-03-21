@@ -43,7 +43,7 @@ Server.prototype =
 		 */
 		open(route, data)
 		{
-			var request = new Request(route, data);
+			const request = new Request(route, data);
 			window.open(request.url);
 		},
 
@@ -58,13 +58,13 @@ Server.prototype =
 		 */
 		load(path, done)
 		{
-			var url = this.getUrl(path);
+			const url = this.getUrl(path);
 			return $.get(url, done);
 		},
 
 		loadController(route, onSuccess)
 		{
-			var url = 'api/load/' + route;
+			const url = 'api/load/' + route;
 			return onSuccess
 				? this.load(url, onSuccess)
 				: window.open(this.base + url);
@@ -72,7 +72,13 @@ Server.prototype =
 
 		post(path, data, done)
 		{
-			const url	= this.getUrl(path);
+			const url = this.getUrl(path);
+			return $.post(url, data, done);
+		},
+
+		submit(method, data, done)
+		{
+			const url = this.getRunUrl(method);
 			return $.post(url, data, done);
 		},
 
