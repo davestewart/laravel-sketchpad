@@ -8,8 +8,8 @@
 
 			<fieldset name="paths">
 				<legend>Paths</legend>
-				<ul class="form-inline" v-sortable="{handle: '.handle', onUpdate: onPathsReorder}">
-					<li v-for="path in settings.config.paths" class="form-group form-group-sm">
+				<ul class="sortable">
+					<li v-for="path in settings.config.paths" :data-index="$index" class="form-inline form-group form-group-sm">
 						<input class="form-control" name="checkbox" type="checkbox" v-model="path.enabled">
 						<input class="form-control" name="name" type="input" v-model="path.name">
 						<input class="form-control" name="path" type="input" v-model="path.path">
@@ -71,8 +71,24 @@ export default
 
 	created ()
 	{
+	},
+
+	ready ()
+	{
 		this.$watch('settings', this.onSettingsChange, {deep:true})
 		this.$watch('settings.config.paths', this.onPathsChange, {deep:true})
+		$('.sortable').sortable({
+			axis: 'y',
+			helper: 'clone',
+			tolerance: 'pointer',
+			containment: 'parent',
+			update: this.onPathsSort
+		})
+	},
+
+	destoyed ()
+	{
+		$('.sortable').sortable('destroy')
 	},
 
 	methods:
@@ -89,9 +105,11 @@ export default
 				.then(data => store.loadAll())
 		},
 
-		onPathsReorder: function (event) {
+		onPathsSort: function (event, ui) {
+			const newIndex = ui.item.index()
+			const oldIndex = parseInt(ui.item.attr('data-index'))
 	        const list = this.settings.config.paths
-	        list.splice(event.newIndex, 0, list.splice(event.oldIndex, 1)[0])
+	        list.splice(newIndex, 0, list.splice(oldIndex, 1)[0])
 	    }
 
 	}

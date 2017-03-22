@@ -398,6 +398,11 @@
 			    width:70%;
 		    }
 
+		    .sortable > li{
+			    margin: 0;
+			    padding: 5px 0;
+		    }
+
 	    }
 
 	    fieldset[name="ui"] {
@@ -411,14 +416,3 @@
 	    }
 
     }
-
-    .sortable-chosen {
-	    opacity: .9;
-	    z-index: 100;
-	    background: #FFF;
-    }
-
-    .sortable-ghost {
-	    opacity: .3;
-    }
-
