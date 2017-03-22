@@ -62,10 +62,10 @@ class Setup
 
 			// variables
 			$app    = app();
-			$data   = app(Sketchpad::class)->getVariables();
-			$vars   =
+			$data   =
 			[
-                'assets' => $config->route . 'assets/',
+				'route'     => $config->route,
+				'assets'    => $config->route . 'assets/',
 				'settings' =>
 				[
 					'route'             => $config->route,
@@ -82,7 +82,7 @@ class Setup
 			];
 
 			// return view
-			return view('sketchpad::setup', array_merge($data, $vars));
+			return view('sketchpad::setup', $data);
 		}
 
 
