@@ -7,15 +7,15 @@
 			<a
 				:class="{method:true, error:error}"
 				:style="linkStyle"
-				:title="comment.intro"
+				:title="comment"
 				v-link="getLink()"
 				>
 				{{{ getLabel() }}}
 			</a>
 			<p
-				v-if="comment.intro"
+				v-if="comment"
 				class="comment"
-				>{{{ comment.intro }}}</p>
+				>{{{ comment }}}</p>
 		</li>
 
 </template>
@@ -93,7 +93,7 @@ export default
 		label () { return this.getLabel(this.method); },
 		route () { return this.method.route; },
 		error () { return this.method.error; },
-		comment () { return this.method.comment; },
+		comment () { return this.method.comment.intro.replace(/<.+?>/g, ''); },
 		tags () { return this.method.tags; }
 	},
 

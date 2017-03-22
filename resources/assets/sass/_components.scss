@@ -4,6 +4,7 @@
 
 	#top-nav.navbar {
         border-radius: 0;
+		margin-bottom: 40px;
 	}
 
 	body:after {
@@ -29,10 +30,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 
 	#header h1{
-		font-size:60px;
+		font-size: 60px;
+		margin: 0;
 	}
 
-	#content header {
+	#main header {
 		min-height: 110px;
 
 		p {
@@ -50,11 +52,16 @@
 	}
 
 	#favourites {
-		margin: 25px 0 0 15px;
+		margin: -35px 0 0 15px;
+	}
+
+	#main #search input {
+		margin-top: -35px;
+		margin-bottom: 10px;
 	}
 
 	#controllers{
-		padding-right:40px;
+		padding-right:5%;
 	}
 
 	.controller-list {
@@ -187,21 +194,12 @@
 // info
 // ---------------------------------------------------------------------------------------------------------------------
 
-	#info {
+	#console #header{
 
-		.info p{
-			/*
-			padding: 3px 10px;
-			margin: 0 0 10px;
-			border-left: 5px solid #ecf0f1;
-			*/
+		h1 {
+			margin-bottom: 5px;
 		}
 
-		/*
-		.info:empty:after{
-			visibility: hidden;
-		}
-		*/
 	}
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -250,13 +248,26 @@
 			transition: opacity 0.1s;
 			opacity: 0;
 
-			#result.loading & {
+			#console.loading & {
 				opacity: 1;
 			}
 		}
 	}
 
 	#params {
+
+		* {
+			vertical-align: middle;
+		}
+
+		ul {
+			margin: 0;
+			padding: 0;
+		}
+
+		li {
+			height: 31px;
+		}
 
 		label:after{
 			content:' : ';
@@ -329,14 +340,24 @@
 
 		iframe.error {
 			width:100%;
-			height:2000px;
+			min-height:2000px;
 			outline:1px solid #DDD;
 		}
 
 		transition: opacity 0.2s;
 
-		#result.transition.loading & {
+		#console.transition.loading & {
 			opacity: 0;
+		}
+
+		#console.pending & {
+			opacity: 0.3;
+		}
+
+		> .data:not(:last-child) {
+			padding-bottom: 21px;
+			margin-bottom: 21px;
+			border-bottom: 1px solid #ecf0f1;
 		}
 
 	}

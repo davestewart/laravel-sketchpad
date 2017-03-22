@@ -7,13 +7,10 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-4">
-					<navigation v-ref:navigation></navigation>
+					<navigation v-ref:nav></navigation>
 				</div>
 				<div class="col-xs-8">
-					<!--
-					<result v-if="state.controller" v-ref:result :state="state"></result>
-					-->
-					<div id="content" class="view">
+					<div id="main">
 						<router-view v-ref:content></router-view>
 					</div>
 				</div>
@@ -40,7 +37,6 @@
 
 	// components
 	import Navigation 	from './nav/Navigation.vue';
-	import Result 		from './content/Result.vue';
 	import TopNav       from './components/TopNav.vue';
 	import Modal        from './components/Modal.vue';
 
@@ -52,9 +48,8 @@
 		components:
 		{
 			Navigation,
-			Result,
-			Modal,
-			TopNav
+			TopNav,
+			Modal
 		},
 
 		data ()
@@ -76,6 +71,8 @@
 		{
 			// links
 			$('#content').on('click', 'a[href]', this.onLinkClick);
+
+			console.log('App ready')
 
 			// ui
 			//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});

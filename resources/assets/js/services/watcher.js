@@ -53,7 +53,20 @@ class Watcher {
 	 */
 	addHandler (rx, fn)
 	{
-		this.handlers.push({rx, fn})
+		this.handlers.push({rx, fn});
+		return this;
+	}
+
+	/**
+	 * Remove file path handler
+	 *
+	 * @param   {Function}  fn      An existing function for the filepath
+	 */
+	removeHandler (fn)
+	{
+		const index = this.handlers.findIndex(handler => handler.fn === fn);
+		this.handlers.splice(index, 1);
+		return this;
 	}
 
 	/**

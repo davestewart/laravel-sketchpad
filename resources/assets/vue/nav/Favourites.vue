@@ -1,13 +1,8 @@
 <template>
 
-	<article>
-		<header id="header">
-			<h1>Favourites</h1>
-		</header>
-		<section id="favourites">
-			<controller-list :filter="filter"></controller-list>
-		</section>
-	</article>
+	<div id="favourites">
+		<controller-list :filter="filter"></controller-list>
+	</div>
 
 </template>
 

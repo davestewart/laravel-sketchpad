@@ -4,7 +4,7 @@
 		<header id="header">
 			<h1>Settings</h1>
 		</header>
-		<section>
+		<section class="content">
 
 			<fieldset name="paths">
 				<legend>Paths</legend>

@@ -13,11 +13,6 @@ use Illuminate\Http\Request;
 class BasicsController extends Controller
 {
 
-	public function index()
-	{
-		return 'This is an index';
-	}
-
 	/**
 	 * Call a method just by clicking on its label
 	 */
@@ -157,6 +152,12 @@ class SomeController extends Controller
     }
 }</pre>
 <p>When the controller is selected in the left hand menu, it will show an index page.</p>
+
+<p>If you want to cheat, just save a markdown file in the same folder as the controller:</p>
+
+<pre class="code php">
+return md(__DIR__ . '/some.md');
+</pre>
 
 <p>See the <a href="../output/markdown">markdown</a> example for more info about the <code>md()</code> method.</p>
 <?php

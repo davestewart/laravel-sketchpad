@@ -1,5 +1,6 @@
 // libraries
-import Vue			from 'vue';
+import Vue		        from 'vue';
+import {clone, dump}    from './utils'
 
 export default function ()
 {
@@ -26,7 +27,7 @@ export default function ()
 	});
 
 	// utilities
-	window.clone = function clone(obj){ return JSON.parse(JSON.stringify(obj)); };
-	window.dump = function dump(){ Array.prototype.slice.call(arguments).map( obj => console.log(clone(obj) ) ) };
+	window.clone = clone;
+	window.dump = dump;
 }
 

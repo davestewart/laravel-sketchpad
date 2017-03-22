@@ -6,9 +6,9 @@
 			:title="param.text"
 		>{{ param.name }}</label>
 		<div class="field">
-			<span class="sizer" v-if="isText()">{{{ value }}}</span>
+			<span class="sizer" v-if="isText()">{{{ param.value }}}</span>
 			<input
-				v-model="value"
+				v-model="param.value"
 				@input="setSize()"
 				@change="setSize()"
 				:type="type"
@@ -38,6 +38,7 @@ export default
 
 	ready ()
 	{
+		//console.log('name:', this.param.name)
 		this.setSize()
 	},
 
@@ -58,26 +59,6 @@ export default
 				return this.param.type;
 			}
 			return 'text';
-		},
-
-		value:
-		{
-			get ()
-			{
-				if(/^bool/.test(this.param.type))
-				{
-					return this.param.value == true || this.param.value == 'true';
-				}
-				else if(this.param.type == 'number')
-				{
-					return Number(this.param.value);
-				}
-				return this.param.value;
-			},
-			set (value)
-			{
-				this.param.value = value;
-			}
 		},
 
 		fields ()
@@ -105,17 +86,27 @@ export default
 		{
 			if (this.isText())
 			{
+				const $el = this.$el;
+				const padding = this.type === 'number' ? 20 : 15;
+
 				// FF needs requires nextTick
 				this.$nextTick(() => {
-					var input = this.$el.getElementsByTagName('input')[0];
-					var sizer = this.$el.getElementsByClassName('sizer')[0];
+					var input = $el.getElementsByTagName('input')[0];
+					var sizer = $el.getElementsByClassName('sizer')[0];
 					var width = parseInt(window.getComputedStyle(sizer).width);
-					var padding = this.type === 'number' ? 20 : 15;
 					input.style.width = (parseInt(width) + padding) + 'px';
 				})
 			}
 		}
 
+	},
+
+	watch:
+	{
+		param (value)
+		{
+			console.log('param', value)
+		}
 	}
 
 }

@@ -3,7 +3,7 @@
 
 	var gulp			= require('gulp'),
 		gutil			= require('gulp-util'),
-		argv            = require('yargs'),
+		argv            = require('yargs').argv,
 		path			= require('path'),
 		elixir			= require('laravel-elixir'),
 		es2015			= require('babel-preset-es2015'),
@@ -80,11 +80,12 @@
 			]
 		}
 
+		// variables
 		var resources   = 'resources/';
 		var assets      = '../publish/assets/';
 		var file        = argv.setup ? 'setup' : 'app';
-		file            = 'app'
 
+		// build
 		mix
 
 			// lib scripts
