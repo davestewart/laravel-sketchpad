@@ -346,7 +346,7 @@
 
 		transition: opacity 0.2s;
 
-		#console.transition.loading & {
+		#console.transitioning.loading & {
 			opacity: 0;
 		}
 
