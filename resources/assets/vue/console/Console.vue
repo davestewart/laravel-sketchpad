@@ -1,9 +1,12 @@
 <template>
 
 	<div id="console" :class="{loading: loading, transitioning: transitioning, pending: pending, error: error}">
-		<info v-ref:info :controller="controller" :method="method"></info>
-		<params v-ref:params :method="method" :params="params"></params>
-		<output v-ref:output :method="method"></output>
+		<div v-show="controller">
+			<info v-ref:info :controller="controller" :method="method"></info>
+			<params v-ref:params :method="method" :params="params"></params>
+			<output v-ref:output :method="method"></output>
+		</div>
+		<not-found v-show="!controller"></not-found>
 	</div>
 
 </template>
@@ -12,7 +15,7 @@
 
 // utils
 import _            from 'underscore'
-import {clone,dump} from '../../js/functions/utils.js';
+import {clone}      from '../../js/functions/utils.js';
 
 // objects
 import state		from '../../js/state/state.js';
@@ -20,7 +23,8 @@ import server		from '../../js/services/server.js';
 import watcher	    from '../../js/services/watcher';
 
 // components
-import Info		    from './Info.vue';
+import NotFound     from './NotFound.vue';
+import Info	        from './Info.vue';
 import Params		from './Params.vue';
 import Output		from './Output.vue';
 
@@ -30,6 +34,7 @@ export default
 
 	components:
 	{
+		NotFound,
 		Info,
 		Params,
 		Output,
@@ -117,6 +122,13 @@ export default
 			const params = state.method
 				? clone(state.method.params)
 				: null
+
+			// missing controller
+			if (!controller)
+			{
+				this.controller = false
+				return transition.next()
+			}
 
 			// set changed properties
 			if (controller !== this.controller)
