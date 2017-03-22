@@ -1,14 +1,9 @@
 <template>
 
-	<article>
-		<header id="header">
-			<h1>Search</h1>
-			<input class="form-control" v-model="term" placeholder="Start typing to filter">
-		</header>
-		<section id="favourites">
-			<controller-list :filter="filter"></controller-list>
-		</section>
-	</article>
+	<div id="search">
+		<input class="form-control" v-model="term" placeholder="Start typing to filter">
+		<controller-list :filter="filter"></controller-list>
+	</div>
 
 </template>
 

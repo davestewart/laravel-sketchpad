@@ -52,7 +52,12 @@
 	}
 
 	#favourites {
-		margin: 25px 0 0 15px;
+		margin: -35px 0 0 15px;
+	}
+
+	#main #search input {
+		margin-top: -35px;
+		margin-bottom: 10px;
 	}
 
 	#controllers{

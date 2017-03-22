@@ -7,13 +7,10 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-4">
-					<navigation v-ref:navigation></navigation>
+					<navigation v-ref:nav></navigation>
 				</div>
 				<div class="col-xs-8">
-					<!--
-					<result v-if="state.controller" v-ref:result :state="state"></result>
-					-->
-					<div id="content" class="view">
+					<div id="main">
 						<router-view v-ref:content></router-view>
 					</div>
 				</div>
@@ -51,8 +48,8 @@
 		components:
 		{
 			Navigation,
-			Modal,
-			TopNav
+			TopNav,
+			Modal
 		},
 
 		data ()
