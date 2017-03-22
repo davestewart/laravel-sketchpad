@@ -70,7 +70,7 @@
 		ready ()
 		{
 			// links
-			$('#content').on('click', 'a[href]', this.onLinkClick);
+			$('#main').on('click', 'a[href]', this.onLinkClick);
 
 			console.log('App ready')
 
