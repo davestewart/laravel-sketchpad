@@ -113,10 +113,13 @@ var Store = Vue.extend({
 			setControllers (data)
 			{
 				this.controllers = data;
-				const controller = this.getControllerByPath(state.controller.path);
-				if (controller)
+				if (state.controller)
 				{
-					this.updateState(controller)
+					const controller = this.getControllerByPath(state.controller.path);
+					if (controller)
+					{
+						this.updateState(controller)
+					}
 				}
 			},
 
