@@ -80,10 +80,13 @@ class Router
 			foreach ($this->paths as $name => $path)
 			{
 				$root               = strpos($path, '/') === 0 ? $path : base_path($path);
-				$scanner            = new Scanner($root, $name);
-				$scanner->start();
-				$this->routes       = array_merge($this->routes, $scanner->routes);
-				$this->controllers  = array_merge($this->controllers, $scanner->controllers);
+				if (file_exists($root))
+				{
+					$scanner            = new Scanner($root, $name);
+					$scanner->start();
+					$this->routes       = array_merge($this->routes, $scanner->routes);
+					$this->controllers  = array_merge($this->controllers, $scanner->controllers);
+				}
 			}
 
 			// save routes
