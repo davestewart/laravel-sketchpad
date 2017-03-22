@@ -1,7 +1,7 @@
 <template>
 	<header id="header">
 		<h1>{{ title }}</h1>
-		<div :class="{info:true, alert:alert, 'alert-danger':warning, 'alert-info':archived }">{{{ info | marked }}}</div>
+		<div :class="{info:true, alert:alert, 'alert-danger':warn, 'alert-info':archived }">{{{ info | marked }}}</div>
 	</header>
 </template>
 
@@ -43,22 +43,22 @@ export default
 			if(this.method)
 			{
 				var tags = this.method.tags;
-				return tags.defer || tags.warning;
+				return tags.defer || tags.warn;
 			}
 			return false;
 		},
 
 		alert ()
 		{
-			return this.warning || this.archived;
+			return this.warn || this.archived;
 		},
 
-		warning ()
+		warn ()
 		{
 			if(this.method)
 			{
 				var tags = this.method.tags;
-				return tags.warning;
+				return tags.warn;
 			}
 			return false;
 		},

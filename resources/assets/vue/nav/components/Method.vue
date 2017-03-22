@@ -51,9 +51,9 @@ export default
 				data.icon = true;
 				data.defer = true;
 			}
-			if (tags.warning) {
+			if (tags.warn) {
 				data.icon = true;
-				data.warning = true;
+				data.warn = true;
 			}
 			if (tags.archived) {
 				data.archived = true;

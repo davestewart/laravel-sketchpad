@@ -262,12 +262,12 @@ li.fancy{
 	/**
 	 * Shows a warning indicator next to the method name, highlights this text in red, and defers calling of the method.
 	 *
-	 * @warning
+	 * @warn
 	 */
-	public function warning()
+	public function warn()
 	{
 		p("Hopefully the big red lozenge didn't put you off too much:");
-		pr('@warning');
+		pr('@warn');
 		p('When the method is finally called, the deferred task, such as sending emails, will be run.');
 ?>
 <p>If you need to pass data to the deferred methods, your other options are:</p>

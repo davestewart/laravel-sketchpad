@@ -54,7 +54,7 @@ export default
 		defer ()
 		{
 			const tags = this.method ? this.method.tags : {}
-			return !! (tags.defer || tags.warning)
+			return !! (tags.defer || tags.warn)
 		},
 
 		error ()
