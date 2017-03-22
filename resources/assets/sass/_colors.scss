@@ -1,0 +1,12 @@
+$gray-base:              #000 !default;
+$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
+$gray-dark:              #7b8a8b !default; // #333
+$gray:                   #95a5a6 !default; // #555
+$gray-light:             #b4bcc2 !default; // #999
+$gray-lighter:           #ecf0f1 !default; // #eee
+
+$brand-primary:         #2C3E50 !default;
+$brand-success:         #18BC9C !default;
+$brand-info:            #3498DB !default;
+$brand-warning:         #F39C12 !default;
+$brand-danger:          #E74C3C !default;
