@@ -1,7 +1,7 @@
 <template>
 	<header id="header">
 		<h1>{{ title }}</h1>
-		<div :class="{info:true, alert:alert, 'alert-danger':warn, 'alert-info':archived }">{{{ info | marked }}}</div>
+		<div :class="{info:true, alert:alert, 'alert-danger':warn }">{{{ info | marked }}}</div>
 	</header>
 </template>
 
@@ -50,7 +50,7 @@ export default
 
 		alert ()
 		{
-			return this.warn || this.archived;
+			return this.warn;
 		},
 
 		warn ()
