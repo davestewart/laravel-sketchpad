@@ -92,13 +92,12 @@
 		{
 			onLinkClick (event)
 			{
-				var run = location.origin + server.getUrl('run/');
-				if(event.target.href && event.target.href.indexOf(run) === 0)
+				var root = location.origin + '/' + app.settings.route;
+				if(event.target.href && event.target.href.indexOf(root) === 0)
 				{
 					event.preventDefault();
-					const path = event.target.href.substr(run.length);
-					router.go('/run/' + decodeURI(path))
-					//router.replace('/run/' + decodeURI(path))
+					const path = event.target.href.substr(root.length - 1);
+					router.go(decodeURI(path))
 				}
 			},
 
