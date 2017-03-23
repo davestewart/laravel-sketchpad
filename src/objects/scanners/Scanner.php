@@ -152,14 +152,17 @@ class Scanner extends AbstractScanner
 			// add
 			if($instance instanceof Controller)
 			{
-				$ref                    = new ControllerReference($route, $instance->path, $instance->classpath);
-				$this->controllers[]    = $instance;
-				$this->addRoute($route, $ref);
+				if (count($instance->methods) > 0 && !$instance->getTag('private'))
+				{
+					$ref = new ControllerReference($route, $instance->path, $instance->classpath);
+					$this->controllers[] = $instance;
+					$this->addRoute($route, $ref);
+				}
 			}
 
 			else
 			{
-				$ref        = new ControllerErrorReference($route, $instance->path, $instance->error);
+				$ref = new ControllerErrorReference($route, $instance->path, $instance->error);
 				$this->addRoute($route, $ref);
 			}
 		}
