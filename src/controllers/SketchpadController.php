@@ -66,9 +66,6 @@ class SketchpadController extends Controller
 					: '<link  href="' . $file . '" rel="stylesheet">';
 			}, $resources);
 
-			// livereload
-	        $livereload = $config->settings->get('livereload');
-
 			// variables
 			$data =
 			[
@@ -76,7 +73,6 @@ class SketchpadController extends Controller
 				'assets'        => $config->route . 'assets/',
 				'settings'      => $config->settings->data,
 				'resources'     => implode("\n\t", $resources),
-				'livereload'    => $livereload ? '<script src="' .$livereload. '" type="text/javascript"></script>' : '',
 				'data'          =>
 				[
 					'controllers'   => $this->sketchpad->getController(),
@@ -87,43 +83,53 @@ class SketchpadController extends Controller
 			return view('sketchpad::index', $data);
 	    }
 
-	    public function asset(SketchpadConfig $config, Paths $paths, $file)
+	    public function asset(Paths $paths, $file)
 	    {
-	        // path
-		    $path = strpos($file, 'user/') === 0
-		        ? base_path($config->assets . substr($file, 5))
-		        : $paths->publish("assets/$file");
-
-	        // 404
-	        if(!file_exists($path))
-	        {
-	            header("HTTP/1.0 404 Not Found");
-	            exit;
-	        }
-
-	        // mimetype
-	        $info   = pathinfo($path);
-	        $ext    = $info['extension'];
-	        $mimes  =
-	        [
-	            'js'    => 'application/javascript',
-	            'css'   => 'text/css',
-	            'gif'   => 'image/gif',
-	            'png'   => 'image/png',
-	            'woff'  => 'application/font-woff',
-	            'ttf'   => 'application/x-font-ttf',
-	        ];
-	        $mime = isset($mimes[$ext])
-	            ? $mimes[$ext]
-	            : 'application/octet-stream'; //'text/html';
-
-	        // serve file
-	        $response = new BinaryFileResponse($path);
-	        $response->mustRevalidate();
-	        $response->headers->set('Content-type', $mime);
-	        $response->headers->set('Content-length', filesize($path));
-	        return $response;
+	    	return $this->getAsset($paths->publish("assets/$file"));
 	    }
+
+	    public function user(SketchpadConfig $config, $file)
+		{
+			return $this->getAsset(base_path(trim($config->assets, '/') . '/' . $file));
+	    }
+
+
+	// ------------------------------------------------------------------------------------------------
+	// helpers
+
+		protected function getAsset($path)
+		{
+			// 404
+			if(!file_exists($path))
+			{
+				header("HTTP/1.0 404 Not Found");
+				exit;
+			}
+
+			// mimetype
+			$info   = pathinfo($path);
+			$ext    = $info['extension'];
+			$mimes  =
+				[
+					'js'    => 'application/javascript',
+					'css'   => 'text/css',
+					'gif'   => 'image/gif',
+					'png'   => 'image/png',
+					'woff'  => 'application/font-woff',
+					'ttf'   => 'application/x-font-ttf',
+				];
+			$mime = isset($mimes[$ext])
+				? $mimes[$ext]
+				: 'application/octet-stream'; //'text/html';
+
+			// serve file
+			$response = new BinaryFileResponse($path);
+			$response->mustRevalidate();
+			$response->headers->set('Content-type', $mime);
+			$response->headers->set('Content-length', filesize($path));
+			return $response;
+
+		}
 
 }
 

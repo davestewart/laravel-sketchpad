@@ -12,6 +12,7 @@
     Route::post ($config->route . 'api/settings',       'ApiController@settings');
 
     // tools
+    Route::get ($config->route . 'api/path',           'ApiController@path');
     Route::post ($config->route . 'api/create',         'ApiController@create');
 
 
@@ -28,4 +29,5 @@
 // sketchpad
 
     Route::get  ($config->route . 'assets/{file}',      'SketchpadController@asset')->where(['file' => '.*']);
+    Route::get  ($config->route . 'user/{file}',        'SketchpadController@user')->where(['file' => '.*']);
     Route::get  ($config->route . '{params?}',          'SketchpadController@index')->where('params', '.*');

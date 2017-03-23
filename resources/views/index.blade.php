@@ -8,11 +8,6 @@
     @include('sketchpad::head')
 
     <!-- user -->
-	{!! $resources !!}
-
-	<!-- livereload -->
-	{!! $livereload !!}
-
 </head>
 <body>
 
