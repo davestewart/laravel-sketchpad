@@ -85,6 +85,24 @@ class ApiController extends Controller
 			return $config->settings;
 		}
 
+		/**
+		 * Validates existence of a path
+		 *
+		 * @method  GET
+		 * @param   Request $request
+		 * @return  array
+		 */
+		public function path(Request $request)
+		{
+			$relpath = $request->get('path');
+			$abspath = base_path($relpath);
+			return [
+				'relpath' => $relpath,
+				'abspath' => $abspath,
+				'exists' => file_exists($abspath)
+			];
+		}
+
 }
 
 require_once __DIR__ . '/../utils/utils.php';
