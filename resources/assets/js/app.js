@@ -1,8 +1,7 @@
 import Vue          from 'vue'
 import VueRouter    from 'vue-router'
-import Sortable     from 'vue-sortable'
+import              '../vue/directives/PathValidator';
 
-Vue.use(Sortable);
 Vue.use(VueRouter);
 
 import store        from './state/store'
@@ -12,9 +11,9 @@ config();
 
 import Home         from '../vue/pages/Home.vue'
 import Help         from '../vue/pages/Help.vue'
-import Settings     from '../vue/pages/Settings.vue'
 import Favourites   from '../vue/pages/Favourites.vue'
 import Search       from '../vue/pages/Search.vue'
+import Settings     from '../vue/settings/Settings.vue'
 import Console      from '../vue/console/Console.vue'
 
 import App          from '../vue/App.vue'

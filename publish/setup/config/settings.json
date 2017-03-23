@@ -27,5 +27,6 @@
 	"head" : [
 		"/sketchpad/assets/user/user.js",
 		"/sketchpad/assets/user/user.css"
-	]
+	],
+	"watcher" : ""
 }
