@@ -168,11 +168,6 @@ export default
 	        return this.$refs.config
 	        	? this.$refs.config.cleanOptions
 	        	: {};
-	    },
-
-	    route()
-	    {
-	        return '/' + this.$refs.config.cleanOptions.route;
 	    }
 	},
 
@@ -208,9 +203,9 @@ export default
 
                 install(event, fsm)
                 {
-                    console.log(this.options, this.route);
+                    console.log(this.options);
                     jQuery
-                        .post(this.route + 'setup/install', this.options)
+                        .post(this.settings.route + 'setup/install', this.options)
                         .then(data => {
                             this.results = data;
                             if(data.success)
