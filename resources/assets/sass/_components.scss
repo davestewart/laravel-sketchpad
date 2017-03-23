@@ -248,7 +248,7 @@
 	#params {
 
 		* {
-			vertical-align: middle;
+			vertical-align: baseline;
 		}
 
 		ul {
@@ -429,7 +429,6 @@
 
 		}
 
-
 	    fieldset[name="ui"] {
 
 		    article {
@@ -445,59 +444,58 @@
 			min-height: 9em;
 		}
 
+		.field {
+			display: block;
+			background: $input-bg;
+			border-radius: 4px;
+			position: relative;
+
+			input {
+				background: none;
+			}
+
+			.icons {
+				position: absolute;
+				top: 0;
+				right: 10px;
+
+				i {
+					line-height: 35px;
+					padding: 0 2px;
+					margin-right: 2px;
+					color: $gray-dark;
+					vertical-align: baseline;
+					cursor: pointer;
+
+					&:hover {
+						color: black;
+					}
+				}
+
+				i.validate-path {
+					display:none;
+					cursor: default;
+					pointer-events: unset;
+					&.fa-check {
+						color: #0C0;
+					}
+					&.fa-question {
+						color: $brand-info;
+					}
+					&.fa-exclamation,
+					&.fa-exclamation-triangle{
+						color: $brand-warning;
+					}
+				}
+
+			}
+		}
 	}
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // components
 // ---------------------------------------------------------------------------------------------------------------------
-
-	.field {
-		display: block;
-		background: $input-bg;
-		border-radius: 4px;
-		position: relative;
-
-		input {
-			background: none;
-		}
-
-		.icons {
-			position: absolute;
-			top: 0;
-			right: 10px;
-
-			i {
-				line-height: 35px;
-				padding: 0 2px;
-				margin-right: 2px;
-				color: $gray-dark;
-				vertical-align: baseline;
-				cursor: pointer;
-
-				&:hover {
-					color: black;
-				}
-			}
-
-			i.validate-path {
-				display:none;
-				cursor: default;
-				pointer-events: unset;
-				&.fa-check {
-					color: #0C0;
-				}
-				&.fa-question {
-					color: $brand-info;
-				}
-				&.fa-exclamation,
-				&.fa-exclamation-triangle{
-					color: $brand-warning;
-				}
-			}
-
-		}
-	}
-
 
 	.loader {
 		display: block;
