@@ -22,21 +22,21 @@ class SketchpadConfig
 		public $route   = '/sketchpad/';
 
 		/**
-		 * An array of paths to controller folders
+		 * An array of root-relative paths to controller folders
 		 *
 		 * @var string[] $path
 		 */
-		public $paths;
+		public $controllers;
 
 		/**
-		 * The public-relative path to the assets folder
+		 * Root-relative path to the user assets folder
 		 *
 		 * @var string $assets
 		 */
 		public $assets;
 
 		/**
-		 * An optional path to a views folder
+		 * Root-relative path to the user views folder
 		 *
 		 * @var string[] $path
 		 */
@@ -69,20 +69,20 @@ class SketchpadConfig
 				$settings       = $this->settings;
 
 				// values
-				$this->route    = $settings->get('config.route');
-				$this->assets   = $settings->get('config.assets');
-				$this->views    = $settings->get('config.views');
-				$paths          = $settings->get('config.paths');
+				$this->route    = $settings->get('route');
+				$this->assets   = $settings->get('paths.assets');
+				$this->views    = $settings->get('paths.views');
+				$controllers    = $settings->get('paths.controllers');
 
 				// ensure route is bounded by slashes to prevent concatenation issue later
 				$this->route    = '/' . trim($this->route, '/') . '/';
 
 				// paths
-				foreach($paths as $obj)
+				foreach($controllers as $obj)
 				{
 					if($obj['enabled'])
 					{
-						$this->paths[$obj['name']] = rtrim($obj['path'], '/') . '/';
+						$this->controllers[$obj['name']] = rtrim($obj['path'], '/') . '/';
 					}
 				}
 			}

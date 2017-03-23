@@ -94,11 +94,10 @@ class Installer
         public function install()
         {
             $this->settings
-                ->set('config.route', $this->prefs->route)
-                ->set('config.basedir', $this->prefs->basedir)
-                ->set('config.paths.0.path', $this->prefs->controllers)
-                ->set('config.views', $this->prefs->views)
-                ->set('config.assets', $this->prefs->assets)
+                ->set('route', $this->prefs->route)
+                ->set('paths.controllers.0.path', $this->prefs->controllers)
+                ->set('paths.views', $this->prefs->views)
+                ->set('paths.assets', $this->prefs->assets)
                 ->create();
 
             if($this->composer)

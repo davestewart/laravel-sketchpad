@@ -1,8 +1,7 @@
 {
-	"config": {
-		"basedir": "",
-		"route": "",
-		"paths": [
+	"route": "",
+	"paths": {
+		"controllers": [
 			{
 				"name": "project",
 				"path": "",
@@ -18,12 +17,12 @@
 		"assets": ""
 	},
 	"ui": {
+		"homepage": "welcome",
 		"humanizeText": true,
 		"showComments": true,
 		"showArchived": true,
-		"formatCode": true,
 		"appendOutput": false,
-		"homepage": "welcome"
+		"formatCode": true
 	},
 	"head" : [
 		"/sketchpad/assets/user/user.js",

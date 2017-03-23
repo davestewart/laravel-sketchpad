@@ -58,7 +58,7 @@ class Sketchpad
 
 		public function init($scan = false)
 		{
-			$this->router = new Router($this->config->paths);
+			$this->router = new Router($this->config->controllers);
 			if($scan)
 			{
 				//pr($this->router);
