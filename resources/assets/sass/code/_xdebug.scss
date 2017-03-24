@@ -1,0 +1,14 @@
+@import 'colors';
+
+font[color="#cc0000"]{
+	color: $string;
+}
+
+font[color="#4e9a06"]{
+	color:$number;
+}
+
+font[color="#75507b"]{
+	color:$bool;
+}
+

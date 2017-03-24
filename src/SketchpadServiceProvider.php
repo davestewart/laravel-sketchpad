@@ -1,8 +1,10 @@
 <?php namespace davestewart\sketchpad;
 
-use davestewart\sketchpad\middleware\RequestId;
+use davestewart\sketchpad\config\Paths;
+use davestewart\sketchpad\config\SketchpadConfig;
 use davestewart\sketchpad\services\Sketchpad;
 use Illuminate\Support\ServiceProvider;
+use Route;
 
 /**
  * SketchpadServiceProvider
@@ -19,65 +21,52 @@ class SketchpadServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
+	    // singletons
+		$this->app->singleton(Paths::class);
+		$this->app->singleton(SketchpadConfig::class);
 		$this->app->singleton(Sketchpad::class);
+
+		// install command
+        $this->commands([
+            'davestewart\sketchpad\commands\InstallCommand'
+        ]);
 	}
 
 	/**
 	 * Bootstrap the application services.
-	 *
-	 * The publishing section is in two parts:
-	 *
-	 *    1. Config        : this allows the config to be published, then edited, before...
-	 *    2. Public assets : the JS and CSS files for the web interface
-	 *    3. Controllers   : an example controller to show what the package can do
-	 *
-	 * @param Sketchpad $sketchpad
 	 */
-	public function boot(Sketchpad $sketchpad, \Illuminate\Contracts\Http\Kernel $kernel, \Illuminate\Routing\Router $router)
+	public function boot()
 	{
+
 		// ------------------------------------------------------------------------------------------------
 		// variables
 
-			// roots
 			$root           = realpath(__DIR__ . '/../') . '/';
-			$resources      = $root . 'resources/';
-			$publish        = $root . 'publish/';
-
-			// package assets
-			$config         = $publish . 'config/config.php';
-			$views          = $resources . 'views';
-
-			// publish paths (attempt to get from config in case publishing was published in two halves)
-			$assets         = config('sketchpad.assets', 'vendor/sketchpad');
-			$examples       = config('sketchpad.path', 'app/Http/Controllers/Sketchpad');
+			$views          = $root . 'resources/views';
+            $config         = app(SketchpadConfig::class);
 
 
-		// ------------------------------------------------------------------------------------------------
-		// vendor folders
+        // ------------------------------------------------------------------------------------------------
+		// views
 
 			$this->loadViewsFrom($views, 'sketchpad');
-			$this->mergeConfigFrom($config, 'sketchpad');
+            $this->loadViewsFrom(base_path($config->views), 'sketchpad');
 
 
-		// ------------------------------------------------------------------------------------------------
-		// publish
+        // ------------------------------------------------------------------------------------------------
+		// routes
 
-			// config
-			$this->publishes
-			([
-				$config => config_path('sketchpad.php')
-			], 'config');
+			// middleware
+			$parameters =
+			[
+				'namespace'     => 'davestewart\sketchpad\controllers'
+			];
 
-			$this->publishes
-			([
-				$publish . 'assets' => public_path($assets),
-			], 'assets');
-
-			$this->publishes
-			([
-				$publish . 'examples' => base_path($examples),
-			], 'examples');
-
+			// routes
+			Route::group($parameters, function ($router) use ($config)
+			{
+			    include 'utils/routes.php';
+			});
 
 	}
 

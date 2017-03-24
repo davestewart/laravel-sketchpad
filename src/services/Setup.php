@@ -1,5 +1,14 @@
 <?php namespace davestewart\sketchpad\services;
 
+use Config;
+use davestewart\sketchpad\config\SketchpadConfig;
+use Illuminate\Http\Request;
+use davestewart\sketchpad\objects\install\JSON;
+use davestewart\sketchpad\config\Paths;
+use davestewart\sketchpad\config\InstallerSettings;
+use davestewart\sketchpad\objects\scanners\Finder;
+
+
 /**
  * Checks setup is OK and advises what to do if not
  *
@@ -9,112 +18,87 @@ class Setup
 {
 
 	// -----------------------------------------------------------------------------------------------------------------
-	// properties
-
-		protected $configPath;
-		protected $config;
-		protected $view;
-
-
-	// ------------------------------------------------------------------------------------------------
-	// instantiation
-
-		public function __construct()
-		{
-			$this->configPath = config_path('sketchpad.php');
-			$this->config     = (object) config('sketchpad');
-		}
-
-
-	// -----------------------------------------------------------------------------------------------------------------
 	// public methods
 
-		public function check()
+		public function index()
 		{
-			// config
-			if( ! file_exists($this->configPath) )
-			{
-				return is_writable(config_path())
-					? $this->fail('config-form')
-					: $this->fail('config-path');
-			}
+		    // variables
+            $request = app(Request::class);
+		    $path = 'sketchpad/setup';
 
-			// check controllers folder exists
-			$controllerPath = rtrim(base_path( $this->config->path ), '/') . '/';
-			if( ! file_exists($controllerPath) )
-			{
-				return $this->fail('controller-path');
-			}
-
-			// controllers
-			$files = glob($controllerPath . '*Controller.php');
-			if( count($files) === 0 )
-			{
-				return $this->fail('controller-count');
-			}
-
-			// return
-			return true;
+            // redirect
+			return $request->path() !== $path
+                ? redirect($path)
+                : $this->view();
 		}
 
+
+    // ------------------------------------------------------------------------------------------------
+    // setup
+
+        /**
+         * Shows the setup form view
+         *
+         * @return mixed
+         */
 		public function view()
 		{
+		    // default variables
+            $finder = new Finder();
+            $finder->start();
+
+            // config
+            $paths  = app(Paths::class);
+            $config = app(SketchpadConfig::class);
+
+            // base name
+            $basePath   = base_path() . '/';
+            $temp       = explode('/', base_path());
+            $baseName   = array_pop($temp) . '/';
+
+            // view path
+            $temp       = Config::get('view.paths');
+            $viewPath   = substr($temp[0], strlen(base_path() . '/'));
+
 			// variables
-			$app  = app();
-			$data = app(Sketchpad::class)->getVariables();
-			$vars =
+			$app    = app();
+			$data   =
 			[
-				'configPath'        => $this->configPath,
-				'config'            => $this->config,
-				'ns'                => method_exists($app, 'getNamespace') ? $app->getNamespace() : 'App\\',
+				'route'     => $config->route,
+				'assets'    => $config->route . 'assets/',
+				'settings' =>
+				[
+					'route'             => $config->route,
+					'basepath'          => $basePath,
+					'basename'          => $baseName,
+                    'viewpath'          => $viewPath,
+                    'storagepath'       => $paths->relative($config->settings->src),
+                    'controllerpath'    => trim($paths->relative($finder->path), '/'),
+					'namespace'         => method_exists($app, 'getNamespace')
+                                            ? trim($app->getNamespace(), '\\')
+                                            : 'App\\',
+                    'namespaces'        => (new JSON('composer.json'))->get('autoload.psr-4')
+				]
 			];
 
 			// return view
-			return view('sketchpad::setup.pages.' . $this->view, array_merge($data, $vars));
-		}
-
-		public function makeConfig($input)
-		{
-
-			// config
-			$config         = config_path('sketchpad.php');
-			$contents       = file_exists($config)
-								? file_get_contents($config)
-								: file_get_contents(base_path('vendor/davestewart/sketchpad/publish/config/config.php'));
-
-			// helper function
-			$update = function ($name, $trim) use($input, & $contents)
-			{
-				$value      = $input[$name];
-				$value      = trim($value, '\\/');
-				$value      = trim($value, $trim) . $trim;
-				$contents   = preg_replace("/('$name'[^']+?)'([^']+?)'/", "$1'$value'", $contents);
-			};
-
-			// massage input
-			$update('route', '/');
-			$update('path', '/');
-			$update('namespace', '\\');
-			$update('assets', '/');
-
-			// update double-slashes
-			$contents       = str_replace('\\', '\\\\', $contents);
-
-			// write the file
-			file_put_contents($config, $contents);
-
-			// run the next stage of setup
-			return true;
+			return view('sketchpad::setup', $data);
 		}
 
 
-	// ------------------------------------------------------------------------------------------------
-	// utility methods
+    // ------------------------------------------------------------------------------------------------
+    // form
 
-		protected function fail($view)
-		{
-			$this->view = $view;
-			return false;
+        public function saveData($input)
+        {
+            $settings = new InstallerSettings();
+            return $settings->save($input);
+		}
+
+        public function loadData()
+        {
+            $settings = new InstallerSettings();
+            return $settings;
 		}
 
 

@@ -1,0 +1,34 @@
+{
+	"route": "",
+	"paths": {
+		"controllers": [
+			{
+				"name": "project",
+				"path": "",
+				"enabled": true
+			},
+			{
+				"name": "help/docs",
+				"path": "vendor/davestewart/sketchpad/src/help/docs",
+				"enabled": true
+			},
+			{
+				"name": "help/demo",
+				"path": "vendor/davestewart/sketchpad/src/help/demo",
+				"enabled": true
+			}
+		],
+		"views": "",
+		"assets": ""
+	},
+	"ui": {
+		"homepage": "welcome",
+		"humanizeText": true,
+		"showComments": true,
+		"showArchived": true,
+		"appendOutput": false,
+		"formatCode": true
+	},
+	"head" : [],
+	"watcher" : ""
+}

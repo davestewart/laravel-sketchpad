@@ -5,7 +5,7 @@ use davestewart\sketchpad\traits\GetterTrait;
 /**
  * Class ControllerFolderScanner
  *
- * @package davestewart\sketchpad\objects\scanners
+ * @property string $namespace
  */
 class Finder extends AbstractScanner
 {
@@ -42,7 +42,7 @@ class Finder extends AbstractScanner
 		protected function scan($path)
 		{
 			// variables
-			$path       = $this->folderize($path);
+			$path       = AbstractScanner::folderize($path);
 			$files      = array_diff(scandir($path), ['.', '..']);
 			$folders    = [];
 

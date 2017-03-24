@@ -1,6 +1,26 @@
-// ------------------------------------------------------------------------------------------------
-// BOOTSTRAP
-// ------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+// layout
+// ---------------------------------------------------------------------------------------------------------------------
+
+	.navbar-toggle {
+		padding: 6px 10px;
+	}
+
+	// debug
+	/*
+	.container{
+		outline:1px solid green;
+	}
+
+	.row > *{
+		outline:1px solid red;
+	}
+	*/
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// modals
+// ---------------------------------------------------------------------------------------------------------------------
 
 	// override stupid bootstrap modal animation
 	.modal{
@@ -16,7 +36,7 @@
 		}
 	}
 
-/*
+	/*
 	.modal{
 		z-index: 100000000;
 	}
@@ -29,7 +49,6 @@
 		margin: 0;
 		margin-top:-10%;
 	}
-
 	*/
 
 	.modal-content {
@@ -51,32 +70,89 @@
 		}
 	}
 
-	.sketchpad-container {
-		max-width: 1570px;
-		padding-left: 15px;
-		padding-right: 15px;
-		margin-left: auto;
-		margin-right: auto;
-	}
 
-	@media (min-width: 1600px){
-		.container {
-			width: 1570px;
+// ---------------------------------------------------------------------------------------------------------------------
+// elements
+// ---------------------------------------------------------------------------------------------------------------------
+
+	.alert{
+		padding: 6px 11px;
+
+		i.fa{
+			margin-right: 5px;
 		}
 	}
 
-// debug
-/*
-	.container{
-		outline:1px solid green;
+	.tooltip {
+
+		.tooltip-inner{
+			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+			width:100%;
+			max-width: 400px;
+			text-align:left;
+		}
 	}
 
-	.row > *{
-		outline:1px solid red;
+	a:active,
+	a:focus{
+		outline:none !important;
 	}
-*/
 
-input:focus {
-	color: rgb(204, 0, 0);
-	outline: none;
-}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// forms
+// ---------------------------------------------------------------------------------------------------------------------
+
+	fieldset{
+		margin-bottom:1.5em;
+	}
+
+	legend{
+		margin-bottom:0.3em;
+	}
+
+	.inline label.radio {
+		padding-top: 0;
+	}
+	.inline div.radio {
+		display: inline-block;
+		margin-right: 10px;
+	}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// components
+// ---------------------------------------------------------------------------------------------------------------------
+
+	.table{
+		margin:20px;
+		max-width: inherit;
+		width:inherit;
+	}
+
+	.table.debug{
+
+		th, td{
+			font-size: 13px;
+			padding:5px 8px;
+		}
+
+		thead th{
+			font-weight: bold !important;
+		}
+
+		thead tr {
+			background: inherit;
+		}
+
+		tbody th{
+			min-width: 50px;
+			color:#e74c3c !important;
+		}
+
+		tbody td{
+			white-space: pre;
+			overflow-x:auto
+		}
+
+	}

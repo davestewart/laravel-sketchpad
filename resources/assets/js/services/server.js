@@ -1,97 +1,106 @@
+import Queue from './server/queue';
+import Request from './server/request';
+import _ from 'underscore'
+
 function Server()
 {
 	// setup base route
-	this.base = $('meta[name="route"]').attr('content');
+	this.base   = $('meta[name="route"]').attr('content');
+	this.queue  = new Queue();
 }
 
 Server.prototype =
 {
 
-		base:'',
+		base        : '',
 
-		requestId:0,
-
-		count:0,
-
+		queue       : null,
 
 	// ------------------------------------------------------------------------------------------------
 	// methods
 
 		/**
-		 * Calls a sketchpad route and returns the result
+		 * Runs a sketchpad method and returns the result
 		 *
-		 * @param route			The full route, including the '/sketchpad/' portion
-		 * @param onSuccess
-		 * @param onFail
-		 * @returns {*}
+		 * @param 	{Object}	method		A Method object with route and params properties
+		 * @param 	{Function}	done
+		 * @param 	{Function}	fail
+		 * @param 	{Function}	always
+		 * @returns {Request}
 		 */
-		call:function(route, onSuccess, onFailure)
+		run(method, done, fail, always)
 		{
-			var url = location.origin + this.getCallUrl(route);
-			this.count++;
-			return $
-				.get(url)
-				.done(this.getSuccessCallback(onSuccess))
-				.fail(this.getFailureCallback(onFailure));
+			const url	= this.getRunUrl(method);
+			const data	= method.params.map(param => _.pick(param, 'name', 'type', 'value'));
+			return this.queue.add(new Request(url, data, done, fail, always));
 		},
 
 		/**
 		 * Opens a sketchpad route in a new window
 		 *
-		 * @param url
+		 * @param route
+		 * @param data
 		 */
-		open:function(route)
+		open(route, data)
 		{
-			window.open(this.getCallUrl(route));
+			const request = new Request(route, data);
+			window.open(request.url);
 		},
 
 		/**
 		 * Requests information from the server
 		 *
-		 * @param route			The partial route, from '/sketchpad/' onwards
-		 * @param onSuccess
-		 * @returns {*}
+		 * Mainly used for :page/
+		 *
+		 * @param 	{string}	path			The partial route, from '/sketchpad/' onwards
+		 * @param	{Object}	[data]          Optional data to pass with the request
+		 * @param	{Function}	[done]          An optional onLoad handler
+		 * @returns {Promise}
 		 */
-		load:function(route, onSuccess)
+		load(path, data, done)
 		{
-			var url = this.base + route;
-			return $.get(url, onSuccess);
+			const url = this.getUrl(path);
+			return $.get(url, data, done);
 		},
 
-	// ------------------------------------------------------------------------------------------------
-	// utilities
-
-		isLastRequest:function(xhr)
+		loadController(route, onSuccess)
 		{
-			this.count--;
-			return this.requestId == xhr.getResponseHeader('X-Request-ID');
+			const url = 'api/load/' + route;
+			return onSuccess
+				? this.load(url).then(onSuccess)
+				: window.open(this.base + url);
 		},
 
-		getSuccessCallback:function(callback)
+		post(path, data, done)
 		{
-			return function(data, status, xhr)
-			{
-				if(this.isLastRequest(xhr))
-				{
-					callback(data, status, xhr);
-				}
-			}.bind(this);
+			const url = this.getUrl(path);
+			return $.post(url, data, done);
 		},
 
-		getFailureCallback:function(callback)
+		submit(method, data, done)
 		{
-			return function(xhr, status, message)
-			{
-				if(this.isLastRequest(xhr))
-				{
-					callback(xhr, status, message);
-				}
-			}.bind(this);
+			const url = this.getRunUrl(method);
+			return $.post(url, data, done);
 		},
 
-		getCallUrl:function(url)
+		validatePath(path)
 		{
-			return url.replace(/\/$/, '') + '?call=1&requestId=' + (++this.requestId);
+			return this.load('api/path', {path:path})
+		},
+
+		getRunUrl(method)
+		{
+			return this.getUrl('api/run/' + method.route);
+		},
+
+		getUrl(path)
+		{
+			return this.base + path;
 		}
-
 };
+
+export default new Server;
+
+
+
+

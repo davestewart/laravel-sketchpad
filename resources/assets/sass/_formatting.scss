@@ -1,6 +1,8 @@
-// ------------------------------------------------------------------------------------------------
+@import 'colors';
+
+// ---------------------------------------------------------------------------------------------------------------------
 // global
-// ------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 
 	html,
 	body{
@@ -18,73 +20,56 @@
 		margin-right: 15px;
 	}
 
-
-
-// ------------------------------------------------------------------------------------------------
-// elements
-// ------------------------------------------------------------------------------------------------
-
-	// headings
-
-		h1, h2, h3, h4, h5, h6{
-			color:#2c3e50;
-		}
-
-
-		h1:first-child,
-		h2:first-child,
-		h3:first-child,
-		h4:first-child{
-			margin-top:0;
-		}
-
-		h3:not(:first-child),
-		h4:not(:first-child){
-			margin-top:1.5em;
-		}
-
-		h1{
-			font-size:60px;
-		}
-
-
-	// code
-
-		code{
-			font-size: 0.8em;
-		}
-
-		.error{
-
-		}
-
-
-// ------------------------------------------------------------------------------------------------
-// forms
-// ------------------------------------------------------------------------------------------------
-
-	.form-container{
-		//width:70%;
+	.container-fluid {
+		min-width: 770px;
+		max-width: 1500px;
+		padding-left: 30px;
+		padding-right: 30px;
 	}
 
-	form{
+
+// ---------------------------------------------------------------------------------------------------------------------
+// elements
+// ---------------------------------------------------------------------------------------------------------------------
+
+	// headings
+	h1, h2, h3, h4, h5, h6{
+		color:#2c3e50;
+	}
+
+    code {
+	    font-size: 0.8em;
+    }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// forms
+// ---------------------------------------------------------------------------------------------------------------------
+
+	form {
 
 		// padding:0 15px;
 
-		label{
+		label {
 			padding:4px;
 		}
 
-		textarea{
+		textarea {
 			max-width: 100%;
 		}
 
-		.help-block{
+		.help-text,
+		.help-block {
 			font-size:0.8em;
 			padding-left:4px;
 		}
 
-		.form-group-submit{
+		.control-group li  > label {
+			padding-bottom: 0;
+			font-size: 13px;
+			font-weight: normal;
+		}
+
+		.form-group-submit {
 
 			margin-top: 30px;
 			margin-bottom:0;
@@ -96,21 +81,25 @@
 			*/
 		}
 
-		&.form-horizontal .control-label{
+		&.form-horizontal .control-label {
 			//padding-top:0;
 		}
 
-		.form-group:last-child{
+		.form-group:last-child {
 			margin-bottom: 0;
 		}
 
 	}
 
-	.form-control{
-		background-color:rgba(220,228,236,0.4);
+	.form-control {
+		background-color: $input-bg;
 		border:none;
 		padding:9px 10px;
 		font-size: inherit;
 		height:40px;
 	}
 
+	input[type="radio"],
+	input[type="checkbox"] {
+		width:20px;
+	}

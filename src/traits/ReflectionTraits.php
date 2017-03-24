@@ -43,7 +43,7 @@ trait ReflectionTraits
 		/**
 		 * Common function for reflection classes to grab first paragraph of doc comments
 		 *
-		 * @return  string
+		 * @return  Comment
 		 */
 		public function getDocComment()
 		{
@@ -65,15 +65,15 @@ trait ReflectionTraits
 			{
 				$label  = $default ?: $this->ref->getName();
 				$label  = preg_replace('/^(.+)Controller$/', '$1', $label);
-				$label  = preg_replace('/_/', ' ', $label);
-				$label  = preg_replace('/([a-z])([A-Z0-9])/', '$1 $2', $label);
-				$label  = strtolower($label);
+				//$label  = preg_replace('/_/', ' ', $label);
+				//$label  = preg_replace('/([a-z])([A-Z0-9])/', '$1 $2', $label);
+				//$label  = strtolower($label);
 			}
 			return $label;
 		}
 
 		/**
-		 * Gets teh first available value of a tag
+		 * Gets the first available value of a tag
 		 *
 		 * @param   string  $name
 		 * @return  string|null

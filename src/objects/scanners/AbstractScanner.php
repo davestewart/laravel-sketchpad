@@ -25,9 +25,9 @@ class AbstractScanner
 		 * Utility function to return a folder path with a slash at the end
 		 *
 		 * @param   string $path The path to cap with a "/"
-		 * @return  string
+		 * @return string
 		 */
-		public function folderize($path)
+		static public function folderize($path)
 		{
 			return rtrim($path, '/') . '/';
 		}

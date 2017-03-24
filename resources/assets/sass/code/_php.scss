@@ -1,6 +1,4 @@
-// ------------------------------------------------------------------------------------------------
-// php
-// ------------------------------------------------------------------------------------------------
+@import 'colors';
 
 pre.sf-dump {
 
@@ -26,15 +24,15 @@ pre.sf-dump {
 	}
 
 	.sf-dump-num {
-		color: #a71d5d
-	}
-
-	.sf-dump-const {
-		color: #795da3
+		color: $number;
 	}
 
 	.sf-dump-str {
-		color: #df5000
+		color: $string;
+	}
+
+	.sf-dump-const {
+		color: $bool
 	}
 
 	.sf-dump-cchr {

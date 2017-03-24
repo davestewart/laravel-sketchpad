@@ -1,0 +1,22 @@
+<?php namespace %namespace%;
+
+use Illuminate\Routing\Controller as BaseController;
+
+/**
+ * Example Controller
+ */
+class ExampleController extends BaseController
+{
+
+    /**
+     * An example controller, just to get you started
+     */
+    public function startHere($name = 'there')
+    {
+        $config = config('sketchpad');
+        return view('sketchpad::example', compact('config', 'name'));
+    }
+
+    // your methods here...
+
+}

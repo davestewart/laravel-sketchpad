@@ -1,0 +1,1 @@
+export default JSON.parse($('#settings').text());

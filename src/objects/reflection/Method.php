@@ -2,6 +2,7 @@
 
 use davestewart\sketchpad\traits\ReflectionTraits;
 use JsonSerializable;
+use ReflectionParameter;
 
 /**
  * Reflection Method
@@ -43,16 +44,21 @@ class Method implements JsonSerializable
 			// properties
 			$this->ref      = $method;
 			$this->name		= $method->name;
-			$this->route    = strtolower($route . $this->name . '/');
+			$this->route    = strtolower($route . '/' . $this->name);
 			$this->label	= $this->getLabel();
 			$this->comment	= $this->getDocComment();
 
 			// params
 			$params			= $method->getParameters();
 			$this->params	= [];
-			foreach($params as $param)
+			foreach($params as /** @var ReflectionParameter */ $param)
 			{
-				array_push($this->params, new Parameter($param));
+				if($param->isOptional())
+				{
+					$tag    = $this->comment->getParam($param->name);
+					$param  = new Parameter($param, $tag);
+					array_push($this->params, $param);
+				}
 			}
 		}
 	
@@ -63,15 +69,11 @@ class Method implements JsonSerializable
 			$data->name         = $this->name;
 			$data->label        = $this->label;
 			$data->route        = $this->route;
-			$data->signature    = $this->signature;
+			//$data->signature    = $this->signature;
+			$data->params       = $this->params;
+			$data->comment      = $this->comment;
+			$data->tags         = $this->comment->tags;
 			$data->error        = 0;
-
-			// complex
-			if( ! $simple )
-			{
-				$data->comment      = $this->comment;
-				$data->params       = $this->params;
-			}
 
 			// return
 			return $data;

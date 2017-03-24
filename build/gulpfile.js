@@ -2,149 +2,111 @@
 // libs
 
 	var gulp			= require('gulp'),
-		sass			= require('gulp-sass'),
-		cssmin 			= require('gulp-cssmin'),
-		uglify			= require('gulp-uglify'),
-		rename			= require('gulp-rename'),
-		concat			= require('gulp-concat');
-		concatCss		= require('gulp-concat-css'),
-		sourcemaps		= require('gulp-sourcemaps')
-		log 			= require('gulp-util').log;
+		gutil			= require('gulp-util'),
+		argv            = require('yargs').argv,
+		path			= require('path'),
+		elixir			= require('laravel-elixir'),
+		es2015			= require('babel-preset-es2015'),
+		txRuntime		= require('babel-plugin-transform-runtime');
+
+		// elixir extensions
+		require('laravel-elixir-vueify');
 
 
 // ---------------------------------------------------------------------------------
 // config
 
 	// paths
-	var pubFolder      = '../publish/assets/';
-	var resFolder      = '../resources/assets/';
-	var libFolder      = '../resources/lib/';
-	var jsFolder       = resFolder + 'js/';
+	var rootPath					= path.normalize(__dirname + '/../');
+	var assetsPath					= rootPath + 'publish/assets/';
 
-	var app =
-	{
-		css:
-		{
-			input	: resFolder + 'sass/**/*.scss',
-			output	: pubFolder,
-		},
-		js:
-		{
-			watch:jsFolder + '**/*.js',
-			input:
-			[
-				jsFolder + '*/**/*.js',
-				jsFolder + 'main.js',
-			],
-			output:
-			{
-				file	:'sketchpad.js',
-				folder	:pubFolder,
-			}
-		}
-	}
+	// elixir input
+	elixir.config.assetsPath		= '../' + elixir.config.assetsPath;
+	//elixir.config.sourcemaps		= true;
 
-	var lib =
-	{
-		css:
-		{
-			input	:libFolder + '**/*.css',
-			output	:
-			{
-				file	:'lib.min.css',
-				folder	:pubFolder
-			}
-		},
-		js:
-		{
-			watch:libFolder + '**/*.js',
-			input:
-			[
-				libFolder + 'jquery-*.js',
-				libFolder + 'vue.js',
-				libFolder + '**/*.js',
-			],
-			output:
-			{
-				file	:'lib.min.js',
-				folder	:pubFolder,
-			}
+	// elixir output
+	elixir.config.publicPath		= '../publish/assets';
+	elixir.config.css.outputFolder	= '';
+	elixir.config.js.outputFolder	= '';
+
+
+// ---------------------------------------------------------------------------------
+// vueify hot reloading
+
+	var bConfig = elixir.config.js.browserify;
+
+	bConfig.plugins.push({
+		name: 'vueify-extract-css',
+		options: {
+			out: assetsPath + 'css/components.css'
 		}
+	});
+
+	if(gutil.env._.indexOf('watch') > -1)
+	{
+		bConfig.plugins.push({
+			name: "browserify-hmr",
+			options : {}
+		});
 	}
 
 
 // ---------------------------------------------------------------------------------
-// functions
+// browserify
 
-	function styles()
-	{
-		log('Rebuilding styles...');
-		return gulp
-			.src(app.css.input)
-			.pipe(sass().on('error', sass.logError))
-			.pipe(gulp.dest(app.css.output));
-	}
+	// https://github.com/babel/babelify
+	elixir.config.js.browserify.transformers =
+	[
+		{ name: 'babelify', options: { presets: [es2015] }, plugins:[ txRuntime ] },
+		{ name: 'partialify' },
+		{ name: 'vueify' }
+	];
 
-	function scripts()
-	{
-		log('Rebuilding scripts...');
-		return gulp
-			.src(app.js.input)
-			.pipe(concat(app.js.output.file))
-			.pipe(gulp.dest(app.js.output.folder));
-	}
-
-	function stylesLib()
-	{
-		log('Rebuilding lib styles...');
-		return gulp
-			.src(lib.css.input)
-			.pipe(concatCss(lib.css.output.file))
-			.pipe(cssmin())
-			.pipe(gulp.dest(lib.css.output.folder));
-	}
-
-	function scriptsLib()
-	{
-		log('Rebuilding lib scripts...');
-		return gulp
-			.src(lib.js.input)
-			.pipe(sourcemaps.init())
-			.pipe(uglify({compress:true}))
-			.pipe(concat(lib.js.output.file))
-			.pipe(sourcemaps.write('.'))
-			.pipe(gulp.dest(lib.js.output.folder));
-	}
+	//bConfig.watchify.enabled = true;
+	bConfig.options.debug = true;
 
 
 // ---------------------------------------------------------------------------------
-// tasks
+// build
 
-	/**
-	 * Build styles and scripts
-	 *
-	 * Call "gulp build --live" to mangle/compress and skip source maps
-	 */
-	function build()
-	{
-		styles();
-		scripts();
-		stylesLib();
-		scriptsLib();
-	}
+	elixir(function(mix){
 
-	/**
-	 * Monitor styles and scripts, and live-reload when saved
-	 */
-	function watch()
-	{
-		build();
-		gulp.watch(app.css.input, styles);
-		gulp.watch(app.js.watch, scripts);
-		gulp.watch(lib.css.input, stylesLib);
-		gulp.watch(lib.js.watch, scriptsLib);
-	}
+		var options = {
+			debug:true,
+			paths:[
+				'../resources/assets/js',
+				'./node_modules',
+				'./build'
+			]
+		}
 
-	gulp.task('build', build);
-	gulp.task('default', watch);
+		// variables
+		var resources   = 'resources/';
+		var assets      = '../publish/assets/';
+		var file        = argv.setup ? 'setup' : 'app';
 
+		// build
+		mix
+
+			// lib scripts
+			.combine(
+			[
+				rootPath + 'resources/lib/jquery-1.12.3.min.js',
+				rootPath + 'resources/lib/**/*.js'
+			], assets + 'js/lib.js')
+
+			// lib styles
+			.combine(rootPath + 'resources/lib/**/*.css', assets + 'css/lib.css')
+
+			// app styles
+			.sass('app.scss',   assets + 'css/app.css')
+			.sass('setup.scss', assets + 'css/setup.css')
+
+			// app scripts
+			// currently, call gulp watch --setup to run setup
+			.browserify(
+				'resources/assets/js/' +file+ '.js',
+				assets + 'js/' +file+ '.js',
+				'../',
+				options)
+	});

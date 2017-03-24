@@ -1,6 +1,4 @@
-// ------------------------------------------------------------------------------------------------
-// json
-// ------------------------------------------------------------------------------------------------
+@import 'colors';
 
 .jsonview {
 
@@ -14,18 +12,20 @@
 
 	.null,
 	.undefined {
-		color: red
+		color: #AAA;
 	}
 
-	.bool,
+	.bool{
+		color: $bool;
+	}
+
 	.num {
-		color: #00f
+		color: $number;
 	}
 
 	.string {
-		color: #18bc9c;
+		color: $string;
 		white-space: pre-wrap
 	}
 
 }
-
