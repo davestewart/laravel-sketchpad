@@ -14,6 +14,15 @@ use Illuminate\Http\Request;
 class BasicsController extends Controller
 {
 
+	public function index()
+	{
+		?>
+		<p>Note that for <strong>all</strong> demo methods, you can simply look at the source code.</p>
+		<p>All demos are just regular Laravel controller methods, that output stuff.</p>
+		<p>You can find it in <code>vendor/davestewart/sketchpad/src/help</code>.</p>
+		<?php
+	}
+
 	/**
 	 * Call a method just by clicking on its label
 	 */

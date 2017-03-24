@@ -58,7 +58,7 @@ class TagsController extends Controller
 ?>
 <p>The current method item <code>&lt;li&gt;</code> has a suitably over-the-top class <code>.fancy</code> added to it:</p>
 <pre>@css fancy</pre>
-<p>It's styled (in part) with the following code in the <code>user.css</code> stylesheet (click <a href="javascript:toggleUserStyles()">here</a> to disable it):</p>
+<p>It's styled (in part) with the following code in the user <code>styles.css</code> stylesheet (click <a href="javascript:toggleUserStyles()">here</a> to disable it):</p>
 <pre class="code css">
 li.fancy{
     border:1px solid #333;

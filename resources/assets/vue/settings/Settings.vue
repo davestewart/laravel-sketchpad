@@ -78,26 +78,26 @@
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Homepage</label>
 						<ul class="col-sm-9 control-group">
-							<li><label><input type="radio" v-model="settings.ui.homepage" value="welcome"> Welcome</label></li>
-							<li><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> Favourites</label></li>
-							<li><label><input type="radio" v-model="settings.ui.homepage" value="search"> Search</label></li>
+							<li><label><input type="radio" v-model="settings.ui.homepage" value="welcome"> <span>Welcome</span></label></li>
+							<li><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> <span>Favourites</span></label></li>
+							<li><label><input type="radio" v-model="settings.ui.homepage" value="search"> <span>Search</span></label></li>
 						</ul>
 					</div>
 
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Navigation</label>
 						<ul class="col-sm-9 control-group">
-							<li><label><input type="checkbox" v-model="settings.ui.humanizeText"> Humanize text</label></li>
-							<li><label><input type="checkbox" v-model="settings.ui.showComments"> Show comments</label></li>
-							<li><label><input type="checkbox" v-model="settings.ui.showArchived"> Show archived</label></li>
+							<li><label><input type="checkbox" v-model="settings.ui.humanizeText"> <span>Humanize text</span></label></li>
+							<li><label><input type="checkbox" v-model="settings.ui.showComments"> <span>Show comments</span></label></li>
+							<li><label><input type="checkbox" v-model="settings.ui.showArchived"> <span>Show archived</span></label></li>
 						</ul>
 					</div>
 
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Output</label>
 						<ul class="col-sm-9 control-group" >
-							<li><label><input type="checkbox" v-model="settings.ui.formatCode"> Format code</label></li>
-							<li><label><input type="checkbox" v-model="settings.ui.appendOutput"> Append output</label></li>
+							<li><label><input type="checkbox" v-model="settings.ui.formatCode"> <span>Format code</span></label></li>
+							<li><label><input type="checkbox" v-model="settings.ui.appendOutput"> <span>Append output</span></label></li>
 						</ul>
 					</div>
 
