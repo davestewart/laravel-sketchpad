@@ -359,6 +359,9 @@
 
 	#settings {
 
+		.col-sm-3 { width: 20%}
+		.col-sm-9 { width: 80%}
+
 	    form {
 		    ul {
 			    margin: 0;
@@ -416,13 +419,13 @@
 
 			    input[name="name"] {
 				    display: inline-block;
-				    width:15%;
+				    width:20%;
 				    font-weight: bold;
 			    }
 
 			    input[name="path"] {
 				    display: inline-block;
-				    width:69%;
+				    width:64%;
 			    }
 
 		    }

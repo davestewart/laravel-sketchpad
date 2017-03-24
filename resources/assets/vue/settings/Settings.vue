@@ -6,7 +6,7 @@
 		</header>
 		<section class="content">
 
-			<form class="form-horizontal" style="width: 700px">
+			<form class="form-horizontal">
 
 				<fieldset name="paths">
 
