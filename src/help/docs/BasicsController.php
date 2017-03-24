@@ -175,19 +175,23 @@ return md(__DIR__ . '/some.md');
 
 		<p>Sketchpad allows you to add custom assets to the app by way of:</p>
 		<ul>
-			<li>Editable user asset files</li>
+			<li>Custom user asset files</li>
 			<li>Loadable asset URLs</li>
 		</ul>
-		<p>During setup, two starter files are copied to <code><?php echo $assets; ?></code>.</p>
-		<p>Both files are then set to load (by default) from the <a href="<?= $route; ?>settings">settings</a> page's user assets section:</p>
+		<p>During setup, two starter files were copied to your installation's <code>assets/</code> folder.</p>
+		<pre>
+<?php echo base_path($assets . 'scripts.js'); ?>
+
+<?php echo base_path($assets . 'styles.css'); ?>
+</pre>
+		<p>By default, these files (along with any other URLs you add) are set to load when Sketchpad runs:</p>
 		<pre>
 /sketchpad/user/scripts.js
 /sketchpad/user/styles.css
 </pre>
 
-		<p>Sketchpad will then add these URLs as <code>&lt;head&gt;</code> assets, along with any other URLs (such as CDNs) you specify.</p>
-		<p>Note the special user assets route <code>/sketchpad/user/</code> which loads the file contents directly, whether or not they are in your <code>public</code> folder.</p>
-		<p>View the <a href="<?= $route; ?>settings">settings</a> page to edit these URLs directly.</p>
+		<p>Note the special "user assets" route (currently <code><?= $route; ?>user/</code>) which loads the file contents directly – whether or not they are in your app's <code>/public/</code> folder.</p>
+		<p>Feel free to <a href="../tags/css">edit these files</a> or update asset URLs on the <a href="<?= $route; ?>settings">settings</a> page.</p>
 <?php
 	}
 
