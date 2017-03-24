@@ -12,6 +12,8 @@ use davestewart\sketchpad\services\Sketchpad;
 
 /**
  * Class SketchpadController
+ *
+ * @private
  */
 class SketchpadController extends Controller
 {

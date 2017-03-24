@@ -9,6 +9,8 @@ use ReflectionMethod;
 
 /**
  * Class ControllerObject
+ *
+ * @private
  */
 class Controller extends File implements Arrayable, JsonSerializable
 {

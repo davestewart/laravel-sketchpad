@@ -10,6 +10,8 @@ use davestewart\sketchpad\services\Sketchpad;
 
 /**
  * Class SketchpadController
+ *
+ * @private
  */
 class ApiController extends Controller
 {
