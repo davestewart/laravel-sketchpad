@@ -5,7 +5,7 @@
 			<nav v-show="method && method.name !== 'index'" class="navbar navbar-default">
 				<span class="loader"></span>
 				<ul class="nav navbar-nav">
-					<li><button @click="load()" class="btn btn-default btn-xs">Run</button></li>
+					<li><button id="run" @click="load()" class="btn btn-default btn-xs">Run</button></li>
 					<param v-for="param in params" :param="param"></param>
 				</ul>
 			</nav>

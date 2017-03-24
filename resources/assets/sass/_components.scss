@@ -264,6 +264,11 @@
 			content:' : ';
 		}
 
+		button#run {
+			height: 27px;
+			margin-left: -2px;
+		}
+
 		// inputs
 		input{
 			border-radius: 3px;
@@ -360,7 +365,7 @@
 	#settings {
 
 		.col-sm-3 { width: 20%}
-		.col-sm-9 { width: 80%}
+		.col-sm-9 { width: 75%}
 
 	    form {
 		    ul {
@@ -404,7 +409,7 @@
 
 			button {
 				outline: none;
-				background: lighten($gray-dark, 30%);
+				background-color: lighten($gray-dark, 30%);
 			}
 
 		    ul.sortable {
@@ -449,7 +454,7 @@
 
 		.field {
 			display: block;
-			background: $input-bg;
+			background-color: $input-bg;
 			border-radius: 4px;
 			position: relative;
 

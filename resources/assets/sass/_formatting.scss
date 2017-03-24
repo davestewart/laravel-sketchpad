@@ -91,6 +91,30 @@
 
 	}
 
+	select.custom {
+		background-image: url('data:image/svg+xml,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="14px" height="14px" viewBox="0 0 1200 1000" fill="rgb(123,138,139)"><path d="M1100 411l-198 -199l-353 353l-353 -353l-197 199l551 551z"/></svg>');
+		background-repeat: no-repeat;
+		background-position: calc(100% - 7px) 50%;
+		padding-right: 25px;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		line-height: 1 !important;
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	select::-ms-expand {
+		display: none;
+	}
+
+	select:-moz-focusring {
+		color: transparent;
+		text-shadow: 0 0 0 #000;
+	}
+
 	button {
 		outline: none !important;
 	}

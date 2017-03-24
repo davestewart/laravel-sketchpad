@@ -61,7 +61,7 @@
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">File watcher</label>
 						<div class="col-sm-9">
-							<select class="form-control" v-model="settings.watcher">
+							<select class="form-control custom" v-model="settings.watcher">
 								<option value="">None</option>
 								<option value="browsersync">BrowserSync</option>
 								<option value="livereload">Live Reload</option>

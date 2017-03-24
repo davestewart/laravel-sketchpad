@@ -1,3 +1,5 @@
+@import 'colors';
+
 // ---------------------------------------------------------------------------------------------------------------------
 // layout
 // ---------------------------------------------------------------------------------------------------------------------
@@ -70,10 +72,35 @@
 		}
 	}
 
+    .btn-default:focus,
+    .btn-default {
+
+	    border-width: 0;
+	    background-color: $gray-dark;
+    }
+
+
+    .btn-default:active,
+    .btn-default:active:focus {
+	    background-color: darken($gray-dark, 10%);
+    }
+
+    .btn-default:hover{
+	    background-color: lighten($gray-dark, 5%);
+    }
+
+	.btn-xs, .btn-group-xs>.btn {
+		padding: 1px 9px;
+	}
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // elements
 // ---------------------------------------------------------------------------------------------------------------------
+
+	.navbar-default {
+		background-color: $gray-lighter;
+	}
 
 	.alert{
 		padding: 6px 11px;
