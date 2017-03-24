@@ -8,6 +8,11 @@ export function dump()
 	Array.prototype.slice.call(arguments).map(obj => console.log(clone(obj)))
 }
 
+export function trim (string)
+{
+	return String(string || '').replace(/^\s+|\s+$/g, '')
+}
+
 let context;
 
 export function getTextWidth(text, font)

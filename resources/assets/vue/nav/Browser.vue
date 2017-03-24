@@ -99,9 +99,13 @@ export default
 							result = {group:method.tags.group, methods:[]}
 							results.push(result)
 						}
-						if(method.name !== 'index') {
-							result.methods.push(method)
+						if(method.name === 'index') {
+							return
 						}
+						if(!settings.ui.showArchived && method.tags.archived) {
+							return
+						}
+						result.methods.push(method)
 					});
 			}
 

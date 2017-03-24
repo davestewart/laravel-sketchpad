@@ -46,7 +46,11 @@ export default
 		{
 			const results = [];
 			store.controllers.forEach(controller => {
-				const methods = controller.methods.filter(this.filterFn)
+				let methods = controller.methods.filter(this.filterFn)
+				if (!settings.ui.showArchived)
+				{
+					methods = methods.filter(method => !method.tags.archived)
+				}
 				if (methods.length)
 				{
 					results.push({route:controller.route, methods:methods})

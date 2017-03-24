@@ -1,3 +1,5 @@
+@import 'colors';
+
 // ---------------------------------------------------------------------------------------------------------------------
 // global
 // ---------------------------------------------------------------------------------------------------------------------
@@ -61,6 +63,12 @@
 			padding-left:4px;
 		}
 
+		.control-group li  > label {
+			padding-bottom: 0;
+			font-size: 13px;
+			font-weight: normal;
+		}
+
 		.form-group-submit {
 
 			margin-top: 30px;
@@ -84,7 +92,7 @@
 	}
 
 	.form-control {
-		background-color:rgba(220,228,236,0.4);
+		background-color: $input-bg;
 		border:none;
 		padding:9px 10px;
 		font-size: inherit;

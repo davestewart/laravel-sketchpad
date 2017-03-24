@@ -9,6 +9,8 @@ use Illuminate\Routing\Controller;
 
 /**
  * Class SketchpadController
+ *
+ * @private
  */
 class SetupController extends Controller
 {

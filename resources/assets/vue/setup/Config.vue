@@ -18,10 +18,10 @@
 
 					<fieldset>
 
-                        <legend>Presets</legend>
+                        <legend>Config</legend>
 
 						<div class="form-group inline">
-							<label class="control-label col-sm-3">Type</label>
+							<label class="control-label col-sm-3">Installation</label>
 							<div class="col-sm-9">
 								<div v-for="(key, option) in getOptions()" class="radio">
 									<label class="radio">
@@ -30,6 +30,19 @@
 									</label>
 								</div>
                                 <p class="help-block">{{ options.desc }}</p>
+							</div>
+						</div>
+
+                        <div :class="getClass('route')">
+							<label class="control-label col-sm-3">Route</label>
+							<div class="col-sm-9">
+								<input type="text"
+									   v-model="options.route"
+									   class="form-control"
+									   name="route"
+									   :placeholder="getPlaceholder('route')">
+								<p class="help-block prompt">{{ prompts.route }}</p>
+								<p class="help-block hint">{{ hints.route }}</p>
 							</div>
 						</div>
 
@@ -79,20 +92,6 @@
 						</div>
 						<!--
 						-->
-
-                        <div :class="getClass('route')">
-							<label class="control-label col-sm-3">Route</label>
-							<div class="col-sm-9">
-								<input type="text"
-									   v-model="options.route"
-									   class="form-control"
-									   name="route"
-									   :placeholder="getPlaceholder('route')">
-								<p class="help-block prompt">{{ prompts.route }}</p>
-								<p class="help-block hint">{{ hints.route }}</p>
-							</div>
-						</div>
-
 					</fieldset>
 
                     <fieldset v-if="autoloader">
@@ -142,10 +141,10 @@
 
 
 var prompts = {
-    controllers	    :'The folder path to a controllers folder that Sketchpad will monitor (you can add more later)',
-    views		    :'The folder path to a views folder to load Sketchpad-specific Blade templates',
-    assets		    :'The public folder path where Sketchpad\'s scripts and styles will be installed',
     route		    :'The URL you run Sketchpad in the browser',
+    controllers	    :'A root-relative path to a controllers folder that Sketchpad will monitor (you can add more later)',
+    views		    :'A root-relative path to a views folder to load Sketchpad-specific Blade templates',
+    assets		    :'A root-relative path to an assets folder to load user scripts and styles',
     namespace	    :'The PSR-4 namespace prefix for controllers',
     basedir         :'The directory the autoloader namespace prefix maps to'
 };

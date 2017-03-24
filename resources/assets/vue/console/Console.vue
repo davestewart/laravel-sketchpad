@@ -1,9 +1,12 @@
 <template>
 
-	<div id="console" :class="{loading: loading, transition: transition, pending: pending, error: error}">
-		<info v-ref:info :controller="controller" :method="method"></info>
-		<params v-ref:params :method="method" :params="params"></params>
-		<output v-ref:output :method="method"></output>
+	<div id="console" :class="{loading: loading, transitioning: transitioning, pending: pending, error: error}">
+		<div v-show="controller">
+			<info v-ref:info :controller="controller" :method="method"></info>
+			<params v-ref:params :method="method" :params="params"></params>
+			<output v-ref:output :method="method"></output>
+		</div>
+		<not-found v-show="!controller"></not-found>
 	</div>
 
 </template>
@@ -12,7 +15,7 @@
 
 // utils
 import _            from 'underscore'
-import {clone,dump} from '../../js/functions/utils.js';
+import {clone}      from '../../js/functions/utils.js';
 
 // objects
 import state		from '../../js/state/state.js';
@@ -20,7 +23,8 @@ import server		from '../../js/services/server.js';
 import watcher	    from '../../js/services/watcher';
 
 // components
-import Info		    from './Info.vue';
+import NotFound     from './NotFound.vue';
+import Info	        from './Info.vue';
 import Params		from './Params.vue';
 import Output		from './Output.vue';
 
@@ -30,6 +34,7 @@ export default
 
 	components:
 	{
+		NotFound,
 		Info,
 		Params,
 		Output,
@@ -39,13 +44,13 @@ export default
 	{
 		return {
 			routing: false,
-			loading: false,
+			updating: false,
 			pending: false,
-			transition: false,
+			loading: false,
+			transitioning: false,
 			controller: null,
 			method: null,
 			params: null,
-			isUpdate: false
 		}
 	},
 
@@ -54,7 +59,7 @@ export default
 		defer ()
 		{
 			const tags = this.method ? this.method.tags : {}
-			return !! (tags.defer || tags.warning)
+			return !! (tags.defer || tags.warn)
 		},
 
 		error ()
@@ -101,7 +106,7 @@ export default
 		data (transition)
 		{
 			// skip full update if we're updating parameters internally
-			if (this.isUpdate)
+			if (this.updating)
 			{
 				return transition.next()
 			}
@@ -118,6 +123,13 @@ export default
 				? clone(state.method.params)
 				: null
 
+			// missing controller
+			if (!controller)
+			{
+				this.controller = false
+				return transition.next()
+			}
+
 			// set changed properties
 			if (controller !== this.controller)
 			{
@@ -125,7 +137,7 @@ export default
 			}
 			if (method !== this.method)
 			{
-				this.transition = true
+				this.transitioning = true
 				this.method = method
 				this.$refs.output.clear()
 				document.title = 'Sketchpad - ' + state.route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
@@ -140,7 +152,7 @@ export default
 			}
 			else
 			{
-				if (this.transition)
+				if (this.transitioning)
 				{
 					this.$nextTick(() => this.$refs.output.setContent('Waiting for input...'))
 				}
@@ -176,9 +188,9 @@ export default
 				state.setParams(this.params)
 
 				// update route
-				this.isUpdate = true
+				this.updating = true
 				router.replace('/run/' + state.route);
-				this.isUpdate = false
+				this.updating = false
 
 				// load if we're not deferred
 				if (!this.defer || force)
@@ -217,7 +229,7 @@ export default
 				this.routing = false
 				this.loading = false
 				this.pending = false
-				this.transition = false
+				this.transitioning = false
 			},
 
 			onFileChange (file, type)

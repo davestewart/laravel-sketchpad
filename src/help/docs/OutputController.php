@@ -1,8 +1,7 @@
-<?php namespace davestewart\sketchpad\help;
+<?php namespace davestewart\sketchpad\help\docs;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Translation\Translator;
-
 
 /**
  * Use the supplied functions to output and format data nicely

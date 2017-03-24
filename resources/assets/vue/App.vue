@@ -70,8 +70,17 @@
 		ready ()
 		{
 			// links
-			$('#content').on('click', 'a[href]', this.onLinkClick);
+			$('#main').on('click', 'a[href]', this.onLinkClick);
 
+			// assets
+			this.updateAssets()
+			this.$watch('settings.head', this.updateAssets, {deep: true})
+
+			// watcher
+			this.updateWatcher()
+			this.$watch('settings.watcher', this.updateWatcher, {deep: true})
+
+			// done!
 			console.log('App ready')
 
 			// ui
@@ -83,13 +92,37 @@
 		{
 			onLinkClick (event)
 			{
-				var run = location.origin + server.getUrl('run/');
-				if(event.target.href && event.target.href.indexOf(run) === 0)
+				var root = location.origin + '/' + app.settings.route;
+				if(event.target.href && event.target.href.indexOf(root) === 0)
 				{
 					event.preventDefault();
-					const path = event.target.href.substr(run.length);
-					router.go('/run/' + decodeURI(path))
-					//router.replace('/run/' + decodeURI(path))
+					const path = event.target.href.substr(root.length - 1);
+					router.go(decodeURI(path))
+				}
+			},
+
+			updateAssets ()
+			{
+				let html = '';
+				const $head = $('head')
+				$head.find('[data-asset]').remove()
+				this.settings.head
+					.forEach(url => {
+						html += /\.css$/.test(url)
+						    ? '<link data-asset href="' +url+ '" rel="stylesheet">'
+						    : '<script data-asset src="' +url+ '"></scr' + 'ipt>'
+					    $('head')
+					})
+				$head.append(html)
+			},
+
+			updateWatcher ()
+			{
+				const $head = $('head')
+				$head.find('[data-watcher]').remove()
+				if (this.settings.watcher === 'livereload')
+				{
+					$head.append('<script data-watcher src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js"></scr' + 'ipt>')
 				}
 			}
 

@@ -10,6 +10,8 @@ use davestewart\sketchpad\services\Sketchpad;
 
 /**
  * Class SketchpadController
+ *
+ * @private
  */
 class ApiController extends Controller
 {
@@ -83,6 +85,24 @@ class ApiController extends Controller
 				$config->settings->save($data);
 			}
 			return $config->settings;
+		}
+
+		/**
+		 * Validates existence of a path
+		 *
+		 * @method  GET
+		 * @param   Request $request
+		 * @return  array
+		 */
+		public function path(Request $request)
+		{
+			$relpath = $request->get('path');
+			$abspath = base_path($relpath);
+			return [
+				'relpath' => $relpath,
+				'abspath' => $abspath,
+				'exists' => file_exists($abspath)
+			];
 		}
 
 }

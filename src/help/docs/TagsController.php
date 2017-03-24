@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\help;
+<?php namespace davestewart\sketchpad\help\docs;
 
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
@@ -260,14 +260,14 @@ li.fancy{
 	}
 
 	/**
-	 * Shows a warning indicator next to the method name, highlights this text in red, and defers calling of the method.
+	 * Shows a warning indicator next to the method name, highlights the comment in red, and defers calling of the method.
 	 *
-	 * @warning
+	 * @warn
 	 */
-	public function warning()
+	public function warn()
 	{
 		p("Hopefully the big red lozenge didn't put you off too much:");
-		pr('@warning');
+		pr('@warn');
 		p('When the method is finally called, the deferred task, such as sending emails, will be run.');
 ?>
 <p>If you need to pass data to the deferred methods, your other options are:</p>
@@ -279,14 +279,14 @@ li.fancy{
 	}
 
 	/**
-	 * Marks the method as archived, which dims the method name in the methods list
+	 * Dims the method name in the methods list
 	 *
 	 * @archived This method is no longer used
 	 */
 	public function archived()
 	{
 		p('Probably best to remove methods you no longer use, but if you want to keep them, you can mark them as archived:');
-		pr('@archived This method has been superseded by someOtherMethod');
+		pr('@archived');
 	}
 
 	/**
@@ -296,6 +296,7 @@ li.fancy{
 	 */
 	public function privateExample()
 	{
+		p("Both controllers and methods can be marked as private, meaning they won't be added to Sketchpad's controller list");
 		p('Normally, you would declare a method as private, but you might need a public method for something like a callback:');
 		pr('@private');
 	}

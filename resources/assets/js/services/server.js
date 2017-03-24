@@ -53,20 +53,21 @@ Server.prototype =
 		 * Mainly used for :page/
 		 *
 		 * @param 	{string}	path			The partial route, from '/sketchpad/' onwards
+		 * @param	{Object}	[data]          Optional data to pass with the request
 		 * @param	{Function}	[done]          An optional onLoad handler
 		 * @returns {Promise}
 		 */
-		load(path, done)
+		load(path, data, done)
 		{
 			const url = this.getUrl(path);
-			return $.get(url, done);
+			return $.get(url, data, done);
 		},
 
 		loadController(route, onSuccess)
 		{
 			const url = 'api/load/' + route;
 			return onSuccess
-				? this.load(url, onSuccess)
+				? this.load(url).then(onSuccess)
 				: window.open(this.base + url);
 		},
 
@@ -80,6 +81,11 @@ Server.prototype =
 		{
 			const url = this.getRunUrl(method);
 			return $.post(url, data, done);
+		},
+
+		validatePath(path)
+		{
+			return this.load('api/path', {path:path})
 		},
 
 		getRunUrl(method)

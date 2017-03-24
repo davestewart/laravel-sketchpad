@@ -7,8 +7,8 @@
 <script>
 
 import settings     from '../../js/state/settings'
-import Favourites   from '../nav/Favourites.vue'
-import Search       from '../nav/Search.vue'
+import Favourites   from '../pages/Favourites.vue'
+import Search       from '../pages/Search.vue'
 import Welcome      from './Welcome.vue'
 
 export default

@@ -1,16 +1,20 @@
 {
-	"config": {
-		"basedir": "",
-		"route": "",
-		"paths": [
+	"route": "",
+	"paths": {
+		"controllers": [
 			{
 				"name": "project",
 				"path": "",
 				"enabled": true
 			},
 			{
-				"name": "help",
-				"path": "vendor/davestewart/sketchpad/src/help/",
+				"name": "help/docs",
+				"path": "vendor/davestewart/sketchpad/src/help/docs",
+				"enabled": true
+			},
+			{
+				"name": "help/demo",
+				"path": "vendor/davestewart/sketchpad/src/help/demo",
 				"enabled": true
 			}
 		],
@@ -18,15 +22,13 @@
 		"assets": ""
 	},
 	"ui": {
+		"homepage": "welcome",
 		"humanizeText": true,
 		"showComments": true,
 		"showArchived": true,
-		"formatCode": true,
 		"appendOutput": false,
-		"homepage": "welcome"
+		"formatCode": true
 	},
-	"head" : [
-		"/sketchpad/assets/user/user.js",
-		"/sketchpad/assets/user/user.css"
-	]
+	"head" : [],
+	"watcher" : ""
 }

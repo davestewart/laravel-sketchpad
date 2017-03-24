@@ -1,3 +1,5 @@
+@import 'colors';
+
 // ---------------------------------------------------------------------------------------------------------------------
 // layout
 // ---------------------------------------------------------------------------------------------------------------------
@@ -161,7 +163,7 @@
 				content: "\f017";
 			}
 
-			&.warning:before{
+			&.warn:before{
 				content: "\f12a";
 				color: #FF0000;
 			}
@@ -238,26 +240,15 @@
 
 		.loader {
 			position: absolute;
-			display: block;
-			width: 16px;
-			height: 16px;
 			right: 0;
 			margin: 8px 12px;
-			background-image: url('../images/ajax-loader.gif');
-			background-repeat: no-repeat;
-			transition: opacity 0.1s;
-			opacity: 0;
-
-			#console.loading & {
-				opacity: 1;
-			}
 		}
 	}
 
 	#params {
 
 		* {
-			vertical-align: middle;
+			vertical-align: baseline;
 		}
 
 		ul {
@@ -346,7 +337,7 @@
 
 		transition: opacity 0.2s;
 
-		#console.transition.loading & {
+		#console.transitioning.loading & {
 			opacity: 0;
 		}
 
@@ -368,37 +359,78 @@
 
 	#settings {
 
+		.col-sm-3 { width: 20%}
+		.col-sm-9 { width: 80%}
+
 	    form {
-		    margin-top: 1.5em;
+		    ul {
+			    margin: 0;
+			    padding: 0;
+		    }
+
+			.error {
+				color: #C00;
+			}
+
 	    }
 
-	    ul {
+		legend {
+			padding-bottom: 10px;
+			border-bottom: 1px dashed #CCC;
+			margin-bottom: 20px;
+			line-height: 1.1;
+			font-size: 26px;
+		}
+
+	    ul.control-group {
 		    list-style: none;
-		    margin-left: 15px;
+		    margin: 0;
 		    padding: 0;
-	    }
+		    padding-left: 15px;
 
-	    fieldset[name="paths"] {
-
-		    li {
-			    width: 100%;
-		    }
-
-		    .handle {
-			    color:#CCC;
-			    text-align: center;
-			    width: 15px;
-		    }
-
-		    input[type="input"][name="name"] {
-			    width:20%;
-		    }
-
-		    input[type="input"][name="path"] {
-			    width:70%;
+		    label {
+			    padding:2px 4px;
+			    margin: 0;
 		    }
 
 	    }
+
+		fieldset {
+			margin-bottom: 2em;
+		}
+
+		.controllers {
+			margin-bottom:28px;
+
+			button {
+				outline: none;
+				background: lighten($gray-dark, 30%);
+			}
+
+		    ul.sortable {
+			    position: relative;
+
+			    > li{
+				    list-style: none;
+				    width: 100%;
+				    margin: 0;
+				    padding: 5px 0;
+			    }
+
+			    input[name="name"] {
+				    display: inline-block;
+				    width:20%;
+				    font-weight: bold;
+			    }
+
+			    input[name="path"] {
+				    display: inline-block;
+				    width:64%;
+			    }
+
+		    }
+
+		}
 
 	    fieldset[name="ui"] {
 
@@ -410,15 +442,75 @@
 
 	    }
 
-    }
+		textarea[name="head"] {
+			line-height: 2;
+			min-height: 9em;
+		}
 
-    .sortable-chosen {
-	    opacity: .9;
-	    z-index: 100;
-	    background: #FFF;
-    }
+		.field {
+			display: block;
+			background: $input-bg;
+			border-radius: 4px;
+			position: relative;
 
-    .sortable-ghost {
-	    opacity: .3;
-    }
+			input {
+				background: none;
+			}
+
+			.icons {
+				position: absolute;
+				top: 0;
+				right: 10px;
+
+				i {
+					line-height: 35px;
+					padding: 0 2px;
+					margin-right: 2px;
+					color: $gray-dark;
+					vertical-align: baseline;
+					cursor: pointer;
+
+					&:hover {
+						color: black;
+					}
+				}
+
+				i.validate-path {
+					display:none;
+					cursor: default;
+					pointer-events: unset;
+					&.fa-check {
+						color: #0C0;
+					}
+					&.fa-question {
+						color: $brand-info;
+					}
+					&.fa-exclamation,
+					&.fa-exclamation-triangle{
+						color: $brand-warning;
+					}
+				}
+
+			}
+		}
+	}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// components
+// ---------------------------------------------------------------------------------------------------------------------
+
+	.loader {
+		display: block;
+		width: 16px;
+		height: 16px;
+		background-image: url('../images/ajax-loader.gif');
+		background-repeat: no-repeat;
+		transition: opacity 0.1s;
+		opacity: 0;
+
+		.loading & {
+			opacity: 1;
+		}
+	}
 
