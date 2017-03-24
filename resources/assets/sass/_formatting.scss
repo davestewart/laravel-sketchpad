@@ -91,15 +91,22 @@
 
 	}
 
-	.form-control {
-		background-color: $input-bg;
-		border:none;
-		padding:9px 10px;
-		font-size: inherit;
-		height:40px;
+	button {
+		outline: none !important;
 	}
 
-	input[type="radio"],
-	input[type="checkbox"] {
-		width:20px;
+	#params,
+	#settings {
+
+		.form-control {
+			background-color: $input-bg;
+			border:none;
+			padding:9px 10px;
+		}
+
+		input[type="radio"],
+		input[type="checkbox"] {
+			width:20px;
+		}
+
 	}

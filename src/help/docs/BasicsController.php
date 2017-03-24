@@ -103,8 +103,8 @@ class BasicsController extends Controller
 		<p>Type something below and submit the form back to the same URL:</p>
 		<!-- any form with an empty or missing "action" attribute will be intercepted and submitted by sketchpad -->
 		<form class="form form-inline">
-			<input  class="form-control" type="text" name="text" placeholder="Type something here...">
-			<button class="form-control" type="submit">Submit</button>
+			<input  class="form-control input-sm" type="text" name="text" placeholder="Type something here...">
+			<button class="btn btn-primary btn-sm" type="submit">Submit</button>
 		</form>
 		<?php
 
