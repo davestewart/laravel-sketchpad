@@ -21,7 +21,7 @@ Install the gulp plugin to see updates to your code, live!
 To install the package, run the following from your site's root directory:
 
 ```
-composer require davestewart/laravel-sketchpad
+composer require davestewart/sketchpad
 ```
 
 Once installed, you'll need to add a reference to the Sketchpad service provider in your app config, found at `config/app.php`.
