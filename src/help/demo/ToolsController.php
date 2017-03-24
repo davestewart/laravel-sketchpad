@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\help\examples;
+<?php namespace davestewart\sketchpad\help\demo;
 
 use App\data\entities\User;
 use Illuminate\Http\Request;
