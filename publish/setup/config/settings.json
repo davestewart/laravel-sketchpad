@@ -8,8 +8,13 @@
 				"enabled": true
 			},
 			{
-				"name": "help",
-				"path": "vendor/davestewart/sketchpad/src/help/",
+				"name": "help/docs",
+				"path": "vendor/davestewart/sketchpad/src/help/docs",
+				"enabled": true
+			},
+			{
+				"name": "help/examples",
+				"path": "vendor/davestewart/sketchpad/src/help/examples",
 				"enabled": true
 			}
 		],

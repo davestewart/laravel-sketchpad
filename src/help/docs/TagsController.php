@@ -1,4 +1,4 @@
-<?php namespace davestewart\sketchpad\help;
+<?php namespace davestewart\sketchpad\help\docs;
 
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
