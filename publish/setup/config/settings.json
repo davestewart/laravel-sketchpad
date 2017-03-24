@@ -13,8 +13,8 @@
 				"enabled": true
 			},
 			{
-				"name": "help/examples",
-				"path": "vendor/davestewart/sketchpad/src/help/examples",
+				"name": "help/demo",
+				"path": "vendor/davestewart/sketchpad/src/help/demo",
 				"enabled": true
 			}
 		],
