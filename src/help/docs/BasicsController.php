@@ -165,35 +165,29 @@ return md(__DIR__ . '/some.md');
 	}
 
 	/**
-	 * Customise the Sketchpad with the user stylesheet and script
+	 * Customise Sketchpad with user scripts and styles
 	 */
-	public function userAssets()
+	public function userAssets(SketchpadConfig $config)
 	{
+		$route = $config->route;
+		$assets = $config->settings->get('paths.assets');
 ?>
-<h3>Styles</h3>
-<p>Edit the <code>vendor/sketchpad/user.css</code> stylesheet to:</p>
-<ul>
-	<li>Add your own styles for custom output</li>
-	<li>Override any of the default Sketchpad or Bootstrap styles</li>
-	<li>Individually <a href="../tags/css">target and style</a> controller and method menu items</li>
-</ul>
 
-<h3>Scripts</h3>
-<p>Should you need to add any JavaScript to the page, you can do this in two ways:</p>
-<ol>
-	<li>Edit the <code>vendor/sketchpad/user.js</code> file</li>
-	<li>Inject and call <code>Sketchpad::addScript()</code> in your controller methods</li>
-</ol>
-<p>Here's an example of injecting the script via the constructor, so it will available in all methods:</p>
-<pre class="code php">
-public function()
-{
-    public function __construct(Sketchpad $sketchpad)
-    {
-        $sketchpad->addScript('sketchpad::path/to/script.js');
-    }
-}
+		<p>Sketchpad allows you to add custom assets to the app by way of:</p>
+		<ul>
+			<li>Editable user asset files</li>
+			<li>Loadable asset URLs</li>
+		</ul>
+		<p>During setup, two starter files are copied to <code><?php echo $assets; ?></code>.</p>
+		<p>Both files are then set to load (by default) from the <a href="<?= $route; ?>settings">settings</a> page's user assets section:</p>
+		<pre>
+/sketchpad/user/scripts.js
+/sketchpad/user/styles.css
 </pre>
+
+		<p>Sketchpad will then add these URLs as <code>&lt;head&gt;</code> assets, along with any other URLs (such as CDNs) you specify.</p>
+		<p>Note the special user assets route <code>/sketchpad/user/</code> which loads the file contents directly, whether or not they are in your <code>public</code> folder.</p>
+		<p>View the <a href="<?= $route; ?>settings">settings</a> page to edit these URLs directly.</p>
 <?php
 	}
 
