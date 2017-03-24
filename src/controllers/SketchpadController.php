@@ -59,6 +59,21 @@ class SketchpadController extends Controller
 			// set up the router and rescan to get all data
 			$config     = $this->sketchpad->init(true)->config;
 
+            // settings
+	        $settings = $config->settings->data;
+
+	        // file watching
+	        $watcher = null;
+	        if ($settings['watcher'])
+	        {
+	        	$host = $_SERVER['HTTP_HOST'];
+				$urls = [
+			        'BrowserSync' => "http://$host:3000/browser-sync/browser-sync-client.js?v=2.18.8",
+					'LiveReload' => "http://$host:35729/livereload.js"
+				];
+				$watcher = @$urls[$settings['watcher']];
+	        }
+
 			// build resources
 			$resources  = $config->settings->get('assets') ?: [];
 			$resources  = array_map(function ($file) {
@@ -73,7 +88,8 @@ class SketchpadController extends Controller
 			[
 				'route'         => $config->route,
 				'assets'        => $config->route . 'assets/',
-				'settings'      => $config->settings->data,
+				'settings'      => $settings,
+				'watcher'       => $watcher,
 				'resources'     => implode("\n\t", $resources),
 				'data'          =>
 				[

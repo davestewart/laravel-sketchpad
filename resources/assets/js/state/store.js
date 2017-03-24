@@ -133,7 +133,7 @@ var Store = Vue.extend({
 				{
 					const index = this.controllers.indexOf(controller);
 					this.controllers[index] = data;
-					if (state.controller.path === data.path)
+					if (state.controller && state.controller.path === data.path)
 					{
 						this.updateState(data);
 					}

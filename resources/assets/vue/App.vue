@@ -29,6 +29,7 @@
 
 	// services
 	import server       from '../js/services/server.js';
+	import watcher      from '../js/services/watcher.js';
 
 	// state
 	import store        from '../js/state/store.js';
@@ -77,8 +78,10 @@
 			this.$watch('settings.head', this.updateAssets, {deep: true})
 
 			// watcher
-			this.updateWatcher()
-			this.$watch('settings.watcher', this.updateWatcher, {deep: true})
+			if(this.settings.watcher)
+			{
+				watcher.init()
+			}
 
 			// done!
 			console.log('App ready')
@@ -114,16 +117,6 @@
 					    $('head')
 					})
 				$head.append(html)
-			},
-
-			updateWatcher ()
-			{
-				const $head = $('head')
-				$head.find('[data-watcher]').remove()
-				if (this.settings.watcher === 'livereload')
-				{
-					$head.append('<script data-watcher src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js"></scr' + 'ipt>')
-				}
 			}
 
 		}

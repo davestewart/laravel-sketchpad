@@ -63,10 +63,11 @@
 						<div class="col-sm-9">
 							<select class="form-control custom" v-model="settings.watcher">
 								<option value="">None</option>
-								<option value="browsersync">BrowserSync</option>
-								<option value="livereload">Live Reload</option>
+								<option value="BrowserSync">BrowserSync</option>
+								<option value="LiveReload">LiveReload</option>
 							</select>
-							<p class="help-block prompt">Specify a JavaScript watcher to use when loading assets via Sketchpad Reload</p>
+							<p v-if="watcherChanged" class="help-block prompt">File watcher changed. <a href="javascript:location.reload(); void(0)">Click here to reload the page</a>.</p>
+							<p v-else class="help-block prompt">Specify a JavaScript watcher to use when loading assets via Sketchpad Reload</p>
 						</div>
 					</div>
 
@@ -134,6 +135,7 @@ export default
 	data()
 	{
 		return {
+			watcherChanged: false,
 			settings: clone(settings)
 		}
 	},
@@ -172,9 +174,9 @@ export default
 			'settings.head',
 		], true)
 		this.watch([
-			'settings.watcher',
 			'settings.ui'
 		])
+		this.$watch('settings.watcher', this.onWatcherChange);
 	},
 
 	methods:
@@ -182,6 +184,11 @@ export default
 		onSettingsChange (value, old)
 		{
 			this.save()
+		},
+
+		onWatcherChange()
+		{
+			this.save().then(() => this.watcherChanged = true)
 		},
 
 		onControllersUpdate (items)

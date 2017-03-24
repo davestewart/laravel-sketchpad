@@ -2,16 +2,31 @@ class Watcher {
 
 	constructor()
 	{
-		// handlers
+		this.initialized = false;
 		this.handlers = [];
+	}
+
+	init ()
+	{
+		// debug
+		console.log('Initializing file watcher...');
+
+		const watcher = app.settings.watcher || 'File watcher';
 
 		// decorate LiveReload
 		if(window.LiveReload)
 		{
+			// don't re-decorate
+			if (LiveReload.reloader.decorated)
+			{
+				return false;
+			}
+
 			// proxy
 			const reload = LiveReload.reloader.reload.bind(LiveReload.reloader);
 
 			// decorate
+			LiveReload.reloader.decorated = true;
 			LiveReload.reloader.reload = (file, options) =>
 			{
 				// default type
@@ -32,17 +47,38 @@ class Watcher {
 				}
 				return reload(file, options);
 			};
+
+			// success
+			this.initialized = true;
 		}
 
 		// listen to browsersync
 		if(window.___browserSync___)
 		{
-			___browserSync___.socket.on('sketchpad.update', event =>
+			// don't redecorate
+			if(___browserSync___.socket.hasListeners('sketchpad:change'))
 			{
-				console.log(arguments);
-				this.handle(event.file, event.type); // TODO check this is the proper call
-			})
+				return false;
+			}
+
+			// add listener
+			___browserSync___.socket.on('sketchpad:change', event =>
+			{
+				return ! this.handle(event.file, event.type);
+			});
+
+			// success
+			this.initialized = true;
 		}
+
+		// debug
+		if (this.initialized)
+		{
+			console.info(watcher + ' initialized');
+			return true;
+		}
+		console.warn(watcher + ' not detected! Did you start the Gulp task?');
+		return false;
 	}
 
 	/**
@@ -79,7 +115,7 @@ class Watcher {
 	handle (file, type)
 	{
 		// debug
-		console.info(type, file);
+		// console.info('File change:', type, file);
 
 		// get matching handlers
 		let handlers = this.handlers
@@ -102,4 +138,7 @@ class Watcher {
 
 }
 
-export default new Watcher;
+const watcher = new Watcher;
+window.watcher = watcher;
+
+export default watcher

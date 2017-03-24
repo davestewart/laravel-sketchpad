@@ -7,6 +7,10 @@
     <meta name="route" content="{{ $route }}">
     @include('sketchpad::head')
 
+	@if ($watcher)<!-- file watching -->
+	<script src="{{ $watcher }}"></script>
+	@endif
+
     <!-- user -->
 </head>
 <body>
