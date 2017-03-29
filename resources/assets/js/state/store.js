@@ -1,6 +1,5 @@
 import Vue 		    from 'vue';
 import server	    from '../services/server';
-import state        from '../state/state'
 import watcher      from '../services/watcher'
 
 /**
@@ -9,15 +8,12 @@ import watcher      from '../services/watcher'
  * - loads controller data
  * - stores controller data
  */
-var Store = Vue.extend({
+const Store = Vue.extend({
 
 	data ()
 	{
 		const text = $('#data').text();
-		const data = JSON.parse(text);
-		data.controller = data.controllers[0];
-		data.method = data.controller.methods[0];
-		return data;
+		return JSON.parse(text);
 	},
 
 	created ()
@@ -33,14 +29,14 @@ var Store = Vue.extend({
 			loadAll ()
 			{
 				server
-					.load('api/load')
+					.loadController()
 					.then(this.onLoadAll)
 			},
 
 			load (route)
 			{
 				server
-					.load('api/load/' + route)
+					.loadController(route)
 					.then(this.onLoad)
 			},
 
@@ -49,19 +45,56 @@ var Store = Vue.extend({
 		// handlers
 
 			/**
-			 * Update controller data when a controller is changed, requested, and data reloaded
+			 * All controllers load handler
 			 *
-			 * @param   {Object[]}  data    An array of controller data
+			 * @param   {Object[]}  data    An array of controller objects
 			 */
 			onLoadAll (data)
 			{
-				this.setControllers(data);
+				this.controllers = data;
+				this.$emit('load', data);
 			},
 
 			/**
-			 * Handles a watcher file change
+			 * Single controller load handler
 			 *
-			 * @param   {string}    path   The absolute path to a controller file (possibly loaded)
+			 * @param   {Object}    data    A single controller object
+			 */
+			onLoad (data)
+			{
+				if(data.path)
+				{
+					// see if the same controller is already loaded
+					const controller = this.getControllerByPath(data.path);
+
+					// if so, replace it
+					if(controller)
+					{
+						const index = this.controllers.indexOf(controller);
+						this.controllers[index] = data;
+					}
+
+					// if not, add it
+					else
+					{
+						this.controllers.push(controller);
+						this.controllers.sort(fnSort);
+					}
+
+					this.$emit('change', data)
+				}
+				if (data.error)
+				{
+					console.log(data.error);
+					this.loadAll();
+				}
+			},
+
+			/**
+			 * Update controller data when a controller file is changed on disk
+			 *
+			 * @param   {string}    path    The absolute path to a controller file (possibly loaded)
+			 * @param   {string}    type    The file change type; change, add, delete
 			 * @returns {boolean}
 			 */
 			onControllerChange (path, type)
@@ -78,91 +111,6 @@ var Store = Vue.extend({
 					return true;
 				}
 				return false;
-			},
-
-			/**
-			 * Single controller load handler
-			 *
-			 * @param   {Object}    data    Controller data
-			 */
-			onLoad (data)
-			{
-				if(data)
-				{
-					if(data.path)
-					{
-						this.setController(data)
-					}
-					if (data.error)
-					{
-						console.log(data.error);
-						this.loadAll();
-					}
-				}
-			},
-
-
-		// ------------------------------------------------------------------------------------------------
-		// update
-
-			/**
-			 * Update all controllers
-			 *
-			 * @param   {Object[]}  data        An array of controllers
-			 */
-			setControllers (data)
-			{
-				this.controllers = data;
-				if (state.controller)
-				{
-					const controller = this.getControllerByPath(state.controller.path);
-					if (controller)
-					{
-						this.updateState(controller)
-					}
-				}
-			},
-
-			setController (data)
-			{
-				// see if the same controller is already loaded
-				const controller = this.getControllerByPath(data.path);
-
-				// if so, replace it
-				if(controller)
-				{
-					const index = this.controllers.indexOf(controller);
-					this.controllers[index] = data;
-					if (state.controller && state.controller.path === data.path)
-					{
-						this.updateState(data);
-					}
-				}
-
-				// if not, add it
-				else
-				{
-					this.controllers.push(controller);
-					this.controllers.sort(fnSort);
-				}
-			},
-
-			/**
-			 * Update the state object after controller update
-			 *
-			 * @param {Object}  controller
-			 */
-			updateState (controller)
-			{
-				// index of existing method on existing controller
-				const index = state.controller.methods.indexOf(state.method);
-
-				// replace controller and method
-				state.controller = controller;
-				if (controller.methods)
-				{
-					state.method = controller.methods[index];
-				}
 			},
 
 

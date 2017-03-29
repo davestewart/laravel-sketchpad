@@ -1,6 +1,7 @@
+import _            from 'underscore'
 import Vue 		from 'vue';
 import store	from './store.js';
-import {clone}	from '../functions/utils';
+import {getArrayChange}	from '../functions/utils';
 
 /**
  * Stores the current controller > method > params
@@ -24,6 +25,12 @@ const State = Vue.extend({
 			{
 				return this.makeRoute(this.method || this.controller);
 			}
+		},
+
+		created ()
+		{
+			store.$on('load', this.onStoreLoad)
+			store.$on('change', this.onStoreChange)
 		},
 
 
@@ -74,6 +81,12 @@ const State = Vue.extend({
 					return true;
 				},
 
+				/**
+				 * Update the params from a query when the method hasn't changed
+				 *
+				 * @param params
+				 * @returns {State}
+				 */
 				setQuery (params)
 				{
 					if (this.method)
@@ -89,6 +102,64 @@ const State = Vue.extend({
 						});
 					}
 					return this;
+				},
+
+				/**
+				 * Update the state when a new controller is loaded
+				 *
+				 * @param {Object}  controller
+				 */
+				setController (controller)
+				{
+					// variables
+					const oldName = this.method ? this.method.name : null;
+					const oldNames = this.controller.methods.map(method => method.name);
+					const newNames = controller.methods.map(method => method.name);
+
+					// update
+					this.controller = controller;
+					if(!this.method)
+					{
+						return;
+					}
+
+					// calculate change
+					const change = getArrayChange(newNames, oldNames, oldName);
+
+					// determine action
+					let route;
+					switch (change.type)
+					{
+						case 'none':
+							this.method = controller.methods[change.index];
+							this.$emit('update', this.controller, this.method);
+							route = this.makeRoute(this.method);
+							break;
+
+						case 'changed': // renamed
+							// re-route to method
+							this.method = controller.methods[change.index];
+							route = this.makeRoute(this.method);
+							break;
+
+						case 'modified':
+							// re-route to controller
+							route = this.makeRoute(this.controller);
+							break;
+
+						case 'moved':
+							// reload console
+							this.method = controller.methods[change.newIndex];
+							//route = this.makeRoute(this.method);
+							this.$emit('update', this.controller, this.method);
+							break;
+					}
+
+					// update route
+					if (route)
+					{
+						router.go('/run/' + route);
+					}
 				},
 
 				setParams (params)
@@ -108,6 +179,31 @@ const State = Vue.extend({
 					this.controller = null;
 					this.method 	= null;
 					return this
+				},
+
+
+			// ------------------------------------------------------------------------------------------------
+			// handlers
+
+				onStoreLoad (data)
+				{
+					if (this.controller)
+					{
+						const controller = store.getControllerByPath(this.controller.path);
+						if (controller)
+						{
+							this.setController(controller)
+						}
+					}
+
+				},
+
+				onStoreChange (controller)
+				{
+					if (this.controller && this.controller.path === controller.path)
+					{
+						this.setController(controller)
+					}
 				},
 
 
