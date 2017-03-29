@@ -44,12 +44,17 @@ class Watcher {
 					file = matches[2];
 				}
 
+				// let livereload handle css, js and image files
+				if (/\.(js|css|jpe?g|gif|png)$/.test(file))
+				{
+					return reload(file, options);
+				}
+
 				// handle event
 				if(this.handle(file, type))
 				{
 					return true;
 				}
-				return reload(file, options);
 			};
 
 			// success

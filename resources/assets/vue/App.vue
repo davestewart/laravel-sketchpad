@@ -81,7 +81,7 @@
 			this.onAssetsChange()
 
 			// watcher
-			if(this.settings.watcher)
+			if(this.settings.livereload.host)
 			{
 				watcher.init()
 			}
