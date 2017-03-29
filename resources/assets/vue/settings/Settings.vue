@@ -58,27 +58,16 @@
 						</div>
 					</div>
 
-					<!--
-					<div class="form-group form-group-sm">
-						<label class="control-label col-sm-3">File watcher</label>
-						<div class="col-sm-9">
-							<select class="form-control custom" v-model="settings.watcher">
-								<option value="">None</option>
-								<option value="BrowserSync">BrowserSync</option>
-								<option value="LiveReload">LiveReload</option>
-							</select>
-							<p v-if="watcherChanged" class="help-block prompt">File watcher changed. <a href="javascript:location.reload(); void(0)">Click here to reload the page</a>.</p>
-							<p v-else class="help-block prompt">Specify a JavaScript watcher to use when loading assets via Sketchpad Reload</p>
-						</div>
-					</div>
-					-->
-
 				</fieldset>
 
 				<fieldset name="watch">
 					<legend>Live Reload</legend>
 
-					<div v-if="watchHostChanged" class="warning">
+					<div v-if="watchError" class="col-sm-offset-3 warning show">
+						<p class="help-block prompt">{{ watchError}}</p>
+					</div>
+
+					<div v-if="watchHostChanged" class="col-sm-offset-3 warning">
 						<p class="help-block prompt">Host changed! <a href="javascript:location.reload(); void(0)">Click here to reload the page</a>.</p>
 					</div>
 
@@ -104,7 +93,7 @@
 					</div>
 
 					<div v-show="settings.livereload.preset" class="form-group form-group-sm">
-						<label class="control-label col-sm-3">Additional watch paths</label>
+						<label class="control-label col-sm-3">Additional paths</label>
 						<div class="col-sm-9">
 							<textarea class="form-control" v-model="settings.livereload.paths"></textarea>
 							<p class="help-block prompt">Any additional root-relative paths you want to watch for file changes</p>
@@ -197,6 +186,7 @@ export default
 		// return
 		return {
 			watchHostChanged: false,
+			watchError: false,
 			settings: data
 		}
 	},
@@ -211,6 +201,9 @@ export default
 
 	ready ()
 	{
+		// error
+		this.watchError = watcher.error;
+
 		// watches
 		this.$refs.controllers.$on('update', this.onControllersUpdate)
 		this.watch([

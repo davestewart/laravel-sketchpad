@@ -51,8 +51,15 @@ const Store = Vue.extend({
 			 */
 			onLoadAll (data)
 			{
-				this.controllers = data;
-				this.$emit('load', data);
+				if (Array.isArray(data))
+				{
+					this.controllers = data;
+					this.$emit('load', data);
+				}
+				else
+				{
+					console.warn('controllers data is not an array', data);
+				}
 			},
 
 			/**
@@ -62,31 +69,34 @@ const Store = Vue.extend({
 			 */
 			onLoad (data)
 			{
-				if(data.path)
+				if (data)
 				{
-					// see if the same controller is already loaded
-					const controller = this.getControllerByPath(data.path);
-
-					// if so, replace it
-					if(controller)
+					if(data.path)
 					{
-						const index = this.controllers.indexOf(controller);
-						this.controllers[index] = data;
-					}
+						// see if the same controller is already loaded
+						const controller = this.getControllerByPath(data.path);
 
-					// if not, add it
-					else
+						// if so, replace it
+						if(controller)
+						{
+							const index = this.controllers.indexOf(controller);
+							this.controllers[index] = data;
+						}
+
+						// if not, add it
+						else
+						{
+							this.controllers.push(controller);
+							this.controllers.sort(fnSort);
+						}
+
+						this.$emit('change', data)
+					}
+					if (data.error)
 					{
-						this.controllers.push(controller);
-						this.controllers.sort(fnSort);
+						console.log(data.error);
+						this.loadAll();
 					}
-
-					this.$emit('change', data)
-				}
-				if (data.error)
-				{
-					console.log(data.error);
-					this.loadAll();
 				}
 			},
 

@@ -30,7 +30,6 @@
 		"formatCode": true
 	},
 	"head" : [],
-	"watcher" : "",
 	"livereload": {
 		"preset": "local",
 		"host": "localhost",

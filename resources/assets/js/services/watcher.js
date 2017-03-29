@@ -3,6 +3,7 @@ class Watcher {
 	constructor()
 	{
 		this.initialized = false;
+		this.error = '';
 		this.handlers = [];
 	}
 
@@ -80,7 +81,8 @@ class Watcher {
 			console.info('LiveReload initialized');
 			return true;
 		}
-		console.warn('LiveReload not detected! Did you run the Sketchpad node task?');
+		this.error = 'LiveReload not detected! Did you run the Sketchpad node task?';
+		console.warn(this.error);
 		return false;
 	}
 

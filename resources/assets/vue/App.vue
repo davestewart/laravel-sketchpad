@@ -27,6 +27,9 @@
 // ------------------------------------------------------------------------------------------------
 // imports
 
+	// libs
+	import _            from 'underscore'
+
 	// services
 	import server       from '../js/services/server.js';
 	import watcher      from '../js/services/watcher.js';
@@ -77,9 +80,6 @@
 			this.$watch('settings.head', this.onAssetsChange, {deep: true});
 			this.onAssetsChange()
 
-			// store updates
-			store.$on('change', this.onStoreChange);
-
 			// watcher
 			if(this.settings.watcher)
 			{
@@ -107,8 +107,13 @@
 				}
 			},
 
-			onAssetsChange ()
+			onAssetsChange (value, oldValue)
 			{
+				if (value && _.isEqual(_.sortBy(value), _.sortBy(oldValue)))
+				{
+					return
+				}
+
 				let html = '';
 				const $head = $('head')
 				$head.find('[data-asset]').remove()

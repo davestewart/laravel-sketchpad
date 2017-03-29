@@ -63,7 +63,7 @@ Server.prototype =
 			return $.get(url, data, done);
 		},
 
-		loadController(route)
+		loadController(route = '')
 		{
 			return this.load('api/load/' + route);
 		},
