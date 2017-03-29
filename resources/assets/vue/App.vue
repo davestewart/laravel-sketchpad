@@ -74,8 +74,11 @@
 			$('#main').on('click', 'a[href]', this.onLinkClick);
 
 			// assets
-			this.updateAssets()
-			this.$watch('settings.head', this.updateAssets, {deep: true})
+			this.$watch('settings.head', this.onAssetsChange, {deep: true});
+			this.onAssetsChange()
+
+			// store updates
+			store.$on('change', this.onStoreChange);
 
 			// watcher
 			if(this.settings.watcher)
@@ -96,7 +99,7 @@
 			onLinkClick (event)
 			{
 				var root = location.origin + '/' + app.settings.route;
-				if(event.target.href && event.target.href.indexOf(root) === 0)
+				if(event.target.href && event.target.href.indexOf(root) === 0 && event.target.href.indexOf('#') === -1)
 				{
 					event.preventDefault();
 					const path = event.target.href.substr(root.length - 1);
@@ -104,16 +107,16 @@
 				}
 			},
 
-			updateAssets ()
+			onAssetsChange ()
 			{
 				let html = '';
 				const $head = $('head')
 				$head.find('[data-asset]').remove()
 				this.settings.head
 					.forEach(url => {
-						html += /\.css$/.test(url)
-						    ? '<link data-asset href="' +url+ '" rel="stylesheet">'
-						    : '<script data-asset src="' +url+ '"></scr' + 'ipt>'
+						html += /\.js$/.test(url)
+						    ? '<script data-asset src="' +url+ '"></scr' + 'ipt>'
+						    : '<link data-asset href="' +url+ '" rel="stylesheet">'
 					    $('head')
 					})
 				$head.append(html)
