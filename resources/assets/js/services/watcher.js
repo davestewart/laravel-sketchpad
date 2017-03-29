@@ -113,7 +113,7 @@ class Watcher {
 	 *
 	 * @param   {string}    file    A root-relative path; i.e. sketchpad/controllers/ExampleController.php
 	 * @param   {string}    type    The type of change; will be one of "add", "change", "delete"
-	 * @returns {boolean}           A flag indicating whether Sketchpad will intercept the load (true) or allow LiveReload to handle it (false)
+	 * @returns {boolean}           A flag indicating whether Sketchpad will intercept the load (true) or allow LiveReload to handle it (falsy)
 	 */
 	handle (file, type)
 	{
@@ -127,11 +127,17 @@ class Watcher {
 		// handle
 		let handled = false;
 		handlers
-			.forEach(handler =>
+			// changing forEach to some here, so that only the first successful handler
+			// handles the file load. Not as-designed right now, but defends against a
+			// 404 when controller methods change name. Also completely dependent on which
+			// order handlers are added. Generally bad design which needs to be fixed outside
+			// of watcher
+			.some(handler =>
 			{
 				if(handler.fn(file, type))
 				{
 					handled = true;
+					return true;
 				}
 			});
 
