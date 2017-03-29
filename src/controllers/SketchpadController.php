@@ -62,35 +62,13 @@ class SketchpadController extends Controller
             // settings
 	        $settings = $config->settings->data;
 
-	        // file watching
-	        $watcher = null;
-	        if ($settings['watcher'])
-	        {
-	        	$host = $_SERVER['HTTP_HOST'];
-				$urls = [
-			        'BrowserSync' => "http://$host:3000/browser-sync/browser-sync-client.js?v=2.18.8",
-					'LiveReload' => "http://$host:35729/livereload.js"
-				];
-				$watcher = @$urls[$settings['watcher']];
-	        }
-
-			// build resources
-			$resources  = $config->settings->get('assets') ?: [];
-			$resources  = array_map(function ($file) {
-				$file = trim($file);
-				return preg_match('/.js$/', $file) === 1
-					? '<script src="' . $file . '"></script>'
-					: '<link  href="' . $file . '" rel="stylesheet">';
-			}, $resources);
-
 			// variables
 			$data =
 			[
 				'route'         => $config->route,
 				'assets'        => $config->route . 'assets/',
+				'livereload'    => (object) $settings['livereload'],
 				'settings'      => $settings,
-				'watcher'       => $watcher,
-				'resources'     => implode("\n\t", $resources),
 				'data'          =>
 				[
 					'controllers'   => $this->sketchpad->getController(),

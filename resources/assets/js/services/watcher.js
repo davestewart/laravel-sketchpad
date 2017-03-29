@@ -8,10 +8,10 @@ class Watcher {
 
 	init ()
 	{
-		// debug
-		console.log('Initializing file watcher...');
-
-		const watcher = app.settings.watcher || 'File watcher';
+		if (!app.settings.livereload.host)
+		{
+			return;
+		}
 
 		// decorate LiveReload
 		if(window.LiveReload)
@@ -21,6 +21,9 @@ class Watcher {
 			{
 				return false;
 			}
+
+			// debug
+			console.log('Initializing LiveReload...');
 
 			// proxy
 			const reload = LiveReload.reloader.reload.bind(LiveReload.reloader);
@@ -52,7 +55,7 @@ class Watcher {
 			this.initialized = true;
 		}
 
-		// listen to browsersync
+		// currently not implemented
 		if(window.___browserSync___)
 		{
 			// don't redecorate
@@ -74,10 +77,10 @@ class Watcher {
 		// debug
 		if (this.initialized)
 		{
-			console.info(watcher + ' initialized');
+			console.info('LiveReload initialized');
 			return true;
 		}
-		console.warn(watcher + ' not detected! Did you start the Gulp task?');
+		console.warn('LiveReload not detected! Did you run the Sketchpad node task?');
 		return false;
 	}
 

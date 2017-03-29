@@ -53,11 +53,12 @@
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Head content</label>
 						<div class="col-sm-9">
-							<textarea class="form-control" v-model="head" name="head"></textarea>
-							<p class="help-block prompt">URLs to additional JS and CSS (use <code>/{{ settings.route }}user/</code> to load user assets)</p>
+							<textarea class="form-control" v-model="settings.head" name="head"></textarea>
+							<p class="help-block prompt">URLs to additional JS and CSS (use <code>/{{ settings.route }}user/*</code> to load user assets)</p>
 						</div>
 					</div>
 
+					<!--
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">File watcher</label>
 						<div class="col-sm-9">
@@ -69,6 +70,52 @@
 							<p v-if="watcherChanged" class="help-block prompt">File watcher changed. <a href="javascript:location.reload(); void(0)">Click here to reload the page</a>.</p>
 							<p v-else class="help-block prompt">Specify a JavaScript watcher to use when loading assets via Sketchpad Reload</p>
 						</div>
+					</div>
+					-->
+
+				</fieldset>
+
+				<fieldset name="watch">
+					<legend>Live Reload</legend>
+
+					<div v-if="watchHostChanged" class="warning">
+						<p class="help-block prompt">Host changed! <a href="javascript:location.reload(); void(0)">Click here to reload the page</a>.</p>
+					</div>
+
+					<div class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Setup</label>
+						<div class="col-sm-9">
+							<select class="form-control custom" v-model="settings.livereload.preset">
+								<option value="">No reloading</option>
+								<option value="local">Run from local machine</option>
+								<option value="vagrant">Run from virtual machine</option>
+								<option value="custom">Edit settings...</option>
+							</select>
+							<p class="help-block prompt">Choose how and where you'll run the Sketchpad Reload task.</p>
+						</div>
+					</div>
+
+					<div v-show="settings.livereload.preset==='custom'" class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Hostname</label>
+						<div class="col-sm-9">
+							<input class="form-control" v-model="settings.livereload.host">
+							<p class="help-block prompt">The hostname for the live reload script</p>
+						</div>
+					</div>
+
+					<div v-show="settings.livereload.preset" class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Additional watch paths</label>
+						<div class="col-sm-9">
+							<textarea class="form-control" v-model="settings.livereload.paths"></textarea>
+							<p class="help-block prompt">Any additional root-relative paths you want to watch for file changes</p>
+						</div>
+					</div>
+
+					<div v-show="settings.livereload.preset==='custom'" class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Options</label>
+						<ul class="col-sm-9 control-group">
+							<li><label><input type="checkbox" v-model="settings.livereload.usePolling"> <span>Use polling</span></label></li>
+						</ul>
 					</div>
 
 				</fieldset>
@@ -123,6 +170,14 @@ import store            from '../../js/state/store.js';
 
 import ControllerPaths  from './ControllerPaths.vue';
 
+function textToArray(value)
+{
+	return trim(value)
+		.split('\n')
+		.map(trim)
+		.filter(value => value !== '')
+}
+
 export default
 {
 	name: 'Settings',
@@ -134,9 +189,15 @@ export default
 
 	data()
 	{
+		// modify data
+		var data = clone(settings)
+		data.head = data.head.join('\n');
+		data.livereload.paths = data.livereload.paths.join('\n');
+
+		// return
 		return {
-			watcherChanged: false,
-			settings: clone(settings)
+			watchHostChanged: false,
+			settings: data
 		}
 	},
 
@@ -145,22 +206,6 @@ export default
 		controllers ()
 		{
 			return clone(this.settings.paths.controllers);
-		},
-
-		head:
-		{
-			get ()
-			{
-				return this.settings.head
-					.join('\n')
-			},
-			set (value)
-			{
-				this.settings.head = trim(value)
-					.split('\n')
-					.map(trim)
-					.filter(value => value !== '')
-			}
 		}
 	},
 
@@ -170,25 +215,60 @@ export default
 		this.$refs.controllers.$on('update', this.onControllersUpdate)
 		this.watch([
 			'settings.paths.views',
-			'settings.paths.assets',
-			'settings.head',
+			'settings.paths.assets'
 		], true)
 		this.watch([
 			'settings.ui'
 		])
+		this.$watch('settings.head', _.debounce(this.onHeadChange, 400));
 		this.$watch('settings.watcher', this.onWatcherChange);
+		this.$watch('settings.livereload.preset', this.onWatchPresetChange);
+		this.$watch('settings.livereload.host', _.debounce(this.onWatchHostChange), 400);
+		this.$watch('settings.livereload', _.debounce(this.onWatchSettingsChange, 400), {deep: true});
 	},
 
 	methods:
 	{
-		onSettingsChange (value, old)
+		onHeadChange (value)
+		{
+			settings.head = textToArray(value)
+		},
+
+		onWatcherChange ()
 		{
 			this.save()
 		},
 
-		onWatcherChange()
+		onWatchPresetChange (value)
 		{
-			this.save().then(() => this.watcherChanged = true)
+			switch(value)
+		    {
+				case 'local':
+					this.settings.livereload.host = 'localhost'
+					this.settings.livereload.usePolling = false
+					break
+				case 'vagrant':
+					this.settings.livereload.host = location.hostname
+					this.settings.livereload.usePolling = true
+					break
+				case '':
+					this.settings.livereload.host = ''
+					this.settings.livereload.usePolling = false
+					break
+			}
+		},
+
+		onWatchHostChange (value)
+		{
+			this.watchHostChanged = true
+			setTimeout(function () {
+				$('fieldset[name="watch"] .warning').addClass('show')
+			}, 100)
+		},
+
+		onWatchSettingsChange (value)
+		{
+			this.save()
 		},
 
 		onControllersUpdate (items)
@@ -197,12 +277,20 @@ export default
 			this.save().then(data => store.loadAll())
 		},
 
+		onSettingsChange (value, old)
+		{
+			this.save()
+		},
+
 		save ()
 		{
-			Object
-				.keys(settings)
-				.forEach(key => app.settings[key] = this.settings[key])
-			return server.post('api/settings', {settings:JSON.stringify(this.settings)})
+			const promise = server.post('api/settings', {settings:JSON.stringify(this.settings)})
+			promise.then(result => {
+				Object
+					.keys(result)
+					.forEach(key => app.settings[key] = result[key])
+			})
+			return promise
 		},
 
 		watch (fields, debounce)

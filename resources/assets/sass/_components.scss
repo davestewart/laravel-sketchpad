@@ -364,6 +364,7 @@
 
 	#settings {
 
+		.col-sm-offset-3 { width: 20%}
 		.col-sm-3 { width: 20%}
 		.col-sm-9 { width: 75%}
 
@@ -436,6 +437,26 @@
 
 		}
 
+	    fieldset[name="watch"] {
+
+		    .warning {
+			    position: relative;
+			    overflow: hidden;
+			    height: 0;
+			    transition: 0.5s all;
+
+			    &.show {
+				    height:35px;
+			    }
+
+			    p {
+				    margin: 0 0 0 20%;
+				    padding-left: 12px;
+			    }
+		    }
+
+	    }
+
 	    fieldset[name="ui"] {
 
 		    article {
@@ -446,7 +467,7 @@
 
 	    }
 
-		textarea[name="head"] {
+		textarea {
 			line-height: 2;
 			min-height: 9em;
 		}

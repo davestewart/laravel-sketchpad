@@ -80,10 +80,22 @@ class ApiController extends Controller
 		 */
 		public function settings(Request $request, SketchpadConfig $config)
 		{
+			function textToArray ($text)
+			{
+				return array_values(array_filter(array_map('trim', explode("\n", trim($text))), 'strlen'));
+			}
+
 			if($request->isMethod('post'))
 			{
+				// convert data
 				$data = json_decode($request->get('settings'));
-				$config->settings->save($data);
+
+				// trim values
+				$data->head = textToArray($data->head);
+				$data->livereload->paths = textToArray($data->livereload->paths);
+
+				// save
+				$config->settings->save((array) $data);
 			}
 			return $config->settings;
 		}

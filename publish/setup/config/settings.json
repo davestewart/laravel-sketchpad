@@ -30,5 +30,11 @@
 		"formatCode": true
 	},
 	"head" : [],
-	"watcher" : ""
+	"watcher" : "",
+	"livereload": {
+		"preset": "local",
+		"host": "localhost",
+		"polling": false,
+		"paths": []
+	}
 }

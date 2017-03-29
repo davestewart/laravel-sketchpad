@@ -7,8 +7,8 @@
     <meta name="route" content="{{ $route }}">
     @include('sketchpad::head')
 
-	@if ($watcher)<!-- file watching -->
-	<script src="{{ $watcher }}"></script>
+	@if ($livereload->host)<!-- file watching -->
+    <script src="http://{{ $livereload->host }}:35729/livereload.js"></script>
 	@endif
 
     <!-- user -->
@@ -21,9 +21,6 @@
 	<script id="data" type="text/plain">{!! json_encode($data, JSON_UNESCAPED_SLASHES) !!}</script>
     <script src="{{ $assets }}js/app.js"></script>
 
-	<!--
-	<a data-toggle="modal" href="http://fiddle.jshell.net/bHmRB/51/show/" data-target="#modal">Click me !</a>
-	-->
 </body>
 </html>
 
