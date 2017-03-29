@@ -28,6 +28,7 @@ class BasicsController extends Controller
 	 */
 	public function methodCall()
 	{
+
 		echo 'This method was called on ' . date(DATE_RFC850);
 	}
 
@@ -38,7 +39,7 @@ class BasicsController extends Controller
 	 */
 	public function parameters($name = 'world')
 	{
-		p("Hello $name!", true);
+		echo "<h1>Hello there $name!</h1>";
 		p('Update the parameter to automatically call the method again.');
 	}
 
@@ -69,9 +70,9 @@ class BasicsController extends Controller
 	}
 
 	/**
-	 * Sketchpad catches exceptions, shows you the full stack trace, and highlights the method in red until it's corrected and called again. If you're using Gulp to watch the controller or related PHP files, the page will simply reload when the error is fixed.
+	 * Sketchpad catches framework exceptions, displays the output, and highlights the method in red until it's corrected and called again. If you're using Sketchpad Reload to watch the controller or related PHP files, the page will simply reload when the error is fixed.
 	 */
-	public function exceptionHandling()
+	public function exceptions()
 	{
 		echo $foo * 2;
 	}

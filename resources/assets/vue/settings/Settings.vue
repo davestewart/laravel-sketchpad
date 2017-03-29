@@ -23,7 +23,7 @@
 						<label class="control-label col-sm-3">Views</label>
 						<div class="col-sm-9">
 							<span class="field">
-								<input v-model="settings.paths.views" v-validate-path type="text" class="form-control" name="assets" placeholder="sketchpad/views">
+								<input v-model="settings.paths.views" v-validate-path type="text" class="form-control" placeholder="sketchpad/views">
 								<span class="icons">
 									<i class="validate-path" aria-hidden="true"></i>
 								</span>
@@ -36,7 +36,7 @@
 						<label class="control-label col-sm-3">Assets</label>
 						<div class="col-sm-9">
 							<span class="field">
-								<input v-model="settings.paths.assets" v-validate-path type="text" class="form-control" name="assets" placeholder="sketchpad/assets">
+								<input v-model="settings.paths.assets" v-validate-path type="text" class="form-control" placeholder="sketchpad/assets">
 								<span class="icons">
 									<i class="validate-path" aria-hidden="true"></i>
 								</span>
@@ -53,7 +53,7 @@
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Head content</label>
 						<div class="col-sm-9">
-							<textarea class="form-control" v-model="settings.head" name="head"></textarea>
+							<textarea class="form-control" v-model="settings.head" autocomplete="off"></textarea>
 							<p class="help-block prompt">URLs to additional JS and CSS (use <code>/{{ settings.route }}user/*</code> to load user assets)</p>
 						</div>
 					</div>
@@ -95,7 +95,7 @@
 					<div v-show="settings.livereload.preset" class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Additional paths</label>
 						<div class="col-sm-9">
-							<textarea class="form-control" v-model="settings.livereload.paths"></textarea>
+							<textarea class="form-control" v-model="settings.livereload.paths" autocomplete="off"></textarea>
 							<p class="help-block prompt">Any additional root-relative paths you want to watch for file changes</p>
 						</div>
 					</div>
@@ -110,7 +110,7 @@
 				</fieldset>
 
 				<fieldset name="ui">
-					<legend>UI</legend>
+					<legend id="ui">UI</legend>
 
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Homepage</label>
