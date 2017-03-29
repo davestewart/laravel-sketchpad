@@ -53,19 +53,20 @@ class ApiController extends Controller
 		 */
 		public function run(Request $request, $path = '')
 		{
-            $request->query->remove('_call');
             return $this->sketchpad->run($path, $request->get('data', []));
 		}
 
-        /**
-         * Returns the JSON for a single controller
-         *
-         * @param $path
-         * @return mixed
-         */
-        public function load($path = null)
+		/**
+		 * Returns the JSON for a single controller
+		 *
+		 * @param null $route
+		 * @return mixed
+		 * @internal param Request $request
+		 * @internal param $path
+		 */
+        public function load($route = null)
         {
-            return response()->json($this->sketchpad->getController($path));
+            return response()->json($this->sketchpad->getController($route));
 		}
 
 		/**

@@ -63,12 +63,9 @@ Server.prototype =
 			return $.get(url, data, done);
 		},
 
-		loadController(route, onSuccess)
+		loadController(route)
 		{
-			const url = 'api/load/' + route;
-			return onSuccess
-				? this.load(url).then(onSuccess)
-				: window.open(this.base + url);
+			return this.load('api/load/' + route);
 		},
 
 		post(path, data, done)

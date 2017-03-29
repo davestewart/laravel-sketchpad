@@ -80,14 +80,14 @@ class Sketchpad
 		/**
 		 * Returns a sketchpad\objects\reflection\Controller that can be converted to JSON
 		 *
-		 * @param   string      $path   The absolute file path to the controller
+		 * @param   string      $route  The relative route to the controller
 		 * @return  Controller          The Controller
 		 */
-		public function getController($path = null)
+		public function getController($route = null)
 		{
-		    $router = $this->init($path == null)->router;
-			return $path
-                ? $router->getController($path)
+		    $router = $this->init($route == null)->router;
+			return $route
+                ? $router->getController($route)
                 : $router->getControllers();
 		}
 
