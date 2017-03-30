@@ -15,7 +15,7 @@
 				</span>
 			</li>
 		</ul>
-		<button style="margin-top: 2px;" class="pull-right btn btn-xs">Add new...</button>
+		<button style="margin-top: 2px;" class="pull-right btn btn-xs">Add path...</button>
 		<p class="help-block prompt">Root-relative paths to controller folders that Sketchpad will analyse</p>
 	</div>
 

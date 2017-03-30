@@ -15,6 +15,10 @@
         margin: auto;
     }
 
+    #controls {
+        padding:0 15px;
+	    text-align: right;
+    }
 
 // ------------------------------------------------------------------------------------------------
 // formatting
@@ -81,6 +85,8 @@
     #steps {
 
         transition: 0.5s all;
+
+	    margin-top: 20px;
 
         &.paused {
             //opacity: 0.25;

@@ -26,7 +26,7 @@ class Html
 		}
 
 		/**
-		 * Bootstrap info / alert box function
+		 * Output a Bootstrap info / alert div
 		 *
 		 * @param   string  $html   The HTML or text to display
 		 * @param   string  $class  An optional CSS class, can be info, success, warning, danger
@@ -44,7 +44,7 @@ class Html
 		}
 
 		/**
-		 * print_r()
+		 * print_r() passed arguments
 		 */
 		public static function pr()
 		{
@@ -64,7 +64,7 @@ class Html
 		}
 
 		/**
-		 * var_dump() contents
+		 * var_dump() passed arguments
 		 *
 		 * @param $value
 		 */
@@ -157,7 +157,7 @@ class Html
 	// file format functions
 
 		/**
-		 *
+		 * Loads and runs a Vue file in the UI
 		 *
 		 * @param            $path
 		 * @param array|null $data
@@ -179,7 +179,7 @@ class Html
 		}
 
 		/**
-		 *
+		 * Loads a Markdown file, or Markdown string into the UI and transforms it
 		 *
 		 * @param $path
 		 * @return string

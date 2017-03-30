@@ -3,133 +3,127 @@
 	<article id="config">
 
 		<h2 class="text-info">Configuration</h2>
-		<!--
-		<p>The installer needs to know some information so it can create folders and copy files.</p>
-		-->
+
 		<p>Sketchpad (and its subfolders) can be installed anywhere in your project, but the default "separate" setup is recommended. This allows you to keep everything in one place, and makes version control easier.</p>
         <p>If the controllers folder is outside of your app namespace, you'll need to supply PSR-4 autoloader info.</p>
 		<p>Choose an installation preset, edit any paths you need to, then click Next to continue.</p>
 
-		<div class="form-container">
+		<div class="form-container" style="margin:30px 15px;">
 
-			<div class="xwell" style="margin:30px 20px;">
+			<form class="form-horizontal" autocomplete="off">
 
-				<form class="form-horizontal" autocomplete="off">
+				<fieldset>
 
-					<fieldset>
+                    <legend>Config</legend>
 
-                        <legend>Config</legend>
-
-						<div class="form-group inline">
-							<label class="control-label col-sm-3">Installation</label>
-							<div class="col-sm-9">
-								<div v-for="(key, option) in getOptions()" class="radio">
-									<label class="radio">
-										<input type="radio" name="type" v-model="type" :value="key"/>
-										{{ option.type | capitalize }}
-									</label>
-								</div>
-                                <p class="help-block">{{ options.desc }}</p>
+					<div class="form-group inline">
+						<label class="control-label col-sm-3">Installation</label>
+						<div class="col-sm-9">
+							<div v-for="(key, option) in getOptions()" class="radio">
+								<label class="radio">
+									<input type="radio" name="type" v-model="type" :value="key"/>
+									{{ option.type | capitalize }}
+								</label>
 							</div>
+                            <p class="help-block">{{ options.desc }}</p>
 						</div>
+					</div>
 
-                        <div :class="getClass('route')">
-							<label class="control-label col-sm-3">Route</label>
-							<div class="col-sm-9">
-								<input type="text"
-									   v-model="options.route"
-									   class="form-control"
-									   name="route"
-									   :placeholder="getPlaceholder('route')">
-								<p class="help-block prompt">{{ prompts.route }}</p>
-								<p class="help-block hint">{{ hints.route }}</p>
-							</div>
+                    <div :class="getClass('route')">
+						<label class="control-label col-sm-3">Route</label>
+						<div class="col-sm-9">
+							<input type="text"
+								   v-model="options.route"
+								   class="form-control"
+								   name="route"
+								   :placeholder="getPlaceholder('route')">
+							<p class="help-block prompt">{{ prompts.route }}</p>
+							<p class="help-block hint">{{ hints.route }}</p>
 						</div>
+					</div>
 
-					</fieldset>
+				</fieldset>
 
-					<fieldset>
+				<fieldset>
 
-                        <legend>Paths</legend>
+                    <legend>Paths</legend>
 
-						<div :class="getClass('controllers', true)">
-							<label class="control-label col-sm-3">Controllers</label>
-							<div class="col-sm-9">
-								<input type="text"
-									   v-model="options.controllers"
-                                       class="form-control"
-									   name="controllers"
-									   :placeholder="getPlaceholder('controllers')">
-								<p class="help-block prompt">{{ prompts.controllers }}</p>
-								<p class="help-block hint">{{ hints.controllers }}</p>
-							</div>
+					<div :class="getClass('controllers', true)">
+						<label class="control-label col-sm-3">Controllers</label>
+						<div class="col-sm-9">
+							<input type="text"
+								   v-model="options.controllers"
+                                   class="form-control"
+								   name="controllers"
+								   :placeholder="getPlaceholder('controllers')">
+							<p class="help-block prompt">{{ prompts.controllers }}</p>
+							<p class="help-block hint">{{ hints.controllers }}</p>
 						</div>
+					</div>
 
-                        <div :class="getClass('views', true)">
-							<label class="control-label col-sm-3">Views</label>
-							<div class="col-sm-9">
-								<input type="text"
-									   v-model="options.views"
-									   class="form-control"
-									   name="views"
-									   :placeholder="getPlaceholder('views')">
-								<p class="help-block prompt">{{ prompts.views }}</p>
-								<p class="help-block hint">{{ hints.views }}</p>
-							</div>
+                    <div :class="getClass('views', true)">
+						<label class="control-label col-sm-3">Views</label>
+						<div class="col-sm-9">
+							<input type="text"
+								   v-model="options.views"
+								   class="form-control"
+								   name="views"
+								   :placeholder="getPlaceholder('views')">
+							<p class="help-block prompt">{{ prompts.views }}</p>
+							<p class="help-block hint">{{ hints.views }}</p>
 						</div>
+					</div>
 
-                        <div :class="getClass('assets')">
-							<label class="control-label col-sm-3">Assets</label>
-							<div class="col-sm-9">
-								<input type="text"
-									   v-model="options.assets"
-									   class="form-control"
-									   name="assets"
-									   :placeholder="getPlaceholder('assets')">
-								<p class="help-block prompt">{{ prompts.assets }}</p>
-								<p class="help-block hint">{{ hints.assets }}</p>
-							</div>
+                    <div :class="getClass('assets')">
+						<label class="control-label col-sm-3">Assets</label>
+						<div class="col-sm-9">
+							<input type="text"
+								   v-model="options.assets"
+								   class="form-control"
+								   name="assets"
+								   :placeholder="getPlaceholder('assets')">
+							<p class="help-block prompt">{{ prompts.assets }}</p>
+							<p class="help-block hint">{{ hints.assets }}</p>
 						</div>
-						<!--
-						-->
-					</fieldset>
+					</div>
+					<!--
+					-->
+				</fieldset>
 
-                    <fieldset v-if="autoloader">
+                <fieldset v-if="autoloader">
 
-                        <legend>Autoloader</legend>
+                    <legend>Autoloader</legend>
 
-						<div :class="getClass('namespace', true)">
-							<label class="control-label col-sm-3">Namespace prefix</label>
-							<div class="col-sm-9">
-								<input type="text"
-									   v-model="options.namespace"
-                                       class="form-control"
-									   name="namespace"
-									   :placeholder="getPlaceholder('namespace')">
-								<p class="help-block prompt">{{ prompts.namespace }}</p>
-								<p class="help-block hint">{{ hints.namespace }}</p>
-							</div>
+					<div :class="getClass('namespace', true)">
+						<label class="control-label col-sm-3">Namespace prefix</label>
+						<div class="col-sm-9">
+							<input type="text"
+								   v-model="options.namespace"
+                                   class="form-control"
+								   name="namespace"
+								   :placeholder="getPlaceholder('namespace')">
+							<p class="help-block prompt">{{ prompts.namespace }}</p>
+							<p class="help-block hint">{{ hints.namespace }}</p>
 						</div>
+					</div>
 
-						<div :class="getClass('basedir', true)">
-							<label class="control-label col-sm-3">Base directory</label>
-							<div class="col-sm-9">
-								<input type="text"
-									   v-model="options.basedir"
-                                       class="form-control"
-									   name="basedir"
-									   :placeholder="getPlaceholder('basedir')">
-								<p class="help-block prompt">{{ prompts.basedir }} </p>
-								<p class="help-block hint">{{ hints.basedir }} </p>
-							</div>
+					<div :class="getClass('basedir', true)">
+						<label class="control-label col-sm-3">Base directory</label>
+						<div class="col-sm-9">
+							<input type="text"
+								   v-model="options.basedir"
+                                   class="form-control"
+								   name="basedir"
+								   :placeholder="getPlaceholder('basedir')">
+							<p class="help-block prompt">{{ prompts.basedir }} </p>
+							<p class="help-block hint">{{ hints.basedir }} </p>
 						</div>
+					</div>
 
-                    </fieldset>
+                </fieldset>
 
 
-				</form>
-
-			</div>
+			</form>
 
 		</div>
 

@@ -33,7 +33,7 @@
 	"livereload": {
 		"preset": "local",
 		"host": "localhost",
-		"polling": false,
+		"usePolling": false,
 		"paths": []
 	}
 }

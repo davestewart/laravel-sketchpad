@@ -17,9 +17,9 @@ class BasicsController extends Controller
 	public function index()
 	{
 		?>
-		<p>Note that for <strong>all</strong> demo methods, you can simply look at the source code.</p>
-		<p>All demos are just regular Laravel controller methods, that output stuff.</p>
-		<p>You can find it in <code>vendor/davestewart/sketchpad/src/help</code>.</p>
+		<p class="alert alert-info">Note that for <strong>all</strong> demo methods, you can simply look at the source code!</p>
+		<p>All demos are just <strong>regular Laravel controller methods</strong>, that return or echo output.</p>
+		<p>You can view all demo code in <code>vendor/davestewart/sketchpad/src/help</code>.</p>
 		<?php
 	}
 
@@ -39,8 +39,17 @@ class BasicsController extends Controller
 	 */
 	public function parameters($name = 'world')
 	{
-		echo "<h1>Hello there $name!</h1>";
-		p('Update the parameter to automatically call the method again.');
+		p("Hello $name !", true);
+?>
+<p>Optional parameters are exposed as editable front-end inputs:</p>
+<pre class="code php">
+public function parameters($name = 'world')
+{
+	echo "Hello $name";
+}
+</pre>
+<p>Update the parameter to automatically call the method again</p>
+<?php
 	}
 
 	/**
@@ -56,6 +65,12 @@ class BasicsController extends Controller
 		?>
 
 <p>Your method's parameter types (<code>string</code>, <code>boolean</code>, etc) determine the HTML input control types.</p>
+<pre class="code php">
+public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mixed = null)
+{
+    // do something with parameters
+}
+</pre>
 <p>They also enable Sketchpad to cast submitted values to the expected type; no need for type-juggling in your methods:</p>
 <?php
 	vd(func_get_args());

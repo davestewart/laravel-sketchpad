@@ -224,7 +224,7 @@ export default
 	{
 		onHeadChange (value)
 		{
-			settings.head = textToArray(value)
+			this.save()
 		},
 
 		onWatcherChange ()

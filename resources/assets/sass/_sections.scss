@@ -390,4 +390,18 @@
 
 			}
 		}
+
+		.fa-check {
+			color: #0C0 !important;
+		}
+
+		.fa-question {
+			color: $brand-info !important;
+		}
+
+		.fa-exclamation,
+		.fa-exclamation-triangle{
+			color: $brand-warning !important;
+		}
+
 	}

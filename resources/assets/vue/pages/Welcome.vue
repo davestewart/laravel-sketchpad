@@ -7,7 +7,7 @@
 		<section class="content">
 
 			<h3>What it is</h3>
-			<p>Sketchpad is an interactive front-end for your back-end; a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.</p>
+			<p>Sketchpad is an interactive front-end for your Laravel back-end; a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.</p>
 			<iframe style="padding:20px;" width="560" height="333" src="https://www.youtube.com/embed/jahhWFd-M_A" frameborder="0" allowfullscreen></iframe>
 
 			<h3>What it does</h3>
