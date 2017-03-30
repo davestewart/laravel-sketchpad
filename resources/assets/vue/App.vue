@@ -27,8 +27,12 @@
 // ------------------------------------------------------------------------------------------------
 // imports
 
+	// libs
+	import _            from 'underscore'
+
 	// services
 	import server       from '../js/services/server.js';
+	import watcher      from '../js/services/watcher.js';
 
 	// state
 	import store        from '../js/state/store.js';
@@ -73,12 +77,14 @@
 			$('#main').on('click', 'a[href]', this.onLinkClick);
 
 			// assets
-			this.updateAssets()
-			this.$watch('settings.head', this.updateAssets, {deep: true})
+			this.$watch('settings.head', this.onAssetsChange, {deep: true});
+			this.onAssetsChange()
 
 			// watcher
-			this.updateWatcher()
-			this.$watch('settings.watcher', this.updateWatcher, {deep: true})
+			if(this.settings.livereload.host)
+			{
+				watcher.init()
+			}
 
 			// done!
 			console.log('App ready')
@@ -93,7 +99,7 @@
 			onLinkClick (event)
 			{
 				var root = location.origin + '/' + app.settings.route;
-				if(event.target.href && event.target.href.indexOf(root) === 0)
+				if(event.target.href && event.target.href.indexOf(root) === 0 && event.target.href.indexOf('#') === -1)
 				{
 					event.preventDefault();
 					const path = event.target.href.substr(root.length - 1);
@@ -101,29 +107,24 @@
 				}
 			},
 
-			updateAssets ()
+			onAssetsChange (value, oldValue)
 			{
+				if (value && _.isEqual(_.sortBy(value), _.sortBy(oldValue)))
+				{
+					return
+				}
+
 				let html = '';
 				const $head = $('head')
 				$head.find('[data-asset]').remove()
 				this.settings.head
 					.forEach(url => {
-						html += /\.css$/.test(url)
-						    ? '<link data-asset href="' +url+ '" rel="stylesheet">'
-						    : '<script data-asset src="' +url+ '"></scr' + 'ipt>'
+						html += /\.js$/.test(url)
+						    ? '<script data-asset src="' +url+ '"></scr' + 'ipt>'
+						    : '<link data-asset href="' +url+ '" rel="stylesheet">'
 					    $('head')
 					})
 				$head.append(html)
-			},
-
-			updateWatcher ()
-			{
-				const $head = $('head')
-				$head.find('[data-watcher]').remove()
-				if (this.settings.watcher === 'livereload')
-				{
-					$head.append('<script data-watcher src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js"></scr' + 'ipt>')
-				}
 			}
 
 		}

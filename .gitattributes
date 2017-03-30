@@ -1,0 +1,4 @@
+/build                  export-ignore
+/resources/assets       export-ignore
+/resources/lib          export-ignore
+/.gitignore             export-ignore

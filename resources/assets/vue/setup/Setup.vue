@@ -87,8 +87,10 @@ composer dump-autoload
 
 			<article id="complete">
 				<h2 class="text-success">Installation complete</h2>
-				<p>The settings file is located at:</p>
-                <pre><code>{{ settings.storagepath }}</code></pre>
+				<p>To have the UI update as you save, add or delete files, install Sketchpad Reload:</p>
+				<ul style="padding: 25px 50px">
+					<li><a target="_blank" href="https://github.com/davestewart/laravel-sketchpad-reload">github.com/davestewart/laravel-sketchpad-reload</a></li>
+				</ul>
 				<p>Click <strong>Next</strong> to start using Sketchpad!</p>
 			</article>
 

@@ -90,8 +90,9 @@ export default
 
 		loadIframe (text, type)
 		{
-			var src		= 'data:' + type + ',' + encodeURIComponent(text);
-			var $iframe = $('<iframe class="error" frameborder="0">');
+			const styles    = '<style>#sf-resetcontent { width:auto; word-break: break-all; }</style>';
+			const src		= 'data:' + type + ',' + encodeURIComponent(text + styles);
+			const $iframe   = $('<iframe class="error" frameborder="0">');
 			this.clear().append($iframe.attr('src', src));
 		},
 

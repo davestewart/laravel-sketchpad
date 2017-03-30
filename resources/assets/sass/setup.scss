@@ -15,6 +15,10 @@
         margin: auto;
     }
 
+    #controls {
+        padding:0 15px;
+	    text-align: right;
+    }
 
 // ------------------------------------------------------------------------------------------------
 // formatting
@@ -28,8 +32,6 @@
         font-size: 60px;
     }
 
-    h1:first-child,
-    h2:first-child,
     h3:first-child,
     h4:first-child {
         margin-top: 0;
@@ -84,6 +86,8 @@
 
         transition: 0.5s all;
 
+	    margin-top: 20px;
+
         &.paused {
             //opacity: 0.25;
         }
@@ -113,7 +117,7 @@
     }
 
     .navbar-default {
-        background-color: #eeeeee;
+        background-color: #ecf0f1;
 
         .navbar-brand {
             color: #2c3e50 !important;

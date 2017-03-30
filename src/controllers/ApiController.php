@@ -53,19 +53,20 @@ class ApiController extends Controller
 		 */
 		public function run(Request $request, $path = '')
 		{
-            $request->query->remove('_call');
             return $this->sketchpad->run($path, $request->get('data', []));
 		}
 
-        /**
-         * Returns the JSON for a single controller
-         *
-         * @param $path
-         * @return mixed
-         */
-        public function load($path = null)
+		/**
+		 * Returns the JSON for a single controller
+		 *
+		 * @param null $route
+		 * @return mixed
+		 * @internal param Request $request
+		 * @internal param $path
+		 */
+        public function load($route = null)
         {
-            return response()->json($this->sketchpad->getController($path));
+            return response()->json($this->sketchpad->getController($route));
 		}
 
 		/**
@@ -79,10 +80,22 @@ class ApiController extends Controller
 		 */
 		public function settings(Request $request, SketchpadConfig $config)
 		{
+			function textToArray ($text)
+			{
+				return array_values(array_filter(array_map('trim', explode("\n", trim($text))), 'strlen'));
+			}
+
 			if($request->isMethod('post'))
 			{
+				// convert data
 				$data = json_decode($request->get('settings'));
-				$config->settings->save($data);
+
+				// trim values
+				$data->head = textToArray($data->head);
+				$data->livereload->paths = textToArray($data->livereload->paths);
+
+				// save
+				$config->settings->save((array) $data);
 			}
 			return $config->settings;
 		}

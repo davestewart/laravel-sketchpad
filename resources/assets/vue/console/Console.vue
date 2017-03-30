@@ -73,8 +73,9 @@ export default
 
 	created ()
 	{
-		watcher.addHandler(/\.php$/, this.onFileChange);
 		this.update = _.debounce(this.update, 400)
+		state.$on('update', this.onStateUpdate)
+		watcher.addHandler(/\.php$/, this.onFileChange);
 	},
 
 	ready ()
@@ -86,8 +87,9 @@ export default
 
 	destroyed ()
 	{
-		watcher.removeHandler(this.onFileChange);
 		state.reset()
+		state.$off('change', this.onStateUpdate)
+		watcher.removeHandler(this.onFileChange);
 	},
 
 
@@ -236,6 +238,12 @@ export default
 			{
 				this.load();
 				return true;
+			},
+
+			onStateUpdate (controller, method)
+			{
+				this.method = method;
+				this.params = clone(method.params);
 			},
 
 

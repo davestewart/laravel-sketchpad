@@ -59,22 +59,16 @@ class SketchpadController extends Controller
 			// set up the router and rescan to get all data
 			$config     = $this->sketchpad->init(true)->config;
 
-			// build resources
-			$resources  = $config->settings->get('assets') ?: [];
-			$resources  = array_map(function ($file) {
-				$file = trim($file);
-				return preg_match('/.js$/', $file) === 1
-					? '<script src="' . $file . '"></script>'
-					: '<link  href="' . $file . '" rel="stylesheet">';
-			}, $resources);
+            // settings
+	        $settings = $config->settings->data;
 
 			// variables
 			$data =
 			[
 				'route'         => $config->route,
 				'assets'        => $config->route . 'assets/',
-				'settings'      => $config->settings->data,
-				'resources'     => implode("\n\t", $resources),
+				'livereload'    => (object) $settings['livereload'],
+				'settings'      => $settings,
 				'data'          =>
 				[
 					'controllers'   => $this->sketchpad->getController(),

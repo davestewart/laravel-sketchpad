@@ -14,11 +14,21 @@ use Illuminate\Http\Request;
 class BasicsController extends Controller
 {
 
+	public function index()
+	{
+		?>
+		<p class="alert alert-info">Note that for <strong>all</strong> demo methods, you can simply look at the source code!</p>
+		<p>All demos are just <strong>regular Laravel controller methods</strong>, that return or echo output.</p>
+		<p>You can view all demo code in <code>vendor/davestewart/sketchpad/src/help</code>.</p>
+		<?php
+	}
+
 	/**
 	 * Call a method just by clicking on its label
 	 */
 	public function methodCall()
 	{
+
 		echo 'This method was called on ' . date(DATE_RFC850);
 	}
 
@@ -29,8 +39,17 @@ class BasicsController extends Controller
 	 */
 	public function parameters($name = 'world')
 	{
-		p("Hello $name!", true);
-		p('Update the parameter to automatically call the method again.');
+		p("Hello $name !", true);
+?>
+<p>Optional parameters are exposed as editable front-end inputs:</p>
+<pre class="code php">
+public function parameters($name = 'world')
+{
+	echo "Hello $name";
+}
+</pre>
+<p>Update the parameter to automatically call the method again</p>
+<?php
 	}
 
 	/**
@@ -46,6 +65,12 @@ class BasicsController extends Controller
 		?>
 
 <p>Your method's parameter types (<code>string</code>, <code>boolean</code>, etc) determine the HTML input control types.</p>
+<pre class="code php">
+public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mixed = null)
+{
+    // do something with parameters
+}
+</pre>
 <p>They also enable Sketchpad to cast submitted values to the expected type; no need for type-juggling in your methods:</p>
 <?php
 	vd(func_get_args());
@@ -60,9 +85,9 @@ class BasicsController extends Controller
 	}
 
 	/**
-	 * Sketchpad catches exceptions, shows you the full stack trace, and highlights the method in red until it's corrected and called again. If you're using Gulp to watch the controller or related PHP files, the page will simply reload when the error is fixed.
+	 * Sketchpad catches framework exceptions, displays the output, and highlights the method in red until it's corrected and called again. If you're using Sketchpad Reload to watch the controller or related PHP files, the page will simply reload when the error is fixed.
 	 */
-	public function exceptionHandling()
+	public function exceptions()
 	{
 		echo $foo * 2;
 	}
@@ -103,8 +128,8 @@ class BasicsController extends Controller
 		<p>Type something below and submit the form back to the same URL:</p>
 		<!-- any form with an empty or missing "action" attribute will be intercepted and submitted by sketchpad -->
 		<form class="form form-inline">
-			<input  class="form-control" type="text" name="text" placeholder="Type something here...">
-			<button class="form-control" type="submit">Submit</button>
+			<input  class="form-control input-sm" type="text" name="text" placeholder="Type something here...">
+			<button class="btn btn-primary btn-sm" type="submit">Submit</button>
 		</form>
 		<?php
 
@@ -175,19 +200,23 @@ return md(__DIR__ . '/some.md');
 
 		<p>Sketchpad allows you to add custom assets to the app by way of:</p>
 		<ul>
-			<li>Editable user asset files</li>
+			<li>Custom user asset files</li>
 			<li>Loadable asset URLs</li>
 		</ul>
-		<p>During setup, two starter files are copied to <code><?php echo $assets; ?></code>.</p>
-		<p>Both files are then set to load (by default) from the <a href="<?= $route; ?>settings">settings</a> page's user assets section:</p>
+		<p>During setup, two starter files were copied to your installation's <code>assets/</code> folder.</p>
+		<pre>
+<?php echo base_path($assets . 'scripts.js'); ?>
+
+<?php echo base_path($assets . 'styles.css'); ?>
+</pre>
+		<p>By default, these files (along with any other URLs you add) are set to load when Sketchpad runs:</p>
 		<pre>
 /sketchpad/user/scripts.js
 /sketchpad/user/styles.css
 </pre>
 
-		<p>Sketchpad will then add these URLs as <code>&lt;head&gt;</code> assets, along with any other URLs (such as CDNs) you specify.</p>
-		<p>Note the special user assets route <code>/sketchpad/user/</code> which loads the file contents directly, whether or not they are in your <code>public</code> folder.</p>
-		<p>View the <a href="<?= $route; ?>settings">settings</a> page to edit these URLs directly.</p>
+		<p>Note the special "user assets" route (currently <code><?= $route; ?>user/</code>) which loads the file contents directly – whether or not they are in your app's <code>/public/</code> folder.</p>
+		<p>Feel free to <a href="../tags/css">edit these files</a> or update asset URLs on the <a href="<?= $route; ?>settings">settings</a> page.</p>
 <?php
 	}
 

@@ -1,5 +1,9 @@
 <div id="example">
-	<p><label>Name: <input type="text" v-model="name"></label></p>
+	<div class="form-group form-inline">
+		<label class="" for="name">Name:</label>
+		<input class="form-control input-sm" id="name" name="name" type="text" v-model="name">
+	</div>
+	<hr>
 	<p>Hello {{ name }}!</p>
 </div>
 

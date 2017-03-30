@@ -31,9 +31,20 @@ class OutputController extends Controller
 	 */
 	public function paragraph()
 	{
-		p('This is a paragraph');
-		p('This is a paragraph with <code>true</code> passed as the second argument; the css class <code>note</code> is added', true);
-		p('This is a paragraph with <code>"special"</code> passed as the second argument; the user css class <code>special</code> is added', 'special');
+		?>
+		<p>This is the format:</p>
+<pre>p('Here is some text', $class);</pre>
+		<p>You can print <strong>normal</strong>, <strong>note</strong> and <strong>custom</strong>-classed paragraphs:</p>
+		<div style="margin-left: 25px">
+
+		<?php
+			p('I am normal');
+			p('I am a note; I passed a boolean true as my 2nd argument', true);
+			p('I am custom; I passed the string "special" as my 2nd argument', 'special');
+			?>
+		</div>
+		<?php
+		p('See the <a href="../basics/userassets">user assets</a> section on how to customise the supplied styles.');
 	}
 
 	/**

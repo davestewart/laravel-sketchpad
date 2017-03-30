@@ -2,16 +2,35 @@ class Watcher {
 
 	constructor()
 	{
-		// handlers
+		this.initialized = false;
+		this.error = '';
 		this.handlers = [];
+	}
+
+	init ()
+	{
+		if (!app.settings.livereload.host)
+		{
+			return;
+		}
 
 		// decorate LiveReload
 		if(window.LiveReload)
 		{
+			// don't re-decorate
+			if (LiveReload.reloader.decorated)
+			{
+				return false;
+			}
+
+			// debug
+			console.log('Initializing LiveReload...');
+
 			// proxy
 			const reload = LiveReload.reloader.reload.bind(LiveReload.reloader);
 
 			// decorate
+			LiveReload.reloader.decorated = true;
 			LiveReload.reloader.reload = (file, options) =>
 			{
 				// default type
@@ -25,24 +44,51 @@ class Watcher {
 					file = matches[2];
 				}
 
+				// let livereload handle css, js and image files
+				if (/\.(js|css|jpe?g|gif|png)$/.test(file))
+				{
+					return reload(file, options);
+				}
+
 				// handle event
 				if(this.handle(file, type))
 				{
 					return true;
 				}
-				return reload(file, options);
 			};
+
+			// success
+			this.initialized = true;
 		}
 
-		// listen to browsersync
+		// currently not implemented
 		if(window.___browserSync___)
 		{
-			___browserSync___.socket.on('sketchpad.update', event =>
+			// don't redecorate
+			if(___browserSync___.socket.hasListeners('sketchpad:change'))
 			{
-				console.log(arguments);
-				this.handle(event.file, event.type); // TODO check this is the proper call
-			})
+				return false;
+			}
+
+			// add listener
+			___browserSync___.socket.on('sketchpad:change', event =>
+			{
+				return ! this.handle(event.file, event.type);
+			});
+
+			// success
+			this.initialized = true;
 		}
+
+		// debug
+		if (this.initialized)
+		{
+			console.info('LiveReload initialized');
+			return true;
+		}
+		this.error = 'LiveReload not detected! Did you run the Sketchpad node task?';
+		console.warn(this.error);
+		return false;
 	}
 
 	/**
@@ -74,12 +120,12 @@ class Watcher {
 	 *
 	 * @param   {string}    file    A root-relative path; i.e. sketchpad/controllers/ExampleController.php
 	 * @param   {string}    type    The type of change; will be one of "add", "change", "delete"
-	 * @returns {boolean}           A flag indicating whether Sketchpad will intercept the load (true) or allow LiveReload to handle it (false)
+	 * @returns {boolean}           A flag indicating whether Sketchpad will intercept the load (true) or allow LiveReload to handle it (falsy)
 	 */
 	handle (file, type)
 	{
 		// debug
-		console.info(type, file);
+		// console.info('File change:', type, file);
 
 		// get matching handlers
 		let handlers = this.handlers
@@ -88,11 +134,17 @@ class Watcher {
 		// handle
 		let handled = false;
 		handlers
-			.forEach(handler =>
+			// changing forEach to some here, so that only the first successful handler
+			// handles the file load. Not as-designed right now, but defends against a
+			// 404 when controller methods change name. Also completely dependent on which
+			// order handlers are added. Generally bad design which needs to be fixed outside
+			// of watcher
+			.some(handler =>
 			{
 				if(handler.fn(file, type))
 				{
 					handled = true;
+					return true;
 				}
 			});
 
@@ -102,4 +154,7 @@ class Watcher {
 
 }
 
-export default new Watcher;
+const watcher = new Watcher;
+window.watcher = watcher;
+
+export default watcher
