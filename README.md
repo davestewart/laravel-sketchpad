@@ -4,7 +4,7 @@
 
 Sketchpad is an interactive front-end for your Laravel back-end; a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.
 
-![sketchpad](https://cloud.githubusercontent.com/assets/132681/18911548/98d0acde-8575-11e6-8632-4297f850f5d3.png)
+![image](https://cloud.githubusercontent.com/assets/132681/24509000/14ee5b96-155d-11e7-95ed-7712a32dceb6.png)
 
 ## What it does
 
@@ -14,34 +14,9 @@ You can navigate to, and run any controller method, even modify parameter values
 
 It comes with a whole bunch of useful tools and functions to make it easy to rattle out quick coding tests.
 
-Install the gulp plugin to see updates to your code, live!
-
-## Installation
-
-To install the package, run the following from your site's root directory:
-
-```
-composer require davestewart/sketchpad
-```
-
-Once installed, you'll need to add a reference to the Sketchpad service provider in your app config, found at `config/app.php`.
-
-At the bottom of the entry to `providers` add the following entry:
-
-```
-davestewart\sketchpad\SketchpadServiceProvider::class
-```
-
-Now, load your site and visit the top-level URL `sketchpad/`, i.e.:
-
-```
-http://yoursite.dev/sketchpad/
-```
-
-The Sketchpad setup page should load, and you will be able to configure paths, after which the application should install.
-
-If you get any errors, the installer will attempt to help you through them.
+Install the [Sketchpad Reload](https://github.com/davestewart/laravel-sketchpad-reload) plugin to see updates to your code, live!
 
 ## More info
 
-For usage instructions, see the [GitHub wiki](https://github.com/davestewart/laravel-sketchpad/wiki).
+For installation and usage instructions, see the [wiki](https://github.com/davestewart/laravel-sketchpad/wiki).
+

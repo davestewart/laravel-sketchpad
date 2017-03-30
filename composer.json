@@ -1,8 +1,14 @@
 {
 	"name": "davestewart/sketchpad",
 	"type": "library",
-	"description": "Browser-based tool to manage development of arbitrary test code",
-	"keywords": ["testing", "php", "tinker"],
+	"description": "An innovative front-end environment for interactive Laravel development",
+	"keywords": [
+		"laravel",
+		"testing",
+		"tools",
+		"tinker",
+		"playground"
+	],
 	"homepage": "https://github.com/davestewart/laravel-sketchpad",
 	"licence": "MIT",
 	"authors": [
