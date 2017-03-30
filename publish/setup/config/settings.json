@@ -31,8 +31,8 @@
 	},
 	"head" : [],
 	"livereload": {
-		"preset": "local",
-		"host": "localhost",
+		"preset": "",
+		"host": "",
 		"usePolling": false,
 		"paths": []
 	}
