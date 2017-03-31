@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
+use DateTime;
 use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
@@ -28,8 +29,8 @@ class BasicsController extends Controller
 	 */
 	public function methodCall()
 	{
-
-		echo 'This method was called on ' . date(DATE_RFC850);
+		$d = new DateTime();
+		echo 'Method called at ' . $d->format('H:i:s.u');
 	}
 
 	/**
@@ -39,8 +40,9 @@ class BasicsController extends Controller
 	 */
 	public function parameters($name = 'world')
 	{
-		p("Hello $name !", true);
 ?>
+<p>The result of this call is:</p>
+<pre>Hello <?php echo $name ?></pre>
 <p>Optional parameters are exposed as editable front-end inputs:</p>
 <pre class="code php">
 public function parameters($name = 'world')

@@ -32,8 +32,8 @@ class OutputController extends Controller
 	public function paragraph()
 	{
 		?>
-		<p>This is the format:</p>
-<pre>p('Here is some text', $class);</pre>
+		<p>The format of the method is:</p>
+<pre class="code php">p($text, $class);</code></pre>
 		<p>You can print <strong>normal</strong>, <strong>note</strong> and <strong>custom</strong>-classed paragraphs:</p>
 		<div style="margin-left: 25px">
 
@@ -52,15 +52,15 @@ class OutputController extends Controller
 	 */
 	public function alert()
 	{
-		p('Just text passed; defaults to "info" class:');
+		p('Pass text only to output a basic Bootstrap "info" alert box:');
 		alert('Just text passed');
 
-		p('Passed with a 2nd argument of a Bootstrap <a href="http://getbootstrap.com/components/#alerts" target="_blank">alert</a> message class:');
+		p('Pass a 2nd argument of a Bootstrap <a href="http://getbootstrap.com/components/#alerts" target="_blank">alert</a> message class:');
 		alert('Passed with "warning"', 'warning');
 		alert('Passed with "danger"', 'danger');
 		alert('Passed with "success"', 'success');
 
-		p('Passed with 2nd argument of a boolean state, renders tick and cross icons:');
+		p('Pass a 2nd argument of a boolean state to render tick or cross icons:');
 		alert('Passed with true', true);
 		alert('Passed with false', false);
 	}

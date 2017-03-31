@@ -78,7 +78,8 @@
 	}
 
 	label > input,
-	label > span {
+	label > input + span,
+	label > input + span {
 		vertical-align: middle;
 	}
 
