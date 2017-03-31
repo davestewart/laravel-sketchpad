@@ -84,7 +84,7 @@ class ToolsController extends Controller
 			];
 		}
 
-		echo vue('sketchpad::help.vue.routes', ['data' => $array]);
+		echo vue('sketchpad::help.vue.routes', $array);
 	}
 
     /**

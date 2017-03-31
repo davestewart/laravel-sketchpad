@@ -180,11 +180,11 @@ class OutputController extends Controller
 	}
 
 	/**
-	 * Use `vue()` to load Vue `.vue` templates from your views folder, even passing data (with no need to escape!)
+	 * Use `vue()` to load Vue `.vue` templates from your views folder, and even pass data from PHP.
 	 */
-	public function vue()
+	public function vue($name = 'World')
 	{
-		echo vue('sketchpad::help.vue.form', ['name' => 'World']);
+		echo vue('sketchpad::help.vue.form', ['name' => $name]);
 	}
 
 	protected function data()
