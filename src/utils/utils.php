@@ -57,11 +57,11 @@ if( ! function_exists('tb') )
 }
 
 
-if( ! function_exists('vue') )
+if( ! function_exists('json') )
 {
-	function vue($path, array $data = null)
+	function json($data)
 	{
-		return \davestewart\sketchpad\utils\Html::vue($path, $data);
+		return \davestewart\sketchpad\utils\Html::json($data);
 	}
 }
 
@@ -70,6 +70,14 @@ if( ! function_exists('md') )
 	function md($path)
 	{
 		return \davestewart\sketchpad\utils\Html::md($path);
+	}
+}
+
+if( ! function_exists('vue') )
+{
+	function vue($path, array $data = null)
+	{
+		return \davestewart\sketchpad\utils\Html::vue($path, $data);
 	}
 }
 

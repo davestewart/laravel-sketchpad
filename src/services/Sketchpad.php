@@ -7,6 +7,7 @@ use davestewart\sketchpad\objects\route\CallReference;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\config\SketchpadConfig;
 use davestewart\sketchpad\traits\GetterTrait;
+use davestewart\sketchpad\utils\Html;
 use ReflectionMethod;
 
 /**
@@ -133,25 +134,37 @@ class Sketchpad
 				// assign controller property
 				$this->route = $ref->route . $ref->method . '/';
 
-				// get controller response
+				// get controller response or content
 				ob_start();
 				$response   = $this->exec($ref->class, $ref->method, $ref->params);
 				$content    = ob_get_contents();
 				ob_end_clean();
 
-				// determine response or any echoed content
-				$response = $response
-					? $response
-					: $content;
-
-				// return markdown immediately, as some versions of laravel may be replacing headers
-				$headers = implode(' ', headers_list());
-				if(strstr($headers, 'Content-type: text/markdown') !== false)
+				// handle echoed output
+				if ($content)
 				{
-					die($response);
+					return $content;
 				}
 
-				// otherwise, return response
+				// handle laravel view responses
+				if ($response instanceof \Illuminate\Contracts\View\View)
+				{
+					return $response;
+				}
+
+				// handle laravel json responses
+				if ($response instanceof \Illuminate\Http\JsonResponse)
+				{
+					return json($response->getData());
+				}
+
+				// handle objects
+				if ($response instanceof Illuminate\Contracts\Support\Jsonable || !is_scalar($response))
+				{
+					return json($response);
+				}
+
+				// anything else
 				return $response;
 			}
 

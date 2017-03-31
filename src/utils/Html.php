@@ -157,11 +157,38 @@ class Html
 	// file format functions
 
 		/**
-		 * Loads and runs a Vue file in the UI
+		 * Converts to, and instructs Sketchpad to format an object as JSON in the front end
 		 *
-		 * @param            $path
-		 * @param array|null $data
-		 * @return mixed|string
+		 * Note that you can also have objects formatted as JSON by just returning them
+		 *
+		 * @param   mixed   $data
+		 * @return  string
+		 */
+		public static function json($data)
+		{
+			echo '<div data-format="json">' .json_encode($data). '</div>';
+		}
+
+		/**
+		 * Loads a Markdown file, and instructs Sketchpad to transform it in the front end
+		 *
+		 * @param   string  $path   An absolute or relative file reference
+		 * @return  string
+		 */
+		public static function md($path)
+		{
+			$abspath = preg_match('%^(/|[a-z]:)%i', $path) === 1
+				? $path
+				: \View::getFinder()->find($path);
+			echo '<div data-format="markdown">' .file_get_contents($abspath). '</div>';
+		}
+
+		/**
+		 * Loads a Vue file and optionally injects data into it
+		 *
+		 * @param   string  $path
+		 * @param   mixed   $data
+		 * @return  string
 		 */
 		public static function vue($path, array $data = null)
 		{
@@ -175,25 +202,10 @@ class Html
 				$str = str_replace($tag1, $tag1 . "(function () {\n\tvar \$data = $json;", $str);
 				$str = str_replace($tag2, '}())' . $tag2, $str);
 			}
-			return $str;
+			echo $str;
 		}
 
-		/**
-		 * Loads a Markdown file, or Markdown string into the UI and transforms it
-		 *
-		 * @param $path
-		 * @return string
-		 */
-		public static function md($path)
-		{
-			$abspath = preg_match('%^(/|[a-z]:)%i', $path) === 1
-				? $path
-				: \View::getFinder()->find($path);
-			header('Content-Type: text/markdown');
-			return file_get_contents($abspath);
-		}
-			
-	
+
 	// ------------------------------------------------------------------------------------------------
 	// utilities
 
