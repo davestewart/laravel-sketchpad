@@ -169,11 +169,11 @@ class Html
 			$str    = file_get_contents($path);
 			if($data)
 			{
-				foreach($data as $key => $value)
-				{
-					$value = json_encode($value);
-					$str = str_replace("%$key%", $value, $str);
-				}
+				$tag1 = '<scr'.'ipt>';
+				$tag2 = '</scr'.'ipt>';
+				$json = json_encode($data);
+				$str = str_replace($tag1, $tag1 . "(function () {\n\tvar \$data = $json;", $str);
+				$str = str_replace($tag2, '}())' . $tag2, $str);
 			}
 			return $str;
 		}
