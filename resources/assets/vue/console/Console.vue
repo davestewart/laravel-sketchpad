@@ -75,7 +75,7 @@ export default
 	{
 		this.update = _.debounce(this.update, 400)
 		state.$on('update', this.onStateUpdate)
-		watcher.addHandler(/\.php$/, this.onFileChange);
+		watcher.addHandler(/\.(?!css)$/, this.onFileChange);
 	},
 
 	ready ()
