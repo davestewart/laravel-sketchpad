@@ -174,7 +174,7 @@ class SomeController extends Controller
 {
     public function index()
     {
-        return md('path.to.index'); // example uses markdown, but you could just as easily use Blade
+        md('path.to.index'); // example uses markdown, but you could just as easily use Blade
     }
 }</pre>
 <p>When the controller is selected in the left hand menu, it will show an index page.</p>
@@ -182,7 +182,7 @@ class SomeController extends Controller
 <p>If you want to cheat, just save a markdown file in the same folder as the controller:</p>
 
 <pre class="code php">
-return md(__DIR__ . '/some.md');
+md(__DIR__ . '/some.md');
 </pre>
 
 <p>See the <a href="../output/markdown">markdown</a> example for more info about the <code>md()</code> method.</p>
