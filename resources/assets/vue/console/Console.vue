@@ -205,14 +205,14 @@ export default
 		// ------------------------------------------------------------------------------------------------
 		// loading events
 
-			onLoad (data, status, xhr)
+			onLoad (text, status, xhr)
 			{
 				const type = xhr.getResponseHeader('Content-Type');
 				if (state.method)
 				{
 					state.method.error = 0;
 				}
-				this.$refs.output.setContent(data, type)
+				this.$refs.output.setContent(text, type)
 			},
 
 			onFail (xhr, status, message)
@@ -221,9 +221,19 @@ export default
 				{
 					state.method.error = 1;
 				}
-				var data	= xhr.responseText;
-				var type	= xhr.getResponseHeader('Content-Type');
-				this.$refs.output.setError(data, type)
+				const text	= xhr.responseText;
+				const type	= xhr.getResponseHeader('Content-Type');
+				const error = $(text).find('.exception_title').text()
+
+				// reload if token exception
+				if (/TokenMismatchException/.test(error))
+				{
+					this.$refs.output.setContent('<p>Token Mismatch. Click <a href="javascript:location.reload()">here</a> to reload the page...</p>')
+					return
+				}
+
+				// show error
+				this.$refs.output.setError(text, type)
 			},
 
 			onComplete ()
