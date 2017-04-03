@@ -9,7 +9,7 @@
 			<h3>Setup</h3>
 			<p>To complete your Sketchpad setup, consider:</p>
 			<ul>
-				<li>Installing <a target="_help" href="http://github.com/davestewart/laravel-sketchpad/wiki/livereload">Sketchpad Reload</a> to update the UI as you save, add or delete files</li>
+				<li>Installing <a target="_help" href="https://github.com/davestewart/laravel-sketchpad-reload">Sketchpad Reload</a> to update the UI as you save, add or delete files</li>
 				<li>Giving the <a href="settings">settings page</a> a once-over</li>
 			</ul>
 

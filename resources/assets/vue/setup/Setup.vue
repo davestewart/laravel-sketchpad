@@ -73,8 +73,8 @@ assets       : {{ options.assets }}
 
                 <p>Actions:</p>
                 <ul>
+                    <li>Click <strong>Next</strong> when you have fixed any problems mentioned above, to try again</li>
                     <li>Click <strong>Back</strong> to edit your settings and try again</li>
-                    <li>Click <strong>Next</strong> if you think this is an external issue (perhaps permissions) and you are ready to try installation again</li>
                 </ul>
 
                 <p>To run the installation manually, run the following code in the terminal:</p>

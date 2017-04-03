@@ -12,4 +12,4 @@
 
     <!-- common -->
     <link  href="{{ $assets }}css/app.css" rel="stylesheet">
-    <link  href="{{ $assets }}css/components.css" rel="stylesheet">
+    <link  href="{{ $assets }}css/vue.css" rel="stylesheet">

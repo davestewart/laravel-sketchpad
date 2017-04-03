@@ -38,7 +38,7 @@
 	bConfig.plugins.push({
 		name: 'vueify-extract-css',
 		options: {
-			out: assetsPath + 'css/components.css'
+			out: assetsPath + 'css/vue.css'
 		}
 	});
 
