@@ -217,10 +217,7 @@ export default
 
 			onFail (xhr, status, message)
 			{
-				if (state.method)
-				{
-					state.method.error = 1;
-				}
+				// variables
 				const text	= xhr.responseText;
 				const type	= xhr.getResponseHeader('Content-Type');
 				const error = $(text).find('.exception_title').text()
@@ -228,11 +225,15 @@ export default
 				// reload if token exception
 				if (/TokenMismatchException/.test(error))
 				{
-					this.$refs.output.setContent('<p>Token Mismatch. Click <a href="javascript:location.reload()">here</a> to reload the page...</p>')
+					this.$refs.output.setContent('<p>CSRF token expired. Click <a href="javascript:location.reload()">here</a> to reload the page...</p>')
 					return
 				}
 
 				// show error
+				if (state.method)
+				{
+					state.method.error = 1;
+				}
 				this.$refs.output.setError(text, type)
 			},
 
