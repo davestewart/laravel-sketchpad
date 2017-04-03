@@ -106,14 +106,14 @@ class SketchpadController extends Controller
 			$info   = pathinfo($path);
 			$ext    = $info['extension'];
 			$mimes  =
-				[
-					'js'    => 'application/javascript',
-					'css'   => 'text/css',
-					'gif'   => 'image/gif',
-					'png'   => 'image/png',
-					'woff'  => 'application/font-woff',
-					'ttf'   => 'application/x-font-ttf',
-				];
+			[
+				'js'    => 'application/javascript',
+				'css'   => 'text/css',
+				'gif'   => 'image/gif',
+				'png'   => 'image/png',
+				'woff'  => 'application/font-woff',
+				'ttf'   => 'application/x-font-ttf',
+			];
 			$mime = isset($mimes[$ext])
 				? $mimes[$ext]
 				: 'application/octet-stream'; //'text/html';
@@ -121,6 +121,7 @@ class SketchpadController extends Controller
 			// serve file
 			$response = new BinaryFileResponse($path);
 			$response->mustRevalidate();
+			$response->setCharset('UTF-8');
 			$response->headers->set('Content-type', $mime);
 			$response->headers->set('Content-length', filesize($path));
 			return $response;

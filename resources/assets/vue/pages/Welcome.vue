@@ -6,14 +6,16 @@
 		</header>
 		<section class="content">
 
-			<h3>What it is</h3>
-			<p>Sketchpad is an interactive front-end for your Laravel back-end; a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.</p>
+			<h3>Introduction</h3>
+			<p>Sketchpad is an innovative, bolt-on development environment for your existing Laravel site.
+			<p>It's a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.</p>
+
 			<iframe style="padding:20px;" width="560" height="333" src="https://www.youtube.com/embed/jahhWFd-M_A" frameborder="0" allowfullscreen></iframe>
 
-			<h3>What it does</h3>
-			<p>It lists controllers and methods from folders of your choice, and allows you to run them without setting up routing, views, etc.</p>
-			<p>You can navigate to, and run any controller method, even modify parameter values, all from a friendly UI.</p>
-			<p>It comes with a bunch of useful tools and PHP functions to make it easy to rattle out quick coding tests.</p>
+			<h3>Overview</h3>
+			<p>Sketchpad provides an alternative structure of controllers, views, assets and routing that lives alongside your main Laravel installation.</p>
+			<p>You can navigate methods, interactively modify parameters, and even <a href="https://github.com/davestewart/laravel-sketchpad-reload" target="_blank">live-reload</a> the code you're working on, all from a friendly UI.</p>
+			<p>Additional tooling and functionality is designed to make it quick and easy to develop or debug new tools, features and code.</p>
 
 			<h3>Next steps&hellip;</h3>
 			<p>Navigate the menu on the left, or view the <a v-link="'/help'">help</a> for more info.</p>

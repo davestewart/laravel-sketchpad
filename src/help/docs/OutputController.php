@@ -13,7 +13,7 @@ class OutputController extends Controller
 
 	public function index()
 	{
-		return md(__DIR__ . '/output.md');
+		md(__DIR__ . '/output.md');
 	}
 
 	/**
@@ -32,8 +32,8 @@ class OutputController extends Controller
 	public function paragraph()
 	{
 		?>
-		<p>This is the format:</p>
-<pre>p('Here is some text', $class);</pre>
+		<p>The format of the method is:</p>
+<pre class="code php">p($text, $class);</code></pre>
 		<p>You can print <strong>normal</strong>, <strong>note</strong> and <strong>custom</strong>-classed paragraphs:</p>
 		<div style="margin-left: 25px">
 
@@ -52,15 +52,15 @@ class OutputController extends Controller
 	 */
 	public function alert()
 	{
-		p('Just text passed; defaults to "info" class:');
+		p('Pass text only to output a basic Bootstrap "info" alert box:');
 		alert('Just text passed');
 
-		p('Passed with a 2nd argument of a Bootstrap <a href="http://getbootstrap.com/components/#alerts" target="_blank">alert</a> message class:');
+		p('Pass a 2nd argument of a Bootstrap <a href="http://getbootstrap.com/components/#alerts" target="_blank">alert</a> message class:');
 		alert('Passed with "warning"', 'warning');
 		alert('Passed with "danger"', 'danger');
 		alert('Passed with "success"', 'success');
 
-		p('Passed with 2nd argument of a boolean state, renders tick and cross icons:');
+		p('Pass a 2nd argument of a boolean state to render tick or cross icons:');
 		alert('Passed with true', true);
 		alert('Passed with false', false);
 	}
@@ -92,11 +92,13 @@ class OutputController extends Controller
 	}
 
 	/**
-	 * Return (*not* echo) objects to convert to JSON and have Sketchpad format interactive output
+	 * Output objects as JSON and have Sketchpad render them interactively
 	 */
 	public function json()
 	{
-		return $this->data();
+		p('Use <code>json()</code> to output objects inline as JSON:');
+		json($this->data());
+		p('Alternatively, you can simply <i>return</i> any complex object, and Sketchpad will format it for you.');
 	}
 
 	/**
@@ -107,6 +109,7 @@ class OutputController extends Controller
 	 */
 	public function ls($options = '')
 	{
+		p('This is the validation config array, formatted as a list:');
 		$data   = \App::make(Translator::class)->get('validation');
 		ls($data, $options);
 	}
@@ -176,15 +179,19 @@ class OutputController extends Controller
 	 */
 	public function markdown()
 	{
-		echo md('sketchpad::help.md.text');
+		p('Pass absolute paths or a <code>sketchpad::path.to.view</code> reference.');
+		md('sketchpad::help.md.text');
+		p('Here is some general markdown formatting:');
+		md('sketchpad::help.md.formatting');
+		echo '<style>.markdown { margin:25px; }</style>';
 	}
 
 	/**
-	 * Use `vue()` to load Vue `.vue` templates from your views folder, even passing data (with no need to escape!)
+	 * Use `vue()` to load Vue `.vue` templates from your views folder, and even pass data from PHP.
 	 */
-	public function vue()
+	public function vue($name = 'World')
 	{
-		echo vue('sketchpad::help.vue.form', ['name' => 'World']);
+		vue('sketchpad::help.vue.form', ['name' => $name]);
 	}
 
 	protected function data()

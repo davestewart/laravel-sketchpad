@@ -7,6 +7,10 @@
 	#top-nav.navbar {
         border-radius: 0;
 		margin-bottom: 40px;
+
+		.container-fluid {
+			background: $gray-lighter;
+		}
 	}
 
 	body:after {
@@ -231,11 +235,15 @@
 // settings
 // ---------------------------------------------------------------------------------------------------------------------
 
-	#settings {
+	@media screen and (min-width:768px) {
+		#settings {
+			.col-sm-offset-3 { margin-left: 15%; }
+			.col-sm-3 { width: 15%}
+			.col-sm-9 { width: 70%}
+		}
+	}
 
-		.col-sm-offset-3 { margin-left: 15%; }
-		.col-sm-3 { width: 15%}
-		.col-sm-9 { width: 70%}
+	#settings {
 
 		margin-bottom: 50%;
 

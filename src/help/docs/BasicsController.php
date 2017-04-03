@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
+use DateTime;
 use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
@@ -28,8 +29,8 @@ class BasicsController extends Controller
 	 */
 	public function methodCall()
 	{
-
-		echo 'This method was called on ' . date(DATE_RFC850);
+		$d = new DateTime();
+		echo 'Method called at ' . $d->format('H:i:s.u');
 	}
 
 	/**
@@ -39,8 +40,9 @@ class BasicsController extends Controller
 	 */
 	public function parameters($name = 'world')
 	{
-		p("Hello $name !", true);
 ?>
+<p>The result of this call is:</p>
+<pre>Hello <?php echo $name ?></pre>
 <p>Optional parameters are exposed as editable front-end inputs:</p>
 <pre class="code php">
 public function parameters($name = 'world')
@@ -174,7 +176,7 @@ class SomeController extends Controller
 {
     public function index()
     {
-        return md('path.to.index'); // example uses markdown, but you could just as easily use Blade
+        md('path.to.index'); // example uses markdown, but you could just as easily use Blade
     }
 }</pre>
 <p>When the controller is selected in the left hand menu, it will show an index page.</p>
@@ -182,7 +184,7 @@ class SomeController extends Controller
 <p>If you want to cheat, just save a markdown file in the same folder as the controller:</p>
 
 <pre class="code php">
-return md(__DIR__ . '/some.md');
+md(__DIR__ . '/some.md');
 </pre>
 
 <p>See the <a href="../output/markdown">markdown</a> example for more info about the <code>md()</code> method.</p>

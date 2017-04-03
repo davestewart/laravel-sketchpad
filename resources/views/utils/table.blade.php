@@ -1,4 +1,4 @@
-<table class="table table-bordered table-striped {{ $class }} debug" style="{{ $style }}">
+<table class="table table-bordered table-striped {{ $class }}" style="{{ $style }}">
 	@if($label)
 		<caption>{{ $label }}</caption>
 	@endif
@@ -16,7 +16,7 @@
 		@foreach($values as $i => $obj)
 		<tr>
 			@if($index)
-			<th>{{ $i }}</th>
+			<th>{{ $i + 1 }}</th>
 			@endif
 			@foreach($obj as $key => $value)
 			<?php

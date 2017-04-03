@@ -29,10 +29,10 @@ export default
 
 	methods:
 	{
-		setContent (data, contentType = '', transition)
+		setContent (text, contentType, transition)
 		{
 			// variables
-			var method 			= this.method;
+			const method 			= this.method;
 
 			// properties
 			this.transition 	= false;
@@ -43,57 +43,65 @@ export default
 				this.clear();
 			}
 
-			// format
+			// html
+			let $html = $('<div class="data">' + text + '</div>');
+
+			// transform data
+			$html
+				.find('[data-format]')
+				.each(function ()
+				{
+					// variables
+					const $el = $(this)
+					const format = $(this).attr('data-format')
+					const text = $el.html()
+
+					// transform
+					if (format === 'json')
+					{
+						$el.addClass('code json').JSONView(text);
+					}
+					else if (format === 'markdown')
+					{
+						$el.addClass('markdown').html(marked(text));
+					}
+				})
+
+			// format code
+			if(settings.ui.formatCode)
+			{
+				$html
+					.find('pre.code, pre > code')
+					.each(function(i, block)
+					{
+						hljs.highlightBlock(block);
+					});
+			}
+
+			// handle iframes
 			if(method && method.tags.iframe)
 			{
-				return this.loadIframe(data, contentType);
-			}
-
-			var $data = $('<div class="data">' + data + '</div>');
-
-			// handle json response
-			if(contentType == 'application/json')
-			{
-				this.format = 'json';
-				$data.html($('<div class="code json">').JSONView(data));
-			}
-
-			// handle md response
-			else if(contentType.indexOf('text/markdown') > -1)
-			{
-				var html		= marked(data);
-				this.format 	= 'markdown';
-				$data.html(html);
+				return this.loadIframe($html.get(0).outerHTML, contentType);
 			}
 
 			// add content
 			(method && method.tags.append) || settings.ui.appendOutput
-				? this.$output.prepend($data)
-				: this.$output.html($data);
-
-			// format code blocks
-			if(settings.ui.formatCode)
-			{
-				$data.find('pre.code, pre > code').each(function(i, block) {
-					hljs.highlightBlock(block);
-				});
-			}
-
-
+				? this.$output.prepend($html)
+				: this.$output.html($html);
 		},
 
-		setError (text, type)
-		{
-			this.format 		= 'error';
-			this.loadIframe (text, type);
-		},
-
-		loadIframe (text, type)
+		setError (html, type)
 		{
 			const styles    = '<style>#sf-resetcontent { width:auto; word-break: break-all; }</style>';
-			const src		= 'data:' + type + ',' + encodeURIComponent(text + styles);
-			const $iframe   = $('<iframe class="error" frameborder="0">');
-			this.clear().append($iframe.attr('src', src));
+			this.format 	= 'error';
+			this.loadIframe (html + styles, type);
+		},
+
+		loadIframe (html, type)
+		{
+			const src		= 'data:' +type+ ',' + encodeURIComponent(html);
+			const $iframe   = $('<iframe class="error" frameborder="0">').attr('src', src);
+			this.clear().append($iframe);
 		},
 
 		clear ()
@@ -108,7 +116,6 @@ export default
 		}
 
 	}
-
 
 }
 

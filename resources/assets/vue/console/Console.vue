@@ -75,7 +75,7 @@ export default
 	{
 		this.update = _.debounce(this.update, 400)
 		state.$on('update', this.onStateUpdate)
-		watcher.addHandler(/\.php$/, this.onFileChange);
+		watcher.addHandler(/\.(?!css)$/, this.onFileChange);
 	},
 
 	ready ()
@@ -205,25 +205,36 @@ export default
 		// ------------------------------------------------------------------------------------------------
 		// loading events
 
-			onLoad (data, status, xhr)
+			onLoad (text, status, xhr)
 			{
 				const type = xhr.getResponseHeader('Content-Type');
 				if (state.method)
 				{
 					state.method.error = 0;
 				}
-				this.$refs.output.setContent(data, type)
+				this.$refs.output.setContent(text, type)
 			},
 
 			onFail (xhr, status, message)
 			{
+				// variables
+				const text	= xhr.responseText;
+				const type	= xhr.getResponseHeader('Content-Type');
+				const error = $(text).find('.exception_title').text()
+
+				// reload if token exception
+				if (/TokenMismatchException/.test(error))
+				{
+					this.$refs.output.setContent('<p>CSRF token expired. Click <a href="javascript:location.reload()">here</a> to reload the page...</p>')
+					return
+				}
+
+				// show error
 				if (state.method)
 				{
 					state.method.error = 1;
 				}
-				var data	= xhr.responseText;
-				var type	= xhr.getResponseHeader('Content-Type');
-				this.$refs.output.setError(data, type)
+				this.$refs.output.setError(text, type)
 			},
 
 			onComplete ()

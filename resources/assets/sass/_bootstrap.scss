@@ -78,7 +78,8 @@
 	}
 
 	label > input,
-	label > span {
+	label > input + span,
+	label > input + span {
 		vertical-align: middle;
 	}
 
@@ -86,6 +87,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // elements
 // ---------------------------------------------------------------------------------------------------------------------
+
+	.navbar {
+		border-radius: 4px;
+	}
 
 	.navbar-toggle {
 		padding: 6px 10px;
@@ -150,7 +155,7 @@
 		width:inherit;
 	}
 
-	.table.debug{
+	#output .table {
 
 		th, td{
 			font-size: 13px;
