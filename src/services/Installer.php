@@ -145,6 +145,11 @@ class Installer
                 $this->composer->has('autoload.psr-4.' . $key)
                     ? $this->pass('Composer autoload config updated')
                     : $this->fail('The PSR-4 autoload entry was not added to your composer.json', "Add a new entry in <code>autoload.psr-4</code>: <code>\"$key\" : \"$value\"</code>");
+
+	            exec('cd ' . base_path() . '; composer dump-autoload 2>&1', $output);
+	            $output[0] === 'Generating optimized autoload files'
+		            ? $this->pass('Composer autoload files generated')
+		            : $this->fail('Composer autoload files not generated', "Try running <code>composer dumpautoload</code> from the project root");
             }
 
             $this->controllers->exists()
