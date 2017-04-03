@@ -1,5 +1,7 @@
 # Laravel Sketchpad
 
+## Introduction
+
 Sketchpad is an innovative, bolt-on development environment for your existing Laravel site.
 
 It's a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.
@@ -9,11 +11,12 @@ It's a place to write, test, experiment and execute code, or just a place to gro
 
 ## Overview
 
-Sketchpad provides an alternative structure of controllers, methods, views and assets, with automatic routing and many other features.
+Sketchpad provides an alternative structure of controllers, views, assets and routing that lives alongside your main Laravel installation.
 
-You can navigate methods, interactively modify parameters, even [live-reload](https://github.com/davestewart/laravel-sketchpad-reload) the code you're working on, all from a friendly UI.
+You can navigate methods, interactively modify parameters, and even [live-reload](https://github.com/davestewart/laravel-sketchpad-reload) the code you're working on, all from a friendly UI.
 
-It comes with a bunch of useful tools and PHP functions to make getting to the end result clearer and faster.
+Additional tooling and functionality is designed to make it quick and easy to develop or debug new tools, features and code.
+
 ## Uses
 
 - Test out new coding ideas
