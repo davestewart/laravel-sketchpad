@@ -73,15 +73,20 @@ class ToolsController extends Controller
 		$array  = [];
 		foreach ($routes as /** @var Route */ $route)
 		{
+			// properties
+			$methods = method_exists($route, 'getMethods') ? $route->getMethods() : $route->methods;
+			$uri = method_exists($route, 'getUri') ? $route->getUri() : $route->uri;
 			$action = $route->getAction()['uses'];
+
+			// data
 			$array[] =
-			[
-				'method'    => implode('|', $route->getMethods()),
-				'uri'       => $route->getUri(),
-				'name'      => $route->getName(),
-				'action'    => $action instanceof \Closure ? 'Closure' : $action,
-				'middleware'=> implode(', ', $route->middleware()),
-			];
+				[
+					'methods'   => implode('|', $methods),
+					'uri'       => $uri,
+					'name'      => $route->getName(),
+					'action'    => $action instanceof \Closure ? 'Closure' : $action,
+					'middleware'=> implode(', ', $route->middleware()),
+				];
 		}
 
 		vue('sketchpad::help.vue.routes', $array);
