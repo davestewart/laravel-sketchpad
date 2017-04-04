@@ -1,9 +1,16 @@
 <template>
 
 	<li
-		:class="{ controller:true, active:isActive() }"
+		:class="{ controller:true, error: !! controller.error, icon: !!controller.error, active:isActive() }"
 		>
-		<a
+		<span v-if="controller.error"
+		    :title="controller.error"
+			:data-path="controller.path"
+			:data-route="controller.route"
+			>
+			{{{ getLabel() }}}
+		</span>
+		<a v-else
 			:data-name="controller.class"
 			:data-path="controller.path"
 			:data-route="controller.route"

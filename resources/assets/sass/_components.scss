@@ -57,11 +57,18 @@
 		li {
 
 			// links
+			&.error > span,
 			> a {
 				padding: 4px 9px;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 				overflow: hidden;
+			}
+
+			&.error > span {
+				display: inline-block;
+				color: $brand-warning;
+				cursor: default;
 			}
 
 			// folders
@@ -98,13 +105,18 @@
 				transition: left 0.3s;
 			}
 
-			&.icon:hover:before,
-			&.active.icon:before{
+			&.icon:not(.error):hover:before,
+			&.active.icon:not(.error):before {
 				left:-18px;
 				transition: left 0.2s;
 			}
 
 			// icons & styling
+			&.error:before{
+				content: "\f071";
+				color: $brand-warning;
+			}
+
 			&.favourite:before{
 				content: "\f005";
 				color: #FFCC00;
