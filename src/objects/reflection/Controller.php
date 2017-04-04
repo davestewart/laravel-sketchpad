@@ -57,7 +57,7 @@ class Controller extends File implements Arrayable, JsonSerializable
 			// check file exists
 			if(!file_exists($path))
 			{
-				return new ControllerError($path, $route, 'file does not exist');
+				return new ControllerError($path, $route, 'File does not exist');
 			}
 
 			// class
@@ -69,7 +69,7 @@ class Controller extends File implements Arrayable, JsonSerializable
 			// error
 			catch(\Exception $error)
 			{
-				return new ControllerError($path, $route, 'class could not be created; check naming and class code');
+				return new ControllerError($path, $route, 'Invalid class; check file name and class name');
 			}
 
 		}
@@ -130,7 +130,6 @@ class Controller extends File implements Arrayable, JsonSerializable
 				'class'     => $this->classname,
 				'path'      => str_replace(base_path() . '/', '', $this->path),
 				'name'      => $this->name,
-				'abspath'   => $this->path,
 				'route'     => $this->route,
 				'folder'    => preg_replace('%[^/]+$%', '', $this->route),
 				'label'     => $this->label,
@@ -147,6 +146,12 @@ class Controller extends File implements Arrayable, JsonSerializable
 
 }
 
+/**
+ * Parses the class source to build a FQ class path
+ *
+ * @param $path
+ * @return string
+ */
 function getClassPath($path)
 {
 	$file = file_get_contents($path);

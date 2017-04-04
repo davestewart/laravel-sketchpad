@@ -9,11 +9,17 @@ use JsonSerializable;
  */
 class ControllerError extends File implements Arrayable, JsonSerializable
 {
+	public $path;
+	public $label;
 	public $error;
 
 	public function __construct($path, $route, $error)
 	{
 		parent::__construct($path, $route);
+
+		$info = pathinfo($path);
+		$label = preg_replace('/^(.+)Controller$/', '$1', $info['filename']);
+		$this->label = $label;
 		$this->error = $error;
 	}
 
@@ -21,9 +27,13 @@ class ControllerError extends File implements Arrayable, JsonSerializable
 	{
 		$data =
 		[
+			'type'      => 'controller',
 			'error'     => $this->error,
-			'abspath'   => $this->path,
+			'path'      => str_replace(base_path() . '/', '', $this->path),
+			'folder'    => preg_replace('%[^/]+$%', '', $this->route),
 			'route'     => $this->route,
+			'label'     => $this->label,
+			'methods'   => []
 		];
 		return $data;
 	}

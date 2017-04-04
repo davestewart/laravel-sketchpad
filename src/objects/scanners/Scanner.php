@@ -163,6 +163,7 @@ class Scanner extends AbstractScanner
 			else
 			{
 				$ref = new ControllerErrorReference($route, $instance->path, $instance->error);
+				$this->controllers[] = $instance;
 				$this->addRoute($route, $ref);
 			}
 		}
