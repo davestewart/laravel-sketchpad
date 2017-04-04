@@ -75,7 +75,7 @@ export default
 	{
 		this.update = _.debounce(this.update, 400)
 		state.$on('update', this.onStateUpdate)
-		watcher.addHandler(/\.(?!css)$/, this.onFileChange);
+		watcher.addHandler(/./, this.onFileChange);
 	},
 
 	ready ()
