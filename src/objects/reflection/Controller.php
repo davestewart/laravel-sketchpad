@@ -2,6 +2,7 @@
 
 use davestewart\sketchpad\objects\file\File;
 use davestewart\sketchpad\objects\reflection\ControllerError;
+use davestewart\sketchpad\objects\route\ControllerReference;
 use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;
 use ReflectionClass;
@@ -120,6 +121,16 @@ class Controller extends File implements Arrayable, JsonSerializable
 
 			// return
 			return $this;
+		}
+
+		public function getReference()
+		{
+			return new ControllerReference($this->route, $this->path, $this->classpath);
+		}
+
+		public function isValid()
+		{
+			return count($this->methods) > 0 && !$this->getTag('private');
 		}
 
 		public function toArray()
