@@ -87,7 +87,7 @@ public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mi
 	}
 
 	/**
-	 * Sketchpad catches framework exceptions, displays the output, and highlights the method in red until it's corrected and called again. If you're using Sketchpad Reload to watch the controller or related PHP files, the page will simply reload when the error is fixed.
+	 * Sketchpad catches framework exceptions, displays the output, and highlights the method it's corrected and called again. If you're using Sketchpad Reload to watch the controller or related PHP files, the page will simply reload when the error is fixed.
 	 */
 	public function exceptions()
 	{

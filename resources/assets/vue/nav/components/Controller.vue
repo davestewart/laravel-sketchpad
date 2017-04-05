@@ -1,8 +1,6 @@
 <template>
 
-	<li
-		:class="{ controller:true, active:isActive() }"
-		>
+	<li :class="getClass()">
 		<a
 			:data-name="controller.class"
 			:data-path="controller.path"
@@ -19,7 +17,7 @@
 
 import Helpers		from '../../../js/functions/helpers.js';
 import settings 	from '../../../js/state/settings.js';
-import state 	    from '../../../js/state/state.js';
+import state 		from '../../../js/state/state.js';
 
 export default
 {
@@ -27,6 +25,16 @@ export default
 
 	methods:
 	{
+		getClass ()
+		{
+			return {
+				controller: true,
+				active: this.isActive(),
+				error: !!this.controller.error,
+				icon: !!this.controller.error
+			}
+		},
+
 		getLabel ()
 		{
 			return settings.ui.humanizeText
@@ -36,7 +44,7 @@ export default
 
 		isActive ()
 		{
-			return state.route && state.route.indexOf(this.controller.route) == 0;
+			return state.route && state.route.indexOf(this.controller.route) === 0;
 		}
 
 	}

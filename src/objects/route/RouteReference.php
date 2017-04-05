@@ -5,7 +5,7 @@
  *
  * @package davestewart\sketchpad\objects\route
  */
-class RouteReference
+abstract class RouteReference
 {
 
     /**

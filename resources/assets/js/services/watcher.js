@@ -94,24 +94,30 @@ class Watcher {
 	/**
 	 * Add file path handler
 	 *
-	 * @param   {RegExp}    rx      A regular expression to match a passed filepath
-	 * @param   {Function}  fn      A handler function for the filepath. Should return a Boolean true if it handled the path
+	 * @param   {Function}          callback    A callback function for the file path; format is function (file, type) { return !!handled }
+	 * @param   {RegExp|Function}  [filter]     A filter function or RegExp to match a passed file path; format is function (file)
 	 */
-	addHandler (rx, fn)
+	addHandler(callback, filter)
 	{
-		this.handlers.push({rx, fn});
+		const fn = filter instanceof RegExp
+			? function (file) { return filter.test(file); }
+			: filter
+		this.handlers.push({filter: fn, callback});
 		return this;
 	}
 
 	/**
 	 * Remove file path handler
 	 *
-	 * @param   {Function}  fn      An existing function for the filepath
+	 * @param   {Function}          callback    An existing handler function for the file path
 	 */
-	removeHandler (fn)
+	removeHandler (callback)
 	{
-		const index = this.handlers.findIndex(handler => handler.fn === fn);
-		this.handlers.splice(index, 1);
+		const index = this.handlers.findIndex(handler => handler.callback === callback);
+		if (index > -1)
+		{
+			this.handlers.splice(index, 1);
+		}
 		return this;
 	}
 
@@ -129,7 +135,7 @@ class Watcher {
 
 		// get matching handlers
 		let handlers = this.handlers
-			.filter(handler => handler.rx.test(file));
+			.filter(handler => handler.filter ? handler.filter(file) : true);
 
 		// handle
 		let handled = false;
@@ -139,9 +145,9 @@ class Watcher {
 			// 404 when controller methods change name. Also completely dependent on which
 			// order handlers are added. Generally bad design which needs to be fixed outside
 			// of watcher
-			.some(handler =>
+			.forEach(handler =>
 			{
-				if(handler.fn(file, type))
+				if(handler.callback(file, type))
 				{
 					handled = true;
 					return true;

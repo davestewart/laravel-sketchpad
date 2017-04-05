@@ -1,6 +1,7 @@
 <?php namespace %namespace%;
 
 use Illuminate\Routing\Controller as BaseController;
+use davestewart\sketchpad\config\SketchpadConfig;
 
 /**
  * Example Controller

@@ -1,6 +1,7 @@
 <?php namespace davestewart\sketchpad\services;
 
 use davestewart\sketchpad\objects\reflection\Controller;
+use davestewart\sketchpad\objects\reflection\ControllerError;
 use davestewart\sketchpad\objects\route\CallReference;
 use davestewart\sketchpad\objects\route\ControllerErrorReference;
 use davestewart\sketchpad\objects\route\ControllerReference;
@@ -146,12 +147,19 @@ class Router
 				}
 
 				// debug
-				// pr('REF', $ref);
+				//pr('REF', $ref);
 
 				// if we got a matching route, update the ref with method and params
 				if($ref instanceof ControllerReference)
                 {
                     return CallReference::fromControllerRef($ref)
+	                    ->setMethod($route)
+	                    ->setParams($params);
+				}
+
+				if($ref instanceof ControllerErrorReference)
+                {
+                    return CallReference::fromRef($ref)
 	                    ->setMethod($route)
 	                    ->setParams($params);
 				}
@@ -204,26 +212,25 @@ class Router
 			{
 				if(strtolower($ref->route) == $route)
 				{
+					// TODO not sure this is needed any more
 					// check if the file still exists
 					if(!file_exists($ref->abspath))
 					{
 						return (object) ["error" => "The file '{$ref->path}' does not exist"];
 					}
 
-					// check for malformed controller
-					if($ref instanceof ControllerErrorReference)
-					{
-						return (object) ["error" => $ref->error];
-					}
+					// otherwise, get a reference
+					$instance = Controller::fromPath($ref->abspath, $ref->route);
 
-					// otherwise, we should have a valid controller
-					return Controller::fromPath($ref->abspath, $ref->route);
+					// update session
+					Session::put('sketchpad.routes.' . $ref->route, $instance->getReference());
+
+					// return
+					return $instance;
 				}
 			}
 
 			return (object) ["error" => "Invalid controller route '$route'"];
-
-			throw new \Exception("Invalid controller route '$route'");
 		}
 	
 }
