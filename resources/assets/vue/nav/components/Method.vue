@@ -5,7 +5,7 @@
 			:class="listClass"
 			>
 			<a
-				:class="{method:true, error:error}"
+				:class="{method:true}"
 				:style="linkStyle"
 				:title="comment"
 				v-link="getLink()"
@@ -58,7 +58,12 @@ export default
 			if (tags.archived) {
 				data.archived = true;
 			}
-			if (tags.icon) {
+
+			if (this.error) {
+				data.icon = true;
+				data.error = true;
+			}
+			else if (tags.icon) {
 				var parts = tags.icon.split(/\s+/);
 				data['fa-' + parts.pop()] = true;
 			}

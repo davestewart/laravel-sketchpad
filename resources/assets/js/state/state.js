@@ -31,6 +31,7 @@ const State = Vue.extend({
 		{
 			store.$on('load', this.onStoreLoad)
 			store.$on('change', this.onStoreChange)
+			store.$on('delete', this.onStoreDelete)
 		},
 
 
@@ -203,6 +204,16 @@ const State = Vue.extend({
 					if (this.controller && this.controller.path === controller.path)
 					{
 						this.setController(controller)
+					}
+				},
+
+				onStoreDelete (controller)
+				{
+					if (this.controller && this.controller.path === controller.path)
+					{
+						this.controller = null
+						this.method = null
+						this.$emit('reset');
 					}
 				},
 

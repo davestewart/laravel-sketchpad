@@ -1,4 +1,5 @@
 <?php namespace davestewart\sketchpad\objects\route;
+use davestewart\sketchpad\objects\reflection\Controller;
 
 /**
  * Call Reference object
@@ -28,6 +29,17 @@ class CallReference extends ControllerReference
 
 	// ------------------------------------------------------------------------------------------------
 	// instantiation
+
+		public static function fromRef($ref)
+	    {
+	    	$controller = new Controller($ref->abspath, $ref->route);
+	        $call = new self($controller->route, $controller->path, $controller->classpath);
+	        foreach($controller as $key => $value)
+	        {
+	            $call->$key = $value;
+	        }
+	        return $call;
+	    }
 
 		public static function fromControllerRef(ControllerReference $controller)
 	    {

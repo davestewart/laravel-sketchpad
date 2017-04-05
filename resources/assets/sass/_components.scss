@@ -56,12 +56,26 @@
 		// list elements
 		li {
 
-			// links
+			// remove focus
+			a:focus {
+				background: inherit;
+			}
+
+			// errors
+			&.error > span,
 			> a {
 				padding: 4px 9px;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 				overflow: hidden;
+			}
+
+			&.active.error a {
+				background: lighten(#ecf0f1, 2%);
+				color: $brand-warning;
+			}
+			&.active.error a:hover {
+				background: #ecf0f1;
 			}
 
 			// folders
@@ -99,12 +113,17 @@
 			}
 
 			&.icon:hover:before,
-			&.active.icon:before{
+			&.active.icon:before {
 				left:-18px;
 				transition: left 0.2s;
 			}
 
 			// icons & styling
+			&.error:before{
+				content: "\f071";
+				color: $brand-warning;
+			}
+
 			&.favourite:before{
 				content: "\f005";
 				color: #FFCC00;

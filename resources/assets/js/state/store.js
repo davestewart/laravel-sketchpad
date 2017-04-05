@@ -1,3 +1,4 @@
+import _            from 'underscore';
 import Vue 		    from 'vue';
 import server	    from '../services/server';
 import watcher      from '../services/watcher'
@@ -18,7 +19,7 @@ const Store = Vue.extend({
 
 	created ()
 	{
-		watcher.addHandler(/Controller\.php$/, this.onControllerChange);
+		watcher.addHandler(this.onControllerChange, /Controller\.php$/);
 	},
 
 	methods:
@@ -81,6 +82,7 @@ const Store = Vue.extend({
 						{
 							const index = this.controllers.indexOf(controller);
 							this.controllers[index] = data;
+							//Vue.set(this.controllers, index, data)
 						}
 
 						// if not, add it
@@ -90,12 +92,11 @@ const Store = Vue.extend({
 							this.controllers.sort(fnSort);
 						}
 
+						// force updates everywhere
+						this.controllers.splice();
+
+						// dispatch
 						this.$emit('change', data)
-					}
-					if (data.error)
-					{
-						console.log(data.error);
-						this.loadAll();
 					}
 				}
 			},
@@ -109,17 +110,30 @@ const Store = Vue.extend({
 			 */
 			onControllerChange (path, type)
 			{
-				const controller = this.getControllerByPath(path);
-				if(controller)
-				{
-					this.load(controller.route);
-					return true;
-				}
-				else if (type === 'add' || type === 'delete')
+				// console.log('store: controller change')
+				if (type === 'add')
 				{
 					this.loadAll();
 					return true;
 				}
+
+				const controller = this.getControllerByPath(path);
+				if (controller)
+				{
+					// delete controller
+					if (type === 'delete')
+					{
+						const index = this.controllers.indexOf(controller);
+						this.controllers.splice(index, 1);
+						this.$emit('delete', controller);
+						return true;
+					}
+
+					// update controller
+					this.load(controller.route);
+					return true;
+				}
+
 				return false;
 			},
 
