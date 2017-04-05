@@ -90,8 +90,10 @@ class JSON extends Copier implements \JsonSerializable
 
     public function create()
     {
-        $text       = json_encode($this->data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        return (bool) file_put_contents($this->trg, $text);
+        $text = json_encode($this->data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        return is_writable($this->trg)
+            ? (bool) file_put_contents($this->trg, $text)
+	        : false;
     }
 
 	function jsonSerialize()
