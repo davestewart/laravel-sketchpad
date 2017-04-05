@@ -1,17 +1,7 @@
 <template>
 
-	<li
-		:class="{ controller:true, error: !! controller.error, icon: !!controller.error, active:isActive() }"
-		>
-		<a v-if="controller.error"
-			:title="controller.error"
-			:data-path="controller.path"
-			:data-route="controller.route"
-		   disabled
-			>
-			{{{ getLabel() }}}
-		</a>
-		<a v-else
+	<li :class="getClass()">
+		<a
 			:data-name="controller.class"
 			:data-path="controller.path"
 			:data-route="controller.route"
@@ -35,6 +25,16 @@ export default
 
 	methods:
 	{
+		getClass ()
+		{
+			return {
+				controller: true,
+				active: this.isActive(),
+				error: !!this.controller.error,
+				icon: !!this.controller.error
+			}
+		},
+
 		getLabel ()
 		{
 			return settings.ui.humanizeText
@@ -44,7 +44,7 @@ export default
 
 		isActive ()
 		{
-			return state.route && state.route.indexOf(this.controller.route) == 0 && !this.controller.error;
+			return state.route && state.route.indexOf(this.controller.route) === 0;
 		}
 
 	}
