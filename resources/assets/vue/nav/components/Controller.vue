@@ -3,13 +3,14 @@
 	<li
 		:class="{ controller:true, error: !! controller.error, icon: !!controller.error, active:isActive() }"
 		>
-		<span v-if="controller.error"
-		    :title="controller.error"
+		<a v-if="controller.error"
+			:title="controller.error"
 			:data-path="controller.path"
 			:data-route="controller.route"
+		   disabled
 			>
 			{{{ getLabel() }}}
-		</span>
+		</a>
 		<a v-else
 			:data-name="controller.class"
 			:data-path="controller.path"
@@ -26,7 +27,7 @@
 
 import Helpers		from '../../../js/functions/helpers.js';
 import settings 	from '../../../js/state/settings.js';
-import state 	    from '../../../js/state/state.js';
+import state 		from '../../../js/state/state.js';
 
 export default
 {
@@ -43,7 +44,7 @@ export default
 
 		isActive ()
 		{
-			return state.route && state.route.indexOf(this.controller.route) == 0;
+			return state.route && state.route.indexOf(this.controller.route) == 0 && !this.controller.error;
 		}
 
 	}

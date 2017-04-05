@@ -5,10 +5,10 @@
 		<!-- controllers -->
 		<section id="controllers" class="col-xs-5">
 			<ul class="nav nav-pills nav-stacked">
-				<template v-for="result in controllers">
-					<folder :route="result.route"></folder>
+				<template v-for="folder in folders">
+					<folder :route="folder.route"></folder>
 					<controller
-						v-for="controller in result.controllers"
+						v-for="controller in folder.controllers"
 						:controller="controller">
 					</controller>
 				</template>
@@ -61,7 +61,7 @@ export default
 
 	computed:
 	{
-		controllers ()
+		folders ()
 		{
 			// variables
 			let results = [];
