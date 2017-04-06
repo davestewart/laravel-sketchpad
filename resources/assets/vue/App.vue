@@ -119,10 +119,24 @@
 				$head.find('[data-asset]').remove()
 				this.settings.head
 					.forEach(url => {
-						html += /\.js$/.test(url)
-						    ? '<script data-asset src="' +url+ '"></scr' + 'ipt>'
-						    : '<link data-asset href="' +url+ '" rel="stylesheet">'
-					    $('head')
+						url = url.replace('$assets/', this.settings.route + 'assets/user/')
+						const ext = url.split('.').pop()
+						switch (ext)
+						{
+							case 'js':
+								// run script using jQuery to protect against invalid URLs
+								$.getScript(url)
+									.done(function( script, textStatus ) {
+										// script loaded ok
+									})
+									.fail(function( jqxhr, settings, exception ) {
+										console.log('error running script: ' + url)
+									});
+								break
+							case 'css':
+						        html += '<link data-asset href="' +url+ '" rel="stylesheet">'
+								break
+						}
 					})
 				$head.append(html)
 			}
