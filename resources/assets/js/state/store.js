@@ -29,14 +29,14 @@ const Store = Vue.extend({
 
 			loadAll ()
 			{
-				server
+				return server
 					.loadController()
 					.then(this.onLoadAll)
 			},
 
 			load (route)
 			{
-				server
+				return server
 					.loadController(route)
 					.then(this.onLoad)
 			},
@@ -111,9 +111,18 @@ const Store = Vue.extend({
 			onControllerChange (path, type)
 			{
 				// console.log('store: controller change')
+
+				// add controller
 				if (type === 'add')
 				{
-					this.loadAll();
+					this.loadAll()
+						.then(() => {
+							const controller = this.getControllerByPath(path);
+							if (controller)
+							{
+								this.$emit('add', controller);
+							}
+						});
 					return true;
 				}
 
