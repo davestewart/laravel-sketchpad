@@ -4,7 +4,7 @@ use davestewart\sketchpad\objects\install\ClassTemplate;
 use davestewart\sketchpad\objects\install\Copier;
 use davestewart\sketchpad\objects\install\Folder;
 use davestewart\sketchpad\objects\install\JSON;
-use davestewart\sketchpad\objects\install\Template;
+use davestewart\sketchpad\objects\install\Composer;
 use davestewart\sketchpad\config\Paths;
 use davestewart\sketchpad\config\InstallerSettings;
 
@@ -32,7 +32,7 @@ class Installer
 
     // installers
 
-        /** @var JSON */
+        /** @var Composer */
         public $composer;
 
         /** @var JSON */
@@ -75,7 +75,7 @@ class Installer
             // update compose
             if($this->prefs->autoloader)
             {
-                $this->composer = new JSON('composer.json');
+                $this->composer = new Composer();
             }
 
             // objects
@@ -99,7 +99,6 @@ class Installer
                 ->set('paths.controllers.0.path', $this->prefs->controllers)
                 ->set('paths.views', $this->prefs->views)
                 ->set('paths.assets', $this->prefs->assets)
-                ->set('head', ["/{$route}user/scripts.js", "/{$route}user/styles.css"])
                 ->create();
 
             if($this->composer)
@@ -134,9 +133,14 @@ class Installer
 		{
 		    $this->logs = [];
 
+		    function writable ($folder)
+		    {
+			    return "Ensure <code>$folder</code> exists and is writable";
+		    }
+
 		    $this->settings->exists()
                 ? $this->pass('Settings created')
-                : $this->fail('The sketchpad settings file could not be found', "Copy it from <code>{$this->settings->src}</code>");
+                : $this->fail('The sketchpad settings file could not be found', writable(storage_path()));
 
             if($this->composer)
             {
@@ -148,11 +152,8 @@ class Installer
                     : $this->fail('The PSR-4 autoload entry was not added to your composer.json', "Make file writeable, or manually add a new entry in <code>autoload.psr-4</code>: <code>\"$key\" : \"$value\"</code>");
 
                 // generate autoload files
-	            exec('cd ' . base_path() . '; composer dump-autoload 2>&1', $output);
-	            $output = trim(implode("\n", $output));
-	            $path = base_path('vendor/composer/autoload_psr4.php');
-	            $data = require($path);
-	            array_key_exists($key, $data)
+	            $output = $this->composer->generateAutoload();
+	            $this->composer->hasPSR4Class($key)
 		            ? $this->pass('Composer autoload files updated')
 		            : $this->fail('Unable to update Composer autoload', "<pre>$output</pre><br>Try running <code>composer dumpautoload</code> from the project root");
             }
@@ -171,7 +172,7 @@ class Installer
 
             $this->views->exists()
                 ? $this->pass('Views folder created')
-                : $this->fail('The sketchpad views folder was not found', "Create it at <code>{$this->views->src}</code>");
+                : $this->fail('The sketchpad views folder was not found', writable(dirname($this->views->src)));
 
             $this->view->exists()
                 ? $this->pass('Example view copied')

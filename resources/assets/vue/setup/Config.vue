@@ -4,7 +4,8 @@
 
 		<h2 class="text-info">Configuration</h2>
 
-		<p>Sketchpad (and its subfolders) can be installed anywhere in your project, but the default "separate" setup is recommended. This allows you to keep everything in one place, and makes version control easier.</p>
+		<p>Sketchpad (and its subfolders) can be installed anywhere in your project, but the default "separate" setup is recommended if you just want a bolt-on development environment. See the <a
+				href="https://github.com/davestewart/laravel-sketchpad/wiki/Setup" target="_blank">wiki</a> for further info.</p>
         <p>If the controllers folder is outside of your app namespace, you'll need to supply PSR-4 autoloader info.</p>
 		<p>Choose an installation preset, edit any paths you need to, then click Next to continue.</p>
 
@@ -146,7 +147,7 @@ var prompts = {
 var options = {
 	separate: {
 		type		:'separate',
-        desc        :'Sketchpad functions separately from your app; easiest for version control',
+        desc        :'Sketchpad functions separately from your app; great for development',
 		controllers	:'sketchpad/controllers',
 		views		:'sketchpad/views',
 		assets		:'sketchpad/assets',
@@ -225,7 +226,7 @@ export default
 
         cleanOptions ()
         {
-            var options  = this.options;
+            const options  = this.options;
 
             function tail(value, char = '/')
             {
@@ -234,13 +235,19 @@ export default
                     .replace(/[ \/\\]*$/, char)
             }
 
+            function route(value)
+            {
+                const route = '/' + tail(value);
+                return route === '//' ? '/' : route;
+            }
+
             return {
                 type            :options.type,
                 autoloader      :this.autoloader,
+                route		    :route(options.route),
                 controllers	    :tail(options.controllers),
                 views		    :tail(options.views),
                 assets		    :tail(options.assets),
-                route		    :tail(options.route),
                 namespace	    :tail(options.namespace, '\\'),
                 basedir         :tail(options.basedir)
             };

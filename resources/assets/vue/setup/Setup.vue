@@ -20,9 +20,8 @@
 
                 <p>Sketchpad will run in the following route:</p>
 <pre>
-{{ options.route }}
+{{ displayRoute }}
 </pre>
-
                 <p>Sketchpad will install to these folders under <code>{{ settings.basename }}</code>:</p>
 
 <pre>
@@ -87,6 +86,17 @@ composer dump-autoload
 
 			<article id="complete">
 				<h2 class="text-success">Installation complete</h2>
+
+				<div class="panel panel-danger" v-if="options.route === '/'">
+					<div class="panel-heading">
+						<h3 class="panel-title">Warning: manual update required</h3>
+					</div>
+					<div class="panel-body">
+						<p>Because you configured Sketchpad to run as your <strong>site root</strong>, you will need to <strong>remove the existing Laravel <code>/</code> route</strong> to view Sketchpad before continuing.</p>
+						<p>If you don't, your <a href="/" target="_blank">existing homepage</a> will show, rather than the Sketchpad dashboard.</p>
+					</div>
+				</div>
+
 				<p>To have the UI update as you save, add or delete files, install Sketchpad Reload:</p>
 				<ul style="padding: 25px 50px">
 					<li><a target="_blank" href="https://github.com/davestewart/laravel-sketchpad-reload">github.com/davestewart/laravel-sketchpad-reload</a></li>
@@ -170,7 +180,12 @@ export default
 	        return this.$refs.config
 	        	? this.$refs.config.cleanOptions
 	        	: {};
-	    }
+	    },
+
+		displayRoute ()
+		{
+			return this.options.route.replace(/^\/(\w)/, '$1')
+		}
 	},
 
 	created ()
@@ -205,7 +220,9 @@ export default
 
                 install(event, fsm)
                 {
-                    console.log(this.options);
+                	// debug
+                    console.info(this.options);
+
                     jQuery
                         .post(this.settings.route + 'setup/install', this.options)
                         .then(data => {
@@ -219,12 +236,15 @@ export default
                                 fsm.go('error');
                             }
                         });
+
+                    // update route once one install attempt has been made
+	                this.settings.route = this.options.route;
                 },
 
                 exit(event, fsm)
                 {
                     fsm.cancel(); // don't show final state screen
-                    location.href = '/' + this.$refs.config.cleanOptions.route;
+                    location.href = this.options.route;
                 }
             }
 		});

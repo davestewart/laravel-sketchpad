@@ -67,6 +67,7 @@ class InstallerSettings
             // clean data
             //$input  = array_map(function($value) { return trim($value, ' \\/'); }, $input);
 
+	        // settings for composer autoloader (hard-coded, a bit yukky)
             if(is_string($input['autoloader']))
             {
                 $input['autoloader'] = filter_var($input['autoloader'], FILTER_VALIDATE_BOOLEAN);
