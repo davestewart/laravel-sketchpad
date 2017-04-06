@@ -98,11 +98,26 @@
 		{
 			onLinkClick (event)
 			{
-				var root = location.origin + '/' + app.settings.route;
+				// variables
+				const root = location.origin + this.settings.route;
+				let path
+
+				// handle sketchpad: links
+				if (event.target.href.indexOf('sketchpad:') === 0)
+				{
+					path = '/run/' + event.target.href.replace(/sketchpad:\/?/, '');
+				}
+
+				// handle normal links
 				if(event.target.href && event.target.href.indexOf(root) === 0 && event.target.href.indexOf('#') === -1)
 				{
+					path = event.target.href.substr(root.length - 1);
+				}
+
+				// navigate to route
+				if (path)
+				{
 					event.preventDefault();
-					const path = event.target.href.substr(root.length - 1);
 					router.go(decodeURI(path))
 				}
 			},
