@@ -98,11 +98,26 @@
 		{
 			onLinkClick (event)
 			{
-				var root = location.origin + '/' + app.settings.route;
+				// variables
+				const root = location.origin + this.settings.route;
+				let path
+
+				// handle sketchpad: links
+				if (event.target.href.indexOf('sketchpad:') === 0)
+				{
+					path = '/run/' + event.target.href.replace(/sketchpad:\/?/, '');
+				}
+
+				// handle normal links
 				if(event.target.href && event.target.href.indexOf(root) === 0 && event.target.href.indexOf('#') === -1)
 				{
+					path = event.target.href.substr(root.length - 1);
+				}
+
+				// navigate to route
+				if (path)
+				{
 					event.preventDefault();
-					const path = event.target.href.substr(root.length - 1);
 					router.go(decodeURI(path))
 				}
 			},
@@ -119,10 +134,24 @@
 				$head.find('[data-asset]').remove()
 				this.settings.head
 					.forEach(url => {
-						html += /\.js$/.test(url)
-						    ? '<script data-asset src="' +url+ '"></scr' + 'ipt>'
-						    : '<link data-asset href="' +url+ '" rel="stylesheet">'
-					    $('head')
+						url = url.replace('$assets/', this.settings.route + 'assets/user/')
+						const ext = url.split('.').pop()
+						switch (ext)
+						{
+							case 'js':
+								// run script using jQuery to protect against invalid URLs
+								$.getScript(url)
+									.done(function( script, textStatus ) {
+										// script loaded ok
+									})
+									.fail(function( jqxhr, settings, exception ) {
+										console.log('error running script: ' + url)
+									});
+								break
+							case 'css':
+						        html += '<link data-asset href="' +url+ '" rel="stylesheet">'
+								break
+						}
 					})
 				$head.append(html)
 			}

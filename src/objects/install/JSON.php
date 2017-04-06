@@ -1,5 +1,7 @@
 <?php namespace davestewart\sketchpad\objects\install;
 
+use davestewart\sketchpad\traits\SaveFileTrait;
+
 /**
  * File templating class
  *
@@ -9,6 +11,8 @@
  */
 class JSON extends Copier implements \JsonSerializable
 {
+
+	use SaveFileTrait;
 
     protected $data;
 
@@ -91,9 +95,7 @@ class JSON extends Copier implements \JsonSerializable
     public function create()
     {
         $text = json_encode($this->data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        return is_writable($this->trg)
-            ? (bool) file_put_contents($this->trg, $text)
-	        : false;
+        $this->_save($this->trg, $text);
     }
 
 	function jsonSerialize()

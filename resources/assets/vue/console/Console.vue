@@ -83,7 +83,6 @@ export default
 
 	destroyed ()
 	{
-		state.reset()
 		state.$off('change', this.onStateUpdate)
 		watcher.removeHandler(this.onFileChange);
 	},

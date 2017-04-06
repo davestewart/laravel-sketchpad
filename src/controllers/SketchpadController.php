@@ -84,7 +84,7 @@ class SketchpadController extends Controller
 	    	return $this->getAsset($paths->publish("assets/$file"));
 	    }
 
-	    public function user(SketchpadConfig $config, $file)
+	    public function userAsset(SketchpadConfig $config, $file)
 		{
 			return $this->getAsset(base_path(trim($config->assets, '/') . '/' . $file));
 	    }

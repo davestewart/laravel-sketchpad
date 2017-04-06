@@ -54,7 +54,7 @@
 						<label class="control-label col-sm-3">Head content</label>
 						<div class="col-sm-9">
 							<textarea class="form-control" v-model="settings.head" autocomplete="off"></textarea>
-							<p class="help-block prompt">URLs to additional JS and CSS (use <code>/{{ settings.route }}user/*</code> to load user assets)</p>
+							<p class="help-block prompt">URLs to additional JS and CSS (use the placeholder <code>$assets/*</code> to load from the user assets folder)</p>
 						</div>
 					</div>
 

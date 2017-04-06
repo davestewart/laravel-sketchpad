@@ -53,7 +53,7 @@ const State = Vue.extend({
 				setRoute (route, query)
 				{
 					// if method is the same, update query only
-					if(this.method && route === this.method.route)
+					if(this.method && this.method.route === route)
 					{
 						this.setQuery(query);
 						return false;

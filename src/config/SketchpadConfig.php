@@ -75,7 +75,7 @@ class SketchpadConfig
 				$controllers    = $settings->get('paths.controllers');
 
 				// ensure route is bounded by slashes to prevent concatenation issue later
-				$this->route    = '/' . trim($this->route, '/') . '/';
+				$this->route    = '/' . ltrim('/' . trim($this->route, '/') . '/', '/');
 
 				// paths
 				foreach($controllers as $obj)

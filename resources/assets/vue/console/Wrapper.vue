@@ -1,8 +1,8 @@
 <template>
 
 	<div>
-		<console v-if="controller" v-ref:console></console>
-		<error v-else></error>
+		<console v-if="isValid" v-ref:console></console>
+		<error v-else :controller="controller"></error>
 	</div>
 
 </template>
@@ -36,6 +36,15 @@ export default
 		}
 	},
 
+	computed:
+	{
+		isValid ()
+		{
+			return this.controller && !this.controller.error;
+		}
+	},
+
+
 // ---------------------------------------------------------------------------------------------------------------------
 // lifecycle
 
@@ -43,11 +52,17 @@ export default
 	{
 		state.$on('reset', this.onStateReset)
 		store.$on('change', this.onStoreChange)
+		store.$on('add', this.onStoreAdd)
 	},
 
 	created ()
 	{
 		store.$off(this.onStoreChange)
+	},
+
+	destroyed ()
+	{
+		state.reset()
 	},
 
 
@@ -72,6 +87,8 @@ export default
 			}
 
 			// update
+			const route = transition.to;
+			state.setRoute(route.params.route, route.query);
 			this.update()
 
 			// complete
@@ -83,37 +100,30 @@ export default
 	{
 		update ()
 		{
-			// update from route
-			state.setRoute(this.$route.params.route, this.$route.query);
-
-			// variables
-			const controller = state.controller
-			const method = state.method
-
-			// missing controller
-			if (!controller)
+			this.controller = state.controller
+			if (this.isValid)
 			{
-				this.controller = null
-				return
-			}
-
-			if (!controller.error)
-			{
-				this.controller = controller
-				const callback = () => this.$refs.console.setData(controller, method)
+				const callback = () => this.$refs.console.setData(state.controller, state.method)
 				this.$refs.console
 					? callback ()
 					: this.$nextTick(callback)
-			}
-			else
-			{
-				this.controller = null
 			}
 		},
 
 		onStoreChange ()
 		{
 			// console.log('wrapper: store change');
+			this.update()
+		},
+
+		onStoreAdd (controller)
+		{
+			// console.log('wrapper: store add');
+			// re-add deleted controller
+			if (!state.controller && this.$route.params.route === controller.route)
+			{
+				state.controller = controller;
+			}
 			this.update()
 		},
 

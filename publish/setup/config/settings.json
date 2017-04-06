@@ -29,7 +29,10 @@
 		"appendOutput": false,
 		"formatCode": true
 	},
-	"head" : [],
+	"head" : [
+		"$assets/scripts.js",
+		"$assets/styles.css"
+	],
 	"livereload": {
 		"preset": "",
 		"host": "",

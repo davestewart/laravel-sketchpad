@@ -1,6 +1,7 @@
 <?php namespace davestewart\sketchpad\help\demo;
 
 use App\data\entities\User;
+use davestewart\sketchpad\config\SketchpadSettings;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
@@ -150,11 +151,20 @@ class ToolsController extends Controller
 
 	/**
 	 * See what's in the session
+	 *
 	 * @group Environment
 	 */
 	public function viewSession()
 	{
 		ls(\Session::all(), true);
+	}
+
+	/**
+	 * Check your sketchpad settings
+	 */
+	public function sketchpadSettings(SketchpadSettings $settings)
+	{
+		return $settings;
 	}
 
     /**
