@@ -87,7 +87,7 @@ public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mi
 	}
 
 	/**
-	 * Sketchpad catches framework exceptions, displays the output, and highlights the method it's corrected and called again. If you're using Sketchpad Reload to watch the controller or related PHP files, the page will simply reload when the error is fixed.
+	 * Sketchpad catches framework exceptions, displays the output, and highlights the method until it's corrected and called again. If you're using Sketchpad Reload to watch the controller or related PHP files, the page will simply reload when the error is fixed.
 	 */
 	public function exceptions()
 	{
@@ -218,8 +218,8 @@ md(__DIR__ . '/some.md');
 </pre>
 		<p>By default, these files (along with any other URLs you add) are set to load when Sketchpad runs:</p>
 		<pre>
-/sketchpad/user/scripts.js
-/sketchpad/user/styles.css
+<?php echo $route ?>assets/user/scripts.js
+<?php echo $route ?>assets/user/styles.css
 </pre>
 
 		<p>Note the special "user assets" route (currently <code><?= $route; ?>user/</code>) which loads the file contents directly – whether or not they are in your app's <code>/public/</code> folder.</p>
