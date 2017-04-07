@@ -267,7 +267,7 @@ li.fancy{
 	 *
 	 * @warn
 	 */
-	public function warn()
+	public function warn($value = 10)
 	{
 		p("Hopefully the big red lozenge didn't put you off too much:");
 		pr('@warn');
