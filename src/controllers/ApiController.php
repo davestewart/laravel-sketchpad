@@ -97,7 +97,7 @@ class ApiController extends Controller
 				// save
 				$config->settings->save((array) $data);
 			}
-			return $config->settings;
+			return response()->json($config->settings);
 		}
 
 		/**
