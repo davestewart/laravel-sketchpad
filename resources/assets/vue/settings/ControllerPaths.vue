@@ -1,18 +1,18 @@
 <template>
 
 	<div>
-		<ul class="sortable">
+		<ul class="sortable deletable">
 			<li v-for="item in items" :data-index="$index">
 				<span class="field">
 					 <input class="form-control" autocomplete="off" type="input" name="name" v-model="item.name" @input="onNameChange">
 					:<input class="form-control" autocomplete="off" type="input" name="path" v-model="item.path" v-validate-path>
 					<span class="icons">
 						<i class="validate-path" aria-hidden="true"></i>
-						<i class="delete fa fa-times" aria-hidden="true" title="Delete"></i>
-						<i :class="{toggle:true, fa:true, 'fa-eye':item.enabled, 'fa-eye-slash':!item.enabled}" aria-hidden="true" title="Toggle"></i>
 						<i class="handle fa fa-arrows-v" aria-hidden="true" title="Reorder"></i>
+						<i :class="{toggle:true, fa:true, 'fa-eye':item.enabled, 'fa-eye-slash':!item.enabled}" aria-hidden="true" title="Toggle"></i>
 					</span>
 				</span>
+				<i class="delete fa fa-times" aria-hidden="true" title="Delete"></i>
 			</li>
 		</ul>
 		<button style="margin-top: 2px;" class="pull-right btn btn-xs">Add path...</button>
