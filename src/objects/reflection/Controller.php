@@ -130,7 +130,9 @@ class Controller extends File implements Arrayable, JsonSerializable
 
 		public function isValid()
 		{
-			return count($this->methods) > 0 && !$this->getTag('private');
+			return !$this->ref->isAbstract()
+				&& !$this->getTag('private')
+				&& count($this->methods) > 0;
 		}
 
 		public function toArray()
