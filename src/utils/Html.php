@@ -2,6 +2,9 @@
 
 use Illuminate\Contracts\Support\Arrayable;
 
+\View::addExtension('vue', 'vue');
+\View::addExtension('md', 'md');
+
 /**
  * Html class
  */
@@ -98,7 +101,7 @@ class Html
 			{
 				$data['style'] .= ';width:100%;';
 			}
-			echo view('sketchpad::utils.list', $data);
+			echo view('sketchpad::html.list', $data);
 		}
 
 		/**
@@ -149,7 +152,7 @@ class Html
 				return self::getCss($value);
 			}, $options['cols']), count($keys), '');
 
-			echo view('sketchpad::utils.table', $options);
+			echo view('sketchpad::html.table', $options);
 		}
 
 
@@ -219,6 +222,3 @@ class Html
 		}
 
 }
-
-\View::addExtension('vue', '\davestewart\sketchpad\utils::vue');
-\View::addExtension('md', '\davestewart\sketchpad\utils::md');

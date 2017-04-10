@@ -120,4 +120,4 @@ class ApiController extends Controller
 
 }
 
-require_once __DIR__ . '/../utils/utils.php';
+require_once __DIR__ . '/../utils/helpers.php';
