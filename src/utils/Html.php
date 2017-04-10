@@ -1,5 +1,7 @@
 <?php namespace davestewart\sketchpad\utils;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 /**
  * Html class
  */
@@ -109,9 +111,12 @@ class Html
 		{
 			if(empty($values))
 			{
-				//throw  new \InvalidArgumentException('Parameter "$values" is an empty array');
-				$values = [['' => '']];
+				alert('Warning: tb() $values is empty', false);
+				return;
 			};
+			$values = $values instanceof Arrayable
+				? $values->toArray()
+				: (array) $values;
 
 			$params = urldecode($params);
 			//pr($params);
@@ -119,6 +124,7 @@ class Html
 			$keys   = array_keys( (array) $values[0]);
 			$options =
 			[
+				'values'    => array_values($values),
 				'keys'      => $keys,
 				'label'     => $opts->get('label'),
 				'index'     => $opts->has('index'),
@@ -143,13 +149,7 @@ class Html
 				return self::getCss($value);
 			}, $options['cols']), count($keys), '');
 
-			//pr($options);
-			$data = [
-				'values'    => $values instanceof Arrayable
-					? $values->toArray()
-					: (array) $values,
-			];
-			echo view('sketchpad::utils.table', array_merge($data, $options));
+			echo view('sketchpad::utils.table', $options);
 		}
 
 
