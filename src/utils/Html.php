@@ -116,14 +116,14 @@ class Html
 		 */
 		public static function tb($values, $params = '')
 		{
+			$values = $values instanceof Arrayable
+				? $values->toArray()
+				: (array) $values;
 			if(empty($values))
 			{
 				alert('Warning: tb() $values is empty', false);
 				return;
 			};
-			$values = $values instanceof Arrayable
-				? $values->toArray()
-				: (array) $values;
 
 			$params = urldecode($params);
 			//pr($params);
