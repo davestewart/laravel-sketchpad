@@ -129,6 +129,10 @@ export default
 					this.method = method
 					this.$refs.output.clear()
 					document.title = 'Sketchpad - ' + state.route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
+					if (app.settings.ui.scrollTop)
+					{
+						$('html,body').animate({scrollTop:0}, 350, 'swing');
+					}
 				}
 				this.params = method
 					? clone(method.params)
