@@ -10,9 +10,9 @@ if( ! function_exists('p') )
 
 if( ! function_exists('alert') )
 {
-	function alert($html, $class = 'info')
+	function alert($html, $class = 'info', $icon = '')
 	{
-		\davestewart\sketchpad\utils\Html::alert($html, $class);
+		\davestewart\sketchpad\utils\Html::alert($html, $class, $icon);
 	}
 }
 

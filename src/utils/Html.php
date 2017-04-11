@@ -35,14 +35,18 @@ class Html
 		 *
 		 * @param   string  $html   The HTML or text to display
 		 * @param   string  $class  An optional CSS class, can be info, success, warning, danger
+		 * @param   string  $icon   An optional FontAwesome icon string
 		 */
-		public static function alert($html, $class = 'info')
+		public static function alert($html, $class = 'info', $icon = '')
 		{
 			if(is_bool($class))
 			{
 				$state  = !! $class;
 				$class  = $state ? 'success' : 'danger';
 				$icon   = $state ? 'check' : 'times';
+			}
+			if ($icon)
+			{
 				$html   = '<i class="fa fa-' .$icon. '" aria-hidden="true"></i> ' . $html;
 			}
 			echo '<div class="alert alert-' .$class. '" role="alert">' .$html. '</div>';
