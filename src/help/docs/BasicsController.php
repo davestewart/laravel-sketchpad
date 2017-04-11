@@ -205,13 +205,14 @@ md(__DIR__ . '/some.md');
 
 <?php echo base_path($assets . 'styles.css'); ?>
 </pre>
-		<p>By default, these files (along with any other URLs you add) are set to load when Sketchpad runs:</p>
+		<p>These files are set to load with Sketchpad by default, along with any other URLs you add (for example <a href="https://momentjs.com/" target="_blank">Moment.js</a>):</p>
 		<pre>
-<?php echo $route ?>assets/user/scripts.js
-<?php echo $route ?>assets/user/styles.css
+https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.0/moment.js
+$assets/scripts.js
+$assets/styles.css
 </pre>
 
-		<p>Note the special "user assets" route (currently <code><?= $route; ?>user/</code>) which loads the file contents directly – whether or not they are in your app's <code>/public/</code> folder.</p>
+		<p>Note the special "user assets" route <code>$assets/</code> which loads the static file contents directly – they do not need to be in your app's <code>/public/</code> folder!</p>
 		<p>Feel free to <a href="../tags/css">edit these files</a> or update asset URLs on the <a href="<?= $route; ?>settings">settings</a> page.</p>
 <?php
 	}
