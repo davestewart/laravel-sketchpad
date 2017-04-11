@@ -11,6 +11,7 @@
 				v-model="param.value"
 				@input="setSize()"
 				@change="setSize()"
+				@keyup.enter="$emit('run')"
 				:type="type"
 				:id="id"
 			>
