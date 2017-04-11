@@ -5,8 +5,21 @@
 			<nav v-show="method && method.name !== 'index'" class="navbar navbar-default">
 				<span class="loader"></span>
 				<ul class="nav navbar-nav">
-					<li><button id="run" @click="load()" class="btn btn-default btn-xs">Run</button></li>
-					<param v-for="param in params" :param="param"></param>
+					<li>
+						<div class="btn-group" >
+							<button
+								id="runState"
+								v-if="runIf"
+								:data-run="runState ? 1 : 0"
+								@click="toggleRunState"
+								class="btn btn-default btn-xs"><i class="fa fa-bolt" aria-hidden="true"></i></button>
+							<button
+								id="run"
+								@click="run()"
+								class="btn btn-default btn-xs">{{ runLabel }}</button>
+						</div>
+					</li>
+					<param v-for="param in params" @run="run" :param="param"></param>
 				</ul>
 			</nav>
 
@@ -23,18 +36,37 @@ export default
 {
 	name: 'Params',
 
-	props: ['defer', 'method', 'params'],
+	props: ['defer', 'method', 'params', 'runIf', 'runState'],
 
 	components:
 	{
 		Param
 	},
 
+	computed:
+	{
+		runLabel ()
+		{
+			let label = 'Run'
+			if (this.method && this.runIf && !this.runState)
+			{
+				label = 'Test'
+			}
+			return label
+		},
+
+	},
+
 	methods:
 	{
-		load ()
+		run ()
 		{
-			this.$emit('load')
+			this.$emit('run')
+		},
+
+		toggleRunState ()
+		{
+			this.$emit('runState')
 		}
 	}
 

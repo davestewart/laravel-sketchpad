@@ -26,10 +26,13 @@ class Method implements JsonSerializable
 	
 		/** @var Parameter[] */
 		public $params;
-	
-		/** @var string */
-		public $signature;
-	
+
+		/** @var boolean */
+		public $runIf = false;
+
+		/** @var boolean */
+		public $runState = true;
+
 
 	// ------------------------------------------------------------------------------------------------
 	// METHODS
@@ -55,9 +58,16 @@ class Method implements JsonSerializable
 			{
 				if($param->isOptional())
 				{
-					$tag    = $this->comment->getParam($param->name);
-					$param  = new Parameter($param, $tag);
-					array_push($this->params, $param);
+					if ($param->getName() === 'run')
+					{
+						$this->runIf = true;
+					}
+					else
+					{
+						$tag    = $this->comment->getParam($param->name);
+						$param  = new Parameter($param, $tag);
+						array_push($this->params, $param);
+					}
 				}
 			}
 		}
@@ -69,10 +79,11 @@ class Method implements JsonSerializable
 			$data->name         = $this->name;
 			$data->label        = $this->label;
 			$data->route        = $this->route;
-			//$data->signature    = $this->signature;
 			$data->params       = $this->params;
 			$data->comment      = $this->comment;
 			$data->tags         = $this->comment->tags;
+			$data->runIf        = $this->runIf;
+			$data->runState     = $this->runState;
 			$data->error        = 0;
 
 			// return

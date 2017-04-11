@@ -138,9 +138,27 @@
 			content:' : ';
 		}
 
-		button#run {
-			height: 27px;
+		.btn-group {
 			margin-left: -2px;
+		}
+
+		button {
+			height: 27px;
+			margin-left: 0;
+		}
+
+		button#runState {
+			width: 26px;
+			border-right: 1px solid darken($gray, 5%);
+			text-align: right;
+
+			&[data-run="1"] {
+				background: $brand-warning;
+			}
+		}
+
+		button#run:not(:first-child) {
+			width:3.3em;
 		}
 
 		// inputs
