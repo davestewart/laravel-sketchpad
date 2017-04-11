@@ -20,6 +20,7 @@ class OutputController extends Controller
 	 * No need to return data or views; just `echo` directly to the page
 	 *
 	 * @label echo
+	 * @group Text
 	 */
 	public function text()
 	{
@@ -56,19 +57,24 @@ class OutputController extends Controller
 		alert('Just text passed');
 
 		p('Pass a 2nd argument of a Bootstrap <a href="http://getbootstrap.com/components/#alerts" target="_blank">alert</a> message class:');
+		alert('Passed with "success"', 'success');
 		alert('Passed with "warning"', 'warning');
 		alert('Passed with "danger"', 'danger');
-		alert('Passed with "success"', 'success');
 
 		p('Pass a 2nd argument of a boolean state to render tick or cross icons:');
 		alert('Passed with true', true);
 		alert('Passed with false', false);
+
+		p('Pass a 3rd argument of a string to render a custom <a href="http://fontawesome.io/icons/" target="_blank">Font Awesome</a> icon:');
+		alert('Passed with "info" and "info"', 'info', 'info');
+		alert('Passed with "warning" and "bolt"', 'warning', 'bolt');
 	}
 
 	/**
 	 * Use `vd()`, `pr()` and `pd()` to output object structures with HTML `pre` tag. All functions take variadic parameters
 	 *
 	 * @label print_r
+	 * @group Data
 	 */
 	public function print_r()
 	{
@@ -176,6 +182,8 @@ class OutputController extends Controller
 
 	/**
 	 * Use `md()` to load markdown `.md` documents from your views folder, which will be rendered client-side
+	 *
+	 * @group File types
 	 */
 	public function markdown()
 	{

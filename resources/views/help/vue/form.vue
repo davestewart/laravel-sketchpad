@@ -1,3 +1,4 @@
+<!-- template; include an id-->
 <div id="example">
 	<p>This is a sample Vue application; start typing to see it update:</p>
 
@@ -11,14 +12,16 @@
 	<pre><code class="php">vue('sketchpad::help.vue.form', ['name' => 'World']);</code></pre>
 
 	<p>Then reference it in Vue using the injected variable <code>$data</code>:</p>
-<pre>
-<code class="js">new Vue({
+
+	<pre><code class="js">new Vue({
     el: "#example",
     data: $data
 });</code></pre>
-<p>View the source method and <code>.vue</code> template to see how it's done.</p>
+
+	<p>View the source method and template at <code>vendor/davestewart/sketchpad/resources/views/help/vue/form.vue</code> to see how it's done.</p>
 </div>
 
+<!-- script; reference `el` by id -->
 <script>
 	new Vue({
 		el: "#example",
