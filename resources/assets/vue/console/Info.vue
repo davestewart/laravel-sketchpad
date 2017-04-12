@@ -20,16 +20,16 @@ export default
 	{
 		title ()
 		{
-			return this.method && this.method.name != 'index'
+			return this.method && this.method.name !== 'index'
 				? Helpers.getMethodLabel(this.method)
 				: this.controller
-					? this.controller.label
+					? Helpers.getControllerLabel(this.controller)
 					: 'Sketchpad';
 		},
 
 		info ()
 		{
-			return this.method && this.method.name != 'index'
+			return this.method && this.method.name !== 'index'
 				? this.method.comment.intro || '&hellip;'
 				: this.controller
 					? this.controller.comment.intro

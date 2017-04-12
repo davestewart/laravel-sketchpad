@@ -2,6 +2,13 @@ import settings from '../state/settings.js';
 
 export default
 {
+	getControllerLabel:function(controller)
+	{
+		return settings.ui.humanizeText
+			? this.humanize(controller.label)
+			: controller.label;
+	},
+
 	getMethodLabel:function(method)
 	{
 		return settings.ui.humanizeText

@@ -34,7 +34,7 @@ Server.prototype =
 			let data	= method.params.map(param => _.pick(param, 'name', 'type', 'value'));
 			if (method.runIf && method.runState)
 			{
-				data.push({name: 'run', type:'boolean', value:true})
+				data.push({name: method.runIf, type:'boolean', value:true})
 				method.runState = false;
 			}
 			return this.queue.add(new Request(url, data, done, fail, always));

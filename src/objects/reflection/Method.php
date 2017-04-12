@@ -58,9 +58,10 @@ class Method implements JsonSerializable
 			{
 				if($param->isOptional())
 				{
-					if ($param->getName() === 'run')
+					$name = $param->name;
+					if ($name === 'run' || $name === 'update' || $name === 'save')
 					{
-						$this->runIf = true;
+						$this->runIf = $name;
 					}
 					else
 					{

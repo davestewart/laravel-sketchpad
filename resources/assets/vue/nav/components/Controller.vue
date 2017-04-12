@@ -37,9 +37,7 @@ export default
 
 		getLabel ()
 		{
-			return settings.ui.humanizeText
-				? Helpers.humanize(this.controller.label)
-				: this.controller.label;
+			return Helpers.getControllerLabel(this.controller);
 		},
 
 		isActive ()
