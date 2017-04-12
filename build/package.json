@@ -1,38 +1,39 @@
 {
-  "name": "sketchpad-build",
-  "description": "Build process for Laravel Sketchpad",
-  "version": "1.0.0",
-  "author": "Dave Stewart",
-  "main": "gulpfile.js",
-  "dependencies": {
-    "jquery": "^3.1.0",
-    "query-string": "^4.3.1",
-    "state-machine": "git+https://github.com/davestewart/javascript-state-machine.git",
-    "underscore": "^1.8.3",
-    "vue": "^1.0.25",
-    "vue-bootstrap-modal": "git+https://github.com/Coffcer/vue-bootstrap-modal.git",
-    "vue-resource": "^1.0.3",
-    "vue-router": "^0.7.13"
-  },
-  "devDependencies": {
-    "gulp": "^3.9.0",
-    "gulp-util": "^3.0.7",
-    "laravel-elixir": "^4.0.4",
-    "laravel-elixir-vueify": "^1.0.3",
-    "babel-core": "^6.10.4",
-    "babel-plugin-transform-runtime": "^6.9.0",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-runtime": "^6.9.2",
-    "browserify-hmr": "^0.3.1",
-    "vueify": "^8.7.0",
-    "vueify-extract-css": "^0.2.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/davestewart/laravel-sketchpad.git"
-  },
-  "license": "MIT"
+	"name": "sketchpad-build",
+	"description": "Build process for Laravel Sketchpad",
+	"version": "1.0.0",
+	"author": "Dave Stewart",
+	"main": "gulpfile.js",
+	"dependencies": {
+		"jquery": "^3.1.0",
+		"query-string": "^4.3.1",
+		"state-machine": "git+https://github.com/davestewart/javascript-state-machine.git",
+		"underscore": "^1.8.3",
+		"vue": "^1.0.25",
+		"vue-bootstrap-modal": "git+https://github.com/Coffcer/vue-bootstrap-modal.git",
+		"vue-resource": "^1.0.3",
+		"vue-router": "^0.7.13"
+	},
+	"devDependencies": {
+		"gulp": "^3.9.0",
+		"gulp-util": "^3.0.7",
+		"laravel-elixir": "^4.0.4",
+		"laravel-elixir-vueify": "^1.0.3",
+		"babel-core": "^6.10.4",
+		"babel-plugin-transform-runtime": "^6.9.0",
+		"babel-preset-es2015": "^6.9.0",
+		"babel-runtime": "^6.9.2",
+		"browserify-hmr": "^0.3.1",
+		"vueify": "^8.7.0",
+		"vueify-extract-css": "^0.2.0"
+	},
+	"scripts": {
+		"release": "gulp --production --setup && gulp --production",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/davestewart/laravel-sketchpad.git"
+	},
+	"license": "MIT"
 }

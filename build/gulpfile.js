@@ -86,6 +86,7 @@
 		var file        = argv.setup ? 'setup' : 'app';
 
 		// build
+		// call --setup to run setup
 		mix
 
 			// lib scripts
@@ -99,11 +100,9 @@
 			.combine(rootPath + 'resources/lib/**/*.css', assets + 'css/lib.css')
 
 			// app styles
-			.sass('app.scss',   assets + 'css/app.css')
-			.sass('setup.scss', assets + 'css/setup.css')
+			.sass(file + '.scss',   assets + 'css/' +file+ '.css')
 
 			// app scripts
-			// currently, call gulp watch --setup to run setup
 			.browserify(
 				'resources/assets/js/' +file+ '.js',
 				assets + 'js/' +file+ '.js',
