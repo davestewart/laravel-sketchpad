@@ -260,6 +260,7 @@ li.fancy{
 	{
 		p('Value <code>$foo</code> was set to ' .$foo. ' at ' . date('H:i:s'));
 		pr('@defer');
+		p('Look also at <a href="../basics/testmode">test mode</a> for a more interactive way to test then run conditional code');
 	}
 
 	/**
@@ -267,7 +268,7 @@ li.fancy{
 	 *
 	 * @warn
 	 */
-	public function warn()
+	public function warn($value = 10)
 	{
 		p("Hopefully the big red lozenge didn't put you off too much:");
 		pr('@warn');
@@ -275,8 +276,9 @@ li.fancy{
 ?>
 <p>If you need to pass data to the deferred methods, your other options are:</p>
 		<ul>
-			<li>Use <a href="../../basics/parameters/">method parameters</a> along with the warning</li>
-			<li>Use an <a href="../../basics/forms/">HTML form</a>, which Sketchpad will intercept and submit back to the original method</li>
+			<li>Use <a href="../basics/parameters">method parameters</a> along with the warning</li>
+			<li>Use <a href="../basics/testmode">test mode</a> for a more interactive way to test then run conditional code</li>
+			<li>Use an <a href="../basics/forms">HTML form</a>, which Sketchpad will intercept and submit back to the original method</li>
 		</ul>
 <?php
 	}

@@ -2,7 +2,7 @@
 
 	<div id="console" :class="{loading: loading, transitioning: transitioning, pending: pending, error: error}">
 		<info v-ref:info :controller="controller" :method="method"></info>
-		<params v-ref:params :method="method" :params="params"></params>
+		<params v-ref:params :method="method" :params="params" :run-if="runIf" :run-state="runState"></params>
 		<output v-ref:output :method="method"></output>
 	</div>
 
@@ -15,6 +15,7 @@ import _            from 'underscore'
 import {clone}      from '../../js/functions/utils.js';
 
 // objects
+import settings		from '../../js/state/settings.js';
 import state		from '../../js/state/state.js';
 import server		from '../../js/services/server.js';
 import watcher	    from '../../js/services/watcher';
@@ -38,14 +39,17 @@ export default
 	data ()
 	{
 		return {
+			// objects
+			controller: null,
+			method: null,
+			params: null,
+
+			// behaviour
 			routing: false,
 			updating: false,
 			pending: false,
 			loading: false,
-			transitioning: false,
-			controller: null,
-			method: null,
-			params: null,
+			transitioning: false
 		}
 	},
 
@@ -60,6 +64,18 @@ export default
 		error ()
 		{
 			return this.method && this.method.error
+		},
+
+		runIf ()
+		{
+			return this.method && this.method.runIf
+		},
+
+		runState ()
+		{
+			return this.method
+				? this.method.runState
+				: true
 		}
 	},
 
@@ -76,7 +92,8 @@ export default
 
 	ready ()
 	{
-		this.$refs.params.$on('load', this.onLoadClick)
+		this.$refs.params.$on('run', this.onRunClick)
+		this.$refs.params.$on('runState', this.onToggleRunState)
 		this.$refs.output.$on('submit', this.onFormSubmit)
 		this.$watch('params', this.onParamsChange, {deep: true})
 	},
@@ -105,14 +122,22 @@ export default
 				// set changed properties
 				if (controller !== this.controller)
 				{
+					this.$refs.output.clear()
 					this.controller = controller
 				}
 				if (method !== this.method)
 				{
+					document.title = 'Sketchpad - ' + state.route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
 					this.transitioning = true
 					this.method = method
-					this.$refs.output.clear()
-					document.title = 'Sketchpad - ' + state.route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
+					if ((method && method.tags.append) || settings.ui.appendOutput)
+					{
+						this.$refs.output.clear()
+					}
+					if (app.settings.ui.scrollTop)
+					{
+						$('html,body').animate({scrollTop:0}, 450, 'easeInOutQuad');
+					}
 				}
 				this.params = method
 					? clone(method.params)
@@ -122,6 +147,7 @@ export default
 				this.pending = this.defer
 				if (this.method)
 				{
+					this.method.runState = false
 					if (!this.defer)
 					{
 						this.load()
@@ -230,6 +256,10 @@ export default
 
 			onParamsChange ()
 			{
+				if (this.method)
+				{
+					this.method.runState = false;
+				}
 				if (!this.routing)
 				{
 					if (this.defer)
@@ -243,11 +273,16 @@ export default
 				}
 			},
 
-			onLoadClick ()
+			onRunClick ()
 			{
 				this.pending
 					? this.update(true)
 					: this.load()
+			},
+
+			onToggleRunState ()
+			{
+				this.method.runState = ! this.method.runState
 			},
 
 			onFormSubmit (data)

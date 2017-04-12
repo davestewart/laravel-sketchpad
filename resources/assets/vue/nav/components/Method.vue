@@ -39,7 +39,7 @@ export default
 			var tags 	= this.tags;
 			var data 	=
 			{
-				active		:state.route && state.route.indexOf(this.route) == 0,
+				active		:this.route === this.$route.params.route,
 				favourite	:tags.favourite,
 				icon		:tags.favourite || tags.icon
 			};

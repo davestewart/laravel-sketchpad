@@ -131,8 +131,9 @@
 					</div>
 
 					<div class="form-group form-group-sm">
-						<label class="control-label col-sm-3">Output</label>
+						<label class="control-label col-sm-3">Console</label>
 						<ul class="col-sm-9 control-group" >
+							<li><label><input type="checkbox" v-model="settings.ui.scrollTop"> <span>Scroll to top on load</span></label></li>
 							<li><label><input type="checkbox" v-model="settings.ui.formatCode"> <span>Format code</span></label></li>
 							<li><label><input type="checkbox" v-model="settings.ui.appendOutput"> <span>Append output</span></label></li>
 						</ul>

@@ -138,9 +138,27 @@
 			content:' : ';
 		}
 
-		button#run {
-			height: 27px;
+		.btn-group {
 			margin-left: -2px;
+		}
+
+		button {
+			height: 27px;
+			margin-left: 0;
+		}
+
+		button#runState {
+			width: 26px;
+			border-right: 1px solid darken($gray, 5%);
+			text-align: right;
+
+			&[data-run="1"] {
+				background: $brand-warning;
+			}
+		}
+
+		button#run:not(:first-child) {
+			width:3.3em;
 		}
 
 		// inputs
@@ -216,7 +234,7 @@
 
 		transition: opacity 0.2s;
 
-		#console.transitioning.loading & {
+		#console.transitioning & {
 			opacity: 0;
 		}
 
@@ -363,6 +381,28 @@
 			min-height: 9em;
 		}
 
+		ul.sortable li {
+			position: relative;
+		}
+
+		ul.deletable li {
+			padding-right: 20px;
+
+			i.delete {
+				display: block;
+				position: absolute;
+				top: 15px;
+				right: -23px;
+				cursor: pointer;
+				opacity: 0.5;
+			}
+
+			i.delete:hover {
+				opacity: 1;
+				color: black;
+			}
+		}
+
 		.field {
 			display: block;
 			background-color: $input-bg;
@@ -376,12 +416,12 @@
 			.icons {
 				position: absolute;
 				top: 0;
-				right: 10px;
+				right: 7px;
 
 				i {
 					line-height: 35px;
-					padding: 0 2px;
-					margin-right: 2px;
+					padding: 0 3px;
+					margin: 0 2px;
 					color: $gray-dark;
 					vertical-align: baseline;
 					cursor: pointer;

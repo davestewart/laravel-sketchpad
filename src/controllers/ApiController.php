@@ -97,7 +97,7 @@ class ApiController extends Controller
 				// save
 				$config->settings->save((array) $data);
 			}
-			return $config->settings;
+			return response()->json($config->settings);
 		}
 
 		/**
@@ -120,4 +120,4 @@ class ApiController extends Controller
 
 }
 
-require_once __DIR__ . '/../utils/utils.php';
+require_once __DIR__ . '/../utils/helpers.php';

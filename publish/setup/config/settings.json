@@ -27,7 +27,8 @@
 		"showComments": true,
 		"showArchived": true,
 		"appendOutput": false,
-		"formatCode": true
+		"formatCode": true,
+		"scrollTop": true
 	},
 	"head" : [
 		"$assets/scripts.js",

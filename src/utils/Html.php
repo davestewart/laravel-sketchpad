@@ -1,5 +1,10 @@
 <?php namespace davestewart\sketchpad\utils;
 
+use Illuminate\Contracts\Support\Arrayable;
+
+\View::addExtension('vue', 'vue');
+\View::addExtension('md', 'md');
+
 /**
  * Html class
  */
@@ -30,14 +35,18 @@ class Html
 		 *
 		 * @param   string  $html   The HTML or text to display
 		 * @param   string  $class  An optional CSS class, can be info, success, warning, danger
+		 * @param   string  $icon   An optional FontAwesome icon string
 		 */
-		public static function alert($html, $class = 'info')
+		public static function alert($html, $class = 'info', $icon = '')
 		{
 			if(is_bool($class))
 			{
 				$state  = !! $class;
 				$class  = $state ? 'success' : 'danger';
 				$icon   = $state ? 'check' : 'times';
+			}
+			if ($icon)
+			{
 				$html   = '<i class="fa fa-' .$icon. '" aria-hidden="true"></i> ' . $html;
 			}
 			echo '<div class="alert alert-' .$class. '" role="alert">' .$html. '</div>';
@@ -96,7 +105,7 @@ class Html
 			{
 				$data['style'] .= ';width:100%;';
 			}
-			echo view('sketchpad::utils.list', $data);
+			echo view('sketchpad::html.list', $data);
 		}
 
 		/**
@@ -107,10 +116,13 @@ class Html
 		 */
 		public static function tb($values, $params = '')
 		{
+			$values = $values instanceof Arrayable
+				? $values->toArray()
+				: (array) $values;
 			if(empty($values))
 			{
-				//throw  new \InvalidArgumentException('Parameter "$values" is an empty array');
-				$values = [['' => '']];
+				alert('Warning: tb() $values is empty', false);
+				return;
 			};
 
 			$params = urldecode($params);
@@ -119,6 +131,7 @@ class Html
 			$keys   = array_keys( (array) $values[0]);
 			$options =
 			[
+				'values'    => array_values($values),
 				'keys'      => $keys,
 				'label'     => $opts->get('label'),
 				'index'     => $opts->has('index'),
@@ -143,13 +156,7 @@ class Html
 				return self::getCss($value);
 			}, $options['cols']), count($keys), '');
 
-			//pr($options);
-			$data = [
-				'values'    => $values instanceof Arrayable
-					? $values->toArray()
-					: (array) $values,
-			];
-			echo view('sketchpad::utils.table', array_merge($data, $options));
+			echo view('sketchpad::html.table', $options);
 		}
 
 
@@ -219,6 +226,3 @@ class Html
 		}
 
 }
-
-\View::addExtension('vue', '\davestewart\sketchpad\utils::vue');
-\View::addExtension('md', '\davestewart\sketchpad\utils::md');

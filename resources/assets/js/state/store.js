@@ -54,6 +54,16 @@ const Store = Vue.extend({
 			{
 				if (Array.isArray(data))
 				{
+					// merge existing controller parameter values into incoming controller values
+					data.forEach(trgController => {
+						const srcController = this.getControllerByPath(trgController.path);
+						if (srcController)
+						{
+							updateController(trgController, srcController);
+						}
+					});
+
+					// update
 					this.controllers = data;
 					this.$emit('load', data);
 				}
@@ -75,20 +85,20 @@ const Store = Vue.extend({
 					if(data.path)
 					{
 						// see if the same controller is already loaded
-						const controller = this.getControllerByPath(data.path);
+						const trgController = data;
+						const srcController = this.getControllerByPath(trgController.path);
 
 						// if so, replace it
-						if(controller)
+						if(srcController)
 						{
-							const index = this.controllers.indexOf(controller);
-							this.controllers[index] = data;
-							//Vue.set(this.controllers, index, data)
+							const index = this.controllers.indexOf(srcController);
+							this.controllers[index] = updateController(trgController, srcController);
 						}
 
 						// if not, add it
 						else
 						{
-							this.controllers.push(controller);
+							this.controllers.push(trgController);
 							this.controllers.sort(fnSort);
 						}
 
@@ -96,7 +106,7 @@ const Store = Vue.extend({
 						this.controllers.splice();
 
 						// dispatch
-						this.$emit('change', data)
+						this.$emit('change', trgController)
 					}
 				}
 			},
@@ -152,7 +162,7 @@ const Store = Vue.extend({
 
 			getControllerByPath (path)
 			{
-				return this.controllers.find( c => c.path === path );
+				return this.controllers.find( controller => controller.path === path );
 			}
 
 	}
@@ -168,4 +178,45 @@ function fnSort (a, b)
 		: (a.path > b.path
 			? 1
 			: 0);
+}
+
+/**
+ * Copies existing controller parameter values to incoming controller parameters
+ *
+ * @param   {Object}    trgController
+ * @param   {Object}    srcController
+ * @returns {Object}
+ */
+function updateController(trgController, srcController)
+{
+	// cache source methods and params as named hashes
+	const srcMethods = srcController.methods.reduce((methods, method) => {
+		methods[method.name] = method.params.reduce((params, param) => {
+			params[param.name] = param;
+			return params;
+		}, {});
+		return methods;
+	}, {});
+
+	// loop over target methods and assign source method param values
+	trgController.methods.forEach(trgMethod => {
+		const srcParams = srcMethods[trgMethod.name]
+		if(srcParams)
+		{
+			// loop over target params and assign source param values
+			trgMethod.params.forEach(trgParam => {
+				trgParam.default = trgParam.value
+				const srcParam = srcParams[trgParam.name]
+				if (srcParam)
+				{
+					trgParam.value = srcParam.default !== trgParam.default
+						? trgParam.value
+						: srcParam.value;
+				}
+			})
+		}
+	})
+
+	// return
+	return trgController;
 }

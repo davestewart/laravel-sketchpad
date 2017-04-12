@@ -25,12 +25,17 @@ class BasicsController extends Controller
 	}
 
 	/**
-	 * Call a method just by clicking on its label
+	 * Run a method just by clicking on its label
+	 *
+	 * @group Execution
 	 */
-	public function methodCall()
+	public function runMethod()
 	{
 		$d = new DateTime();
-		echo 'Method called at ' . $d->format('H:i:s.u');
+		$date = $d->format('H:i:s.u');
+		p('Method called at:');
+		echo "<pre>$date</pre>";
+		p('Run again by clicking the <strong>Run</strong> button');
 	}
 
 	/**
@@ -47,7 +52,7 @@ class BasicsController extends Controller
 <pre class="code php">
 public function parameters($name = 'world')
 {
-	echo "Hello $name";
+    echo "Hello $name";
 }
 </pre>
 <p>Update the parameter to automatically call the method again</p>
@@ -87,6 +92,42 @@ public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mi
 	}
 
 	/**
+	 * Declare a special optional parameter to test code before running it
+	 *
+	 * @param int $id
+	 * @param bool $run
+	 */
+	public function testMode($id = 1, $run = false)
+	{
+		$mode = $run ? true : 'info';
+		$status = !!$run
+			? "Action taken for user $id !"
+			: "Showing user $id";
+		alert($status, $mode);
+		?>
+		<p>There are often occasions where you want to <strong>test</strong> code before running it.</p>
+		<p>Sketchpad allows you to set an additional boolean parameter <code>$run</code> which creates a special <code>Test / Run</code> toggle <i class="fa fa-bolt"></i> on the front end:</p>
+		<pre class="code php">public function emailUser($id = 1, $run = false) { ... }</pre>
+		<p>This allows you to preview output and <em>only</em> run additional code when happy with the results:</p>
+		<pre class="code php">
+public function emailUser($id = 1, $run = false)
+{
+    // always get and show user
+    $user = User::find($id);
+    tb($user);
+
+    // conditionally send email
+    if ($run)
+    {
+        // email the user...
+    }
+}
+</pre>
+		<p>Note that each time parameters are updated or the the method is run, the mode is reset to "Test".</p>
+		<?php
+	}
+
+	/**
 	 * Sketchpad catches framework exceptions, displays the output, and highlights the method until it's corrected and called again. If you're using Sketchpad Reload to watch the controller or related PHP files, the page will simply reload when the error is fixed.
 	 */
 	public function exceptions()
@@ -95,61 +136,9 @@ public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mi
 	}
 
 	/**
-	 * Sketchpad intercepts normal HTML page links, so you can link to other methods
-	 */
-	public function links()
-	{
-		?>
-		<p>Relative paths run other methods:</p>
-		<ul>
-			<li>This links to the <a href="forms">forms</a> method in the same controller</li>
-			<li>This links to one of the <a href="../../demo/tools/dumpapp">sample tools</a> in the tools controller</li>
-		</ul>
-
-		<p>Use the special <code>sketchpad:</code> protocol to link directly to methods:</p>
-		<ul>
-			<li>This links to the same <a href="sketchpad:help/demo/tools/dumpapp">sample tool</a> in the tools controller</li>
-		</ul>
-
-		<p>Absolute paths (outside of sketchpad) run as normal:</p>
-		<ul>
-			<li>This loads the <a href="/">main app</a></li>
-		</ul>
-
-		<p>External links run as normal:</p>
-		<ul>
-			<li>This links to <a href="http://google.com" target="_blank">Google</a> in a new window</li>
-			<li>This runs some <a href="javascript:alert('Sketchpad rocks!')">JavaScript</a></li>
-		</ul>
-
-		<?php
-	}
-
-	/**
-	 * Sketchpad makes using forms easy, by intercepting and `POST`ing action-less forms on your behalf
-	 */
-	public function forms(Request $request)
-	{
-		?>
-		
-		<p>Type something below and submit the form back to the same URL:</p>
-		<!-- any form with an empty or missing "action" attribute will be intercepted and submitted by sketchpad -->
-		<form class="form form-inline">
-			<input  class="form-control input-sm" type="text" name="text" placeholder="Type something here...">
-			<button class="btn btn-primary btn-sm" type="submit">Submit</button>
-		</form>
-		<?php
-
-		if($request->isMethod('post'))
-		{
-			echo '<hr />';
-			p('All you need to do is check for a POST submission in the same method, and take action appropriately:');
-			dump($request->all());
-		}
-	}
-
-	/**
 	 * The first line of DocBlock comments are shown in the method list and the page heading
+	 *
+	 * @group Organisation
 	 */
 	public function comments()
 	{
@@ -216,13 +205,14 @@ md(__DIR__ . '/some.md');
 
 <?php echo base_path($assets . 'styles.css'); ?>
 </pre>
-		<p>By default, these files (along with any other URLs you add) are set to load when Sketchpad runs:</p>
+		<p>These files are set to load with Sketchpad by default, along with any other URLs you add (for example <a href="https://momentjs.com/" target="_blank">Moment.js</a>):</p>
 		<pre>
-<?php echo $route ?>assets/user/scripts.js
-<?php echo $route ?>assets/user/styles.css
+https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.0/moment.js
+$assets/scripts.js
+$assets/styles.css
 </pre>
 
-		<p>Note the special "user assets" route (currently <code><?= $route; ?>user/</code>) which loads the file contents directly – whether or not they are in your app's <code>/public/</code> folder.</p>
+		<p>Note the special "user assets" route <code>$assets/</code> which loads the static file contents directly – they do not need to be in your app's <code>/public/</code> folder!</p>
 		<p>Feel free to <a href="../tags/css">edit these files</a> or update asset URLs on the <a href="<?= $route; ?>settings">settings</a> page.</p>
 <?php
 	}
