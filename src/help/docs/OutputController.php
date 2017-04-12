@@ -1,7 +1,9 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
+use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Routing\Controller;
 use Illuminate\Translation\Translator;
+use Illuminate\Http\Request;
 
 /**
  * Use the supplied functions to output and format data nicely
@@ -68,6 +70,62 @@ class OutputController extends Controller
 		p('Pass a 3rd argument of a string to render a custom <a href="http://fontawesome.io/icons/" target="_blank">Font Awesome</a> icon:');
 		alert('Passed with "info" and "info"', 'info', 'info');
 		alert('Passed with "warning" and "bolt"', 'warning', 'bolt');
+	}
+
+	/**
+	 * Sketchpad intercepts normal HTML page links, so you can link to other methods
+	 *
+	 * @group HTML
+	 */
+	public function links()
+	{
+		?>
+		<p>Relative paths run other methods:</p>
+		<ul>
+			<li>This links to the <a href="forms">forms</a> method in the same controller</li>
+			<li>This links to one of the <a href="../../demo/tools/dumpapp">sample tools</a> in the tools controller</li>
+		</ul>
+
+		<p>Use the special <code>sketchpad:</code> protocol to link directly to methods:</p>
+		<ul>
+			<li>This links to the same <a href="sketchpad:help/demo/tools/dumpapp">sample tool</a> in the tools controller</li>
+		</ul>
+
+		<p>Absolute paths (outside of sketchpad) run as normal:</p>
+		<ul>
+			<li>This loads the <a href="/">main app</a></li>
+		</ul>
+
+		<p>External links run as normal:</p>
+		<ul>
+			<li>This links to <a href="http://google.com" target="_blank">Google</a> in a new window</li>
+			<li>This runs some <a href="javascript:alert('Sketchpad rocks!')">JavaScript</a></li>
+		</ul>
+
+		<?php
+	}
+
+	/**
+	 * Sketchpad makes using forms easy, by intercepting and `POST`ing action-less forms on your behalf
+	 */
+	public function forms(Request $request)
+	{
+		?>
+
+		<p>Type something below and submit the form back to the same URL:</p>
+		<!-- any form with an empty or missing "action" attribute will be intercepted and submitted by sketchpad -->
+		<form class="form form-inline">
+			<input  class="form-control input-sm" type="text" name="text" placeholder="Type something here...">
+			<button class="btn btn-primary btn-sm" type="submit">Submit</button>
+		</form>
+		<?php
+
+		if($request->isMethod('post'))
+		{
+			echo '<hr />';
+			p('All you need to do is check for a POST submission in the same method, and take action appropriately:');
+			dump($request->all());
+		}
 	}
 
 	/**
@@ -181,9 +239,17 @@ class OutputController extends Controller
 	}
 
 	/**
-	 * Use `md()` to load markdown `.md` documents from your views folder, which will be rendered client-side
+	 * Use the `sketchpad::` view shortcut to load sketchpad-specific blade views
 	 *
-	 * @group File types
+	 * @group File
+	 */
+	public function blade(SketchpadConfig $config)
+	{
+		return view('sketchpad::help/blade', ['views' => $config->views]);
+	}
+
+	/**
+	 * Use `md()` to load markdown `.md` documents from your views folder, which will be rendered client-side
 	 */
 	public function markdown()
 	{
