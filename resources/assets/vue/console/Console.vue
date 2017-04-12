@@ -131,7 +131,7 @@ export default
 					document.title = 'Sketchpad - ' + state.route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
 					if (app.settings.ui.scrollTop)
 					{
-						$('html,body').animate({scrollTop:0}, 350, 'swing');
+						$('html,body').animate({scrollTop:0}, 350, 'easeInOutCubic');
 					}
 				}
 				this.params = method
