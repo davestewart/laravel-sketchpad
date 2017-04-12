@@ -15,6 +15,7 @@ import _            from 'underscore'
 import {clone}      from '../../js/functions/utils.js';
 
 // objects
+import settings		from '../../js/state/settings.js';
 import state		from '../../js/state/state.js';
 import server		from '../../js/services/server.js';
 import watcher	    from '../../js/services/watcher';
@@ -121,17 +122,21 @@ export default
 				// set changed properties
 				if (controller !== this.controller)
 				{
+					this.$refs.output.clear()
 					this.controller = controller
 				}
 				if (method !== this.method)
 				{
+					document.title = 'Sketchpad - ' + state.route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
 					this.transitioning = true
 					this.method = method
-					this.$refs.output.clear()
-					document.title = 'Sketchpad - ' + state.route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
+					if ((method && method.tags.append) || settings.ui.appendOutput)
+					{
+						this.$refs.output.clear()
+					}
 					if (app.settings.ui.scrollTop)
 					{
-						$('html,body').animate({scrollTop:0}, 350, 'easeInOutCubic');
+						$('html,body').animate({scrollTop:0}, 450, 'easeInOutQuad');
 					}
 				}
 				this.params = method
