@@ -136,6 +136,7 @@ const Store = Vue.extend({
 					return true;
 				}
 
+				// existing controller
 				const controller = this.getControllerByPath(path);
 				if (controller)
 				{
@@ -153,7 +154,9 @@ const Store = Vue.extend({
 					return true;
 				}
 
-				return false;
+				// fallback for new controllers, not yet added
+				this.onControllerChange(path, 'add')
+				return true;
 			},
 
 
