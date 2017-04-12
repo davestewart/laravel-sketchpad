@@ -47,10 +47,12 @@ export default
 	{
 		runLabel ()
 		{
-			let label = 'Run'
-			if (this.method && this.runIf && !this.runState)
+			let label = 'Run';
+			if(this.runIf)
 			{
-				label = 'Test'
+				label = this.runState
+					? String(this.runIf).replace(/\w/, char => char.toUpperCase())
+					: 'Test';
 			}
 			return label
 		},

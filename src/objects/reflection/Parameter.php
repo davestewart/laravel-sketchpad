@@ -50,8 +50,8 @@ class Parameter extends Tag implements JsonSerializable
 		/**
 		 * Parses a ReflectionParameter into a more usable object
 		 *
-		 * @param   ReflectionParameter $param
-		 * @param   Tag                 $tag
+		 * @param   ReflectionParameter $param      PHP reflection parameter object
+		 * @param   Tag                 $tag        An optional PHP DocComment @param declaration of user-defined type and text
 		 */
 		public function __construct($param, $tag = null)
 		{
