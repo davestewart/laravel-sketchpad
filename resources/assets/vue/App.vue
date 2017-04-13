@@ -86,6 +86,9 @@
 				watcher.init()
 			}
 
+			// error frame
+			window.addEventListener('message', this.onPostMessage)
+
 			// done!
 			console.log('App ready')
 
@@ -154,6 +157,18 @@
 						}
 					})
 				$head.append(html)
+			},
+
+			onPostMessage (event)
+			{
+				if (event.data && event.data.setFrameHeight)
+				{
+					const frame = document.getElementById('error-frame');
+					if(frame)
+					{
+						frame.height = event.data.setFrameHeight;
+					}
+				}
 			}
 
 		}
