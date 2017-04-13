@@ -3,7 +3,6 @@
 use App\data\entities\User;
 use davestewart\sketchpad\config\SketchpadSettings;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
 use Illuminate\View\View;
 
@@ -12,7 +11,7 @@ use Illuminate\View\View;
  *
  * @package App\Http\Controllers
  */
-class ToolsController extends Controller
+class ToolsController
 {
 
 	/**

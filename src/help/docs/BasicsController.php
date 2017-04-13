@@ -2,26 +2,21 @@
 
 use DateTime;
 use davestewart\sketchpad\config\SketchpadConfig;
-use Illuminate\Routing\Controller;
 use Illuminate\View\FileViewFinder;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 
 /**
- * Get to know Sketchpad's basic functions
+ * Get to know Sketchpad's core functionality
  *
  * @package App\Http\Controllers
  */
-class BasicsController extends Controller
+class BasicsController
 {
 
 	public function index()
 	{
-		?>
-		<p class="alert alert-info">Note that for <strong>all</strong> demo methods, you can simply look at the source code!</p>
-		<p>All demos are just <strong>regular Laravel controller methods</strong>, that return or echo output.</p>
-		<p>You can view all demo code in <code>vendor/davestewart/sketchpad/src/help</code>.</p>
-		<?php
+		md(__DIR__ . '/basics.md');
 	}
 
 	/**

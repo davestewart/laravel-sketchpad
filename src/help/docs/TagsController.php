@@ -1,15 +1,11 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
-use Illuminate\Routing\Controller;
-use Illuminate\View\FileViewFinder;
-use Illuminate\View\View;
-
 /**
  * Use custom tags in your controller and method DocBlocks to change Sketchpad's behaviour
  *
  * @package App\Http\Controllers
  */
-class TagsController extends Controller
+class TagsController
 {
 
 	/**

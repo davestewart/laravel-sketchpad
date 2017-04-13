@@ -1,4 +1,4 @@
-The following are loaded by default:
+The following helpers are loaded by default:
 
 - `p()` - echo paragraphs
 - `alert()` - echo Bootstrap alert elements
