@@ -38,16 +38,16 @@ class BasicsController
 	 *
 	 * @param string $name
 	 */
-	public function parameters($name = 'world')
+	public function parameters($name = 'World')
 	{
 ?>
 <p>The result of this call is:</p>
-<pre>Hello <?php echo $name ?></pre>
+<pre>Hello, <?php echo $name ?>!</pre>
 <p>Optional parameters are exposed as editable front-end inputs:</p>
 <pre class="code php">
-public function parameters($name = 'world')
+public function parameters($name = 'World')
 {
-    echo "Hello $name";
+    echo "Hello, $name!";
 }
 </pre>
 <p>Update the parameter to automatically call the method again</p>
