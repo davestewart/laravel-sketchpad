@@ -236,13 +236,13 @@
 // output
 // ---------------------------------------------------------------------------------------------------------------------
 
-	#output{
+	#console iframe {
+		width:100%;
+		min-height:100vh;
+		outline:1px solid #DDD;
+	}
 
-		iframe.error {
-			width:100%;
-			min-height:2000px;
-			outline:1px solid #DDD;
-		}
+	#output{
 
 		transition: opacity 0.2s;
 
