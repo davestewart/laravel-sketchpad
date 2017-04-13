@@ -1,12 +1,12 @@
 <template>
-	<div id="params" :show="method && method.name !== 'index'">
+	<div id="params" :class="{enabled:enabled}">
 		<div class="sticky">
 
-			<nav v-show="method && method.name !== 'index'" class="navbar navbar-default">
+			<nav class="navbar navbar-default">
 				<span class="loader"></span>
 				<ul class="nav navbar-nav">
 					<li>
-						<div class="btn-group" >
+						<div class="btn-group">
 							<button
 								id="runState"
 								v-if="runIf"
@@ -14,9 +14,10 @@
 								@click="toggleRunState"
 								class="btn btn-default btn-xs"><i class="fa fa-bolt" aria-hidden="true"></i></button>
 							<button
+								:disabled="!enabled"
 								id="run"
 								@click="run()"
-								class="btn btn-default btn-xs">{{ runLabel }}</button>
+								class="btn btn-default btn-xs">{{{ runLabel }}}</button>
 						</div>
 					</li>
 					<param v-for="param in params" @run="run" :param="param"></param>
@@ -45,6 +46,11 @@ export default
 
 	computed:
 	{
+		enabled ()
+		{
+			return this.method && this.method.name !== 'index';
+		},
+
 		runLabel ()
 		{
 			let label = 'Run';

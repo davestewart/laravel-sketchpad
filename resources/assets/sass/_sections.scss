@@ -157,8 +157,20 @@
 			}
 		}
 
-		button#run:not(:first-child) {
-			min-width:3.5em;
+		button#run {
+			transition: opacity 0.5s, color 0.5s;
+			&.disabled,
+			&[disabled] {
+				opacity: 0.2;
+				&:hover {
+					background: $gray-dark;
+				}
+			}
+			&:not(:first-child) {
+				transition: all 0s;
+				min-width:3.5em;
+			}
+
 		}
 
 		// inputs

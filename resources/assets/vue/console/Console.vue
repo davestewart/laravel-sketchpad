@@ -134,7 +134,7 @@ export default
 					{
 						this.$refs.output.clear()
 					}
-					if (app.settings.ui.scrollTop)
+					if (settings.ui.scrollTop)
 					{
 						$('html,body').animate({scrollTop:0}, 450, 'easeInOutQuad');
 					}

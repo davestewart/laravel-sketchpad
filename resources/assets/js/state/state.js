@@ -65,7 +65,7 @@ const State = Vue.extend({
 					// if no method, fall back to index
 					if(!method && controller)
 					{
-						method = controller.methods.find(function(m){ return m.name == 'index'; });
+						method = controller.methods.find(function(m){ return m.name === 'index'; });
 					}
 
 					// state
