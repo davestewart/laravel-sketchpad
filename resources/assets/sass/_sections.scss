@@ -239,7 +239,8 @@
 	#console iframe {
 		width:100%;
 		min-height:100vh;
-		outline:1px solid #DDD;
+		border:1px solid #DDD;
+		border-radius: 3px;
 	}
 
 	#output{
@@ -330,6 +331,24 @@
 				    width: 100%;
 				    margin: 0;
 				    padding: 5px 0;
+
+				    &[data-disabled] {
+					    .field {
+						    background: $input-bg-disabled;
+					    }
+					    input {
+						    opacity: 0.3;
+						    // color: $brand-danger;
+						    // text-decoration: line-through;
+					    }
+					    i.fa {
+					        opacity: 0.2;
+					    }
+					    i.fa-eye-slash {
+					        opacity: 1;
+						    color: black;
+					    }
+				    }
 			    }
 
 			    input[name="name"] {
