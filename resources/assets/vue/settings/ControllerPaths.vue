@@ -4,8 +4,8 @@
 		<ul class="sortable deletable">
 			<li v-for="item in items" :data-index="$index" :data-disabled="!item.enabled">
 				<span class="field">
-					 <input class="form-control" autocomplete="off" type="input" name="name" v-model="item.name" :disabled="!item.enabled" @input="onNameChange">
-					:<input class="form-control" autocomplete="off" type="input" name="path" v-model="item.path" :disabled="!item.enabled" v-validate-path>
+					 <input class="form-control" spellcheck="false" autocomplete="off" type="input" name="name" v-model="item.name" :disabled="!item.enabled" @input="onNameChange">
+					:<input class="form-control" spellcheck="false" autocomplete="off" type="input" name="path" v-model="item.path" :disabled="!item.enabled" v-validate-path>
 					<span class="icons">
 						<i class="validate-path" aria-hidden="true"></i>
 						<i class="handle fa fa-arrows-v" aria-hidden="true" title="Reorder"></i>

@@ -53,7 +53,7 @@
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Head content</label>
 						<div class="col-sm-9">
-							<textarea class="form-control" v-model="settings.head" autocomplete="off"></textarea>
+							<textarea class="form-control" v-model="settings.head" spellcheck="false" autocomplete="off"></textarea>
 							<p class="help-block prompt">URLs to additional JS and CSS (use the placeholder <code>$assets/*</code> to load from the user assets folder)</p>
 						</div>
 					</div>
@@ -87,7 +87,7 @@
 					<div v-show="settings.livereload.preset==='custom'" class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Hostname</label>
 						<div class="col-sm-9">
-							<input class="form-control" v-model="settings.livereload.host">
+							<input class="form-control" spellcheck="false" v-model="settings.livereload.host">
 							<p class="help-block prompt">The hostname for the live reload script</p>
 						</div>
 					</div>
@@ -95,7 +95,7 @@
 					<div v-show="settings.livereload.preset" class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Additional paths</label>
 						<div class="col-sm-9">
-							<textarea class="form-control" v-model="settings.livereload.paths" autocomplete="off"></textarea>
+							<textarea class="form-control" v-model="settings.livereload.paths" spellcheck="false" autocomplete="off"></textarea>
 							<p class="help-block prompt">Any additional root-relative paths you want to watch for file changes</p>
 						</div>
 					</div>
