@@ -179,13 +179,14 @@ export default
 			{
 				if (this.method && !this.controller.error)
 				{
+					this.loading = true
 					if (this.iframe)
 					{
 						this.$refs.xframe.load(this.method);
+						this.onComplete();
 					}
 					else
 					{
-						this.loading = true
 						server.run(this.method, this.onLoad, this.onFail, this.onComplete);
 					}
 				}
