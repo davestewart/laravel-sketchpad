@@ -157,8 +157,20 @@
 			}
 		}
 
-		button#run:not(:first-child) {
-			min-width:3.5em;
+		button#run {
+			transition: opacity 0.5s, color 0.5s;
+			&.disabled,
+			&[disabled] {
+				opacity: 0.2;
+				&:hover {
+					background: $gray-dark;
+				}
+			}
+			&:not(:first-child) {
+				transition: all 0s;
+				min-width:3.5em;
+			}
+
 		}
 
 		// inputs
@@ -224,13 +236,14 @@
 // output
 // ---------------------------------------------------------------------------------------------------------------------
 
-	#output{
+	#console iframe {
+		width:100%;
+		min-height:100vh;
+		border:1px solid #DDD;
+		border-radius: 3px;
+	}
 
-		iframe.error {
-			width:100%;
-			min-height:2000px;
-			outline:1px solid #DDD;
-		}
+	#output{
 
 		transition: opacity 0.2s;
 
@@ -318,6 +331,29 @@
 				    width: 100%;
 				    margin: 0;
 				    padding: 5px 0;
+
+				    &[data-disabled] {
+					    .field {
+						    background: $input-bg-disabled;
+					    }
+					    input {
+						    opacity: 0.3;
+						    font-weight: normal;
+						    // color: $brand-danger;
+						    // text-decoration: line-through;
+					    }
+					    i.fa {
+					        opacity: 0.2;
+					    }
+					    i.fa-eye-slash {
+					        opacity: 1;
+						    //color: black;
+					    }
+					    i.handle,
+					    i.delete {
+						    display: none;
+					    }
+				    }
 			    }
 
 			    input[name="name"] {

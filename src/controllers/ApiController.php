@@ -53,7 +53,9 @@ class ApiController extends Controller
 		 */
 		public function run(Request $request, $path = '')
 		{
-            return $this->sketchpad->run($path, $request->get('data', []));
+			$data   = $request->get('data', []);
+			$params = json_decode($data, JSON_OBJECT_AS_ARRAY);
+            return $this->sketchpad->run($path, $params);
 		}
 
 		/**

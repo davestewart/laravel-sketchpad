@@ -4,7 +4,7 @@
 
 <script>
 
-import settings		    from '../../js/state/settings.js';
+import settings		from '../../js/state/settings.js';
 
 export default
 {
@@ -78,12 +78,6 @@ export default
 					});
 			}
 
-			// handle iframes
-			if(method && method.tags.iframe)
-			{
-				return this.loadIframe($html.get(0).outerHTML, contentType);
-			}
-
 			// add content
 			(method && method.tags.append) || settings.ui.appendOutput
 				? this.$output.prepend($html)
@@ -92,16 +86,15 @@ export default
 
 		setError (html, type)
 		{
+			// variables
 			const styles    = '<style>#sf-resetcontent { width:auto; word-break: break-all; }</style>';
-			this.format 	= 'error';
-			this.loadIframe (html + styles, type);
-		},
+			const script    = '<script>function post() { parent.postMessage({setFrameHeight:document.body.clientHeight + 80}, "*"); } if(parent.postMessage) { post(); window.onresize = post; };</scr' + 'ipt>';
 
-		loadIframe (html, type)
-		{
-			const src		= 'data:' +type+ ',' + encodeURIComponent(html);
-			const $iframe   = $('<iframe class="error" frameborder="0">').attr('src', src);
+			// set content
+			const src		= 'data:' +type+ ',' + encodeURIComponent(html + styles + script);
+			const $iframe   = $('<iframe id="error-frame" frameborder="0">').attr('src', src);
 			this.clear().append($iframe);
+			this.format 	= 'error';
 		},
 
 		clear ()

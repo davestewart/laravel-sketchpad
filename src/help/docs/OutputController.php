@@ -1,16 +1,15 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
 use davestewart\sketchpad\config\SketchpadConfig;
-use Illuminate\Routing\Controller;
 use Illuminate\Translation\Translator;
 use Illuminate\Http\Request;
 
 /**
- * Use the supplied functions to output and format data nicely
+ * Use various techniques and helpers to print and format text, html and data
  *
  * @package App\Http\Controllers
  */
-class OutputController extends Controller
+class OutputController
 {
 
 	public function index()
@@ -176,6 +175,7 @@ class OutputController extends Controller
 		p('This is the validation config array, formatted as a list:');
 		$data   = \App::make(Translator::class)->get('validation');
 		ls($data, $options);
+		p('Use the same options as the <a href="table">table</a> function.');
 	}
 
 	/**
@@ -212,7 +212,7 @@ class OutputController extends Controller
 
 		?>
 		<p>This function takes an optional formatting string, with a syntax similar to Laravel validation:</p>
-		<pre>tb($data, '<?php echo $options; ?>');</pre>
+		<pre class="code php">tb($data, '<?php echo $options; ?>');</pre>
 		<p>The following table outlines the available options:</p>
 
 		<?php

@@ -3,7 +3,8 @@
 	<div id="console" :class="{loading: loading, transitioning: transitioning, pending: pending, error: error}">
 		<info v-ref:info :controller="controller" :method="method"></info>
 		<params v-ref:params :method="method" :params="params" :run-if="runIf" :run-state="runState"></params>
-		<output v-ref:output :method="method"></output>
+		<output v-ref:output v-show="!iframe" :method="method"></output>
+		<x-frame v-ref:xframe v-show="iframe"></x-frame>
 	</div>
 
 </template>
@@ -24,6 +25,7 @@ import watcher	    from '../../js/services/watcher';
 import Info	        from './Info.vue';
 import Params		from './Params.vue';
 import Output		from './Output.vue';
+import XFrame       from './XFrame.vue';
 
 export default
 {
@@ -34,6 +36,7 @@ export default
 		Info,
 		Params,
 		Output,
+		XFrame,
 	},
 
 	data ()
@@ -66,6 +69,11 @@ export default
 			return this.method && this.method.error
 		},
 
+		iframe ()
+		{
+			return this.method && this.method.tags.iframe;
+		},
+
 		runIf ()
 		{
 			return this.method && this.method.runIf
@@ -78,6 +86,7 @@ export default
 				: true
 		}
 	},
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // lifecycle
@@ -122,7 +131,7 @@ export default
 				// set changed properties
 				if (controller !== this.controller)
 				{
-					this.$refs.output.clear()
+					this.clear()
 					this.controller = controller
 				}
 				if (method !== this.method)
@@ -132,9 +141,9 @@ export default
 					this.method = method
 					if ((method && method.tags.append) || settings.ui.appendOutput)
 					{
-						this.$refs.output.clear()
+						this.clear()
 					}
-					if (app.settings.ui.scrollTop)
+					if (settings.ui.scrollTop)
 					{
 						$('html,body').animate({scrollTop:0}, 450, 'easeInOutQuad');
 					}
@@ -171,7 +180,15 @@ export default
 				if (this.method && !this.controller.error)
 				{
 					this.loading = true
-					server.run(this.method, this.onLoad, this.onFail, this.onComplete);
+					if (this.iframe)
+					{
+						this.$refs.xframe.load(this.method);
+						this.onComplete();
+					}
+					else
+					{
+						server.run(this.method, this.onLoad, this.onFail, this.onComplete);
+					}
 				}
 			},
 
@@ -190,6 +207,12 @@ export default
 				{
 					this.load()
 				}
+			},
+
+			clear ()
+			{
+				this.$refs.xframe.clear();
+				this.$refs.output.clear();
 			},
 
 

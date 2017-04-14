@@ -31,12 +31,7 @@ Server.prototype =
 		run(method, done, fail, always)
 		{
 			const url	= this.getRunUrl(method);
-			let data	= method.params.map(param => _.pick(param, 'name', 'type', 'value'));
-			if (method.runIf && method.runState)
-			{
-				data.push({name: method.runIf, type:'boolean', value:true})
-				method.runState = false;
-			}
+			const data  = this.getData(method);
 			return this.queue.add(new Request(url, data, done, fail, always));
 		},
 
@@ -98,6 +93,17 @@ Server.prototype =
 		getUrl(path)
 		{
 			return this.base + path;
+		},
+
+		getData (method)
+		{
+			let data	= method.params.map(param => _.pick(param, 'name', 'type', 'value'));
+			if (method.runIf && method.runState)
+			{
+				data.push({name: method.runIf, type:'boolean', value:true})
+				method.runState = false;
+			}
+			return JSON.stringify(data);
 		}
 };
 
