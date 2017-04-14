@@ -163,11 +163,7 @@
 			{
 				if (event.data && event.data.setFrameHeight)
 				{
-					const frame = document.getElementById('error-frame');
-					if(frame)
-					{
-						frame.height = event.data.setFrameHeight;
-					}
+					$('#console iframe').css('height', event.data.setFrameHeight + 'px');
 				}
 			}
 
