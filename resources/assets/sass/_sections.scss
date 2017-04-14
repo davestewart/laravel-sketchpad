@@ -338,6 +338,7 @@
 					    }
 					    input {
 						    opacity: 0.3;
+						    font-weight: normal;
 						    // color: $brand-danger;
 						    // text-decoration: line-through;
 					    }
@@ -346,7 +347,11 @@
 					    }
 					    i.fa-eye-slash {
 					        opacity: 1;
-						    color: black;
+						    //color: black;
+					    }
+					    i.handle,
+					    i.delete {
+						    display: none;
 					    }
 				    }
 			    }
