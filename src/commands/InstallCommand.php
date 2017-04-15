@@ -36,9 +36,9 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        $installer = new Installer();
+        $installer = new Installer($this);
         $this->info('Running Sketchpad installer...');
-        $installer->install($this);
+        $installer->install();
         $this->info('Sketchpad installer complete!');
     }
 

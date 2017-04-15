@@ -42,9 +42,13 @@ assets       : {{ options.assets }}
 			</article>
 
 			<article id="install">
-
                 <h2 class="text-info">Installing</h2>
-                <p>One moment please...</p>
+                <p>Running tasks...</p>
+			</article>
+
+			<article id="test">
+                <h2 class="text-info">Installing</h2>
+                <p>Testing install...</p>
 			</article>
 
 			<article id="error">
@@ -79,7 +83,6 @@ assets       : {{ options.assets }}
                 <p>To run the installation manually, run the following code in the terminal:</p>
                 <pre>cd "{{ settings.basepath }}"
 php artisan sketchpad:install
-composer dump-autoload
 </pre>
 
 			</article>
@@ -202,13 +205,13 @@ export default
 		    transitions:
 		    [
 		        // user
-		        'next     : config > summary > install                   < error',
-		        'next     :                              complete > exit',
-		        'back     : config < summary                             < error',
+		        'next     : config > summary > install > test                   < error',
+		        'next     :                                     complete > exit',
+		        'back     : config < summary                                    < error',
 
 		        // internal
-		        'complete :                    install > complete',
-		        'error    :                    install >                   error'
+		        'complete :                              test > complete',
+		        'error    :                              test >                   error'
 		    ],
 
 		    handlers:
@@ -223,23 +226,32 @@ export default
                 	// debug
                     console.info(this.options);
 
+                    // run installer
                     jQuery
                         .post(this.settings.route + 'setup/install', this.options)
-                        .then(data => {
-                            this.results = data;
-                            if(data.success)
-                            {
-                                fsm.do('complete');
-                            }
-                            else
-                            {
-                                fsm.go('error');
-                            }
-                        });
+                        .then(data => fsm.go('test'));
+                },
 
+			    test ()
+			    {
                     // update route once one install attempt has been made
 	                this.settings.route = this.options.route;
-                },
+
+	                // test install
+				    jQuery
+					    .get(this.settings.route + 'setup/test')
+					    .then(data => {
+						    this.results = data;
+						    if(data.success)
+						    {
+							    fsm.do('complete');
+						    }
+						    else
+						    {
+							    fsm.go('error');
+						    }
+					    });
+			    },
 
                 exit(event, fsm)
                 {
