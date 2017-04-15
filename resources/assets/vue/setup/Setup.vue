@@ -63,8 +63,10 @@ assets       : {{ options.assets }}
                     <tbody>
                         <tr v-for="log in results.data" :class="['log', log.state ? 'pass' : 'fail']">
                             <td class="state">
-                                <i v-if="log.state" class="fa fa-check"></i>
-                                <i v-else class="fa fa-times"></i>
+                                <svg v-if="log.state"
+                                     width="16" height="16" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg>
+                                <svg v-else
+                                     width="16" height="16" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg>
                             </td>
                             <td class="operation">
                                 <p>{{ log.title }}</p>

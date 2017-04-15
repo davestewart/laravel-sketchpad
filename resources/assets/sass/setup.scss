@@ -139,6 +139,12 @@
 
     .inline label.radio {
         padding-top: 0;
+
+	    * {
+		    margin-right: 3px;
+		    display: inline-block;
+		    position: relative;
+	    }
     }
 
     .inline div.radio {
@@ -231,12 +237,12 @@
             font-size: 0.8em;
         }
 
-        .log.pass i {
-            color: #0C0;
+        .log.pass svg {
+            fill: #0C0;
         }
 
-        .log.fail i {
-            color: #C00;
+        .log.fail svg {
+            fill: #C00;
         }
 
         code {

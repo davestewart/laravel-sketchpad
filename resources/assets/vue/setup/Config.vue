@@ -23,7 +23,7 @@
 							<div v-for="(key, option) in getOptions()" class="radio">
 								<label class="radio">
 									<input type="radio" name="type" v-model="type" :value="key"/>
-									{{ option.type | capitalize }}
+									<span>{{ option.type | capitalize }}</span>
 								</label>
 							</div>
                             <p class="help-block">{{ options.desc }}</p>
