@@ -7,6 +7,7 @@ use davestewart\sketchpad\objects\install\JSON;
 use davestewart\sketchpad\objects\install\Composer;
 use davestewart\sketchpad\config\Paths;
 use davestewart\sketchpad\config\InstallerSettings;
+use Illuminate\Console\Command;
 
 /**
  * Installs Sketchpad according to the settings saved by the GUI form
@@ -19,6 +20,7 @@ class Installer
 
     // variables
 
+		/** @var JSON */
         protected $settings;
         protected $paths;
 
@@ -53,16 +55,22 @@ class Installer
         /** @var Copier */
 		public $assets;
 
+	// command
+
+		/** @var Command */
+		protected $command;
+
 
 
 	// -----------------------------------------------------------------------------------------------------------------
     // INSTANTIATION
 
-        public function __construct()
+        public function __construct($command = null)
         {
             $this->state        = true;
             $this->prefs        = new InstallerSettings();
             $this->paths        = new Paths();
+            $this->command      = $command;
             $this->initialize();
         }
 
@@ -93,35 +101,41 @@ class Installer
 
         public function install()
         {
-        	$route = $this->prefs->route;
-            $this->settings
-                ->set('route', $route)
-                ->set('paths.controllers.0.path', $this->prefs->controllers)
-                ->set('paths.views', $this->prefs->views)
-                ->set('paths.assets', $this->prefs->assets)
-                ->create();
-
             if($this->composer)
             {
+            	// update composer
+        	    $this->info(' > Updating composer.json');
                 $this->composer
                     ->set("autoload.psr-4.{$this->prefs->namespace}", $this->prefs->basedir)
                     ->create();
+
+	            // generate autoload files
+        	    $this->info(' > Running composer --dumpautoload');
+	            $output = $this->composer->generateAutoload();
+	            if ($this->command)
+	            {
+	            	$this->command->info($output);
+	            }
             }
 
+            $this->info(' > Creating controllers folder');
             $this->controllers
                 ->create();
 
+	        $this->info(' > Creating example controller');
             $this->controller
                 ->setNamespace()
-                ->set($this->prefs)
                 ->create();
 
+            $this->info(' > Creating views folder');
             $this->views
                 ->create();
 
+            $this->info(' > Creating example view');
             $this->view
                 ->create();
 
+            $this->info(' > Copying user assets');
             $this->assets
                 ->create();
         }
@@ -131,16 +145,26 @@ class Installer
          */
 		public function test()
 		{
-		    $this->logs = [];
-
 		    function writable ($folder)
 		    {
 			    return "Ensure <code>$folder</code> exists and is writable";
 		    }
 
-		    $this->settings->exists()
-                ? $this->pass('Settings created')
-                : $this->fail('The sketchpad settings file could not be found', writable(storage_path()));
+		    function copy ($src, $trg)
+		    {
+		    	$src = rel($src);
+		    	$trg = rel($trg);
+			    return "Copy <code>{$src}</code> to <code>{$trg}</code>";
+		    }
+
+		    function rel ($path)
+		    {
+		    	$base = base_path() . '/';
+		    	return str_replace($base, '', $path);
+
+		    }
+
+		    $this->logs = [];
 
             if($this->composer)
             {
@@ -149,26 +173,24 @@ class Installer
                 $value  = $this->prefs->basedir;
                 $this->composer->has('autoload.psr-4.' . $key)
                     ? $this->pass('Composer autoload config updated')
-                    : $this->fail('The PSR-4 autoload entry was not added to your composer.json', "Make file writeable, or manually add a new entry in <code>autoload.psr-4</code>: <code>\"$key\" : \"$value\"</code>");
+                    : $this->fail('The PSR-4 autoload entry was not added to your composer.json', "Make <code>composer.json</code> writeable, or manually add a new entry in <code>autoload.psr-4</code>: <code>\"$key\" : \"$value\"</code>");
 
-                // generate autoload files
-	            $output = $this->composer->generateAutoload();
 	            $this->composer->hasPSR4Class($key)
-		            ? $this->pass('Composer autoload files updated')
-		            : $this->fail('Unable to update Composer autoload', "<pre>$output</pre><br>Try running <code>composer dumpautoload</code> from the project root");
+		            ? $this->pass('Composer autoload updated')
+		            : $this->fail('Composer autoload was not updated', "Try running the command <code>composer dumpautoload</code> from the project root");
             }
 
             $this->controllers->exists()
                 ? $this->pass('Controller folder created')
-                : $this->fail('The sketchpad controllers folder was not found', "Create it at <code>{$this->controllers->src}</code>");
+                : $this->fail('The sketchpad controllers folder was not found', "Create the folder <code>" .rel($this->controllers->src). "</code>");
 
             $this->controller->exists()
                 ? $this->pass('Example controller created')
-                : $this->fail('The sketchpad example controller could not be found', "Create a new controller in <code>{$this->controller->trg}</code>");
+                : $this->fail('The sketchpad example controller could not be found', "Create the controller <code>" .rel($this->controller->trg)."</code>");
 
             $this->controller->loads()
                 ? $this->pass('Example controller loaded')
-                : $this->fail('Unable to load example controller', "Check the namespace declaration in <code>{$this->controller->trg}</code>");
+                : $this->fail('Unable to load example controller', "Check the namespace declaration in <code>" .rel($this->controller->trg). "</code>");
 
             $this->views->exists()
                 ? $this->pass('Views folder created')
@@ -176,11 +198,27 @@ class Installer
 
             $this->view->exists()
                 ? $this->pass('Example view copied')
-                : $this->fail('The sketchpad example view was not found', "Create it at <code>{$this->view->trg}</code>");
+                : $this->fail('The sketchpad example view was not found', copy($this->view->src, $this->view->trg));
 
             $this->assets->exists()
                 ? $this->pass('Assets copied')
-                : $this->fail('The sketchpad assets folder was not copied', "Copy it from <code>{$this->assets->src}</code>");
+                : $this->fail('The sketchpad assets folder was not copied', copy($this->assets->src, $this->assets->trg));
+
+            // only save settings if everything went ok
+            if ($this->state)
+            {
+	            $this->info(' > Saving settings.json');
+	            $this->settings
+		            ->set('route', $this->prefs->route)
+		            ->set('paths.controllers.0.path', $this->prefs->controllers)
+		            ->set('paths.views', $this->prefs->views)
+		            ->set('paths.assets', $this->prefs->assets)
+		            ->create();
+
+	            $this->settings->exists()
+		            ? $this->pass('Settings created')
+		            : $this->fail('The sketchpad settings file could not be found', writable(rel(storage_path('sketchpad/'))));
+            }
 
             $this->saveLogs();
 
@@ -201,6 +239,19 @@ class Installer
 		protected function log($state, $title, $text = '')
         {
             $this->logs[] = new Log($state, $title, $text);
+            if ($text)
+            {
+                $text .= "\n";
+            }
+            $this->info("$title\n$text");
+        }
+
+        protected function info($text)
+        {
+            if ($this->command)
+            {
+            	$this->command->info($text);
+            }
         }
 
         protected function saveLogs()

@@ -44,4 +44,9 @@ class Copier extends FilesystemObject
         return file_exists($this->trg);
     }
 
+	public function remove()
+	{
+		$this->fs->remove($this->trg);
+    }
+
 }

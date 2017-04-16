@@ -42,9 +42,13 @@ assets       : {{ options.assets }}
 			</article>
 
 			<article id="install">
-
                 <h2 class="text-info">Installing</h2>
-                <p>One moment please...</p>
+                <p>Running tasks...</p>
+			</article>
+
+			<article id="test">
+                <h2 class="text-info">Installing</h2>
+                <p>Testing install...</p>
 			</article>
 
 			<article id="error">
@@ -59,8 +63,10 @@ assets       : {{ options.assets }}
                     <tbody>
                         <tr v-for="log in results.data" :class="['log', log.state ? 'pass' : 'fail']">
                             <td class="state">
-                                <i v-if="log.state" class="fa fa-check"></i>
-                                <i v-else class="fa fa-times"></i>
+                                <svg v-if="log.state"
+                                     width="16" height="16" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"/></svg>
+                                <svg v-else
+                                     width="16" height="16" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg>
                             </td>
                             <td class="operation">
                                 <p>{{ log.title }}</p>
@@ -79,7 +85,6 @@ assets       : {{ options.assets }}
                 <p>To run the installation manually, run the following code in the terminal:</p>
                 <pre>cd "{{ settings.basepath }}"
 php artisan sketchpad:install
-composer dump-autoload
 </pre>
 
 			</article>
@@ -202,13 +207,13 @@ export default
 		    transitions:
 		    [
 		        // user
-		        'next     : config > summary > install                   < error',
-		        'next     :                              complete > exit',
-		        'back     : config < summary                             < error',
+		        'next     : config > summary > install > test                   < error',
+		        'next     :                                     complete > exit',
+		        'back     : config < summary                                    < error',
 
 		        // internal
-		        'complete :                    install > complete',
-		        'error    :                    install >                   error'
+		        'complete :                              test > complete',
+		        'error    :                              test >                   error'
 		    ],
 
 		    handlers:
@@ -223,23 +228,29 @@ export default
                 	// debug
                     console.info(this.options);
 
+                    // run installer
                     jQuery
                         .post(this.settings.route + 'setup/install', this.options)
-                        .then(data => {
-                            this.results = data;
-                            if(data.success)
-                            {
-                                fsm.do('complete');
-                            }
-                            else
-                            {
-                                fsm.go('error');
-                            }
-                        });
-
-                    // update route once one install attempt has been made
-	                this.settings.route = this.options.route;
+                        .then(data => fsm.go('test'));
                 },
+
+			    test ()
+			    {
+				    jQuery
+					    .get(this.settings.route + 'setup/test')
+					    .then(data => {
+						    this.results = data;
+						    if(data.success)
+						    {
+	                            this.settings.route = this.options.route;
+							    fsm.do('complete');
+						    }
+						    else
+						    {
+							    fsm.go('error');
+						    }
+					    });
+			    },
 
                 exit(event, fsm)
                 {
