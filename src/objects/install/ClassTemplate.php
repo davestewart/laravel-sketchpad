@@ -35,6 +35,32 @@ class ClassTemplate extends Template
         $this->setNamespace();
     }
 
+	public function set($data)
+	{
+		$data   = (array) $data;
+		$text   = $this->text;
+		foreach($data as $key => $value)
+		{
+			switch ($key)
+			{
+				case 'namespace':
+					$value = rtrim($value, '\\');
+					$text = preg_replace("%namespace\\s+.+?;%", "namespace $value;", $text);
+					break;
+
+				case 'extends':
+				case 'class':
+					$text = preg_replace("%$key\\s+\\[w\\]+%", "$key $value", $text);
+					break;
+
+				default:
+					$text = str_replace("%$key%", $value, $text);
+			}
+		}
+		$this->text = $text;
+		return $this;
+    }
+
     public function setNamespace()
     {
         if( ! $this->resolver )

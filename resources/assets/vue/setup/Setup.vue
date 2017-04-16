@@ -236,16 +236,13 @@ export default
 
 			    test ()
 			    {
-                    // update route once one install attempt has been made
-	                this.settings.route = this.options.route;
-
-	                // test install
 				    jQuery
 					    .get(this.settings.route + 'setup/test')
 					    .then(data => {
 						    this.results = data;
 						    if(data.success)
 						    {
+	                            this.settings.route = this.options.route;
 							    fsm.do('complete');
 						    }
 						    else

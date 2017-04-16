@@ -13,7 +13,6 @@ class InstallerSettings
         public $autoloader;
 
         public $controllers;
-        public $controllersns;
         public $views;
         public $assets;
         public $route;

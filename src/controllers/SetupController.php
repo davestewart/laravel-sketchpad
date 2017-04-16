@@ -86,7 +86,6 @@ class SetupController extends Controller
 		public function install()
         {
             Artisan::call('sketchpad:install');
-            return $this->test();
         }
 
 

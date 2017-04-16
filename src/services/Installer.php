@@ -20,6 +20,7 @@ class Installer
 
     // variables
 
+		/** @var JSON */
         protected $settings;
         protected $paths;
 
@@ -100,15 +101,6 @@ class Installer
 
         public function install()
         {
-        	$this->info(' > Updating settings.json');
-        	$route = $this->prefs->route;
-            $this->settings
-                ->set('route', $route)
-                ->set('paths.controllers.0.path', $this->prefs->controllers)
-                ->set('paths.views', $this->prefs->views)
-                ->set('paths.assets', $this->prefs->assets)
-                ->create();
-
             if($this->composer)
             {
             	// update composer
@@ -130,10 +122,9 @@ class Installer
             $this->controllers
                 ->create();
 
-            $this->info(' > Creating example controller');
+	        $this->info(' > Creating example controller');
             $this->controller
                 ->setNamespace()
-                ->set($this->prefs)
                 ->create();
 
             $this->info(' > Creating views folder');
@@ -154,8 +145,6 @@ class Installer
          */
 		public function test()
 		{
-		    $this->logs = [];
-
 		    function writable ($folder)
 		    {
 			    return "Ensure <code>$folder</code> exists and is writable";
@@ -175,9 +164,7 @@ class Installer
 
 		    }
 
-		    $this->settings->exists()
-                ? $this->pass('Settings created')
-                : $this->fail('The sketchpad settings file could not be found', writable(rel(storage_path('sketchpad/'))));
+		    $this->logs = [];
 
             if($this->composer)
             {
@@ -216,6 +203,22 @@ class Installer
             $this->assets->exists()
                 ? $this->pass('Assets copied')
                 : $this->fail('The sketchpad assets folder was not copied', copy($this->assets->src, $this->assets->trg));
+
+            // only save settings if everything went ok
+            if ($this->state)
+            {
+	            $this->info(' > Saving settings.json');
+	            $this->settings
+		            ->set('route', $this->prefs->route)
+		            ->set('paths.controllers.0.path', $this->prefs->controllers)
+		            ->set('paths.views', $this->prefs->views)
+		            ->set('paths.assets', $this->prefs->assets)
+		            ->create();
+
+	            $this->settings->exists()
+		            ? $this->pass('Settings created')
+		            : $this->fail('The sketchpad settings file could not be found', writable(rel(storage_path('sketchpad/'))));
+            }
 
             $this->saveLogs();
 
