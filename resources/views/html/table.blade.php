@@ -1,3 +1,4 @@
+<?php use \davestewart\sketchpad\utils\Html; ?>
 <table class="table table-bordered table-striped {{ $class }}" style="{{ $style }}">
 	@if($label)
 		<caption>{{ $label }}</caption>
@@ -26,9 +27,9 @@
 				$isHtml = in_array($key, $html);
 			?>
 			@if($isHtml)
-			<td<?php echo $class ?>>{!! $value !!}</td>
+			<td<?php echo $class ?>>{!! Html::getText($value) !!}</td>
 			@else
-			<td<?php echo $class ?>>{{ $value }}</td>
+			<td<?php echo $class ?>>{{ Html::getText($value) }}</td>
 			@endif
 			@endforeach
 		</tr>

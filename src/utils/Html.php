@@ -225,4 +225,11 @@ class Html
 			return "$css:$value";
 		}
 
+		public static function getText($value)
+		{
+			return is_bool($value)
+				? $value ? 'true' : 'false'
+				: $value;
+		}
+
 }
