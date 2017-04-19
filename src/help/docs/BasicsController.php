@@ -130,7 +130,7 @@ public function emailUser($id = 1, $run = false)
 	 */
 	public function exceptions()
 	{
-		echo $foo * 2;
+		echo 'Foo is : ' . $foo;
 	}
 
 	/**
