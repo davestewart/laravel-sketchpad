@@ -54,4 +54,11 @@ const routes = {
 
 router.map(routes);
 
+router.afterEach(function (transition) {
+	if (transition.to.path.indexOf('/run') !== 0)
+	{
+		document.title = 'Sketchpad - ' + transition.to.matched[0].handler.component.name.toLowerCase();
+	}
+})
+
 router.start(App, '#app');
