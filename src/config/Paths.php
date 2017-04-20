@@ -42,19 +42,19 @@ class Paths
         }
 
         /**
-         * Returns the publish path, i.e. vendor/davestewart/sketchpad/publish/...
+         * Returns the package path, i.e. vendor/davestewart/sketchpad/package/...
          *
-         * @param   string  $path       An optional path to append to the publish path
+         * @param   string  $path       An optional path to append to the package path
          * @param   bool    $relative   An optional flag to return the path relative to the base path
          * @return  string              The final path
          */
-        public function publish($path = '', $relative = false)
+        public function package($path = '', $relative = false)
         {
-            return $this->make($this->_install . 'publish/' . $path, $relative);
+            return $this->make($this->_install . 'package/' . $path, $relative);
         }
 
         /**
-         * Returns the publish path, i.e. storage/vendor/sketchpad/...
+         * Returns the storage path, i.e. storage/sketchpad/...
          *
          * @param   string  $path       An optional path to append to the storage path
          * @param   bool    $relative   An optional flag to return the path relative to the base path

@@ -78,7 +78,7 @@ class Installer
         {
             // variables
             $settings           = $this->prefs;
-            $publish            = $this->paths->publish();
+            $package            = $this->paths->package();
 
             // update compose
             if($this->prefs->autoloader)
@@ -87,12 +87,12 @@ class Installer
             }
 
             // objects
-            $this->settings     = new JSON(     $publish . 'setup/config/settings.json', $this->paths->storage());
+            $this->settings     = new JSON(     $package . 'config/settings.json', $this->paths->storage());
             $this->controllers  = new Folder(   $settings->controllers);
-            $this->controller   = new ClassTemplate( $publish . 'setup/controllers/ExampleController.txt', $settings->controllers . '{filename}.php');
+            $this->controller   = new ClassTemplate( $package . 'setup/controllers/ExampleController.txt', $settings->controllers . '{filename}.php');
             $this->views        = new Folder(   $settings->views);
-            $this->view         = new Copier(   $publish . 'setup/views/example.blade.php', $settings->views);
-	        $this->assets       = new Copier(   $publish . 'setup/assets', base_path($settings->assets));
+            $this->view         = new Copier(   $package . 'setup/views/example.blade.php', $settings->views);
+	        $this->assets       = new Copier(   $package . 'setup/assets', base_path($settings->assets));
         }
 
 

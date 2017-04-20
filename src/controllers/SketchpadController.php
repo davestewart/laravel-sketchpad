@@ -81,7 +81,7 @@ class SketchpadController extends Controller
 
 	    public function asset(Paths $paths, $file)
 	    {
-	    	return $this->getAsset($paths->publish("assets/$file"));
+	    	return $this->getAsset($paths->package("assets/$file"));
 	    }
 
 	    public function userAsset(SketchpadConfig $config, $file)

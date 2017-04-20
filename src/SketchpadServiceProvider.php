@@ -42,7 +42,7 @@ class SketchpadServiceProvider extends ServiceProvider
 		// variables
 
 			$root           = realpath(__DIR__ . '/../') . '/';
-			$views          = $root . 'resources/views';
+			$views          = $root . 'package/views';
             $config         = app(SketchpadConfig::class);
 
 

@@ -18,14 +18,14 @@
 
 	// paths
 	var rootPath					= path.normalize(__dirname + '/../');
-	var assetsPath					= rootPath + 'publish/assets/';
+	var assetsPath					= rootPath + 'package/assets/';
 
 	// elixir input
 	elixir.config.assetsPath		= '../' + elixir.config.assetsPath;
 	//elixir.config.sourcemaps		= true;
 
 	// elixir output
-	elixir.config.publicPath		= '../publish/assets';
+	elixir.config.publicPath		= '../package/assets';
 	elixir.config.css.outputFolder	= '';
 	elixir.config.js.outputFolder	= '';
 
@@ -82,7 +82,7 @@
 
 		// variables
 		var resources   = 'resources/';
-		var assets      = '../publish/assets/';
+		var assets      = '../package/assets/';
 		var file        = argv.setup ? 'setup' : 'app';
 
 		// build
