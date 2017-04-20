@@ -57,7 +57,7 @@ class Html
 		 */
 		public static function pr()
 		{
-			echo "\n" . '<pre style="font-size:11px">' . "\n";
+			echo "\n" . '<pre>' . "\n";
 			$args = func_get_args();
 			print_r( count($args) === 1 ? $args[0] : $args);
 			echo "</pre>\n\n";
@@ -73,13 +73,21 @@ class Html
 		}
 
 		/**
-		 * var_dump() passed arguments
-		 *
-		 * @param $value
+		 * var_dump() passed arguments, with slightly nicer formatting than the default
 		 */
-		public static function vd($value)
+		public static function vd()
 		{
-			var_dump($value);
+			echo "\n" . '<pre>' . "\n";
+			$args = func_get_args();
+			ob_start();
+			var_dump(count($args) === 1 ? $args[0] : $args);
+			$output = ob_get_contents();
+			ob_end_clean();
+			$output = preg_replace('/\\]=>[\\r\\n]+\s+/', '] => ', $output);
+			$output = preg_replace('/^(\s+)/m', '$1$1', $output);
+			echo $output;
+			echo "</pre>\n\n";
+
 		}
 
 		/**
