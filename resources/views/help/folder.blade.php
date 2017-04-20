@@ -14,8 +14,8 @@
     <h4>Path</h4>
     <ul class="path">
         <li>
-            @foreach($breadcrumbs as $name => $p)
-                <a href="?path={{ $p }}">{{ $name ? $name : 'Root' }}</a>
+            @foreach($breadcrumbs as $p => $name)
+                <a href="?path={{ $p }}">{{ $name }}</a>
                 <span class="divider">&#9656;</span>
             @endforeach
         </li>

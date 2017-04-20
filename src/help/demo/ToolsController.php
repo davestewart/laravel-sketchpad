@@ -80,61 +80,60 @@ class ToolsController
 
 			// data
 			$array[] =
-				[
-					'methods'   => implode('|', $methods),
-					'uri'       => $uri,
-					'name'      => $route->getName(),
-					'action'    => $action instanceof \Closure ? 'Closure' : $action,
-					'middleware'=> implode(', ', $route->middleware()),
-				];
+			[
+				'methods'   => implode('|', $methods),
+				'uri'       => $uri,
+				'name'      => $route->getName(),
+				'action'    => $action instanceof \Closure ? 'Closure' : $action,
+				'middleware'=> implode(', ', $route->middleware()),
+			];
 		}
 
 		vue('sketchpad::help.vue.routes', $array);
 	}
 
-    /**
-     * Browse your local filesystem
-     *
-     * @param $path
-     * @return View|string
-     */
+	/**
+	 * Browse your local filesystem
+	 *
+	 * @param string $path
+	 * @return View|string
+	 */
     public function browseFilesystem($path = '')
     {
-
-        // parameters
-        if( ! $path )
+        // helpers
+        function getBreadcrumbs($base, $path)
         {
-            $path = base_path($path);
+            $paths  = ['/' => $base];
+            $path   = trim($path, '/');
+            if ($path !== '')
+            {
+                $segments   = explode('/', $path);
+                $current    = '/';
+	            foreach($segments as $segment)
+	            {
+	                $current .= $segment . '/';
+	                $paths[$current] = $segment;
+	            }
+            }
+            return $paths;
         }
 
-        // paths
-        $_path      = $path;
-        $path       = realpath($path);
-        $parent     = $path == '' ? null : realpath($path . '/../');
+	    // paths
+	    $path       = '/' . trim(preg_replace('%[\\/]+%', '/', $path), '/');
+        $realpath   = realpath(base_path($path));
+	    $base       = pathinfo(base_path())['basename'];
 
         // found
-        if($path)
+        if($realpath)
         {
-            function getBreadcrumbs($path)
-            {
-                $segments   = array_flip(explode('/', $path));
-                $lastPath   = '';
-                foreach($segments as $key => $value)
-                {
-                    $path = $lastPath . $key . '/';
-                    $segments[$key] = $path;
-                    $lastPath = $path;
-                }
-                return $segments;
-            }
-
             try
             {
-                $objects        = array_diff(scandir($path), ['.','..']);
-                $breadcrumbs    = getBreadcrumbs($path);
-                $folders        = array_filter($objects, function($f) use ($path) { return is_dir($path . '/' . $f); });
-                $files          = array_filter($objects, function($f) use ($path) { return is_file($path . '/' . $f); });
+                $objects        = array_diff(scandir($realpath), ['.','..']);
+                $breadcrumbs    = getBreadcrumbs($base, $path);
+                $folders        = array_filter($objects, function($f) use ($realpath) { return is_dir($realpath . '/' . $f); });
+                $files          = array_filter($objects, function($f) use ($realpath) { return is_file($realpath . '/' . $f); });
                 $path           = rtrim($path, '/') . '/';
+                $parent         = $path !== '/' ? preg_replace('%[^/]+/$%', '', $path) : '/';
 
                 return view('sketchpad::help.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
             }
@@ -145,7 +144,7 @@ class ToolsController
         }
 
         // not found
-        return "Path '$_path' not found";
+        return "Path '$path' not found";
 	}
 
 	/**
