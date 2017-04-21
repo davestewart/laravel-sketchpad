@@ -32,8 +32,8 @@
 	// production
 	if (argv.production)
 	{
-		console.log('Setting NODE_ENV to "production"')
-		process.env.NODE_ENV = 'production';
+		//console.log('Setting NODE_ENV to "production"')
+		//process.env.NODE_ENV = 'production';
 	}
 
 
