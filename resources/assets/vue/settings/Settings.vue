@@ -161,14 +161,6 @@ import store            from '../../js/state/store.js';
 
 import ControllerPaths  from './ControllerPaths.vue';
 
-function textToArray(value)
-{
-	return trim(value)
-		.split('\n')
-		.map(trim)
-		.filter(value => value !== '')
-}
-
 export default
 {
 	name: 'Settings',
