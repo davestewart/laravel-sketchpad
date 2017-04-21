@@ -69,6 +69,7 @@ class SketchpadController extends Controller
 				'assets'        => $config->route . 'assets/',
 				'livereload'    => (object) $settings['livereload'],
 				'settings'      => $settings,
+				'admin'         => $config->admin,
 				'home'          => view('sketchpad::home', compact('settings', 'config')),
 				'data'          =>
 				[

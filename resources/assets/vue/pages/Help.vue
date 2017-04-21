@@ -6,13 +6,14 @@
 		</header>
 		<section class="content">
 
-			<h3>Setup</h3>
-			<p>To complete your Sketchpad setup, consider:</p>
-			<ul>
-				<li>Installing <a target="_help" href="https://github.com/davestewart/laravel-sketchpad-reload">Sketchpad Reload</a> to update the UI as you save, add or delete files</li>
-				<li>Giving the <a href="settings">settings page</a> a once-over</li>
-			</ul>
-
+			<template v-if="admin.settings">
+				<h3>Setup</h3>
+				<p>To complete your Sketchpad setup, consider:</p>
+				<ul>
+					<li>Installing <a target="_help" href="https://github.com/davestewart/laravel-sketchpad-reload">Sketchpad Reload</a> to update the UI as you save, add or delete files</li>
+					<li>Giving the <a href="settings">settings page</a> a once-over</li>
+				</ul>
+			</template>
 
 			<h3>Usage</h3>
 			<p>The menus on the left show the contents of your configured controllers folders, and the methods within.</p>
@@ -43,10 +44,15 @@
 </template>
 
 <script>
-	
+
+import admin from '../../js/state/admin';
+
 export default
 {
-	name: 'Help'
+	name: 'Help',
+	data () {
+		return { admin }
+	}
 }
 
 </script>

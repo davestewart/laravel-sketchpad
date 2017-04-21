@@ -3,6 +3,7 @@ import VueRouter    from 'vue-router'
 import              '../vue/directives/PathValidator';
 
 // state
+import admin        from './state/admin'
 import store        from './state/store'
 import config       from './functions/config'
 config();
@@ -38,9 +39,6 @@ const routes = {
 	'/favourites' : {
 		component: Favourites
 	},
-	'/settings' : {
-		component: Settings
-	},
 	'/search' : {
 		component: Search
 	},
@@ -51,6 +49,13 @@ const routes = {
 		component: Home
 	}
 };
+
+if (admin.settings)
+{
+	routes['/settings'] = {
+		component: Settings
+	}
+}
 
 router.map(routes);
 
