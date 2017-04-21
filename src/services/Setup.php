@@ -85,6 +85,17 @@ class Setup
 			return view('sketchpad::setup', $data);
 		}
 
+		public function disabled()
+		{
+			$config = app(SketchpadConfig::class);
+			$data =
+			[
+				'route' => $config->route,
+				'assets' => '/' . $config->assets,
+				'path' => substr(storage_path('sketchpad/admin.json'), strlen(base_path()) + 1)
+			];
+			die(view('sketchpad::no-setup', $data));
+		}
 
     // ------------------------------------------------------------------------------------------------
     // form

@@ -1,6 +1,8 @@
 <?php namespace davestewart\sketchpad\controllers;
 
 use Artisan;
+use davestewart\sketchpad\config\SketchpadConfig;
+use davestewart\sketchpad\config\SketchpadSettings;
 use davestewart\sketchpad\services\Installer;
 use davestewart\sketchpad\services\Setup;
 use davestewart\sketchpad\services\Sketchpad;
@@ -38,11 +40,19 @@ class SetupController extends Controller
 		 * SketchpadController constructor.
 		 *
 		 * @param Sketchpad $sketchpad
+		 * @param SketchpadConfig $config
 		 */
-		public function __construct(Sketchpad $sketchpad)
+		public function __construct(Sketchpad $sketchpad, SketchpadConfig $config)
 		{
+			// properties
 			$this->sketchpad    = $sketchpad;
 			$this->setup        = new Setup();
+
+			// hacky middleware-less 403
+			if (property_exists($config->admin, 'setup') && $config->admin->setup === false)
+			{
+				$this->setup->disabled();
+			}
 		}
 
 
