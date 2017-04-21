@@ -60,18 +60,19 @@ class SketchpadController extends Controller
 			$config     = $this->sketchpad->init(true)->config;
 
             // settings
-	        $settings = $config->settings->data;
+	        $settings   = $config->settings->data;
 
-			// variables
+			// data
 			$data =
 			[
 				'route'         => $config->route,
 				'assets'        => $config->route . 'assets/',
 				'livereload'    => (object) $settings['livereload'],
 				'settings'      => $settings,
+				'home'          => view('sketchpad::home', compact('settings', 'config')),
 				'data'          =>
 				[
-					'controllers'   => $this->sketchpad->getController(),
+					'controllers' => $this->sketchpad->getController(),
 				]
 			];
 

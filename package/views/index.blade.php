@@ -19,6 +19,7 @@
 
 	<script id="settings" type="text/plain">{!! json_encode($settings, JSON_UNESCAPED_SLASHES) !!}</script>
 	<script id="data" type="text/plain">{!! json_encode($data, JSON_UNESCAPED_SLASHES) !!}</script>
+	<script id="home" type="text/template">{!! $home !!}</script>
     <script src="{{ $assets }}js/app.js"></script>
 
 </body>

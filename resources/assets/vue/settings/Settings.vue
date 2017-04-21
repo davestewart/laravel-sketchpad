@@ -118,6 +118,7 @@
 							<li><label><input type="radio" v-model="settings.ui.homepage" value="welcome"> <span>Welcome</span></label></li>
 							<li><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> <span>Favourites</span></label></li>
 							<li><label><input type="radio" v-model="settings.ui.homepage" value="search"> <span>Search</span></label></li>
+							<li><label><input type="radio" v-model="settings.ui.homepage" value="custom"> <span>Custom</span></label></li>
 						</ul>
 					</div>
 
