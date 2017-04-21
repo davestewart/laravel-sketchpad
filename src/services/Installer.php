@@ -58,6 +58,9 @@ class Installer
         public $view;
 
         /** @var Copier */
+        public $home;
+
+        /** @var Copier */
 		public $assets;
 
 	// command
@@ -96,6 +99,7 @@ class Installer
             $this->controller   = new ClassTemplate( $package . 'setup/controllers/ExampleController.txt', $settings->controllers . '{filename}.php');
             $this->views        = new Folder(   $settings->views);
             $this->view         = new Copier(   $package . 'setup/views/example.blade.php', $settings->views);
+            $this->home         = new Copier(   $package . 'setup/views/home.blade.php', $settings->views);
 	        $this->assets       = new Copier(   $package . 'setup/assets', base_path($settings->assets));
             $this->admin        = new JSON(     $package . 'config/admin.json', $this->paths->storage());
             $this->settings     = new JSON(     $package . 'config/settings.json', $this->paths->storage());
@@ -139,6 +143,10 @@ class Installer
 
             $this->info(' > Creating example view');
             $this->view
+                ->create();
+
+            $this->info(' > Creating home view');
+            $this->home
                 ->create();
 
             $this->info(' > Copying user assets');
@@ -210,9 +218,13 @@ class Installer
                 ? $this->pass('Example view copied')
                 : $this->fail('The sketchpad example view was not found', copy($this->view->src, $this->view->trg));
 
+            $this->home->exists()
+                ? $this->pass('Custom home view copied')
+                : $this->fail('The custom home view was not found', copy($this->home->src, $this->home->trg));
+
             $this->assets->exists()
                 ? $this->pass('User assets copied')
-                : $this->fail('The sketchpad assets folder was not copied', copy($this->assets->src, $this->assets->trg));
+                : $this->fail('The user assets folder was not copied', copy($this->assets->src, $this->assets->trg));
 
             $this->admin->exists()
                 ? $this->pass('Admin settings copied')

@@ -61,6 +61,7 @@ class SketchpadController extends Controller
 
             // settings
 	        $settings   = $config->settings->data;
+	        $home       = $config->views . 'home.blade.php';
 
 			// data
 			$data =
@@ -70,7 +71,7 @@ class SketchpadController extends Controller
 				'livereload'    => (object) $settings['livereload'],
 				'settings'      => $settings,
 				'admin'         => $config->admin,
-				'home'          => view('sketchpad::home', compact('settings', 'config')),
+				'home'          => view(file_exists(base_path($home)) ? 'sketchpad::home' : 'sketchpad::no-home', compact('home')),
 				'data'          =>
 				[
 					'controllers' => $this->sketchpad->getController(),
