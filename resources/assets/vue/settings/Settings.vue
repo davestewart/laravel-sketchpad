@@ -1,7 +1,7 @@
 <template>
 
 	<article id="settings">
-		<header id="header">
+		<header>
 			<h1>Settings</h1>
 		</header>
 		<section class="content">
@@ -118,6 +118,7 @@
 							<li><label><input type="radio" v-model="settings.ui.homepage" value="welcome"> <span>Welcome</span></label></li>
 							<li><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> <span>Favourites</span></label></li>
 							<li><label><input type="radio" v-model="settings.ui.homepage" value="search"> <span>Search</span></label></li>
+							<li><label><input type="radio" v-model="settings.ui.homepage" value="custom"> <span>Custom</span></label></li>
 						</ul>
 					</div>
 
@@ -159,14 +160,6 @@ import settings         from '../../js/state/settings.js';
 import store            from '../../js/state/store.js';
 
 import ControllerPaths  from './ControllerPaths.vue';
-
-function textToArray(value)
-{
-	return trim(value)
-		.split('\n')
-		.map(trim)
-		.filter(value => value !== '')
-}
 
 export default
 {

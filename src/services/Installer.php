@@ -21,7 +21,9 @@ class Installer
     // variables
 
 		/** @var JSON */
-        protected $settings;
+        protected $prefs;
+
+        /** @var Paths */
         protected $paths;
 
     // state
@@ -38,7 +40,10 @@ class Installer
         public $composer;
 
         /** @var JSON */
-        public $prefs;
+        public $admin;
+
+        /** @var JSON */
+        public $settings;
 
         /** @var Folder */
         public $controllers;
@@ -51,6 +56,9 @@ class Installer
 
         /** @var Copier */
         public $view;
+
+        /** @var Copier */
+        public $home;
 
         /** @var Copier */
 		public $assets;
@@ -87,12 +95,14 @@ class Installer
             }
 
             // objects
-            $this->settings     = new JSON(     $package . 'config/settings.json', $this->paths->storage());
             $this->controllers  = new Folder(   $settings->controllers);
             $this->controller   = new ClassTemplate( $package . 'setup/controllers/ExampleController.txt', $settings->controllers . '{filename}.php');
             $this->views        = new Folder(   $settings->views);
             $this->view         = new Copier(   $package . 'setup/views/example.blade.php', $settings->views);
+            $this->home         = new Copier(   $package . 'setup/views/home.blade.php', $settings->views);
 	        $this->assets       = new Copier(   $package . 'setup/assets', base_path($settings->assets));
+            $this->admin        = new JSON(     $package . 'config/admin.json', $this->paths->storage());
+            $this->settings     = new JSON(     $package . 'config/settings.json', $this->paths->storage());
         }
 
 
@@ -135,8 +145,16 @@ class Installer
             $this->view
                 ->create();
 
+            $this->info(' > Creating home view');
+            $this->home
+                ->create();
+
             $this->info(' > Copying user assets');
             $this->assets
+                ->create();
+
+            $this->info(' > Copying admin settings');
+            $this->admin
                 ->create();
         }
 
@@ -200,9 +218,17 @@ class Installer
                 ? $this->pass('Example view copied')
                 : $this->fail('The sketchpad example view was not found', copy($this->view->src, $this->view->trg));
 
+            $this->home->exists()
+                ? $this->pass('Custom home view copied')
+                : $this->fail('The custom home view was not found', copy($this->home->src, $this->home->trg));
+
             $this->assets->exists()
-                ? $this->pass('Assets copied')
-                : $this->fail('The sketchpad assets folder was not copied', copy($this->assets->src, $this->assets->trg));
+                ? $this->pass('User assets copied')
+                : $this->fail('The user assets folder was not copied', copy($this->assets->src, $this->assets->trg));
+
+            $this->admin->exists()
+                ? $this->pass('Admin settings copied')
+                : $this->fail('The admin settings file was not copied', copy($this->admin->src, $this->admin->trg));
 
             // only save settings if everything went ok
             if ($this->state)

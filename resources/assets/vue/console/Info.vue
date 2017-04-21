@@ -1,5 +1,5 @@
 <template>
-	<header id="header">
+	<header>
 		<h1>{{ title }}</h1>
 		<div :class="{info:true, alert:alert, 'alert-danger':warn }">{{{ info | marked }}}</div>
 	</header>

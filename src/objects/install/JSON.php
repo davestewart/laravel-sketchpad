@@ -25,6 +25,7 @@ class JSON extends Copier implements \JsonSerializable
     public function __construct($src, $trg = null)
     {
         parent::__construct($src, $trg ? $trg : $src);
+    	$this->data = [];
         $this->load();
     }
 

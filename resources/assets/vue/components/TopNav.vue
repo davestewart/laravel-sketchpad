@@ -12,7 +12,7 @@
 
 			<div class="navbar-collapse collapse" id="navbar-main">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a v-link="'/settings'" title="Settings">Settings</a></li>
+					<li v-if="admin.settings"><a v-link="'/settings'" title="Settings">Settings</a></li>
 					<li><a v-link="'/help'" title="Help">Help</a></li>
 				</ul>
 			</div>
@@ -24,8 +24,16 @@
 
 <script>
 
+import admin    from '../../js/state/admin';
+import settings from '../../js/state/settings';
+
 export default
 {
+	data ()
+	{
+		return { admin, settings }
+	},
+
 	methods:
 	{
 

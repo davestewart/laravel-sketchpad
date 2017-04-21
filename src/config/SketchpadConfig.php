@@ -49,20 +49,28 @@ class SketchpadConfig
 		 */
 		public $settings;
 
+		/**
+		 * Admin settings as an object
+		 *
+		 * @var object $admin
+		 */
+		public $admin;
+
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// instantiation
 
 		public function __construct()
 		{
-		    $this->settings     = new SketchpadSettings();
-			$this->load();
+		    $this->settings = new SketchpadSettings();
+			$this->loadSettings();
+			$this->loadAdmin();
 		}
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// methods
 
-		public function load()
+		protected function loadSettings()
 		{
 			if ($this->settings->exists())
 			{
@@ -86,7 +94,22 @@ class SketchpadConfig
 					}
 				}
 			}
+		}
 
+		protected function loadAdmin ()
+		{
+			// settings
+			$admin  = new JSON(storage_path('sketchpad/admin.json'));
+			$data   = $admin->data;
+
+			// session
+			if (\Session::has('sketchpad.admin'))
+			{
+				$data = array_merge($data, \Session::get('sketchpad.admin'));
+			}
+
+			// save
+			$this->admin = (object) $data;
 		}
 
 }

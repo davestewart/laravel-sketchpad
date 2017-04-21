@@ -29,6 +29,13 @@
 	elixir.config.css.outputFolder	= '';
 	elixir.config.js.outputFolder	= '';
 
+	// production
+	if (argv.production)
+	{
+		//console.log('Setting NODE_ENV to "production"')
+		//process.env.NODE_ENV = 'production';
+	}
+
 
 // ---------------------------------------------------------------------------------
 // vueify hot reloading

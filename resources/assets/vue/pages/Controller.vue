@@ -1,7 +1,7 @@
 <template>
 
 	<article>
-		<header id="header">
+		<header>
 			<h1>New Controller</h1>
 		</header>
 

@@ -14,7 +14,9 @@ class ExampleController extends BaseController
      */
     public function startHere(SketchpadConfig $config, $name = 'there')
     {
-        return view('sketchpad::example', compact('config', 'name'));
+        $controllers = $config->controllers['project'];
+        $views = $config->views;
+        return view('sketchpad::example', compact('name', 'controllers', 'views'));
     }
 
     // your methods here...
