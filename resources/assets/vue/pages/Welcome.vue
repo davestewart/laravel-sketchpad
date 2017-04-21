@@ -1,7 +1,7 @@
 <template>
 
 	<article>
-		<header id="header">
+		<header>
 			<h1>Sketchpad</h1>
 		</header>
 		<section class="content">
