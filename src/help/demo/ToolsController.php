@@ -119,6 +119,7 @@ class ToolsController
         }
 
 	    // paths
+	    $path       = str_replace('../', '', $path);
 	    $path       = '/' . trim(preg_replace('%[\\/]+%', '/', $path), '/');
         $realpath   = realpath(base_path($path));
 	    $base       = pathinfo(base_path())['basename'];
