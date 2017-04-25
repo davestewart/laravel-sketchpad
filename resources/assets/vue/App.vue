@@ -29,6 +29,7 @@
 
 	// libs
 	import _            from 'underscore'
+	import {getRoute}   from '../js/functions/utils'
 
 	// services
 	import server       from '../js/services/server.js';
@@ -40,7 +41,7 @@
 	import settings     from '../js/state/settings.js';
 
 	// components
-	import Navigation 	from './nav/Navigation.vue';
+	import Navigation 	from './navigation/Navigation.vue';
 	import TopNav       from './components/TopNav.vue';
 	import Modal        from './components/Modal.vue';
 
@@ -121,7 +122,10 @@
 				if (path)
 				{
 					event.preventDefault();
-					router.go(decodeURI(path))
+					path = path.replace(/^\/api\/run\//, '/run/');
+					getRoute(path) === getRoute(this.$route.path)
+						? router.replace(decodeURI(path))
+						: router.go(decodeURI(path))
 				}
 			},
 

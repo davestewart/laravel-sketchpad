@@ -13,7 +13,7 @@
 
 <script>
 
-import Search  from '../nav/Search.vue'
+import Search  from '../navigation/Search.vue'
 
 export default
 {

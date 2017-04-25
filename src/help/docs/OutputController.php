@@ -1,8 +1,11 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
-use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Translation\Translator;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use davestewart\sketchpad\services\Sketchpad;
+use davestewart\sketchpad\config\SketchpadConfig;
 
 /**
  * Use various techniques and helpers to print and format text, html and data
@@ -78,53 +81,41 @@ class OutputController
 	 */
 	public function links()
 	{
-		?>
-		<p>Relative paths run other methods:</p>
-		<ul>
-			<li>This links to the <a href="forms">forms</a> method in the same controller</li>
-			<li>This links to one of the <a href="../../demo/tools/dumpapp">sample tools</a> in the tools controller</li>
-		</ul>
-
-		<p>Use the special <code>sketchpad:</code> protocol to link directly to methods:</p>
-		<ul>
-			<li>This links to the same <a href="sketchpad:help/demo/tools/dumpapp">sample tool</a> in the tools controller</li>
-		</ul>
-
-		<p>Absolute paths (outside of sketchpad) run as normal:</p>
-		<ul>
-			<li>This loads the <a href="/">main app</a></li>
-		</ul>
-
-		<p>External links run as normal:</p>
-		<ul>
-			<li>This links to <a href="http://google.com" target="_blank">Google</a> in a new window</li>
-			<li>This runs some <a href="javascript:alert('Sketchpad rocks!')">JavaScript</a></li>
-		</ul>
-
-		<?php
+		echo view('sketchpad::help.links');
 	}
 
 	/**
 	 * Sketchpad makes using forms easy, by intercepting and `POST`ing action-less forms on your behalf
 	 */
-	public function forms(Request $request)
+	public function forms()
 	{
-		?>
+		echo view('sketchpad::help.form', ['form' => Sketchpad::$form]);
+	}
 
-		<p>Type something below and submit the form back to the same URL:</p>
-		<!-- any form with an empty or missing "action" attribute will be intercepted and submitted by sketchpad -->
-		<form class="form form-inline">
-			<input  class="form-control input-sm" type="text" name="text" placeholder="Type something here...">
-			<button class="btn btn-primary btn-sm" type="submit">Submit</button>
-		</form>
-		<?php
+	/**
+	 * Sketchpad is designed to work invisibly with pagination, by preserving URL variables between front and back end
+	 *
+	 * @param int $start
+	 * @param int $length
+	 */
+	public function pagination($start = 1, $length = 10)
+	{
+		// manually create paginator
+		$data   = array_map(function ($num) { return ['id' => $num, 'value' => "Item $num"]; }, range(1, 100));
+		$page   = Paginator::resolveCurrentPage('page');
+		$path   = Paginator::resolveCurrentPath();
+		$items  = array_slice($data, abs($start - 1) + (($page - 1) * $length), $length);
+		$paginator  = new LengthAwarePaginator($items, count($data), $length, $page, [
+			'path' => $path,
+			'pageName' => 'page',
+		]);
 
-		if($request->isMethod('post'))
-		{
-			echo '<hr />';
-			p('All you need to do is check for a POST submission in the same method, and take action appropriately:');
-			dump($request->all());
-		}
+		// append existing parameters
+		$paginator->appends(Sketchpad::$params);
+
+		// output
+		return view('sketchpad::help.pagination', compact('items', 'paginator'));
+
 	}
 
 	/**
@@ -210,32 +201,7 @@ class OutputController
 			$data[$index]['example'] = implode(' ', array_map(function($value){ return "<code>$value</code>";}, explode('|', $example)));
 		}
 
-		?>
-		<p>This function takes an optional formatting string, with a syntax similar to Laravel validation:</p>
-		<pre class="code php">tb($data, '<?php echo $options; ?>');</pre>
-		<p>The following table outlines the available options:</p>
-
-		<?php
-		tb($data, $options);
-?>
-
-		<p>Within the options string, you can:</p>
-		<ul>
-			<li>add multiple options, using the pipe character</li>
-			<li>specify arguments, using a colon</li>
-			<li>add multiple arguments, separated with commas</li>
-		</ul>
-
-		<p>Experiment with updating the options string above, or click the links below to explore some presets:</p>
-<ul>
-	<li><a href="?options=html:example|index">Add an index</a></li>
-	<li><a href="?options=html:example|index|cols:100,400,300">Set column widths</a></li>
-	<li><a href="?options=html:example|index|cols:100,400,300|index|style:background:white;z-index:1000;transform:rotate(10deg)">Set the style</a></li>
-	<li><a href="?options=html:example|label:Table formatting options">Set a table caption</a></li>
-	<li><a href="?options=html:example">Reset the table</a></li>
-	<li><a href="?options=">Clear all settings</a></li>
-</ul>
-<?php
+		return view('sketchpad::help.table', compact('data', 'options'));
 	}
 
 	/**
@@ -245,7 +211,7 @@ class OutputController
 	 */
 	public function blade(SketchpadConfig $config)
 	{
-		return view('sketchpad::help/blade', ['views' => $config->views]);
+		return view('sketchpad::help.blade', ['views' => $config->views]);
 	}
 
 	/**
