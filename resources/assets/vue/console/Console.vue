@@ -136,7 +136,10 @@ export default
 				}
 				if (method !== this.method)
 				{
-					document.title = 'Sketchpad - ' + state.route.replace(/\/$/, '').replace(/\//g, ' ▸ ');
+					document.title = 'Sketchpad - ' + state.route
+							.replace(/\?.+$/, '')
+							.replace(/\/$/, '')
+							.replace(/\//g, ' ▸ ');
 					this.transitioning = true
 					this.method = method
 					if ((method && method.tags.append) || settings.ui.appendOutput)
