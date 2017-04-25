@@ -122,6 +122,7 @@
 				{
 					event.preventDefault();
 					router.go(decodeURI(path))
+					path = path.replace(/^\/api\/run\//, '/run/');
 				}
 			},
 
