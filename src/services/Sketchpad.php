@@ -51,6 +51,13 @@ class Sketchpad
 		 */
 		public static $params;
 
+		/**
+		 * Any submitted form data
+		 *
+		 * @var mixed[]
+		 */
+		public static $form;
+
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// INSTANTIATION
@@ -108,9 +115,10 @@ class Sketchpad
          *
          * @param string $route
          * @param array $params
+         * @param array $form
          * @return mixed|string
          */
-		public function run($route = '', array $params)
+		public function run($route = '', array $params, array $form = null)
 		{
 			// set up the router, but don't scan
 			$this->init();
@@ -141,6 +149,7 @@ class Sketchpad
 				// assign static properties
 				Sketchpad::$route = $ref->route . $ref->method . '/';
 				Sketchpad::$params = $ref->params;
+				Sketchpad::$form = empty($form) ? null : $form;
 
 				// get controller response or content
 				ob_start();

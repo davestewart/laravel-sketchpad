@@ -53,12 +53,19 @@ class ApiController extends Controller
 		 */
 		public function run(Request $request, $path = '')
 		{
-			$data   = $request->get('data', []);
+			// data
+			$data   = $request->get('_data', []);
 			if (is_string($data))
 			{
 				$data = json_decode($data, JSON_OBJECT_AS_ARRAY);
 			}
-            return $this->sketchpad->run($path, $data);
+
+			// form
+			$form   = $request->get('_form', null);
+			parse_str($form, $form);
+
+			// run
+            return $this->sketchpad->run($path, $data, $form);
 		}
 
 		/**

@@ -34,7 +34,7 @@ Queue.prototype =
 
 		// only ever run if there is one request in the queue
 		// if there are 2, the newly-added request will be loaded on completion of teh first one
-		if(this.requests.length == 1)
+		if(this.requests.length === 1)
 		{
 			this.next();
 		}
@@ -48,24 +48,24 @@ Queue.prototype =
 		if(request)
 		{
 			const method = $[this.method];
-			request.deferred = method(request.url, {data:request.data})
+			request.deferred = method(request.url, {_data:request.data})
 				.done( (data, status, xhr) =>
 				{
 					this.requests.shift();
-					this.requests.length == 0
+					this.requests.length === 0
 						? request.done(data, status, xhr)
 						: this.next();
 				})
 				.fail( (xhr, status, message) =>
 				{
 					this.requests.shift();
-					this.requests.length == 0
+					this.requests.length === 0
 						? request.fail(xhr, status, message)
 						: this.next();
 				})
 				.always( () =>
 				{
-					if(this.requests.length == 0)
+					if(this.requests.length === 0)
 					{
 						if(request.always)
 						{

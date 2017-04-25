@@ -74,10 +74,11 @@ Server.prototype =
 			return $.post(url, data, done);
 		},
 
-		submit(method, data, done)
+		submit(method, form, done)
 		{
-			const url = this.getRunUrl(method);
-			return $.post(url, data, done);
+			const url   = this.getRunUrl(method);
+			const data  = this.getData(method);
+			return $.post(url, {_data: data, _form: form}, done);
 		},
 
 		validatePath(path)
