@@ -41,7 +41,7 @@
 	import settings     from '../js/state/settings.js';
 
 	// components
-	import Navigation 	from './nav/Navigation.vue';
+	import Navigation 	from './navigation/Navigation.vue';
 	import TopNav       from './components/TopNav.vue';
 	import Modal        from './components/Modal.vue';
 
