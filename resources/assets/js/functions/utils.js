@@ -81,3 +81,22 @@ export function getArrayChange (newValues, oldValues, oldValue)
 	}
 }
 
+/**
+ * Parses query string into key => value pairs
+ *
+ * @param   {String}    [query]     An optional query string; defaults to browser query
+ * @returns {Object}
+ */
+export function parseQuery(query)
+{
+	query = (query || location.search).replace(/^\?/, '');
+	return query
+		? query
+			.split('&')
+			.reduce((obj, pair) => {
+				const [key, value] = pair.split('=');
+				obj[key] = typeof value !== 'undefined' ? decodeURIComponent(value) : value;
+				return obj;
+			}, {})
+		: {};
+}

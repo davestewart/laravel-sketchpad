@@ -1,7 +1,11 @@
-import _            from 'underscore'
+import _        from 'underscore'
 import Vue 		from 'vue';
 import store	from './store.js';
-import {getArrayChange}	from '../functions/utils';
+import {
+    getArrayChange,
+    parseQuery,
+    clone
+}               from '../functions/utils';
 
 /**
  * Stores the current controller > method > params
@@ -15,7 +19,8 @@ const State = Vue.extend({
 		{
 			return {
 				controller	: null,
-				method		: null
+				method		: null,
+				query       : null, // extra query params
 			};
 		},
 
@@ -23,7 +28,7 @@ const State = Vue.extend({
 		{
 			route ()
 			{
-				return this.makeRoute(this.method || this.controller);
+				return this.makeRoute(this.method || this.controller, true);
 			}
 		},
 
@@ -76,6 +81,7 @@ const State = Vue.extend({
 					this.method = method;
 
 					// if we have a method, update its parameters
+					this.query = '';
 					this.setQuery(query);
 
 					// return
@@ -85,13 +91,17 @@ const State = Vue.extend({
 				/**
 				 * Update the params from a query when the method hasn't changed
 				 *
-				 * @param params
+				 * @param   {Object}    params  A POJO of name:value properties
 				 * @returns {State}
 				 */
 				setQuery (params)
 				{
 					if (this.method)
 					{
+						// variables
+						params = clone(params);
+
+						// update method
 						this.method.params.forEach(param =>
 						{
 							const name      = param.name;
@@ -99,8 +109,15 @@ const State = Vue.extend({
 							if (typeof value !== 'undefined')
 							{
 								param.value = value;
+								delete params[name]
 							}
 						});
+
+						// cache any user params
+						this.query = Object
+							.keys(params)
+							.map(key => key + '=' + params[key])
+							.join('&')
 					}
 					return this;
 				},
@@ -248,19 +265,31 @@ const State = Vue.extend({
 				 * Make a FQ route from a method or controller
 				 *
 				 * @param   {Object}    obj
+				 * @param   {Boolean}  [includeQuery]
 				 * @returns {string}
 				 */
-				makeRoute (obj)
+				makeRoute (obj, includeQuery)
 				{
 					if (obj)
 					{
+						// base route
 						let route = obj.route;
+
+						// append params as query string
 						if(obj.params && obj.params.length)
 						{
-							return route + '?' + obj.params
-									.map( p => p.name + '=' + (p.value || '') )
-									.join('&');
+							route += '?' + obj.params
+								.map( p => p.name + '=' + (p.value || '') )
+								.join('&');
 						}
+
+						// grab any parameters
+						if (includeQuery && this.query)
+						{
+							route += (route.indexOf('?') === -1 ? '?' : '&') + this.query
+						}
+
+						// return
 						return route;
 					}
 					return '';

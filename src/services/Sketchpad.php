@@ -42,7 +42,14 @@ class Sketchpad
 		 *
 		 * @var string
 		 */
-		protected $route;
+		public static $route;
+
+		/**
+		 * The currently-called params as key => value pairs
+		 *
+		 * @var mixed[]
+		 */
+		public static $params;
 
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -131,8 +138,9 @@ class Sketchpad
 					}
 				}
 
-				// assign controller property
-				$this->route = $ref->route . $ref->method . '/';
+				// assign static properties
+				Sketchpad::$route = $ref->route . $ref->method . '/';
+				Sketchpad::$params = $ref->params;
 
 				// get controller response or content
 				ob_start();

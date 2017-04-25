@@ -87,7 +87,7 @@ Server.prototype =
 
 		getRunUrl(method)
 		{
-			return this.getUrl('api/run/' + method.route);
+			return this.getUrl('api/run/' + method.route) + location.search;
 		},
 
 		getUrl(path)

@@ -149,10 +149,15 @@
 // components
 // ---------------------------------------------------------------------------------------------------------------------
 
+	.pagination,
 	.table{
 		margin:20px;
 		max-width: inherit;
 		width:inherit;
+	}
+
+	.table + .pagination {
+		margin-top:0;
 	}
 
 	#output .table {
