@@ -82,6 +82,17 @@ export function getArrayChange (newValues, oldValues, oldValue)
 }
 
 /**
+ * Returns only the route component of a path
+ *
+ * @param   {string}    path
+ * @returns {string}
+ */
+export function getRoute (path)
+{
+	return path.split('?').shift();
+}
+
+/**
  * Parses query string into key => value pairs
  *
  * @param   {String}    [query]     An optional query string; defaults to browser query

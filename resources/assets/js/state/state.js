@@ -151,13 +151,13 @@ const State = Vue.extend({
 						case 'none':
 							this.method = controller.methods[change.index];
 							this.$emit('update', this.controller, this.method);
-							route = this.makeRoute(this.method);
+							route = this.makeRoute(this.method, true);
 							break;
 
 						case 'changed': // renamed
 							// re-route to method
 							this.method = controller.methods[change.index];
-							route = this.makeRoute(this.method);
+							route = this.makeRoute(this.method, true);
 							break;
 
 						case 'modified':
@@ -176,7 +176,7 @@ const State = Vue.extend({
 					// update route
 					if (route)
 					{
-						router.go('/run/' + route);
+						router.replace('/run/' + route);
 					}
 				},
 
