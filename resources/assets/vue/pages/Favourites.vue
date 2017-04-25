@@ -13,7 +13,7 @@
 
 <script>
 
-import Favourites  from '../nav/Favourites.vue'
+import Favourites  from '../navigation/Favourites.vue'
 
 export default
 {
