@@ -3,7 +3,12 @@
 	"paths": {
 		"controllers": [
 			{
-				"name": "project",
+				"name": "app",
+				"path": "app/Http/Controllers",
+				"enabled": false
+			},
+			{
+				"name": "sketchpad",
 				"path": "",
 				"enabled": true
 			},

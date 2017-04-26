@@ -5,13 +5,13 @@
 	<div>
 		<table class="table table-bordered table-striped">
 			<thead>
-			<tr>
-				<td colspan="6">Routes: {{ getCount(filter) }}</td>
-			</tr>
-			<tr>
-				<td>#</td>
-				<td v-for="(key, value) in routes[0]">{{ key }}</td>
-			</tr>
+				<tr>
+					<td colspan="6">Routes: {{ getCount(filter) }}</td>
+				</tr>
+				<tr>
+					<td>#</td>
+					<td v-for="(key, value) in routes[0]">{{ key }}</td>
+				</tr>
 			</thead>
 			<tbody>
 			<template v-for="route in routes">
@@ -33,9 +33,6 @@
 			routes: $data
 		},
 		methods: {
-			getCount: function() {
-				return $('#routes').find('tbody tr').length;
-			},
 			getText: function(route) {
 				return Object.keys(route).reduce(function(p,c,i,a){ return p + ' ' + (route[c] || ''); }, '');
 			},
