@@ -51,14 +51,8 @@ class Installer
         /** @var ClassTemplate */
         public $controller;
 
-        /** @var Folder */
+        /** @var Copier */
         public $views;
-
-        /** @var Copier */
-        public $view;
-
-        /** @var Copier */
-        public $home;
 
         /** @var Copier */
 		public $assets;
@@ -96,10 +90,8 @@ class Installer
 
             // objects
             $this->controllers  = new Folder(   $settings->controllers);
-            $this->controller   = new ClassTemplate( $package . 'setup/controllers/ExampleController.txt', $settings->controllers . '{filename}.php');
-            $this->views        = new Folder(   $settings->views);
-            $this->view         = new Copier(   $package . 'setup/views/example.blade.php', $settings->views);
-            $this->home         = new Copier(   $package . 'setup/views/home.blade.php', $settings->views);
+            $this->controller   = new ClassTemplate( $package . 'setup/controllers/ExampleController.php', $settings->controllers . '{filename}.php');
+            $this->views        = new Copier(   $package . 'setup/views', base_path($settings->views));
 	        $this->assets       = new Copier(   $package . 'setup/assets', base_path($settings->assets));
             $this->admin        = new JSON(     $package . 'config/admin.json', $this->paths->storage());
             $this->settings     = new JSON(     $package . 'config/settings.json', $this->paths->storage());
@@ -137,16 +129,8 @@ class Installer
                 ->setNamespace()
                 ->create();
 
-            $this->info(' > Creating views folder');
+            $this->info(' > Copying user views');
             $this->views
-                ->create();
-
-            $this->info(' > Creating example view');
-            $this->view
-                ->create();
-
-            $this->info(' > Creating home view');
-            $this->home
                 ->create();
 
             $this->info(' > Copying user assets');
@@ -212,15 +196,7 @@ class Installer
 
             $this->views->exists()
                 ? $this->pass('Views folder created')
-                : $this->fail('The sketchpad views folder was not found', writable(dirname($this->views->src)));
-
-            $this->view->exists()
-                ? $this->pass('Example view copied')
-                : $this->fail('The sketchpad example view was not found', copy($this->view->src, $this->view->trg));
-
-            $this->home->exists()
-                ? $this->pass('Custom home view copied')
-                : $this->fail('The custom home view was not found', copy($this->home->src, $this->home->trg));
+                : $this->fail('The user views folder was not copied', copy($this->views->src, $this->views->trg));
 
             $this->assets->exists()
                 ? $this->pass('User assets copied')
