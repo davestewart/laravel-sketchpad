@@ -236,7 +236,7 @@ class Installer
 	            $this->info(' > Saving settings.json');
 	            $this->settings
 		            ->set('route', $this->prefs->route)
-		            ->set('paths.controllers.0.path', $this->prefs->controllers)
+		            ->set('paths.controllers.1.path', trim($this->prefs->controllers, '/'))
 		            ->set('paths.views', $this->prefs->views)
 		            ->set('paths.assets', $this->prefs->assets)
 		            ->create();
