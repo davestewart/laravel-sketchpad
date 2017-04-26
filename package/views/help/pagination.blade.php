@@ -10,7 +10,7 @@ public function pagination ($start = 1, $length = 10)
 <p>This allows Laravel's built-in pagination to work without any extra input:</p>
 
 {!! tb($items) !!}
-{!! $paginator->links() !!}
+{!! $paginator !!}
 
 <p><strong>Explicitly</strong>, you can also add a <code>page</code> parameter to your methods, which will always be part of the URL, allowing you to set pagination manually:</p>
 <pre class="code php">
