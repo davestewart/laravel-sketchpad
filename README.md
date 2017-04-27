@@ -21,7 +21,7 @@ Additional tooling and functionality is designed to make it quick and easy to de
 
 View the live demo at:
 
-- [sketchpad.davestewart.io](http://sketchpad.davestewart.io)
+- [sketchpad.davestewart.io/sketchpad](http://sketchpad.davestewart.io/sketchpad)
 
 ## Uses
 
