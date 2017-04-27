@@ -89,7 +89,7 @@ class ToolsController
 			];
 		}
 
-		vue('sketchpad::help.vue.routes', $array);
+		vue('sketchpad::help.tools.routes', $array);
 	}
 
 	/**
@@ -136,7 +136,7 @@ class ToolsController
                 $path           = rtrim($path, '/') . '/';
                 $parent         = $path !== '/' ? preg_replace('%[^/]+/$%', '', $path) : '/';
 
-                return view('sketchpad::help.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
+                return view('sketchpad::help.tools.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
             }
             catch(\Exception $e)
             {

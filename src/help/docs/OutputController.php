@@ -81,7 +81,7 @@ class OutputController
 	 */
 	public function links()
 	{
-		echo view('sketchpad::help.links');
+		echo view('sketchpad::help.output.links');
 	}
 
 	/**
@@ -89,7 +89,7 @@ class OutputController
 	 */
 	public function forms()
 	{
-		echo view('sketchpad::help.form', ['form' => Sketchpad::$form]);
+		echo view('sketchpad::help.output.form', ['form' => Sketchpad::$form]);
 	}
 
 	/**
@@ -114,7 +114,7 @@ class OutputController
 		$paginator->appends(Sketchpad::$params);
 
 		// output
-		return view('sketchpad::help.pagination', compact('items', 'paginator'));
+		return view('sketchpad::help.output.pagination', compact('items', 'paginator'));
 
 	}
 
@@ -201,7 +201,7 @@ class OutputController
 			$data[$index]['example'] = implode(' ', array_map(function($value){ return "<code>$value</code>";}, explode('|', $example)));
 		}
 
-		return view('sketchpad::help.table', compact('data', 'options'));
+		return view('sketchpad::help.output.table', compact('data', 'options'));
 	}
 
 	/**
@@ -211,7 +211,7 @@ class OutputController
 	 */
 	public function blade(SketchpadConfig $config)
 	{
-		return view('sketchpad::help.blade', ['views' => $config->views]);
+		return view('sketchpad::help.output.blade', ['views' => $config->views]);
 	}
 
 	/**
@@ -220,9 +220,9 @@ class OutputController
 	public function markdown()
 	{
 		p('Pass absolute paths or a <code>sketchpad::path.to.view</code> reference.');
-		md('sketchpad::help.md.text');
+		md('sketchpad::help.output.text');
 		p('Here is some general markdown formatting:');
-		md('sketchpad::help.md.formatting');
+		md('sketchpad::help.output.formatting');
 		echo '<style>.markdown { margin:25px; }</style>';
 	}
 
@@ -231,7 +231,7 @@ class OutputController
 	 */
 	public function vue($name = 'World')
 	{
-		vue('sketchpad::help.vue.form', ['name' => $name]);
+		vue('sketchpad::help.output.vue', ['name' => $name]);
 	}
 
 	protected function data()

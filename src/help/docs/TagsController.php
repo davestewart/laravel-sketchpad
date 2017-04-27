@@ -241,7 +241,7 @@ li.fancy{
 	 */
 	public function iframe()
 	{
-		return view('sketchpad::help.iframe');
+		return view('sketchpad::help.tags.iframe');
 	}
 
 	/**
