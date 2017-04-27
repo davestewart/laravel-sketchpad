@@ -12,7 +12,7 @@ The following helpers are loaded by default; you can use them in any methods loa
 | Helper    | Result
 | --------- | -------
 | `p()`     | Output paragraphs
-| `pre()`   | Output preformatted text
+| `text()`  | Output preformatted text
 | `code()`  | Output syntax-highlighted code
 | `alert()` | Output Bootstrap alert elements
 | `pr()`    | `print_r` data
@@ -33,6 +33,7 @@ You can view the source for the HTML examples at:
 
 The source for the actual helpers and views is available at:
 
-	vendor/davestewart/sketchpad/src/utils/Html.php
-	vendor/davestewart/sketchpad/package/views/html
-	
+```text
+vendor/davestewart/sketchpad/src/utils/Html.php
+vendor/davestewart/sketchpad/package/views/html/*
+```

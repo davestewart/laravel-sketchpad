@@ -22,7 +22,7 @@ class TagsController
 	public function label()
 	{
 		p('This method\'s name is actually "' . __FUNCTION__ . '"');
-		pre('@label Custom label!');
+		text('@label Custom label!');
 	}
 	
 	/**
@@ -33,7 +33,7 @@ class TagsController
 	public function color()
 	{
 		p("You won't miss this in a hurry:");
-		pre('@color orange');
+		text('@color orange');
 	}
 
 	/**
@@ -44,9 +44,9 @@ class TagsController
 	public function icon()
 	{
 		p('Declare an icon name:');
-		pre('@icon paper-plane');
+		text('@icon paper-plane');
 		p('Prefix with a color to colorize:');
-		pre('@icon red paper-plane');
+		text('@icon red paper-plane');
 	}
 
 	/**
@@ -67,9 +67,9 @@ class TagsController
 	public function group()
 	{
 		p('Mark a method as the start of a group:');
-		pre('@group I am a new group');
+		text('@group I am a new group');
 		p('Add as many as you like:');
-		pre('@group I am another new group!');
+		text('@group I am another new group!');
 	}
 
 	/**
@@ -80,7 +80,7 @@ class TagsController
 	public function favourite()
 	{
 		p('Use UK or US spelling:');
-		pre("@favourite\n@favorite");
+		text("@favourite\n@favorite");
 	}
 
 	/**
@@ -228,7 +228,7 @@ class TagsController
 	public function defer($foo = 1)
 	{
 		p('Value <code>$foo</code> was set to ' .$foo. ' at ' . date('H:i:s'));
-		pre('@defer');
+		text('@defer');
 		p('Look also at <a href="../basics/testmode">test mode</a> for a more interactive way to test then run conditional code');
 	}
 
@@ -250,7 +250,7 @@ class TagsController
 	public function archived()
 	{
 		p('Probably best to remove methods you no longer use, but if you want to keep them, you can mark them as archived:');
-		pre('@archived');
+		text('@archived');
 	}
 
 	/**
@@ -262,7 +262,7 @@ class TagsController
 	{
 		p("Both controllers and methods can be marked as private, meaning they won't be added to Sketchpad's controller list");
 		p('Normally, you would declare a method as private, but you might need a public method for something like a callback:');
-		pre('@private');
+		text('@private');
 	}
 
 

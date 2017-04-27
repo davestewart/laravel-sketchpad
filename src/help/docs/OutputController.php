@@ -55,14 +55,14 @@ class OutputController
 	/**
 	 * Output preformatted text
 	 */
-	public function pre()
+	public function text()
 	{
 		?>
 		<p>The format of the method is:</p>
-		<pre class="code php">pre($text);</pre>
+		<pre class="code php">text($text);</pre>
 		<p>This is a paragraph...</p>
 		<?php
-		pre('...and this is some text');
+		text('...and this is some text');
 	}
 
 	/**
