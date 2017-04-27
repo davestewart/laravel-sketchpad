@@ -35,7 +35,7 @@ class Html
 		 *
 		 * @param   string  $text
 		 */
-		public static function pre($text)
+		public static function text($text)
 		{
 			echo "<pre>$text</pre>\n";
 		}

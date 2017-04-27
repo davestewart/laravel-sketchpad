@@ -8,11 +8,11 @@ if( ! function_exists('p') )
 	}
 }
 
-if( ! function_exists('pre') )
+if( ! function_exists('text') )
 {
-	function pre($text)
+	function text($text)
 	{
-		\davestewart\sketchpad\utils\Html::pre($text);
+		\davestewart\sketchpad\utils\Html::text($text);
 	}
 }
 
