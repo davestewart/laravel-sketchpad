@@ -57,7 +57,7 @@ class Html
 		 */
 		public static function pr()
 		{
-			echo "\n" . '<pre>' . "\n";
+			echo "\n" . '<pre class="code php">' . "\n";
 			$args = func_get_args();
 			print_r( count($args) === 1 ? $args[0] : $args);
 			echo "</pre>\n\n";
@@ -77,7 +77,7 @@ class Html
 		 */
 		public static function vd()
 		{
-			echo "\n" . '<pre>' . "\n";
+			echo "\n" . '<pre class="code php">' . "\n";
 			$args = func_get_args();
 			ob_start();
 			var_dump(count($args) === 1 ? $args[0] : $args);
