@@ -175,14 +175,24 @@
 			background: inherit;
 		}
 
-		tbody th{
+		tbody th {
 			min-width: 50px;
 			color:#e74c3c !important;
 		}
 
-		tbody td{
+		tbody td {
 			white-space: pre;
 			overflow-x:auto
 		}
 
+	}
+
+	#output .markdown table {
+
+		td, th {
+			font-size: inherit;
+		}
+		td {
+			padding:3px 20px 3px 8px;
+		}
 	}

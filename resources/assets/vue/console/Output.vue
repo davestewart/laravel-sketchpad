@@ -64,7 +64,9 @@ export default
 					}
 					else if (format === 'markdown')
 					{
-						$el.addClass('markdown').html(marked(_.unescape(text)));
+						let html = marked(_.unescape(text));
+						html = html.replace(/<table>/, '<table class="table">');
+						$el.addClass('markdown').html(html);
 					}
 				})
 
