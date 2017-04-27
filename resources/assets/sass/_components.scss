@@ -101,8 +101,11 @@
 			}
 
 			// icons
-			&.icon:before{
+			&.icon {
 				color:#CCC;
+			}
+
+			&.icon:before{
 				position: absolute;
 				top: 4px;
 				left: -12px;
