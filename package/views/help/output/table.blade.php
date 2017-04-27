@@ -1,4 +1,6 @@
-<p>This function takes an optional formatting string, with a syntax similar to Laravel validation:</p>
+<p>The format of the method is:</p>
+<pre class="code php">tb($values, $options = '');</pre>
+<p>The options parameter passes formatting arguments, with a syntax similar to Laravel validation:</p>
 <pre class="code php">tb($data, '<?php echo $options; ?>');</pre>
 <p>The following table outlines the available options:</p>
 

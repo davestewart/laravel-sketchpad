@@ -32,15 +32,15 @@ class OutputController
 	}
 
 	/**
-	 * Use `p()` to print HTML paragraphs tags
+	 * Output text in HTML paragraphs tags
 	 */
 	public function paragraph()
 	{
 		?>
 		<p>The format of the method is:</p>
-<pre class="code php">p($text, $class);</code></pre>
+		<pre class="code php">p($text, $class = '');</code></pre>
 		<p>You can print <strong>normal</strong>, <strong>note</strong> and <strong>custom</strong>-classed paragraphs:</p>
-		<div style="margin-left: 25px">
+		<div style="margin: 20px 25px 30px;">
 
 		<?php
 			p('I am normal');
@@ -53,10 +53,40 @@ class OutputController
 	}
 
 	/**
+	 * Output preformatted text
+	 */
+	public function pre()
+	{
+		?>
+		<p>The format of the method is:</p>
+		<pre class="code php">pre($text);</pre>
+		<p>This is a paragraph...</p>
+		<?php
+		pre('...and this is some text');
+	}
+
+	/**
+	 * Output code with formatting and html entities converted
+	 */
+	public function code()
+	{
+		?>
+		<p>The format of the method is:</p>
+		<pre class="code php">code($text, $format = 'php');</pre>
+		<p>As an example, the contents of this file is:</p>
+		<?php
+		code(file_get_contents(__FILE__));
+	}
+
+	/**
 	 * Use `alert()` to print Bootstrap "alert" message boxes to the page
 	 */
 	public function alert()
 	{
+		?>
+		<p>The format of the method is:</p>
+		<pre class="code php">alert($html, $class = 'info', $icon = '');</pre>
+		<?php
 		p('Pass text only to output a basic Bootstrap "info" alert box:');
 		alert('Just text passed');
 
@@ -119,7 +149,7 @@ class OutputController
 	}
 
 	/**
-	 * Use `vd()`, `pr()` and `pd()` to output object structures with HTML `pre` tag. All functions take variadic parameters
+	 * Use `vd()`, `pr()` and `pd()` to output object structures with HTML `pre` tag and some basic syntax highlighting
 	 *
 	 * @label print_r
 	 * @group Data
@@ -129,8 +159,10 @@ class OutputController
 		p('Use <code>pr()</code> to format and <code>print_r()</code>:');
 		pr($this->data());
 
-		p('Use <code>vd()</code> to format and <code>var_dump()</code>:');
+		p('Use <code>vd()</code> to format and <code>var_dump()</code>, with a slightly tweaked structure to bring it more into line with <code>pr()</code>:');
 		vd($this->data());
+		p('Note that all functions take variadic parameters, so you do the following:');
+		echo '<pre class="code php">pr($foo, $bar, $baz);</pre>';
 	}
 
 	/**
@@ -163,10 +195,14 @@ class OutputController
 	 */
 	public function ls($options = '')
 	{
-		p('This is the validation config array, formatted as a list:');
+		?>
+		<p>The format of the method is:</p>
+		<pre class="code php">ls($values, $options = '');</pre>
+		<p>The options are the same as the <a href="table">table</a> function.</p>
+		<p>This is the validation config array, formatted as a list:</p>
+		<?php
 		$data   = \App::make(Translator::class)->get('validation');
 		ls($data, $options);
-		p('Use the same options as the <a href="table">table</a> function.');
 	}
 
 	/**

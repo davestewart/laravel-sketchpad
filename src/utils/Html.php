@@ -17,17 +17,17 @@ class Html
 		/**
 		 * Echo a paragraph tag, with optional class
 		 *
-		 * @param               $value
+		 * @param               $text
 		 * @param bool|string   $class
 		 */
-		public static function p($value, $class = null)
+		public static function p($text, $class = null)
 		{
 			$attr = $class === true
 				? ' class="note"'
 				: (is_string($class)
 					? ' class="' .$class. '"'
 					: '');
-			echo "<p{$attr}>$value</p>";
+			echo "<p{$attr}>$text</p>";
 		}
 
 		/**

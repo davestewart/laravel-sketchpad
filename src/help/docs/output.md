@@ -9,16 +9,20 @@ It ships with a variety of helper functions and front end tricks to make it as *
 
 The following helpers are loaded by default; you can use them in any methods loaded by Sketchpad:
 
-- `p()` - echo paragraphs
-- `alert()` - echo Bootstrap alert elements
-- `pr()` - print_r data
-- `vd()` - var_dump data
-- `dump()` - dump (but don't die)
-- `json()` - output objects as JSON
-- `ls()` - output objects as list of name:value pairs
-- `tb()` - output an array of objects in table format
-- `md()` - transform and output Markdown
-- `vue()` - load and inject data into a Vue file
+| Helper    | Result
+| --------- | -------
+| `p()`     | Output paragraphs
+| `pre()`   | Output preformatted text
+| `code()`  | Output syntax-highlighted code
+| `alert()` | Output Bootstrap alert elements
+| `pr()`    | `print_r` data
+| `vd()`    | `var_dump` data
+| `dump()`  | `dd()` but don't die
+| `json()`  | Output objects as JSON
+| `ls()`    | Output objects as list of name / value pairs
+| `tb()`    | Output an array of objects in table format
+| `md()`    | Transform and output Markdown
+| `vue()`   | Load and inject data into a Vue file
 
 
 ### Source
