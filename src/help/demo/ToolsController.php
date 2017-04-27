@@ -13,6 +13,10 @@ use Illuminate\View\View;
  */
 class ToolsController
 {
+	public function index()
+	{
+		md(__DIR__ . '/tools.md');
+	}
 
 	/**
 	 * View the app state

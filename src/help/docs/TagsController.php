@@ -8,6 +8,11 @@
 class TagsController
 {
 
+	public function index()
+	{
+		md(__DIR__ . '/tags.md');
+	}
+
 	/**
 	 * Defines a specific label to use, other than the method name
 	 *
@@ -34,14 +39,14 @@ class TagsController
 	/**
 	 * Adds a <a href="http://fontawesome.io/icons/" target="_blank">FontAwesome</a> icon next to the method name
 	 *
-	 * @icon  bookmark
+	 * @icon  paper-plane
 	 */
 	public function icon()
 	{
 		p('Declare an icon name:');
-		pr('@icon bookmark');
+		pr('@icon paper-plane');
 		p('Prefix with a color to colorize:');
-		pr('@icon red bookmark');
+		pr('@icon red paper-plane');
 	}
 
 	/**

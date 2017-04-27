@@ -1,4 +1,13 @@
-The following helpers are loaded by default:
+### Overview
+
+Sketchpad is designed to help you produce good-looking and meaningful output from the get-go.
+
+It ships with a variety of helper functions and front end tricks to make it as *easy as possible* to put content on-screen.
+
+
+### Helpers
+
+The following helpers are loaded by default; you can use them in any methods loaded by Sketchpad:
 
 - `p()` - echo paragraphs
 - `alert()` - echo Bootstrap alert elements
@@ -11,4 +20,15 @@ The following helpers are loaded by default:
 - `md()` - transform and output Markdown
 - `vue()` - load and inject data into a Vue file
 
-You can view the source in `vendor/davestewart/sketchpad/src/utils/Html.php`.
+
+### Source
+
+You can view the source for the HTML examples at:
+
+	vendor/davestewart/sketchpad/src/help
+
+The source for the actual helpers and views is available at:
+
+	vendor/davestewart/sketchpad/src/utils/Html.php
+	vendor/davestewart/sketchpad/package/views/html
+	
