@@ -31,6 +31,28 @@ class Html
 		}
 
 		/**
+		 * Output preformatted text
+		 *
+		 * @param   string  $text
+		 */
+		public static function pre($text)
+		{
+			echo "<pre>$text</pre>\n";
+		}
+
+		/**
+		 * Output code with optional highlighting
+		 *
+		 * @param   string  $text
+		 * @param   string  $format
+		 */
+		public static function code($text, $format = 'php')
+		{
+			$text = htmlentities($text);
+			echo "<pre class='code $format'>$text</pre>\n";
+		}
+
+		/**
 		 * Output a Bootstrap info / alert div
 		 *
 		 * @param   string  $html   The HTML or text to display
