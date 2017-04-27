@@ -26,11 +26,10 @@ class BasicsController
 	 */
 	public function runMethod()
 	{
-		$d = new DateTime();
-		$date = $d->format('H:i:s.u');
-		p('Method called at:');
-		echo "<pre>$date</pre>";
-		p('Run again by clicking the <strong>Run</strong> button');
+		list($s, $m) = explode(".", microtime(true));
+		$date = date('H:i:s', $s) . '.' . $m;
+		return view('sketchpad::help.basics.run', compact('date'));
+
 	}
 
 	/**
@@ -199,9 +198,9 @@ md(__DIR__ . '/some.md');
 		</ul>
 		<p>During setup, two starter files were copied to your installation's <code>assets/</code> folder.</p>
 		<pre>
-<?php echo base_path($assets . 'scripts.js'); ?>
+<?php echo $assets . 'scripts.js'; ?>
 
-<?php echo base_path($assets . 'styles.css'); ?>
+<?php echo $assets . 'styles.css'; ?>
 </pre>
 		<p>These files are set to load with Sketchpad by default, along with any other URLs you add (for example <a href="https://momentjs.com/" target="_blank">Moment.js</a>):</p>
 		<pre>

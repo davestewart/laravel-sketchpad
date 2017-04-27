@@ -34,7 +34,7 @@
 </head>
 <body>
 	<h1>Use <strong class="red">@iframe</strong> to separate content</h1>
-	<p>Sketchpad loads content inline by default, but sometimes this is not what you want.</p>
+	<p>Sketchpad loads content inline by default, but sometimes this is not what you want (in this case, loading a custom font).</p>
 	<p>Consider using iframes when:</p>
 	<ul>
 		<li>running anything that would break Sketchpad's layout or scripting</li>
