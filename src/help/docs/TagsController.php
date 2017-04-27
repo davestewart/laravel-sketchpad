@@ -22,7 +22,7 @@ class TagsController
 	public function label()
 	{
 		p('This method\'s name is actually "' . __FUNCTION__ . '"');
-		pr('@label Custom label!');
+		pre('@label Custom label!');
 	}
 	
 	/**
@@ -33,7 +33,7 @@ class TagsController
 	public function color()
 	{
 		p("You won't miss this in a hurry:");
-		pr('@color orange');
+		pre('@color orange');
 	}
 
 	/**
@@ -44,9 +44,9 @@ class TagsController
 	public function icon()
 	{
 		p('Declare an icon name:');
-		pr('@icon paper-plane');
+		pre('@icon paper-plane');
 		p('Prefix with a color to colorize:');
-		pr('@icon red paper-plane');
+		pre('@icon red paper-plane');
 	}
 
 	/**
@@ -56,30 +56,7 @@ class TagsController
 	 */
 	public function css()
 	{
-?>
-<p>The current method item <code>&lt;li&gt;</code> has a suitably over-the-top class <code>.fancy</code> added to it:</p>
-<pre>@css fancy</pre>
-<p>It's styled (in part) with the following code in the user <code>styles.css</code> stylesheet (click <a href="javascript:toggleUserStyles()">here</a> to disable it):</p>
-<pre class="code css">
-li.fancy{
-    border:1px solid #333;
-    background: repeating-linear-gradient(
-        -45deg,
-        #222,
-        #222 5px,
-        #333 5px,
-        #333 10px
-    );
-}</pre>
-<p>See the <a href="../basics/userassets">user assets</a> section for more information.</p>
-<script>function toggleUserStyles()
-{
-	var $link = $('link[href$="user/styles.css"]');
-	$link.is('[disabled]')
-		? $link.removeAttr('disabled')
-		: $link.attr('disabled', 'disabled');
-}</script>
-<?php
+		return view('sketchpad::help.tags.css');
 	}
 
 	/**
@@ -90,9 +67,9 @@ li.fancy{
 	public function group()
 	{
 		p('Mark a method as the start of a group:');
-		pr('@group I am a new group');
+		pre('@group I am a new group');
 		p('Add as many as you like:');
-		pr('@group I am another new group!');
+		pre('@group I am another new group!');
 	}
 
 	/**
@@ -103,7 +80,7 @@ li.fancy{
 	public function favourite()
 	{
 		p('Use UK or US spelling:');
-		pr("@favourite\n@favorite");
+		pre("@favourite\n@favorite");
 	}
 
 	/**
@@ -112,16 +89,7 @@ li.fancy{
 	public function order()
 	{
 		alert('Not yet implemented', false);
-		?>
-		<p>The tag takes a single numeric integer:</p>
-		<pre>@order 1</pre>
-		<p>Lower numbers appear first (so the same as natural numbering) with unordered members appearing after, in their given order:</p>
-		<ul>
-			<li>Groups will appear in the order they are listed in config</li>
-			<li>Controllers will appear in filesystem order</li>
-			<li>Methods will appear in the order they are written</li>
-		</ul>
-		<?php
+		echo view('sketchpad::help.tags.order');
 	}
 
 	/**
@@ -260,7 +228,7 @@ li.fancy{
 	public function defer($foo = 1)
 	{
 		p('Value <code>$foo</code> was set to ' .$foo. ' at ' . date('H:i:s'));
-		pr('@defer');
+		pre('@defer');
 		p('Look also at <a href="../basics/testmode">test mode</a> for a more interactive way to test then run conditional code');
 	}
 
@@ -269,19 +237,9 @@ li.fancy{
 	 *
 	 * @warn
 	 */
-	public function warn($value = 10)
+	public function warn()
 	{
-		p("Hopefully the big red lozenge didn't put you off too much:");
-		pr('@warn');
-		p('When the method is finally called, the deferred task, such as sending emails, will be run.');
-?>
-<p>If you need to pass data to the deferred methods, your other options are:</p>
-		<ul>
-			<li>Use <a href="../basics/parameters">method parameters</a> along with the warning</li>
-			<li>Use <a href="../basics/testmode">test mode</a> for a more interactive way to test then run conditional code</li>
-			<li>Use an <a href="../basics/forms">HTML form</a>, which Sketchpad will intercept and submit back to the original method</li>
-		</ul>
-<?php
+		return view('sketchpad::help.tags.warn');
 	}
 
 	/**
@@ -292,7 +250,7 @@ li.fancy{
 	public function archived()
 	{
 		p('Probably best to remove methods you no longer use, but if you want to keep them, you can mark them as archived:');
-		pr('@archived');
+		pre('@archived');
 	}
 
 	/**
@@ -304,7 +262,7 @@ li.fancy{
 	{
 		p("Both controllers and methods can be marked as private, meaning they won't be added to Sketchpad's controller list");
 		p('Normally, you would declare a method as private, but you might need a public method for something like a callback:');
-		pr('@private');
+		pre('@private');
 	}
 
 

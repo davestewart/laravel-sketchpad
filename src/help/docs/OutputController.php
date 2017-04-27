@@ -26,7 +26,7 @@ class OutputController
 	 * @label echo
 	 * @group Text
 	 */
-	public function text()
+	public function echooo()
 	{
 		echo 'Hello there';
 	}
