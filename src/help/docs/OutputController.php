@@ -26,21 +26,21 @@ class OutputController
 	 * @label echo
 	 * @group Text
 	 */
-	public function text()
+	public function echooo()
 	{
 		echo 'Hello there';
 	}
 
 	/**
-	 * Use `p()` to print HTML paragraphs tags
+	 * Output text in HTML paragraphs tags
 	 */
 	public function paragraph()
 	{
 		?>
 		<p>The format of the method is:</p>
-<pre class="code php">p($text, $class);</code></pre>
+		<pre class="code php">p($text, $class = '');</code></pre>
 		<p>You can print <strong>normal</strong>, <strong>note</strong> and <strong>custom</strong>-classed paragraphs:</p>
-		<div style="margin-left: 25px">
+		<div style="margin: 20px 25px 30px;">
 
 		<?php
 			p('I am normal');
@@ -53,10 +53,40 @@ class OutputController
 	}
 
 	/**
+	 * Output preformatted text
+	 */
+	public function text()
+	{
+		?>
+		<p>The format of the method is:</p>
+		<pre class="code php">text($text);</pre>
+		<p>This is a paragraph...</p>
+		<?php
+		text('...and this is some text');
+	}
+
+	/**
+	 * Output code with formatting and html entities converted
+	 */
+	public function code()
+	{
+		?>
+		<p>The format of the method is:</p>
+		<pre class="code php">code($text, $format = 'php');</pre>
+		<p>As an example, the contents of this file is:</p>
+		<?php
+		code(file_get_contents(__FILE__));
+	}
+
+	/**
 	 * Use `alert()` to print Bootstrap "alert" message boxes to the page
 	 */
 	public function alert()
 	{
+		?>
+		<p>The format of the method is:</p>
+		<pre class="code php">alert($html, $class = 'info', $icon = '');</pre>
+		<?php
 		p('Pass text only to output a basic Bootstrap "info" alert box:');
 		alert('Just text passed');
 
@@ -81,7 +111,7 @@ class OutputController
 	 */
 	public function links()
 	{
-		echo view('sketchpad::help.links');
+		echo view('sketchpad::help.output.links');
 	}
 
 	/**
@@ -89,7 +119,7 @@ class OutputController
 	 */
 	public function forms()
 	{
-		echo view('sketchpad::help.form', ['form' => Sketchpad::$form]);
+		echo view('sketchpad::help.output.form', ['form' => Sketchpad::$form]);
 	}
 
 	/**
@@ -114,12 +144,12 @@ class OutputController
 		$paginator->appends(Sketchpad::$params);
 
 		// output
-		return view('sketchpad::help.pagination', compact('items', 'paginator'));
+		return view('sketchpad::help.output.pagination', compact('items', 'paginator'));
 
 	}
 
 	/**
-	 * Use `vd()`, `pr()` and `pd()` to output object structures with HTML `pre` tag. All functions take variadic parameters
+	 * Use `vd()`, `pr()` and `pd()` to output object structures with HTML `pre` tag and some basic syntax highlighting
 	 *
 	 * @label print_r
 	 * @group Data
@@ -129,8 +159,10 @@ class OutputController
 		p('Use <code>pr()</code> to format and <code>print_r()</code>:');
 		pr($this->data());
 
-		p('Use <code>vd()</code> to format and <code>var_dump()</code>:');
+		p('Use <code>vd()</code> to format and <code>var_dump()</code>, with a slightly tweaked structure to bring it more into line with <code>pr()</code>:');
 		vd($this->data());
+		p('Note that all functions take variadic parameters, so you do the following:');
+		echo '<pre class="code php">pr($foo, $bar, $baz);</pre>';
 	}
 
 	/**
@@ -163,10 +195,14 @@ class OutputController
 	 */
 	public function ls($options = '')
 	{
-		p('This is the validation config array, formatted as a list:');
+		?>
+		<p>The format of the method is:</p>
+		<pre class="code php">ls($values, $options = '');</pre>
+		<p>The options are the same as the <a href="table">table</a> function.</p>
+		<p>This is the validation config array, formatted as a list:</p>
+		<?php
 		$data   = \App::make(Translator::class)->get('validation');
 		ls($data, $options);
-		p('Use the same options as the <a href="table">table</a> function.');
 	}
 
 	/**
@@ -201,7 +237,7 @@ class OutputController
 			$data[$index]['example'] = implode(' ', array_map(function($value){ return "<code>$value</code>";}, explode('|', $example)));
 		}
 
-		return view('sketchpad::help.table', compact('data', 'options'));
+		return view('sketchpad::help.output.table', compact('data', 'options'));
 	}
 
 	/**
@@ -211,7 +247,7 @@ class OutputController
 	 */
 	public function blade(SketchpadConfig $config)
 	{
-		return view('sketchpad::help.blade', ['views' => $config->views]);
+		return view('sketchpad::help.output.blade', ['views' => $config->views]);
 	}
 
 	/**
@@ -220,9 +256,9 @@ class OutputController
 	public function markdown()
 	{
 		p('Pass absolute paths or a <code>sketchpad::path.to.view</code> reference.');
-		md('sketchpad::help.md.text');
+		md('sketchpad::help.output.text');
 		p('Here is some general markdown formatting:');
-		md('sketchpad::help.md.formatting');
+		md('sketchpad::help.output.formatting');
 		echo '<style>.markdown { margin:25px; }</style>';
 	}
 
@@ -231,7 +267,7 @@ class OutputController
 	 */
 	public function vue($name = 'World')
 	{
-		vue('sketchpad::help.vue.form', ['name' => $name]);
+		vue('sketchpad::help.output.vue', ['name' => $name]);
 	}
 
 	protected function data()

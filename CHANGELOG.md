@@ -5,6 +5,37 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.3] - 2017-04-27
+
+### Added
+
+- Support for implicit pagination
+- Included app controllers folder in paths
+- Index pages for all help controllers
+- Static `Sketchpad::$form` and `Sketchpad::$data` properties
+- New `text()` and `code()` helper functions
+- Bootstrap formatting for Markdown tables
+- Added changelog
+
+### Changed
+
+- Improved example controller and views
+- Updated a lot of help to be better-formatted and more consistent
+- Added formatting classes to `pr()` and `vd()`
+- Updated FontAwesome to latest version
+- Simplified copying of user views in setup
+- Improved submission of form data
+
+### Fixed
+
+- Defended against showing parent paths in Browse filesystem
+- Fixed edge-case with buggy internal routes
+- Fixed bug with method titles showing parameters
+- Fixed Markdown not showing code or blockquotes correctly
+- Fixed bug where coloured @icon icons not showing
+- Updated demo link in readme
+
+
 ## [1.1.0] - 2017-04-21
 
 ### Added

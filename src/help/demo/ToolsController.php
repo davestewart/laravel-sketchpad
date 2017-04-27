@@ -1,6 +1,5 @@
 <?php namespace davestewart\sketchpad\help\demo;
 
-use App\data\entities\User;
 use davestewart\sketchpad\config\SketchpadSettings;
 use Illuminate\Http\Request;
 use Illuminate\View\FileViewFinder;
@@ -13,6 +12,10 @@ use Illuminate\View\View;
  */
 class ToolsController
 {
+	public function index()
+	{
+		md(__DIR__ . '/tools.md');
+	}
 
 	/**
 	 * View the app state
@@ -29,37 +32,22 @@ class ToolsController
 	 */
 	public function viewUsers()
 	{
-		$classes =
-		[
-			'\User',
-			'\App\User',
-			'\App\Models\User',
-			'\App\Models\Entities\User',
-			'\App\data\entities\User',
-		];
-		$users = null;
-		foreach($classes as $class)
-		{
-			if(class_exists($class))
-			{
-				p("Using user class <code>$class</code> and fetching users...");
-				$users = $class::all();
-				break;
-			}
-		}
+		$users = \DB::table('users')
+			->select('id', 'name', 'email', 'created_at')
+			->limit(1)
+			->paginate(15);
 
 		if($users)
 		{
-			$data = $users->toArray();
-			return count($data)
-				? tb($data)
-				: p('There are no users in the database', 'note');
+			$data = $users->getCollection();
+			if (!empty($data))
+			{
+				tb($data);
+				echo $users;
+				return;
+			}
 		}
-		else
-		{
-			p('Could not find User class in the following array:');
-			pr($classes);
-		}
+		p('Unable to show users');
 
 	}
 
@@ -89,7 +77,7 @@ class ToolsController
 			];
 		}
 
-		vue('sketchpad::help.vue.routes', $array);
+		vue('sketchpad::help.tools.routes', $array);
 	}
 
 	/**
@@ -136,7 +124,7 @@ class ToolsController
                 $path           = rtrim($path, '/') . '/';
                 $parent         = $path !== '/' ? preg_replace('%[^/]+/$%', '', $path) : '/';
 
-                return view('sketchpad::help.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
+                return view('sketchpad::help.tools.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
             }
             catch(\Exception $e)
             {
@@ -195,38 +183,16 @@ class ToolsController
             $links[] = '<a href="?key=' .$key. '">' .$key. '</a> ';
         }
 
-		?>
-		<style type="text/css">
-            #output .links{ padding: 10px; padding-top:0; border-bottom:1px solid #EEE; margin-bottom:10px; }
-
-			#output h1 {font-size: 150%;}
-			#output h2 {font-size: 125%;}
-			#output pre {margin: 0; font-family: monospace;}
-			#output hr {background-color: #ccc; border: 0; height: 1px;}
-			#output img {float: right; border: 0;}
-
-			#output .phpinfo table a:hover {text-decoration: underline;}
-			#output .phpinfo table a:link {color: #009; text-decoration: none; background-color: #fff;}
-			#output .phpinfo table {border-collapse: collapse; border: 0; width: 100%; box-shadow: 1px 2px 3px #ccc;}
-			#output .phpinfo td, th {border: 1px solid #666 !important; font-size: 75%; vertical-align: baseline; padding: 4px 5px;}
-			#output .phpinfo .p {text-align: left;}
-			#output .phpinfo .e {background-color: #ccf; width: 300px; font-weight: bold;}
-			#output .phpinfo .h {background-color: #99c; font-weight: bold;}
-			#output .phpinfo .v {background-color: #FBFBFB; max-width: 300px; overflow-x: auto;}
-			#output .phpinfo .v i {color: #999; }
-			#output .phpinfo .v pre { font-size:10px !important; }
-		</style>
-		<?php
-
 		ob_start();
 		phpinfo($section);
 		$contents = ob_get_contents();
 		ob_end_clean();
 
+		$contents   = str_replace('<hr />', '', $contents);
 		$contents   = preg_replace('/^[\s\S]+?body>/', '', $contents);
 		$contents   = preg_replace('/<\/body>[\s\S]+$/', '', $contents);
-        echo '<div class="links">' . implode( ' | ', $links) . '</div>';
-        echo '<div class="phpinfo">' . $contents . '</div>';
+
+        return view('sketchpad::help.tools.phpinfo', compact('links', 'contents'));
 	}
 
 

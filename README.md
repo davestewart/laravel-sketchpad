@@ -17,6 +17,12 @@ You can navigate methods, interactively modify parameters, and even [live-reload
 
 Additional tooling and functionality is designed to make it quick and easy to develop or debug new tools, features and code.
 
+## Demo
+
+View the live demo at:
+
+- [sketchpad.davestewart.io/sketchpad](http://sketchpad.davestewart.io/sketchpad)
+
 ## Uses
 
 - Test out new coding ideas

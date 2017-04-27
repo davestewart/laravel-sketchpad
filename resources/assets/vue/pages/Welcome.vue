@@ -7,7 +7,7 @@
 		<section class="content">
 
 			<h3>Introduction</h3>
-			<p>Sketchpad is an innovative, bolt-on development environment for your existing Laravel site.
+			<p>Sketchpad is an innovative live-coding, development and admin environment for your existing Laravel site.
 			<p>It's a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.</p>
 
 			<iframe style="padding:20px;" width="560" height="333" src="https://www.youtube.com/embed/jahhWFd-M_A" frameborder="0" allowfullscreen></iframe>

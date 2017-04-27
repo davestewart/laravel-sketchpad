@@ -17,17 +17,39 @@ class Html
 		/**
 		 * Echo a paragraph tag, with optional class
 		 *
-		 * @param               $value
+		 * @param               $text
 		 * @param bool|string   $class
 		 */
-		public static function p($value, $class = null)
+		public static function p($text, $class = null)
 		{
 			$attr = $class === true
 				? ' class="note"'
 				: (is_string($class)
 					? ' class="' .$class. '"'
 					: '');
-			echo "<p{$attr}>$value</p>";
+			echo "<p{$attr}>$text</p>";
+		}
+
+		/**
+		 * Output preformatted text
+		 *
+		 * @param   string  $text
+		 */
+		public static function text($text)
+		{
+			echo "<pre>$text</pre>\n";
+		}
+
+		/**
+		 * Output code with optional highlighting
+		 *
+		 * @param   string  $text
+		 * @param   string  $format
+		 */
+		public static function code($text, $format = 'php')
+		{
+			$text = htmlentities($text);
+			echo "<pre class='code $format'>$text</pre>\n";
 		}
 
 		/**
@@ -57,7 +79,7 @@ class Html
 		 */
 		public static function pr()
 		{
-			echo "\n" . '<pre>' . "\n";
+			echo "\n" . '<pre class="code php">' . "\n";
 			$args = func_get_args();
 			print_r( count($args) === 1 ? $args[0] : $args);
 			echo "</pre>\n\n";
@@ -77,7 +99,7 @@ class Html
 		 */
 		public static function vd()
 		{
-			echo "\n" . '<pre>' . "\n";
+			echo "\n" . '<pre class="code php">' . "\n";
 			$args = func_get_args();
 			ob_start();
 			var_dump(count($args) === 1 ? $args[0] : $args);

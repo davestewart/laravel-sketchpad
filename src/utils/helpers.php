@@ -8,6 +8,22 @@ if( ! function_exists('p') )
 	}
 }
 
+if( ! function_exists('text') )
+{
+	function text($text)
+	{
+		\davestewart\sketchpad\utils\Html::text($text);
+	}
+}
+
+if( ! function_exists('code') )
+{
+	function code($text, $format = 'php')
+	{
+		\davestewart\sketchpad\utils\Html::code($text, $format);
+	}
+}
+
 if( ! function_exists('alert') )
 {
 	function alert($html, $class = 'info', $icon = '')

@@ -4,6 +4,7 @@
 
 <script>
 
+import _ from 'underscore';
 import settings		from '../../js/state/settings.js';
 
 export default
@@ -63,7 +64,9 @@ export default
 					}
 					else if (format === 'markdown')
 					{
-						$el.addClass('markdown').html(marked(text));
+						let html = marked(_.unescape(text));
+						html = html.replace(/<table>/, '<table class="table">');
+						$el.addClass('markdown').html(html);
 					}
 				})
 
