@@ -91,10 +91,28 @@ export default
 		{
 			// variables
 			const styles    = '<style>#sf-resetcontent { width:auto; word-break: break-all; }</style>';
-			const script    = '<script>function post() { parent.postMessage({setFrameHeight:document.body.clientHeight + 80}, "*"); } if(parent.postMessage) { post(); window.onresize = post; };</scr' + 'ipt>';
+			const script    = `
+function onResize ()
+{
+	if (canResize)
+	{
+		canResize = false;
+		const data = {setFrameHeight:document.body.clientHeight, id:"error-frame"}
+		parent.postMessage(data, '*');
+		setTimeout(function () { canResize = true; }, 200)
+	}
+}
+var canResize = true;
+if (parent.postMessage)
+{
+	window.onresize = onResize;
+	onResize();
+};`
 
 			// set content
-			const src		= 'data:' +type+ ',' + encodeURIComponent(html + styles + script);
+			html            = html.replace(/^[\s\S]+?<!DOCTYPE html>/, '<!DOCTYPE html>');
+			html            = html.replace('</body>', [styles, '<script>' +script+ '</scr' + 'ipt>', '</body>'].join('\n'));
+			const src		= 'data:' +type+ ',' + encodeURIComponent(html);
 			const $iframe   = $('<iframe id="error-frame" frameborder="0">').attr('src', src);
 			this.clear().append($iframe);
 			this.format 	= 'error';
