@@ -5,12 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [1.1.3] - 2017-04-27
+## [1.1.4] - 2017-04-28
 
 ### Added
 
 - Support for implicit pagination
 - Included app controllers folder in paths
+- Automatic injection of `$route` variable into views
 - Index pages for all help controllers
 - Static `Sketchpad::$form` and `Sketchpad::$data` properties
 - New `text()` and `code()` helper functions
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Updated FontAwesome to latest version
 - Simplified copying of user views in setup
 - Improved submission of form data
+- Improved formatting for tables and forms
 
 ### Fixed
 
@@ -33,6 +35,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed bug with method titles showing parameters
 - Fixed Markdown not showing code or blockquotes correctly
 - Fixed bug where coloured @icon icons not showing
+- Fixed scroll to top animation
+- Fixed bug with intercepted link currentTarget
 - Updated demo link in readme
 
 
