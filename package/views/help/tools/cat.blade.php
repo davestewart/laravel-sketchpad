@@ -1,4 +1,26 @@
-<a href="http://thecatapi.com" target="_blank" id="cat"></a>
+<a href="http://thecatapi.com" target="_blank" id="cat">
+	<div>
+		<img src="{{ $route }}assets/images/ajax-loader-bars.gif" alt="">
+	</div>
+</a>
+
+<style>
+	#cat div {
+		position: relative;
+		width: 100%;
+		padding-top: 66.66%;
+		border: 1px solid #EEE;
+		background: #F9F9F9;
+	}
+
+	#cat div img {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin: -8px 0 0 -8px;
+	}
+</style>
+
 <script>
 	function loadImage()
 	{

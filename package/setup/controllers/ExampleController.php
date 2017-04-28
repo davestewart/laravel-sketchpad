@@ -1,6 +1,5 @@
 <?php namespace user;
 
-use Illuminate\Routing\Controller as BaseController;
 use davestewart\sketchpad\config\SketchpadConfig;
 
 /**
@@ -8,7 +7,7 @@ use davestewart\sketchpad\config\SketchpadConfig;
  *
  * @label start here
  */
-class ExampleController extends BaseController
+class ExampleController
 {
 
     public function index (SketchpadConfig $config)
@@ -17,6 +16,7 @@ class ExampleController extends BaseController
 	    [
 	        'controllers' => $config->controllers['sketchpad'],
 	        'views'       => $config->views,
+	        'assets'      => $config->assets,
 	    ];
         return view('sketchpad::example.index', $data);
     }

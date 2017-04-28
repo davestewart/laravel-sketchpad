@@ -27,9 +27,9 @@ The following helpers are loaded by default; you can use them in any methods loa
 
 ### Source
 
-You can view the source for the HTML examples at:
+You can view the source for this controller at:
 
-	vendor/davestewart/sketchpad/src/help
+	vendor/davestewart/sketchpad/src/help/docs/OutputController.php
 
 The source for the actual helpers and views is available at:
 

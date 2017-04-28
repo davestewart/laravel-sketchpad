@@ -1,9 +1,6 @@
 <?php namespace davestewart\sketchpad\help\demo;
 
 use davestewart\sketchpad\config\SketchpadSettings;
-use Illuminate\Http\Request;
-use Illuminate\View\FileViewFinder;
-use Illuminate\View\View;
 
 /**
  * Apart from just testing code, you can use Sketchpad as front end to access often-used tools and functions

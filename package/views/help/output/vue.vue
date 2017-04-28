@@ -13,12 +13,16 @@
 
 	<p>Then reference it in Vue using the injected variable <code>$data</code>:</p>
 
-	<pre><code class="js">new Vue({
+	<pre class="code js">new Vue({
     el: "#example",
     data: $data
-});</code></pre>
+});</pre>
 
-	<p>View the source method and template at <code>vendor/davestewart/sketchpad/resources/views/help/vue/form.vue</code> to see how it's done.</p>
+<p>Check the method and view source to see how it's done:</p>
+<pre>
+vendor/davestewart/sketchpad/src/help/docs/OutputController.php
+vendor/davestewart/sketchpad/package/views/help/output/vue.vue
+</pre>
 </div>
 
 <!-- script; reference `el` by id -->
