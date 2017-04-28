@@ -103,19 +103,20 @@
 			onLinkClick (event)
 			{
 				// variables
-				const root = location.origin + this.settings.route;
+				const root      = location.origin + this.settings.route;
+				const target    = event.currentTarget;
 				let path
 
 				// handle sketchpad: links
-				if (event.target.href.indexOf('sketchpad:') === 0)
+				if (target.href.indexOf('sketchpad:') === 0)
 				{
-					path = '/run/' + event.target.href.replace(/sketchpad:\/?/, '');
+					path = '/run/' + target.href.replace(/sketchpad:\/?/, '');
 				}
 
 				// handle normal links
-				if(event.target.href && event.target.href.indexOf(root) === 0 && event.target.href.indexOf('#') === -1)
+				if(target.href && target.href.indexOf(root) === 0 && target.href.indexOf('#') === -1)
 				{
-					path = event.target.href.substr(root.length - 1);
+					path = target.href.substr(root.length - 1);
 				}
 
 				// navigate to route
