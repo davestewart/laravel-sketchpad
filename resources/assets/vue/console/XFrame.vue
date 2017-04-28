@@ -32,11 +32,12 @@ export default
 			this.action = server.getRunUrl(method);
 			this.params = server.getData(method);
 			this.$nextTick(() => this.$els.form.submit());
+			this.$els.iframe.style = '';
 		},
 
 		clear ()
 		{
-			this.$els.iframe.src = ''
+			this.$els.iframe.src = '';
 		}
 	}
 }

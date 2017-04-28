@@ -51,6 +51,9 @@ class SketchpadServiceProvider extends ServiceProvider
 
 			$this->loadViewsFrom($views, 'sketchpad');
             $this->loadViewsFrom(base_path($config->views), 'sketchpad');
+			view()->composer('*', function ($view) use ($config) {
+				$view->with('route', $config->route);
+			});
 
 
         // ------------------------------------------------------------------------------------------------

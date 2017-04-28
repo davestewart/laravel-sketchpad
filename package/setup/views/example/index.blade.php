@@ -1,9 +1,13 @@
-<h3>Index</h3>
+<h3>Overview</h3>
 <p>This is the index method for your installed <code>ExampleController</code>.</p>
-<p>All the items in the navigation on the left are controllers and methods from different folders; you click them, they run :)</p>
-<p>The files for this setup can be found at:</p>
-<ul>
-	<li><code>{{ $controllers }}</code></li>
-	<li><code>{{ $views }}</code></li>
-</ul>
-<p>Feel free to modify, add or remove views, controllers or methods as you see fit.</p>
+<p>Like all the other controllers on the left, its methods are shown as a list; you click them, they run :)</p>
+<p>To add or remove controller folders, see the <strong>Paths</strong> section of the <a href="{{ $route }}settings">Settings</a> page.</p>
+
+<h3>Source</h3>
+<p>Your source files can be found at:</p>
+<pre>
+{{ $controllers }}
+{{ $views }}
+{{ $assets }}
+</pre>
+<p>These files are yours to modify, add to, or remove as you like.</p>

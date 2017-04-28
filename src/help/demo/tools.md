@@ -13,12 +13,13 @@ The tools contained here are just examples of the types of things you can build 
 - VueJS components
 - Blade views
 - Sketchpad package view syntax `sketchpad::`
+- View `$route` variable
 - Markdown (this page!)
 - Formatting
 - Tags
 
 ### Source
 
-You can check the source code for all tools at:
+You can view the source for this controller at:
 
-	vendor/davestewart/sketchpad/src/help/demo
+	vendor/davestewart/sketchpad/src/help/demo/ToolsController.php

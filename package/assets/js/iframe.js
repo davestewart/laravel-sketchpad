@@ -1,8 +1,7 @@
 ;(function () {
 	function post()
 	{
-		var height = document.body.clientHeight + 80;
-		parent.postMessage({setFrameHeight: height}, "*");
+		parent.postMessage({setFrameHeight: document.body.clientHeight}, "*");
 	}
 
 	if (parent.postMessage)

@@ -6,8 +6,11 @@
 	<button class="btn btn-primary btn-sm" type="submit">Submit</button>
 </form>
 
-@if($form)
+<p>All you need to do is check for <code>Sketchpad::$form</code> in your methods and take action appropriately.</p>
 <hr />
-<p>All you need to do is check for <code>Sketchpad::$form</code> in your methods and take action appropriately:</p>
+@if($form)
+<p>The form data is:</p>
 {!! dump($form) !!}
+@else
+<p>Waiting for form data...</p>
 @endif
