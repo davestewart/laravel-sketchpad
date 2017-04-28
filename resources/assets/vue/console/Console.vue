@@ -148,7 +148,7 @@ export default
 					}
 					if (settings.ui.scrollTop)
 					{
-						$('html,body').animate({scrollTop:0}, 450, 'easeInOutQuad');
+						$('html,body').stop().animate({scrollTop:0}, 450, 'easeInOutQuad');
 					}
 				}
 				this.params = method

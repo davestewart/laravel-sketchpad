@@ -11,6 +11,6 @@ This section covers the basics of writing, running and organising Sketchpad code
 
 ### Source
 
-Note that for **all** demo methods, you can simply look at the source code, available at:
+You can view the source for this controller at:
 
-	vendor/davestewart/sketchpad/src/help
+	vendor/davestewart/sketchpad/src/help/docs/BasicsController.php

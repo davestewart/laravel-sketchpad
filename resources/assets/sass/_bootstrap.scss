@@ -160,7 +160,17 @@
 		margin-top:0;
 	}
 
-	#output .table {
+	#output table {
+
+		td, th {
+			font-size: 14px;
+		}
+		td {
+			padding:3px 20px 3px 8px;
+		}
+	}
+
+	#output .table.debug {
 
 		th, td{
 			font-size: 13px;
@@ -187,12 +197,3 @@
 
 	}
 
-	#output .markdown table {
-
-		td, th {
-			font-size: inherit;
-		}
-		td {
-			padding:3px 20px 3px 8px;
-		}
-	}
