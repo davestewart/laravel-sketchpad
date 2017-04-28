@@ -84,11 +84,10 @@ class TagsController
 	}
 
 	/**
-	 * Prioritize a method or controller towards the top of a group
+	 * Override controller order within a folder
 	 */
 	public function order()
 	{
-		alert('Not yet implemented', false);
 		echo view('sketchpad::help.tags.order');
 	}
 

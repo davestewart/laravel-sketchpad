@@ -30,6 +30,19 @@
 			line-height: 1.4em;
 		}
 
+		pre {
+			display: block;
+			padding: 10px;
+			word-break: break-all;
+			word-wrap: break-word;
+			background-color: #fbfbfb;
+			border-radius: 4px;
+			font: normal 11px/1.4em Menlo,Monaco,Consolas,Courier New,monospace!important;
+			white-space: pre;
+			color: #000;
+			margin: 20px;
+		}
+
 	</style>
 </head>
 <body>
@@ -41,7 +54,9 @@
 		<li>loading your application's main controllers</li>
 		<li>loading content from external sites</li>
 	</ul>
-	<script src="/sketchpad/assets/js/iframe.js"></script>
+	<p>To automatically size any iframes to the size of their content (and so remove scrollbars) include the following script at the end of the loaded page:</p>
+	<pre>&lt;script src="{{ $route }}assets/js/iframe.js">&lt;/script></pre>
+	<script src="{{ $route }}assets/js/iframe.js"></script>
 </body>
 </html>
 
