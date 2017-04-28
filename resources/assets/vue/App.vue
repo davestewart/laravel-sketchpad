@@ -167,7 +167,8 @@
 			{
 				if (event.data && event.data.setFrameHeight)
 				{
-					$('#console iframe').css('height', event.data.setFrameHeight + 'px');
+					const height = event.data.setFrameHeight + 100;
+					$('#console iframe').css('height', height + 'px');
 				}
 			}
 
