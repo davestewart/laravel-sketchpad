@@ -25,27 +25,29 @@ class Scanner extends AbstractScanner
 	// PROPERTIES
 
 		/**
-		 * An array of 'route' => RouteReference instances, representing all found
-		 * folders / controllers from the sketchpad/ controller folder down
+		 * The base route for controllers
+		 *
+		 * @var string
+		 */
+		public $route;
+
+		/**
+		 * An array of 'route' => RouteReference instances
+		 *
+		 * These are saved to the session and are used to quickly re-scan controllers later
 		 *
 		 * @var FolderReference[]
 		 */
 		public $routes;
 
 		/**
-		 * An array of Controller instances, representing all found
-		 * folders / controllers from the sketchpad/ controller folder down
+		 * An array of Controller instances
+		 *
+		 * These are used to build the controller JSON array
 		 *
 		 * @var FolderReference[]
 		 */
 		public $controllers;
-
-		/**
-		 * The base route for sketchpad/ controllers
-		 *
-		 * @var string
-		 */
-		public $route;
 
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -55,8 +57,6 @@ class Scanner extends AbstractScanner
 		 * Router constructor.
 		 *
 		 * Sets up the Router with the values it needs determine or match routes
-		 *
-		 * Parameters are all from the Sketchpad config file
 		 *
 		 * @param   string   $path
 		 * @param   string   $route         the base route for sketchpad routes
@@ -95,31 +95,57 @@ class Scanner extends AbstractScanner
 		 */
 		protected function scan($path = '')
 		{
-			// variables
-			$root               = AbstractScanner::folderize($this->path . $path);
-			$files              = array_diff(scandir($root), ['.', '..']);
-
-			//pd($this->route, $root, $path, $files);
-			// folders
+			// add folder
 			$this->addFolder($path);
 
-			// loop
+			// get elements
+			$root       = AbstractScanner::folderize($this->path . $path);
+			$els        = array_diff(scandir($root), ['.', '..']);
+
+			// split elements
+			$files      = [];
+			$folders    = [];
+			foreach ($els as $el)
+			{
+				is_dir($root . $el)
+					? array_push($folders, $el)
+					: array_push($files, $el);
+			}
+
+			// files
+			$controllers = [];
 			foreach ($files as $file)
 			{
-				// variables
-				$abspath    = $root . $file;
-				$relpath    = $path . $file;
+				$abspath = $root . $file;
+				if($this->isController($abspath))
+				{
+					$controller = $this->addController($abspath, $path);
+					if ($controller)
+					{
+						// bit of a hack, but it works... using order + name to affect order
+						$order = $this->getOrder($controller);
+						$order = str_pad($order === 0 ? '999999' : $order, 6, 0, STR_PAD_LEFT);
+						$name = $controller->classname;
+						$controllers["$order:$name"] = $controller;
+					}
+				}
 
-				// parse
-				if(is_dir($abspath))
-				{
-					$this->scan($relpath . '/');
-				}
-				else if($this->isController($abspath))
-				{
-					$this->addController($abspath, $path);
-				}
 			}
+
+			// sort controllers
+			ksort($controllers);
+
+			// add controllers
+			$this->controllers = array_merge($this->controllers, array_values($controllers));
+
+			// folders
+			foreach ($folders as $folder)
+			{
+				$relpath = $path . $folder;
+				$this->scan($relpath . '/');
+			}
+
+			$orders = array_map(function ($c) { return $c->classpath; }, $this->controllers);
 		}
 
 		/**
@@ -137,7 +163,9 @@ class Scanner extends AbstractScanner
 		/**
 		 * Adds a controller to the internal routes array
 		 *
-		 * @param          $abspath
+		 * @param   string       $abspath
+		 * @param   string       $route
+		 * @return  Controller|\davestewart\sketchpad\objects\reflection\ControllerError
 		 */
 		protected function addController($abspath, $route)
 		{
@@ -152,19 +180,20 @@ class Scanner extends AbstractScanner
 			// add
 			if($instance instanceof Controller)
 			{
+				// controller isn't abstract, has methods, isn't private
 				if ($instance->isValid())
 				{
 					$ref = $instance->getReference();
-					$this->controllers[] = $instance;
 					$this->addRoute($route, $ref);
+					return $instance;
 				}
 			}
 
 			else
 			{
 				$ref = $instance->getReference();
-				$this->controllers[] = $instance;
 				$this->addRoute($route, $ref);
+				return $instance;
 			}
 		}
 
@@ -178,6 +207,26 @@ class Scanner extends AbstractScanner
 		{
 			//$ref->route = $route;
 			$this->routes[$route] = $ref;
+		}
+
+
+	// -----------------------------------------------------------------------------------------------------------------
+	// HELPERS
+
+		/**
+		 * Helper function to order controllers
+		 *
+		 * @param Controller $controller
+		 * @return int
+		 */
+		protected function getOrder ($controller)
+		{
+			$order = 0;
+			if ($controller instanceof Controller)
+			{
+				$order = (int) $controller->comment->getTag('order');
+			}
+			return $order;
 		}
 
 }
