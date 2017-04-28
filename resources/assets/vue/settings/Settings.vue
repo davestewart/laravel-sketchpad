@@ -64,7 +64,7 @@
 					<legend>Live Reload</legend>
 
 					<div v-if="watchError" class="col-sm-offset-3 warning show">
-						<p class="help-block prompt">{{ watchError}}</p>
+						<p class="help-block prompt">{{ watchError}} <a href="javascript:location.reload(); void(0)">Click here to try again</a>.</p>
 					</div>
 
 					<div v-if="watchHostChanged" class="col-sm-offset-3 warning">
