@@ -203,7 +203,7 @@ class ToolsController
      */
 	public function randomCat()
     {
-        return '<a href="http://thecatapi.com"><img style="width:100%" src="http://thecatapi.com/api/images/get?format=src&rand=' .rand(0, 1000). '"></a>';
+    	return view('sketchpad::help.tools.cat');
     }
 
 }
