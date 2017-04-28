@@ -9,12 +9,6 @@ abstract class RouteReference
 {
 
     /**
-     * The absolute path to the controller file
-     * @var
-     */
-    public $abspath;
-
-    /**
      * The relative path to the controller file
      * @var
      */
@@ -24,12 +18,11 @@ abstract class RouteReference
 
 	public $type;
 
-	public function __construct($type, $route, $path)
+	public function __construct($type, $route, $abspath)
 	{
 		$this->type     = $type;
 		$this->route    = $route;
-        $this->abspath  = $path;
-        $this->path     = str_replace(base_path() . '/', '', $path);
+        $this->path     = str_replace(base_path() . '/', '', $abspath);
 
     }
 	
@@ -43,6 +36,11 @@ abstract class RouteReference
 	{
 		$segments = explode('/', trim($this->route, '/'));
 		return count($segments);
+	}
+
+	public function exists()
+	{
+		return file_exists(base_path($this->path));
 	}
 
 }

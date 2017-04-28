@@ -214,13 +214,13 @@ class Router
 				{
 					// TODO not sure this is needed any more
 					// check if the file still exists
-					if(!file_exists($ref->abspath))
+					if(!$ref->exists())
 					{
 						return (object) ["error" => "The file '{$ref->path}' does not exist"];
 					}
 
 					// otherwise, get a reference
-					$instance = Controller::fromPath($ref->abspath, $ref->route);
+					$instance = Controller::fromPath(base_path($ref->path), $ref->route);
 
 					// update session
 					Session::put('sketchpad.routes.' . $ref->route, $instance->getReference());
