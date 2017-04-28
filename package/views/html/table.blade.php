@@ -1,5 +1,5 @@
 <?php use \davestewart\sketchpad\utils\Html; ?>
-<table class="table table-bordered table-striped {{ $class }}" style="{{ $style }}">
+<table class="table table-bordered table-striped {{ $class }} debug" style="{{ $style }}">
 	@if($label)
 		<caption>{{ $label }}</caption>
 	@endif
