@@ -1,13 +1,11 @@
 <?php namespace davestewart\sketchpad\services;
 
 use App;
-use davestewart\sketchpad\config\SketchpadSettings;
 use davestewart\sketchpad\objects\reflection\Controller;
 use davestewart\sketchpad\objects\route\CallReference;
 use davestewart\sketchpad\objects\route\ControllerReference;
 use davestewart\sketchpad\config\SketchpadConfig;
 use davestewart\sketchpad\traits\GetterTrait;
-use davestewart\sketchpad\utils\Html;
 use ReflectionMethod;
 
 /**
@@ -147,7 +145,7 @@ class Sketchpad
 				}
 
 				// assign static properties
-				Sketchpad::$route = $ref->route . $ref->method . '/';
+				Sketchpad::$route = $ref->route . '/' . $ref->method . '/';
 				Sketchpad::$params = $ref->params;
 				Sketchpad::$form = empty($form) ? null : $form;
 
