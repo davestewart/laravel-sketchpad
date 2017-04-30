@@ -18,7 +18,7 @@ export default
 
 	data ()
 	{
-		return {homepage: settings.ui.homepage}
+		return {homepage: settings.site.homepage}
 	},
 
 	components:

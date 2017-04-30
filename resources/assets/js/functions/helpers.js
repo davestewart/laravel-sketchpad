@@ -22,6 +22,11 @@ export default
 			.replace(/_/g, ' ')
 			.replace(/([a-z])([A-Z0-9])/g, '$1 $2')
 			.toLowerCase();
+	},
+
+	setTitle (text)
+	{
+		document.title = settings.site.title + ' - ' + text;
 	}
 
 };

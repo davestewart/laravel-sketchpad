@@ -78,7 +78,7 @@
 			$('#main').on('click', 'a[href]', this.onLinkClick);
 
 			// assets
-			this.$watch('settings.head', this.onAssetsChange, {deep: true});
+			this.$watch('settings.site.assets', this.onAssetsChange, {deep: true});
 			this.onAssetsChange()
 
 			// watcher
@@ -140,7 +140,7 @@
 				let html = '';
 				const $head = $('head')
 				$head.find('[data-asset]').remove()
-				this.settings.head
+				this.settings.site.assets
 					.forEach(url => {
 						url = url.replace('$assets/', this.settings.route + 'assets/user/')
 						const ext = url.split('.').pop()

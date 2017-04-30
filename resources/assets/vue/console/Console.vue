@@ -14,6 +14,7 @@
 // utils
 import _            from 'underscore'
 import {clone}      from '../../js/functions/utils.js';
+import Helpers      from '../../js/functions/helpers.js';
 
 // objects
 import settings		from '../../js/state/settings.js';
@@ -136,10 +137,10 @@ export default
 				}
 				if (method !== this.method)
 				{
-					document.title = 'Sketchpad - ' + state.route
+					Helpers.setTitle(state.route
 							.replace(/\?.+$/, '')
 							.replace(/\/$/, '')
-							.replace(/\//g, ' ▸ ');
+							.replace(/\//g, ' ▸ '));
 					this.transitioning = true
 					this.method = method
 					if ((method && method.tags.append) || settings.ui.appendOutput)

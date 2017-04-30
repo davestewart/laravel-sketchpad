@@ -26,23 +26,26 @@
 		"views": "",
 		"assets": ""
 	},
-	"ui": {
+	"site": {
+		"title": "Sketchpad",
 		"homepage": "welcome",
+		"assets": [
+			"$assets/scripts.js",
+			"$assets/styles.css"
+		]
+	},
+	"livereload": {
+		"preset": "",
+		"host": "",
+		"usePolling": false,
+		"paths": []
+	},
+	"ui": {
 		"humanizeText": true,
 		"showComments": true,
 		"showArchived": true,
 		"appendOutput": false,
 		"formatCode": true,
 		"scrollTop": true
-	},
-	"head" : [
-		"$assets/scripts.js",
-		"$assets/styles.css"
-	],
-	"livereload": {
-		"preset": "",
-		"host": "",
-		"usePolling": false,
-		"paths": []
 	}
 }

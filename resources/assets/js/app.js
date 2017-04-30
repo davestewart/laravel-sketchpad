@@ -8,6 +8,9 @@ import store        from './state/store'
 import config       from './functions/config'
 config();
 
+// functions
+import Helpers      from './functions/helpers';
+
 // components
 import Home         from '../vue/pages/Home.vue'
 import Help         from '../vue/pages/Help.vue'
@@ -62,7 +65,7 @@ router.map(routes);
 router.afterEach(function (transition) {
 	if (transition.to.path.indexOf('/run') !== 0)
 	{
-		document.title = 'Sketchpad - ' + transition.to.matched[0].handler.component.name.toLowerCase();
+		Helpers.setTitle(transition.to.matched[0].handler.component.name.toLowerCase());
 	}
 })
 
