@@ -137,7 +137,7 @@ export default
 				}
 				if (method !== this.method)
 				{
-					Helpers.setTitle(state.route
+					Helpers.setTitle('Run ▸ ' + state.route
 							.replace(/\?.+$/, '')
 							.replace(/\/$/, '')
 							.replace(/\//g, ' ▸ '));

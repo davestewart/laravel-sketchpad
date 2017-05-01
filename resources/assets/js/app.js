@@ -65,7 +65,7 @@ router.map(routes);
 router.afterEach(function (transition) {
 	if (transition.to.path.indexOf('/run') !== 0)
 	{
-		Helpers.setTitle(transition.to.matched[0].handler.component.name.toLowerCase());
+		Helpers.setTitle(transition.to.matched[0].handler.component.name);
 	}
 })
 

@@ -170,6 +170,7 @@
 
 import _                from 'underscore';
 import {clone, trim}    from '../../js/functions/utils';
+import Helpers          from '../../js/functions/helpers';
 import server           from '../../js/services/server';
 
 import settings         from '../../js/state/settings';
@@ -247,7 +248,7 @@ export default
 
 		onSiteTitleChange (value)
 		{
-			document.title = (value || 'Sketchpad') + ' - settings';
+			Helpers.setTitle('settings', value);
 			this.save();
 		},
 

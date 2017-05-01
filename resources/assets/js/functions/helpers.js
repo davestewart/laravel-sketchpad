@@ -24,9 +24,9 @@ export default
 			.toLowerCase();
 	},
 
-	setTitle (text)
+	setTitle (text, name)
 	{
-		document.title = (settings.site.title || 'Sketchpad') + ' - ' + text;
+		document.title = (name || settings.site.title || 'Sketchpad') + ' ▸ ' + text;
 	}
 
 };
