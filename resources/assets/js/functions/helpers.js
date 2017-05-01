@@ -26,7 +26,7 @@ export default
 
 	setTitle (text)
 	{
-		document.title = settings.site.title + ' - ' + text;
+		document.title = (settings.site.title || 'Sketchpad') + ' - ' + text;
 	}
 
 };

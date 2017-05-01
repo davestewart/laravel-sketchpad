@@ -54,7 +54,7 @@
 						<label class="control-label col-sm-3">Name</label>
 						<div class="col-sm-9">
 							<span class="field">
-								<input v-model="settings.site.title" type="text" class="form-control" placeholder="sketchpad/assets">
+								<input v-model="settings.site.title" type="text" class="form-control" placeholder="Sketchpad">
 								<span class="icons">
 									<i class="validate-path" aria-hidden="true"></i>
 								</span>
@@ -169,11 +169,11 @@
 <script>
 
 import _                from 'underscore';
-import {clone, trim}    from '../../js/functions/utils.js';
-import server           from '../../js/services/server.js';
+import {clone, trim}    from '../../js/functions/utils';
+import server           from '../../js/services/server';
 
-import settings         from '../../js/state/settings.js';
-import store            from '../../js/state/store.js';
+import settings         from '../../js/state/settings';
+import store            from '../../js/state/store';
 
 import ControllerPaths  from './ControllerPaths.vue';
 
@@ -221,7 +221,6 @@ export default
 		this.watch([
 			'settings.paths.assets',
 			'settings.paths.views',
-			'settings.site.title',
 			'settings.site.assets'
 		], true);
 
@@ -233,6 +232,7 @@ export default
 		], false, true);
 
 		// manual
+		this.$watch('settings.site.title', this.onSiteTitleChange);
 		this.$watch('settings.livereload.preset', this.onWatchPresetChange);
 		this.$watch('settings.livereload.host', _.debounce(this.onWatchHostChange), 400);
 		this.$watch('settings.livereload', _.debounce(this.onWatchSettingsChange, 400), {deep: true});
@@ -243,6 +243,12 @@ export default
 		onChange (value, old)
 		{
 			this.save()
+		},
+
+		onSiteTitleChange (value)
+		{
+			document.title = (value || 'Sketchpad') + ' - settings';
+			this.save();
 		},
 
 		onWatchPresetChange (value)
