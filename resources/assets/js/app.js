@@ -1,6 +1,6 @@
 import Vue          from 'vue'
 import VueRouter    from 'vue-router'
-import              '../vue/directives/PathValidator';
+import              '../vue/directives/validate-path';
 
 // state
 import admin        from './state/admin'
