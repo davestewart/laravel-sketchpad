@@ -47,13 +47,39 @@
 
 				</fieldset>
 
-				<fieldset name="assets">
-					<legend>Assets</legend>
+				<fieldset name="site">
+					<legend>Site</legend>
 
 					<div class="form-group form-group-sm">
-						<label class="control-label col-sm-3">Head content</label>
+						<label class="control-label col-sm-3">Name</label>
 						<div class="col-sm-9">
-							<textarea class="form-control" v-model="settings.head" spellcheck="false" autocomplete="off"></textarea>
+							<span class="field">
+								<input v-model="settings.site.title" type="text" class="form-control" placeholder="Sketchpad">
+								<span class="icons">
+									<i class="validate-path" aria-hidden="true"></i>
+								</span>
+							</span>
+							<p class="help-block prompt">Text that will be used to build page titles</p>
+						</div>
+					</div>
+
+					<div class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Homepage</label>
+						<div class="col-sm-9">
+							<select class="form-control custom" v-model="settings.site.homepage">
+								<option value="welcome">Welcome</option>
+								<option value="search">Search</option>
+								<option value="favourites">Favourites</option>
+								<option value="custom">Custom</option>
+							</select>
+							<p class="help-block prompt">Home page that will show when you load Sketchpad</p>
+						</div>
+					</div>
+
+					<div class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Assets</label>
+						<div class="col-sm-9">
+							<textarea class="form-control" v-model="settings.site.assets" spellcheck="false" autocomplete="off"></textarea>
 							<p class="help-block prompt">URLs to additional JS and CSS (use the placeholder <code>$assets/*</code> to load from the user assets folder)</p>
 						</div>
 					</div>
@@ -113,16 +139,6 @@
 					<legend id="ui">UI</legend>
 
 					<div class="form-group form-group-sm">
-						<label class="control-label col-sm-3">Homepage</label>
-						<ul class="col-sm-9 control-group">
-							<li><label><input type="radio" v-model="settings.ui.homepage" value="welcome"> <span>Welcome</span></label></li>
-							<li><label><input type="radio" v-model="settings.ui.homepage" value="favourites"> <span>Favourites</span></label></li>
-							<li><label><input type="radio" v-model="settings.ui.homepage" value="search"> <span>Search</span></label></li>
-							<li><label><input type="radio" v-model="settings.ui.homepage" value="custom"> <span>Custom</span></label></li>
-						</ul>
-					</div>
-
-					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Navigation</label>
 						<ul class="col-sm-9 control-group">
 							<li><label><input type="checkbox" v-model="settings.ui.humanizeText"> <span>Humanize text</span></label></li>
@@ -153,11 +169,12 @@
 <script>
 
 import _                from 'underscore';
-import {clone, trim}    from '../../js/functions/utils.js';
-import server           from '../../js/services/server.js';
+import {clone, trim}    from '../../js/functions/utils';
+import Helpers          from '../../js/functions/helpers';
+import server           from '../../js/services/server';
 
-import settings         from '../../js/state/settings.js';
-import store            from '../../js/state/store.js';
+import settings         from '../../js/state/settings';
+import store            from '../../js/state/store';
 
 import ControllerPaths  from './ControllerPaths.vue';
 
@@ -174,7 +191,7 @@ export default
 	{
 		// modify data
 		var data = clone(settings)
-		data.head = data.head.join('\n');
+		data.site.assets = data.site.assets.join('\n');
 		data.livereload.paths = data.livereload.paths.join('\n');
 
 		// return
@@ -200,15 +217,23 @@ export default
 
 		// watches
 		this.$refs.controllers.$on('update', this.onControllersUpdate)
+
+		// debounce
 		this.watch([
+			'settings.paths.assets',
 			'settings.paths.views',
-			'settings.paths.assets'
-		], true)
+			'settings.site.assets'
+		], true);
+
+		// deep
 		this.watch([
+			'settings.site.homepage',
+			'settings.watcher',
 			'settings.ui'
-		])
-		this.$watch('settings.head', _.debounce(this.onHeadChange, 400));
-		this.$watch('settings.watcher', this.onWatcherChange);
+		], false, true);
+
+		// manual
+		this.$watch('settings.site.title', this.onSiteTitleChange);
 		this.$watch('settings.livereload.preset', this.onWatchPresetChange);
 		this.$watch('settings.livereload.host', _.debounce(this.onWatchHostChange), 400);
 		this.$watch('settings.livereload', _.debounce(this.onWatchSettingsChange, 400), {deep: true});
@@ -216,14 +241,15 @@ export default
 
 	methods:
 	{
-		onHeadChange (value)
+		onChange (value, old)
 		{
 			this.save()
 		},
 
-		onWatcherChange ()
+		onSiteTitleChange (value)
 		{
-			this.save()
+			Helpers.setTitle('settings', value);
+			this.save();
 		},
 
 		onWatchPresetChange (value)
@@ -264,11 +290,6 @@ export default
 			this.save().then(data => store.loadAll())
 		},
 
-		onSettingsChange (value, old)
-		{
-			this.save()
-		},
-
 		save ()
 		{
 			const promise = server.post('api/settings', {settings:JSON.stringify(this.settings)})
@@ -280,14 +301,14 @@ export default
 			return promise
 		},
 
-		watch (fields, debounce)
+		watch (fields, debounce = false, deep = false)
 		{
-			let handler = this.onSettingsChange
+			let handler = this.onChange
 			if (debounce)
 			{
 				handler = _.debounce(handler, 400)
 			}
-			fields.forEach(field => this.$watch(field, handler, {deep:true}))
+			fields.forEach(field => this.$watch(field, handler, {deep:deep}))
 		}
 
 	}

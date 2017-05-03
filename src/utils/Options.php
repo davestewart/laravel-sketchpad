@@ -17,11 +17,15 @@ class Options
 	// -----------------------------------------------------------------------------------------------------------------
 	// instantiation
 
-		public function __construct($options = '')
+		public function __construct($str = '')
 		{
-			$this->options = $this->parse($options);
+			$this->options = $this->parse($str);
 		}
 
+		public static function create ($str = '')
+		{
+			return new Options($str);
+		}
 
 
 	// ------------------------------------------------------------------------------------------------
@@ -66,10 +70,11 @@ class Options
 		 * - splits options by |
 		 * - splits arguments by :
 		 * - splits argument members by ,
+		 * - splits argument member names and values by =
 		 *
 		 * Example:
 		 *
-		 *  index|html:path|pre:path,methods
+		 *  index|html:path|pre:path,methods|values:One=1,Two=2,Three=3
 		 *
 		 * @param $input
 		 * @return array
@@ -86,9 +91,22 @@ class Options
 				{
 					list($name, $value) = explode(':', $option, 2);
 				}
-				$output[$name] = strstr($value, ',') !== false
-					? explode(',', $value)
-					: $value;
+				if (strstr($value, ',') !== false)
+				{
+					$values = explode(',', $value);
+					if (strstr($value, '=') !== false)
+					{
+						$pairs = [];
+						foreach($values as $value)
+						{
+							list($n, $v) = explode('=', $value, 2);
+							$pairs[$n] = $v;
+						}
+						$values = $pairs;
+					}
+					$value = $values;
+				}
+				$output[$name] = $value;
 			}
 			return $output;
 		}

@@ -14,6 +14,7 @@
 // utils
 import _            from 'underscore'
 import {clone}      from '../../js/functions/utils.js';
+import Helpers      from '../../js/functions/helpers.js';
 
 // objects
 import settings		from '../../js/state/settings.js';
@@ -93,8 +94,8 @@ export default
 
 	created ()
 	{
-		this.load = _.debounce(this.load, 0)
-		this.update = _.debounce(this.update, 400)
+		this.run = _.debounce(this.run, 0)
+		//this.update = _.debounce(this.update, 400)
 		state.$on('update', this.onStateUpdate)
 		watcher.addHandler(this.onFileChange, file => !/Controller\.php$/.test(file));
 	},
@@ -136,10 +137,10 @@ export default
 				}
 				if (method !== this.method)
 				{
-					document.title = 'Sketchpad - ' + state.route
+					Helpers.setTitle('Run ▸ ' + state.route
 							.replace(/\?.+$/, '')
 							.replace(/\/$/, '')
-							.replace(/\//g, ' ▸ ');
+							.replace(/\//g, ' ▸ '));
 					this.transitioning = true
 					this.method = method
 					if ((method && method.tags.append) || settings.ui.appendOutput)
@@ -162,7 +163,7 @@ export default
 					this.method.runState = false
 					if (!this.defer)
 					{
-						this.load()
+						this.run()
 					}
 					else
 					{
@@ -178,7 +179,7 @@ export default
 		// ------------------------------------------------------------------------------------------------
 		// loading actions
 
-			load ()
+			run ()
 			{
 				if (this.method && !this.controller.error)
 				{
@@ -205,10 +206,10 @@ export default
 				router.replace('/run/' + state.route);
 				this.updating = false
 
-				// load if we're not deferred
+				// run if we're not deferred
 				if (!this.defer || force)
 				{
-					this.load()
+					this.run()
 				}
 			},
 
@@ -265,7 +266,7 @@ export default
 			onFileChange (file, type)
 			{
 				// console.log('console: file change')
-				this.load();
+				this.run();
 				return true;
 			},
 
@@ -303,7 +304,7 @@ export default
 			{
 				this.pending
 					? this.update(true)
-					: this.load()
+					: this.run()
 			},
 
 			onToggleRunState ()

@@ -8,8 +8,8 @@
 					<li>
 						<div class="btn-group">
 							<button
-								id="runState"
 								v-if="runIf"
+								id="runState"
 								:data-run="runState ? 1 : 0"
 								@click="toggleRunState"
 								class="btn btn-default btn-xs"><i class="fa fa-bolt" aria-hidden="true"></i></button>
@@ -20,7 +20,17 @@
 								class="btn btn-default btn-xs">{{{ runLabel }}}</button>
 						</div>
 					</li>
-					<param v-for="param in params" @run="run" :param="param"></param>
+					<li v-for="param in params">
+						<label
+							:for="'param-' + param.name"
+							:title="param.text"
+						>{{ param.name }}</label>
+						<component
+							:is="getParam(param)"
+							:param="param"
+							@run="run"
+						></component>
+					</li>
 				</ul>
 			</nav>
 
@@ -31,7 +41,13 @@
 
 <script>
 
-import Param		from './Param.vue';
+import TextParam        from './params/TextParam.vue';
+import InputParam       from './params/InputParam.vue';
+import ColorParam       from './params/ColorParam.vue';
+import NumberParam      from './params/NumberParam.vue';
+import CheckboxParam    from './params/CheckboxParam.vue';
+import SelectParam      from './params/SelectParam.vue';
+import DatalistParam    from './params/DatalistParam.vue';
 
 export default
 {
@@ -41,7 +57,13 @@ export default
 
 	components:
 	{
-		Param
+		TextParam,
+		InputParam,
+		ColorParam,
+		NumberParam,
+		CheckboxParam,
+		SelectParam,
+		DatalistParam
 	},
 
 	computed:
@@ -75,6 +97,42 @@ export default
 		toggleRunState ()
 		{
 			this.$emit('runState')
+		},
+
+		getParam (param)
+		{
+			// variables
+			let field   = param.field;
+			let type    = param.type;
+
+			// field
+			if(field)
+			{
+				if (/^(select|datalist)$/.test(field))
+				{
+					return field + '-param'
+
+				}
+				if (/^(text|number|color|date|datetime|month|time|week)$/.test(field))
+				{
+					return field === 'color'
+						? 'color-param'
+						: 'input-param';
+				}
+			}
+
+			// checkbox
+			if(/^bool/.test(type))
+			{
+				return 'checkbox-param';
+			}
+
+			if(type === 'number')
+			{
+				return 'number-param';
+			}
+
+			return 'text-param';
 		}
 	}
 

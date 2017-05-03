@@ -103,7 +103,7 @@ class ApiController extends Controller
 				$data = json_decode($request->get('settings'));
 
 				// trim values
-				$data->head = textToArray($data->head);
+				$data->site->assets = textToArray($data->site->assets);
 				$data->livereload->paths = textToArray($data->livereload->paths);
 
 				// save

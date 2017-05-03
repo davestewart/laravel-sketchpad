@@ -33,6 +33,9 @@
 			routes: $data
 		},
 		methods: {
+			getCount: function() {
+				return $('#routes').find('tbody tr').length;
+			},
 			getText: function(route) {
 				return Object.keys(route).reduce(function(p,c,i,a){ return p + ' ' + (route[c] || ''); }, '');
 			},

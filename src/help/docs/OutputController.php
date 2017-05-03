@@ -17,7 +17,7 @@ class OutputController
 
 	public function index()
 	{
-		md(__DIR__ . '/output.md');
+		md('sketchpad::help/output/index');
 	}
 
 	/**

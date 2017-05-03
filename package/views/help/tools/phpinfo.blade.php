@@ -19,5 +19,4 @@
 	#output .phpinfo .v i {color: #999; }
 	#output .phpinfo .v pre { font-size:10px !important; }
 </style>
-<div class="links">{!! implode( ' | ', $links)  !!}</div>
 <div class="phpinfo">{!! $contents !!}</div>

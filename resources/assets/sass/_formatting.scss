@@ -137,7 +137,6 @@
 	#settings {
 
 		.form-control {
-			background-color: $input-bg;
 			border:none;
 			padding:9px 10px;
 		}
@@ -146,5 +145,8 @@
 		input[type="checkbox"] {
 			width:20px;
 		}
+	}
 
+	#settings .form-control {
+		background-color: $input-bg;
 	}

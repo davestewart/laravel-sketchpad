@@ -48,7 +48,7 @@ class Tag
 			$this->text         = $text;
 
 			// param
-			if($name === 'param')
+			if($name === 'param' || $name === 'field')
 			{
 				preg_match('/(\w+)\s+\$(\w+)(.*)/', $text, $matches);
 				if($matches)

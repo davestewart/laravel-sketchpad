@@ -9,8 +9,23 @@
 	</tr>
 	</tbody>
 </table>
+<p>This enables you to generate absolute links in your views if required:</p>
+<pre class="code php">&lt;a href="@{{ $route }}some/link"&gt;Link&lt;/a&gt;</pre>
 
+<h3>Path variables</h3>
+<p>Sketchpad adds your user <code>view</code> folder to the Sketchpad package path variable:</p>
 
+<table class="table">
+	<tbody>
+	<tr>
+		<td style="width:180px"><code>sketchpad::</code></td>
+		<td>The path to your user view folder (currently <code>{{ $views }}</code>)</td>
+	</tr>
+	</tbody>
+</table>
+
+<p>This allows you to reference views easily:</p>
+<pre class="code php">return view('sketchpad::user.view.path');</pre>
 
 <h3>Route variables</h3>
 <p>The <code>Sketchpad</code> service has various values pertaining to the called route:</p>

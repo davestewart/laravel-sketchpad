@@ -16,7 +16,7 @@ class BasicsController
 
 	public function index()
 	{
-		md(__DIR__ . '/basics.md');
+		md('sketchpad::help/basics/index');
 	}
 
 	/**
@@ -63,26 +63,7 @@ public function parameters($name = 'World')
 	 */
 	public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mixed = null)
 	{
-		?>
-
-<p>Your method's parameter types (<code>string</code>, <code>boolean</code>, etc) determine the HTML input control types.</p>
-<pre class="code php">
-public function typeCasting($string = 'hello', $number = 1, $boolean = true, $mixed = null)
-{
-    // do something with parameters
-}
-</pre>
-<p>They also enable Sketchpad to cast submitted values to the expected type; no need for type-juggling in your methods:</p>
-<?php
-	vd(func_get_args());
-?>
-<p>Should you need to override determined types, type-hint your DocBocks:</p>
-<pre class="code php">
-@param  string   $string   This is a text field
-@param  int      $number   This is a number field
-@param  boolean  $boolean  This is a checkbox
-@param  mixed    $mixed    This is a text field (but will be converted to the correct type)
-</pre><?php
+		return view('sketchpad::help/basics/typecasting', ['params' => func_get_args()]);
 	}
 
 	/**
@@ -199,8 +180,9 @@ $assets/styles.css
 	public function variables(SketchpadConfig $config)
 	{
 		$route = $config->route;
+		$views = $config->views;
 		$fullroute = Sketchpad::$route;
-		echo view('sketchpad::help.basics.variables', compact('route', 'fullroute'));
+		echo view('sketchpad::help.basics.variables', compact('route', 'fullroute', 'views'));
 	}
 
 

@@ -5,22 +5,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [1.1.5] - 2017-04-28
+## [1.1.6] - 2017-05-03
 
 ### Added
 
+- Implemented support for `@field` tags
 - Implemented controller reordering
 - Implemented support for implicit pagination
+- New `text()` and `code()` helper functions
+- Static `Sketchpad::$form` and `Sketchpad::$data` properties
 - Automatic injection of `$route` variable into views
 - Included app controllers folder in paths
-- Static `Sketchpad::$form` and `Sketchpad::$data` properties
-- New `text()` and `code()` helper functions
+- Custom page title functionality
 - Index pages for all help controllers
 - Bootstrap formatting for Markdown tables
 - Added changelog
 
 ### Changed
 
+- Move various settings to single "Site" section
 - Improved example controller and view content
 - Updated a lot of help to be better-formatted and more consistent
 - Added formatting classes to `pr()` and `vd()`
@@ -38,6 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed bug where coloured @icon icons not showing
 - Fixed scroll to top animation
 - Fixed bug with intercepted link currentTarget
+- Fixed URL encoding bug with route parameters
 - Removed absolute path references from RouteReference classes
 - Updated demo link in readme
 
