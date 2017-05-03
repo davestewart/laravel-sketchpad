@@ -42,6 +42,13 @@ class Controller extends File implements Arrayable, JsonSerializable
 		 */
 		public $methods;
 
+		/**
+		 * An integer that indicates an intended order
+		 *
+		 * @var int
+		 */
+		public $order = 0;
+
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// METHODS
@@ -90,6 +97,7 @@ class Controller extends File implements Arrayable, JsonSerializable
 			$this->label        = $this->getLabel($this->classname);
 			$this->comment      = $this->getDocComment();
 			$this->methods      = [];
+			$this->order        = (int) $this->comment->getTag('order');
 
 			// methods
 			if($process)
@@ -145,6 +153,7 @@ class Controller extends File implements Arrayable, JsonSerializable
 				'name'      => $this->name,
 				'route'     => $this->route,
 				'folder'    => preg_replace('%[^/]+$%', '', $this->route),
+				'order'     => $this->order,
 				'label'     => $this->label,
 				'comment'   => $this->comment,
 				'methods'   => $this->methods,
