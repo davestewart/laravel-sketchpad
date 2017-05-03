@@ -167,6 +167,12 @@
 
 		}
 
+		select.form-control {
+			height: 27px;
+			background: #FFF;
+			padding-right:8px;
+		}
+
 		// inputs
 		input{
 			border-radius: 3px;
@@ -188,7 +194,12 @@
 		}
 
 		input[type="date"]{
-			width:160px;
+			width:155px;
+		}
+
+		input[type="color"]{
+			background: none;
+			height:28px;
 		}
 
 		input[type="text"],
@@ -219,7 +230,7 @@
 
 				// debugging
 				//outline: 1px solid red;
-				height:0px;
+				height:0;
 				transform: scaleX(0);
 			}
 		}

@@ -170,7 +170,7 @@
 		}
 	}
 
-	#output .table.debug {
+	#output .table.data {
 
 		th, td{
 			font-size: 13px;
@@ -190,7 +190,7 @@
 			color:#e74c3c !important;
 		}
 
-		tbody td {
+		tbody td.obj {
 			white-space: pre;
 			overflow-x:auto
 		}

@@ -1,5 +1,5 @@
 <?php use \davestewart\sketchpad\utils\Html; ?>
-<table class="table table-bordered table-striped {{ $class }} debug" style="{{ $style }}">
+<table class="table table-bordered table-striped {{ $class }} data" style="{{ $style }}">
 	<colgroup>
 		<col class="col-xs-1">
 		<col class="col-xs-7">

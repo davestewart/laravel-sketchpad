@@ -1,4 +1,5 @@
 <?php namespace davestewart\sketchpad\help\docs;
+use davestewart\sketchpad\services\Sketchpad;
 
 /**
  * Use custom tags in your controller and method DocBlocks to change Sketchpad's behaviour
@@ -92,108 +93,54 @@ class TagsController
 	}
 
 	/**
-	 * Allows customisation of parameter fields
-	 *
-	 * The format is @options param blah
+	 * Override basic HTML inputs with more complex HTML input types and attributes
 	 *
 	 * @group Output
 	 *
-	 * @field number min:10|max:20
-	 * @field date date
-	 * @field select options:foo,bar,baz
+	 * @param int       $select
+	 * @field select    $select     options:One=1,Two=2,Three=3
 	 *
-	 * @param string $date
-	 * @param string $select
-	 * @param int    $range
+	 * @param int       $range
+	 * @field number    $range      min:0|max:100|step:5
+	 *
+	 * @param string    $date
+	 * @field date      $date
+	 *
+	 * @param string    $color
+	 * @field color     $color
+	 *
 	 */
-	public function field($date = '2015-01-01', $select = 'foo', $range = 10)
+	public function field($select = 1, $range = 0, $date = '2015-01-01', $color = 'ff0000')
 	{
-		$types =
+		$splits =
 		[
 			[
-				'attribute' => 'text',
-				'description' => 'HTML text input',
-				'example' => '<code>text</code>',
+				'operator' => '<code>|</code>',
+				'grouping' => 'attributes',
+				'example' => '<code>min:0|max:100</code>',
 			],
 			[
-				'attribute' => 'number',
-				'description' => 'HTML number input',
-				'example' => '<code>number</code>',
+				'operator' => '<code>:</code>',
+				'grouping' => 'attribute name / attribute value',
+				'example' => '<code>step:5</code>',
 			],
 			[
-				'attribute' => 'date',
-				'description' => 'HTML date input',
-				'example' => '<code>date</code>',
+				'operator' => '<code>,</code>',
+				'grouping' => 'options (<code>select</code> and <code>datalist</code> only)',
+				'example' => '<code>foo,bar,baz</code>',
 			],
 			[
-				'attribute' => 'select',
-				'description' => 'HTML select input (use with options to specify values)',
-				'example' => '<code>select</code>',
-			],
-		];
-
-		$attributes =
-		[
-			[
-				'attribute' => 'min',
-				'description' => 'set the minimum value',
-				'example' => '<code>min:0</code>',
-			],
-			[
-				'attribute' => 'max',
-				'description' => 'set the maximum value',
-				'example' => '<code>max:10</code>',
-			],
-			[
-				'attribute' => 'step',
-				'description' => 'set the step size',
-				'example' => '<code>step:0.1</code>',
-			],
-			[
-				'attribute' => 'size',
-				'description' => 'set the field size',
-				'example' => '<code>size:10</code>',
-			],
-			[
-				'attribute' => 'width',
-				'description' => 'set the field width, in pixels',
-				'example' => '<code>width:100</code>',
-			],
-			[
-				'attribute' => 'maxlength',
-				'description' => 'set the maximum character length',
-				'example' => '<code>maxlength:10</code>',
-			],
-			[
-				'attribute' => 'pattern',
-				'description' => 'set a regex pattern to check the input value against',
-				'example' => '<code>pattern:\d{3}</code>',
-			],
-			[
-				'attribute' => 'options',
-				'description' => 'set options for select element',
-				'example' => '<code>options:foo,bar,baz</code>',
+				'operator' => '<code>=</code>',
+				'grouping' => 'option text / option value',
+				'example' => '<code>Yes=1</code>',
 			],
 		];
 
 		$format = 'html:example|cols:100,400,200';
-        alert('Not yet implemented', false);
-		?>
-		<p>Allows per-field customisation of method parameters. It uses the Laravel validation syntax, and a couple of additional parameters</p>
-<pre>
-@field x numeric|min:10|max:20
-@field y numeric|min:20|max:30
-@field email email
-@field date date
-</pre>
 
-		<p>The following field types / coercions are available:</p>
-		<?php tb($types, $format); ?>
+		$params = Sketchpad::$params;
 
-		<p>The following attributes are available:</p>
-		<?php tb($attributes, $format); ?>
-
-<?php
+		return view('sketchpad::help/tags/field', compact('types', 'attributes', 'format', 'params', 'splits'));
 	}
 
 	/**
@@ -259,9 +206,9 @@ class TagsController
 	 */
 	public function privateExample()
 	{
-		p("Both controllers and methods can be marked as private, meaning they won't be added to Sketchpad's controller list");
-		p('Normally, you would declare a method as private, but you might need a public method for something like a callback:');
+		p("Both controllers and methods can be marked as private, meaning they won't be added to Sketchpad's controller list:");
 		text('@private');
+		p('Normally, you would declare a method as private, but you might need a public method for something like a callback.');
 	}
 
 

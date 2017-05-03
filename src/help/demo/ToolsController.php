@@ -155,31 +155,11 @@ class ToolsController
      * Output the result of `phpinfo()`
      *
      * Note the use of escaping into HTML to output the style tag
-     * @param string $key
+     * @param   int     $section    The section to show
+     * @field   select  $section    options:All=-1,General=1,Credits=2,Configuration=4,Modules=8,Environment=16,Variables=32,License=64
      */
-	public function phpInfo($key = 'all')
+	public function phpInfo($section = -1)
 	{
-		$sections =
-		[
-			'all' => -1,
-			'general' => 1,
-			'credits' => 2,
-			'configuration' => 4,
-			'modules' => 8,
-			'environment' => 16,
-			'variables' => 32,
-			'license' => 64,
-		];
-		$section = isset($sections[$key])
-			? $sections[$key]
-			: -1;
-
-        $links = [];
-        foreach($sections as $key => $value)
-        {
-            $links[] = '<a href="?key=' .$key. '">' .$key. '</a> ';
-        }
-
 		ob_start();
 		phpinfo($section);
 		$contents = ob_get_contents();
@@ -189,7 +169,7 @@ class ToolsController
 		$contents   = preg_replace('/^[\s\S]+?body>/', '', $contents);
 		$contents   = preg_replace('/<\/body>[\s\S]+$/', '', $contents);
 
-        return view('sketchpad::help.tools.phpinfo', compact('links', 'contents'));
+        return view('sketchpad::help.tools.phpinfo', compact('contents'));
 	}
 
 

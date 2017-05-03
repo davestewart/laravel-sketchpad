@@ -1,6 +1,6 @@
 <p>There are often occasions where you want to <strong>test</strong> code before running it.</p>
 <p>Sketchpad allows you to set an additional boolean parameter <code>$run</code> which creates a special <code>Test / Run</code> toggle <i class="fa fa-bolt"></i> on the front end:</p>
-<pre class="code php">public function testMode($id = 1, $run = {{ $run ? 'true' : 'false' }}) { ... }</pre>
+<pre class="code php">public function testMode($id = 1, $run = false) { ... }</pre>
 <p>This allows you to preview output and <em>only</em> run additional code when happy with the results:</p>
 <pre class="code php">
 public function emailUser($id = 1, $run = false)
