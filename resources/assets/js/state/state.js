@@ -108,7 +108,7 @@ const State = Vue.extend({
 							const value     = params[name];
 							if (typeof value !== 'undefined')
 							{
-								param.value = value;
+								param.value = decodeURIComponent(value);
 								delete params[name]
 							}
 						});
@@ -280,7 +280,9 @@ const State = Vue.extend({
 						{
 							route += '?' + obj.params
 								.map( p => p.name + '=' + (p.value || '') )
-								.join('&');
+								.join('&')
+								.replace(/#/g, '%23')
+								.replace(/\?/g, '%3F');
 						}
 
 						// grab any parameters
