@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\objects\reflection;
 
+use davestewart\sketchpad\utils\Options;
 use JsonSerializable;
 use ReflectionParameter;
 
@@ -43,6 +44,20 @@ class Parameter extends Tag implements JsonSerializable
 		 */
 		public $text;
 
+		/**
+		 * Any field attribute values
+		 *
+		 * @var Field
+		 */
+		public $field;
+
+		/**
+		 * Any field attribute values
+		 *
+		 * @var array
+		 */
+		public $attrs;
+
 
 	// ---------------------------------------------------------------------------------------------------------------
 	// METHODS
@@ -71,6 +86,18 @@ class Parameter extends Tag implements JsonSerializable
 
 			// type
 			$this->type         = $this->getType($param, $value, $tag ? $tag->type : null);
+		}
+
+		/**
+		 * Set the field value
+		 *
+		 * @param   Field   $field
+		 * @return          $this
+		 */
+		public function setField ($field)
+		{
+			$this->field = $field;
+			return $this;
 		}
 
 		/**
@@ -113,13 +140,25 @@ class Parameter extends Tag implements JsonSerializable
 		 */
 		public function jsonSerialize()
 		{
-			return (object)
+			// base values
+			$values = (object)
 			[
-				'name'    => $this->name,
-				'type'    => $this->type,
-				'value'   => $this->value,
-				'text'    => $this->text,
+				'name'      => $this->name,
+				'type'      => $this->type,
+				'value'     => $this->value,
+				'text'      => $this->text,
+				'field'     => null,
+				'attrs'     => (object) [],
 			];
+
+			// override if field set
+			if (isset($this->field))
+			{
+				$values->field = $this->field->type;
+				$values->attrs = (object) $this->field->attrs;
+
+			}
+			return $values;
 		}
 
 }

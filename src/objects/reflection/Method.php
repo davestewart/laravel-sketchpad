@@ -71,6 +71,19 @@ class Method implements JsonSerializable
 					}
 				}
 			}
+
+			// fields
+			if (!empty($this->comment->fields))
+			{
+				foreach($this->params as $param)
+				{
+					$field = $this->comment->getField($param->name);
+					if ($field)
+					{
+						$param->setField($field);
+					}
+				}
+			}
 		}
 	
 		public function toArray($simple = false)

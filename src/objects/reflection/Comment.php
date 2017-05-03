@@ -1,6 +1,7 @@
 <?php namespace davestewart\sketchpad\objects\reflection;
 
 use davestewart\sketchpad\traits\GetterTrait;
+use davestewart\sketchpad\utils\Options;
 use JsonSerializable;
 
 /**
@@ -49,6 +50,13 @@ class Comment implements JsonSerializable
 		 */
 		public $tags;
 
+		/**
+		 * Any user-defined field types
+		 *
+		 * @var Tag[]
+		 */
+		public $fields;
+
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// INSTANTIATION
@@ -93,16 +101,22 @@ class Comment implements JsonSerializable
 				// match all tags, separate of paragraph text
 				$this->params   = [];
 				$this->tags     = [];
-	
+
 				preg_match_all('/@(\w+)(.*)/', $body, $matches);
 				foreach ($matches[0] as $index => $match)
 				{
 					$name   = $matches[1][$index];
 					$value  = trim($matches[2][$index]);
 					$tag    = new Tag($name, $value);
-					if($name == 'param')
+					//dump([$name, $value, $tag]);
+					if($name === 'param')
 					{
 						$this->params[$tag->name] = $tag;
+					}
+					if ($name === 'field')
+					{
+						$field = new Field($name, $value);
+						$this->fields[$field->name] = $field;
 					}
 					else
 					{
@@ -114,7 +128,7 @@ class Comment implements JsonSerializable
 				if(isset($this->tags['favorite']))
 				{
 					unset($this->tags['favorite']);
-					$this->tags['favourite'] = '';
+					$this->tags['favourite'] = true;
 				}
 		}
 
@@ -144,7 +158,20 @@ class Comment implements JsonSerializable
 				: null;
 		}
 
-		function jsonSerialize()
+		/**
+		 * Returns a field by name
+		 *
+		 * @param   string      $name
+		 * @return  Field|null
+		 */
+		public function getField($name)
+		{
+			return isset($this->fields[$name])
+				? $this->fields[$name]
+				: null;
+		}
+
+		public function jsonSerialize()
 		{
 			$data               = (object) [];
 			$data->intro        = $this->intro;
