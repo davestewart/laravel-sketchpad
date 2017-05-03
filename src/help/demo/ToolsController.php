@@ -11,7 +11,7 @@ class ToolsController
 {
 	public function index()
 	{
-		md(__DIR__ . '/tools.md');
+		md('sketchpad::help/tools/index');
 	}
 
 	/**

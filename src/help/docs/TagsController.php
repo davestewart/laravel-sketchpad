@@ -11,7 +11,7 @@ class TagsController
 
 	public function index()
 	{
-		md(__DIR__ . '/tags.md');
+		md('sketchpad::help/tags/index');
 	}
 
 	/**

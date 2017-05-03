@@ -16,7 +16,7 @@ class BasicsController
 
 	public function index()
 	{
-		md(__DIR__ . '/basics.md');
+		md('sketchpad::help/basics/index');
 	}
 
 	/**
