@@ -70,7 +70,7 @@ export default
 	{
 		enabled ()
 		{
-			return this.method && this.method.name !== 'index';
+			return !!this.method;
 		},
 
 		runLabel ()
