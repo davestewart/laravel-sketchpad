@@ -6,9 +6,9 @@
 	<p>Custom help page <code>{{ $help }}</code> not found.</p>
 	<p>You can:</p>
 	<ul>
-		<li>create it manually</li>
-		<li>re-run setup</li>
-		<li>switch back to a default help page</li>
+		<li>copy it from <code>vendor/davestewart/sketchpad/package/setup/views/help.blade.php</code></li>
+		<li>re-run setup to copy the file automatically</li>
+		<li>switch back to the default help page</li>
 		<li>choose not show a help page</li>
 	</ul>
 </section>
