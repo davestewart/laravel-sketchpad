@@ -10,6 +10,7 @@ Route::post ($config->route . 'api/settings',       'ApiController@settings');
 
 // api - tools
 Route::get ($config->route .  'api/path',           'ApiController@path');
+Route::get ($config->route .  'api/page/{name}',    'ApiController@page');
 
 // setup
 Route::get  ($config->route . 'setup',              'SetupController@index');

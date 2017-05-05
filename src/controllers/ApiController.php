@@ -82,6 +82,17 @@ class ApiController extends Controller
 		}
 
 		/**
+		 * Loads custom page content
+		 *
+		 * @param   string  $name
+		 * @return  string
+		 */
+		public function page($name)
+		{
+			return view("sketchpad::$name");
+		}
+
+		/**
 		 * Loads or saves settings data
 		 *
 		 * @method  POST

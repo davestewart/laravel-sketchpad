@@ -27,8 +27,9 @@
 		"assets": ""
 	},
 	"site": {
-		"title": "Sketchpad",
-		"homepage": "welcome",
+		"name": "Sketchpad",
+		"home": "welcome",
+		"help": "default",
 		"assets": [
 			"$assets/scripts.js",
 			"$assets/styles.css"

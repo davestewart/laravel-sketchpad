@@ -54,7 +54,7 @@
 						<label class="control-label col-sm-3">Name</label>
 						<div class="col-sm-9">
 							<span class="field">
-								<input v-model="settings.site.title" type="text" class="form-control" placeholder="Sketchpad">
+								<input v-model="settings.site.name" type="text" class="form-control" placeholder="Sketchpad">
 								<span class="icons">
 									<i class="validate-path" aria-hidden="true"></i>
 								</span>
@@ -64,15 +64,27 @@
 					</div>
 
 					<div class="form-group form-group-sm">
-						<label class="control-label col-sm-3">Homepage</label>
+						<label class="control-label col-sm-3">Home page</label>
 						<div class="col-sm-9">
-							<select class="form-control custom" v-model="settings.site.homepage">
+							<select class="form-control custom" v-model="settings.site.home">
 								<option value="welcome">Welcome</option>
 								<option value="search">Search</option>
 								<option value="favourites">Favourites</option>
 								<option value="custom">Custom</option>
 							</select>
 							<p class="help-block prompt">Home page that will show when you load Sketchpad</p>
+						</div>
+					</div>
+
+					<div class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Help page</label>
+						<div class="col-sm-9">
+							<select class="form-control custom" v-model="settings.site.help">
+								<option value="default">Default</option>
+								<option value="custom">Custom</option>
+								<option value="none">None</option>
+							</select>
+							<p class="help-block prompt">Help page to provide basic information to get users started</p>
 						</div>
 					</div>
 

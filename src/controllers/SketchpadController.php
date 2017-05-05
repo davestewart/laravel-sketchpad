@@ -62,6 +62,7 @@ class SketchpadController extends Controller
             // settings
 	        $settings   = $config->settings->data;
 	        $home       = $config->views . 'home.blade.php';
+	        $help       = $config->views . 'help.blade.php';
 
 			// data
 			$data =
@@ -72,6 +73,7 @@ class SketchpadController extends Controller
 				'settings'      => $settings,
 				'admin'         => $config->admin,
 				'home'          => view(file_exists(base_path($home)) ? 'sketchpad::home' : 'sketchpad::no-home', compact('home')),
+				'help'          => view(file_exists(base_path($help)) ? 'sketchpad::help' : 'sketchpad::no-help', compact('help')),
 				'data'          =>
 				[
 					'controllers' => $this->sketchpad->getController(),
