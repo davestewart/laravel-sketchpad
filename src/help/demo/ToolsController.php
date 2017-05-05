@@ -74,7 +74,7 @@ class ToolsController
 			];
 		}
 
-		vue('sketchpad::help.tools.routes', $array);
+		vue('sketchpad::help/tools/routes', $array);
 	}
 
 	/**
@@ -121,7 +121,7 @@ class ToolsController
                 $path           = rtrim($path, '/') . '/';
                 $parent         = $path !== '/' ? preg_replace('%[^/]+/$%', '', $path) : '/';
 
-                return view('sketchpad::help.tools.folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
+                return view('sketchpad::help/tools/folder', compact('parent', 'path', 'folders', 'files', 'breadcrumbs'));
             }
             catch(\Exception $e)
             {
@@ -169,7 +169,7 @@ class ToolsController
 		$contents   = preg_replace('/^[\s\S]+?body>/', '', $contents);
 		$contents   = preg_replace('/<\/body>[\s\S]+$/', '', $contents);
 
-        return view('sketchpad::help.tools.phpinfo', compact('contents'));
+        return view('sketchpad::help/tools/phpinfo', compact('contents'));
 	}
 
 
@@ -180,7 +180,7 @@ class ToolsController
      */
 	public function randomCat()
     {
-    	return view('sketchpad::help.tools.cat');
+    	return view('sketchpad::help/tools/cat');
     }
 
 }

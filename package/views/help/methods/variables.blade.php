@@ -11,6 +11,7 @@
 </table>
 <p>This enables you to generate absolute links in your views if required:</p>
 <pre class="code php">&lt;a href="@{{ $route }}some/link"&gt;Link&lt;/a&gt;</pre>
+<p>Note that <code>$route</code> is available in <a href="../output/blade">Blade</a>, <a href="../output/markdown">Markdown</a>, <a href="../output/vue">Vue</a> views.</p>
 
 <h3>Path variables</h3>
 <p>Sketchpad adds your user <code>view</code> folder to the Sketchpad package path variable:</p>
@@ -24,8 +25,14 @@
 	</tbody>
 </table>
 
-<p>This allows you to reference views easily:</p>
-<pre class="code php">return view('sketchpad::user.view.path');</pre>
+<p>This allows you to reference view files quickly and easily:</p>
+<pre class="code php">
+return view('sketchpad::user/view/path');
+</pre>
+
+<pre class="code php">
+md('sketchpad::user/view/path');
+</pre>
 
 <h3>Route variables</h3>
 <p>The <code>Sketchpad</code> service has various values pertaining to the called route:</p>

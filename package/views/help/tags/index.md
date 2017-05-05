@@ -18,6 +18,7 @@ Just add them to your methods' doc comments, and Sketchpad automatically impleme
 
 ### Source
 
-You can view the source for this controller at:
+You can view the source for this section at:
 
+	vendor/davestewart/sketchpad/package/views/help/tags
 	vendor/davestewart/sketchpad/src/help/docs/TagsController.php

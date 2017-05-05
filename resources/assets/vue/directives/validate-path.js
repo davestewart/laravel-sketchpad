@@ -40,7 +40,7 @@ Vue.directive('validate-path',
 
 	onInput ()
 	{
-		this.check();
+		this.check(true);
 	},
 
 	onBlur ()
@@ -48,7 +48,7 @@ Vue.directive('validate-path',
 		this.$icon.hide();
 	},
 
-	check ()
+	check (update)
 	{
 		const $el = $(this.el);
 		const path = trim($el.val());
@@ -63,7 +63,7 @@ Vue.directive('validate-path',
 						.toggleClass('fa-check', data.exists)
 						.toggleClass('fa-exclamation-triangle', !data.exists);
 				}
-				if (data.exists)
+				if (data.exists && update)
 				{
 					if (this.vm.onPathExists)
 					{

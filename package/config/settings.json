@@ -29,7 +29,7 @@
 	"site": {
 		"name": "Sketchpad",
 		"home": "welcome",
-		"help": "default",
+		"help": "help",
 		"assets": [
 			"$assets/scripts.js",
 			"$assets/styles.css"

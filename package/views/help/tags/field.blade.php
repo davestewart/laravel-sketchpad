@@ -1,5 +1,5 @@
 <h3>Overview</h3>
-<p>You can override Sketchpad's choice of <a href="../basics/typecasting">input field</a> with various HTML 5 element or input field types using the <code>@field</code> tag:</p>
+<p>You can override Sketchpad's choice of <a href="../methods/typecasting">input field</a> with various HTML 5 element or input field types using the <code>@field</code> tag:</p>
 <pre>
 @field  select    $select     options:One=1,Two=2,Three=3
 @field  number    $range      min:0|max:100|step:5

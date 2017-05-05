@@ -14,7 +14,7 @@
 
 			<h3>Overview</h3>
 			<p>Sketchpad provides an alternative structure of controllers, views, assets and routing that lives alongside your main Laravel installation.</p>
-			<p>You can navigate methods, interactively modify parameters, and even <a href="https://github.com/davestewart/laravel-sketchpad-reload" target="_blank">live-reload</a> the code you're working on, all from a friendly UI.</p>
+			<p>You can navigate methods, interactively modify parameters, and even <a href="run/help/docs/setup/livereload">live-reload</a> the code you're working on, all from a friendly UI.</p>
 			<p>Additional tooling and functionality is designed to make it quick and easy to develop or debug new tools, features and code.</p>
 
 			<h3>Next steps&hellip;</h3>
