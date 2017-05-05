@@ -19,7 +19,7 @@ const Store = Vue.extend({
 
 	created ()
 	{
-		watcher.addHandler(this.onControllerChange, /Controller\.php$/);
+		watcher.addHandler(this.onControllerChange, file => /Controller\.php$/.test(file));
 	},
 
 	methods:
