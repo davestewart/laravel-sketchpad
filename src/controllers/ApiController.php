@@ -103,6 +103,11 @@ class ApiController extends Controller
 		 */
 		public function settings(Request $request, SketchpadConfig $config)
 		{
+			if (!$config->admin->settings)
+			{
+				return response()->json($config->settings);
+			}
+
 			function textToArray ($text)
 			{
 				return array_values(array_filter(array_map('trim', explode("\n", trim($text))), 'strlen'));

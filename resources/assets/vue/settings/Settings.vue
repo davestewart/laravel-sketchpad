@@ -6,7 +6,13 @@
 		</header>
 		<section class="content">
 
-			<form class="form-horizontal">
+			<div v-if="!enabled">
+				<h3 class="text-danger">Settings are disabled</h3>
+				<p>If you think this is a mistake, contact your System Administrator.</p>
+				<p>If you are the System Administrator see the <a href="https://github.com/davestewart/laravel-sketchpad/wiki/Admin" target="_blank">wiki</a> on how to enable setup.</p>
+
+			</div>
+			<form v-else class="form-horizontal">
 
 				<fieldset name="paths">
 
@@ -181,10 +187,13 @@
 <script>
 
 import _                from 'underscore';
-import {clone, trim}    from '../../js/functions/utils';
+import {clone,
+		trim,
+		scrollTo}       from '../../js/functions/utils';
 import Helpers          from '../../js/functions/helpers';
 import server           from '../../js/services/server';
 
+import admin            from '../../js/state/admin';
 import settings         from '../../js/state/settings';
 import store            from '../../js/state/store';
 
@@ -208,6 +217,7 @@ export default
 
 		// return
 		return {
+			enabled: admin.settings,
 			watchHostChanged: false,
 			watchError: false,
 			settings: data
@@ -224,6 +234,11 @@ export default
 
 	ready ()
 	{
+		if (!this.enabled)
+		{
+			return;
+		}
+
 		// error
 		this.watchError = watcher.error;
 
