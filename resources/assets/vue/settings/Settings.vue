@@ -104,7 +104,7 @@
 
 				</fieldset>
 
-				<fieldset name="watch">
+				<fieldset name="livereload">
 					<legend>Live Reload</legend>
 
 					<div v-if="watchError" class="col-sm-offset-3 warning show">
@@ -154,7 +154,7 @@
 				</fieldset>
 
 				<fieldset name="ui">
-					<legend id="ui">UI</legend>
+					<legend>UI</legend>
 
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Navigation</label>
@@ -246,24 +246,30 @@ export default
 		this.$refs.controllers.$on('update', this.onControllersUpdate)
 
 		// debounce
-		this.watch([
+		this.watchField([
 			'settings.paths.assets',
 			'settings.paths.views',
 			'settings.site.assets'
-		], true);
+		], {debounce: true});
 
 		// deep
-		this.watch([
-			'settings.site.homepage',
+		this.watchField([
 			'settings.watcher',
 			'settings.ui'
-		], false, true);
+		], {deep:true});
 
-		// manual
-		this.$watch('settings.site.title', this.onSiteTitleChange);
-		this.$watch('settings.livereload.preset', this.onWatchPresetChange);
-		this.$watch('settings.livereload.host', _.debounce(this.onWatchHostChange), 400);
-		this.$watch('settings.livereload', _.debounce(this.onWatchSettingsChange, 400), {deep: true});
+		// shallow
+		this.watchField([
+			'settings.site.home',
+			'settings.site.help'
+		]);
+
+		// custom
+		this.watchField('settings.site.name', {debounce:true}, this.onSiteNameChange);
+		this.watchField('settings.livereload.preset', null, this.onWatchPresetChange);
+		this.watchField('settings.livereload.host', {debounce:true}, this.onWatchHostChange);
+		this.watchField('settings.livereload', {debounce: true, deep: true}, this.onWatchSettingsChange);
+
 		// scroll
 		if (location.hash)
 		{
@@ -274,12 +280,13 @@ export default
 
 	methods:
 	{
-		onChange (value, old)
+		onControllersUpdate (items)
 		{
-			this.save()
+			this.settings.paths.controllers = items
+			this.save().then(data => store.loadAll())
 		},
 
-		onSiteTitleChange (value)
+		onSiteNameChange (value)
 		{
 			Helpers.setTitle('settings', value);
 			this.save();
@@ -308,19 +315,13 @@ export default
 		{
 			this.watchHostChanged = true
 			setTimeout(function () {
-				$('fieldset[name="watch"] .warning').addClass('show')
+				$('fieldset[name="livereload"] .warning').addClass('show')
 			}, 100)
 		},
 
 		onWatchSettingsChange (value)
 		{
 			this.save()
-		},
-
-		onControllersUpdate (items)
-		{
-			this.settings.paths.controllers = items
-			this.save().then(data => store.loadAll())
 		},
 
 		save ()
@@ -334,14 +335,24 @@ export default
 			return promise
 		},
 
-		watch (fields, debounce = false, deep = false)
+		watchField (fields, options, handler = false)
 		{
-			let handler = this.onChange
-			if (debounce)
+			// defaults
+			options = Object.assign({debounce: false, deep: false}, options);
+			handler = handler || this.save;
+
+			// params
+			if (options.debounce)
 			{
 				handler = _.debounce(handler, 400)
 			}
-			fields.forEach(field => this.$watch(field, handler, {deep:deep}))
+			if (typeof fields === 'string')
+			{
+				fields = [fields];
+			}
+
+			// watch
+			fields.forEach(field => this.$watch(field, handler, {deep:options.deep}))
 		}
 
 	}
