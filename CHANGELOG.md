@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [1.1.7] - 2017-05-05
+## [1.1.8] - 2017-05-05
 
 ### Added
 
@@ -27,19 +27,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Huge docs and examples update!
+  - Created new Sketchpad docs sections
+  - Updated a lot of help to be better-formatted and more consistent
+  - Improved example controller and view content
 - Moved various settings to single "Site" section
 - New Param sub-components for different data types
 - Disabled Settings page now shows a message
-- Improved example controller and view content
-- Created new Sketchpad docs sections
-- Updated a lot of help to be better-formatted and more consistent
 - Index pages can be re-run
-- Changed some site key names
 - Added formatting classes to `pr()` and `vd()`
 - Updated FontAwesome to latest version
-- Simplified copying of user views in setup
 - Improved submission of form data
 - Improved formatting of tables and forms
+- Simplified copying of user views in setup
 
 ### Fixed
 
@@ -55,6 +55,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed bug in NumberParam where unset variables don't show 0
 - Fixed bug where Output only styles first markdown table
 - Fixed bug in internal href links not working for links with hashes
+- Fixed bug with validate-path directive causing settings to be reloaded on focus
 - Removed absolute path references from RouteReference classes
 - Updated demo link in readme
 
