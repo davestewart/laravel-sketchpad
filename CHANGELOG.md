@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [1.1.8] - 2017-05-05
+## [1.1.9] - 2017-05-06
 
 ### Added
 
@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed bug where Output only styles first markdown table
 - Fixed bug in internal href links not working for links with hashes
 - Fixed bug with validate-path directive causing settings to be reloaded on focus
+- Fixed routing bug in Help
 - Removed absolute path references from RouteReference classes
 - Updated demo link in readme
 
@@ -64,6 +65,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 New Settings `site` section:
 
 - Copy `site` node from `vendor/davestewart/sketchpad/package/config/admin.json`
+- Remove `head` node
+- Remove `ui.homepage` node
+- Copy relevant values if required
 
 
 ## [1.1.0] - 2017-04-21
