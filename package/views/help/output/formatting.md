@@ -1,3 +1,4 @@
+
 # This is an H1
 ## This is an H2
 ### This is an H3
@@ -7,10 +8,14 @@
 
 This is a paragraph
 
+Here are **some** *styling* [examples](http://www.google.com) ...
+
 - this
 - is
 - a
 - list
+
+> Here is a block indent
 
 Here is some code:
 
@@ -22,6 +27,41 @@ for(var i = 0; i < 10 ; i++)
 }
 ```
 
-> this is a block indent
+This is an unstyled table:
 
-Here are **some** *formatting* [examples](http://www.google.com) ...
+| Value | Description |
+| ------ | ------ |
+| Foo | Lorem ipsum dolor sit amet, vix at adipiscing temporibus |
+| Bar | At eam decore utroque, vel cu alia persius |
+| Baz | Liberavisse euismod persequeris sit ei |
+
+This is a styled table:
+
+<table class="table table-bordered table-striped debug">
+	<thead>
+	<tr>
+		<th>Value</th>
+		<th>Description</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>Foo</td>
+		<td>Lorem ipsum dolor sit amet, vix at adipiscing temporibus</td>
+	</tr>
+	<tr>
+		<td>Bar</td>
+		<td>At eam decore utroque, vel cu alia persius</td>
+	</tr>
+	<tr>
+		<td>Baz</td>
+		<td>Liberavisse euismod persequeris sit ei</td>
+	</tr>
+	</tbody>
+</table>
+
+Here are some other pages with Markdown examples:
+
+- http://dillinger.io/
+- http://showdownjs.github.io/demo/
+- http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html

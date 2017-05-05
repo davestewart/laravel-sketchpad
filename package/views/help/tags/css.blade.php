@@ -12,7 +12,7 @@ li.fancy{
         #333 10px
     );
 }</pre>
-<p>See the <a href="../basics/userassets">user assets</a> section for more information.</p>
+<p>See the <a href="../setup/assets">assets</a> section for more information.</p>
 <script>function toggleUserStyles()
 {
 	var $link = $('link[href$="user/styles.css"]');

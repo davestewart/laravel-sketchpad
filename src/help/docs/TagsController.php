@@ -57,7 +57,7 @@ class TagsController
 	 */
 	public function css()
 	{
-		return view('sketchpad::help.tags.css');
+		return view('sketchpad::help/tags/css');
 	}
 
 	/**
@@ -89,13 +89,13 @@ class TagsController
 	 */
 	public function order()
 	{
-		echo view('sketchpad::help.tags.order');
+		echo view('sketchpad::help/tags/order');
 	}
 
 	/**
 	 * Override basic HTML inputs with more complex HTML input types and attributes
 	 *
-	 * @group Output
+	 * @group Input / Output
 	 *
 	 * @param int       $select
 	 * @field select    $select     options:One=1,Two=2,Three=3
@@ -160,7 +160,7 @@ class TagsController
 	 */
 	public function iframe()
 	{
-		return view('sketchpad::help.tags.iframe');
+		return view('sketchpad::help/tags/iframe');
 	}
 
 	/**
@@ -175,7 +175,7 @@ class TagsController
 	{
 		p('Value <code>$foo</code> was set to ' .$foo. ' at ' . date('H:i:s'));
 		text('@defer');
-		p('Look also at <a href="../basics/testmode">test mode</a> for a more interactive way to test then run conditional code');
+		p('Look also at <a href="../methods/test">test mode</a> for a more interactive way to test then run conditional code');
 	}
 
 	/**
@@ -185,7 +185,7 @@ class TagsController
 	 */
 	public function warn()
 	{
-		return view('sketchpad::help.tags.warn');
+		return view('sketchpad::help/tags/warn');
 	}
 
 	/**
@@ -200,15 +200,15 @@ class TagsController
 	}
 
 	/**
-	 * Hides the method from the Sketchpad front end
+	 * Hides the controller or method from the Sketchpad front end
 	 *
 	 * @label   private
 	 */
-	public function privateExample()
+	public function hidden()
 	{
 		p("Both controllers and methods can be marked as private, meaning they won't be added to Sketchpad's controller list:");
 		text('@private');
-		p('Normally, you would declare a method as private, but you might need a public method for something like a callback.');
+		p('For situations where you want to hide what might otherwise be a private method (for example, a callback) simply add the private tag.');
 	}
 
 
