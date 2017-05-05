@@ -22,11 +22,7 @@ class SetupController
 	 */
 	public function controllers(SketchpadConfig $config)
 	{
-		$paths = [];
-		foreach ($config->controllers as $name => $path)
-		{
-			$paths[] = ['name' => $name, 'path' => $path];
-		}
+		$paths = $config->settings->get('paths.controllers');
 		return view('sketchpad::help/setup/controllers', compact('paths'));
 	}
 

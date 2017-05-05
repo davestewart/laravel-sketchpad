@@ -40,7 +40,7 @@
 				<p>Sketchpad also comes with some example <a href="run/help/demo/tools">tools</a> to show you the kinds of things you could develop.</p>
 
 				<h3>More...</h3>
-				<p>See the <a target="_help" href="http://github.com/davestewart/laravel-sketchpad/wiki">Sketchpad Wiki</a> for more information.</p>
+				<p>View the <a href="run/help/docs/setup">live documentation</a> or see the <a target="_help" href="http://github.com/davestewart/laravel-sketchpad/wiki">wiki</a> for more information.</p>
 
 			</section>
 		</template>
@@ -66,12 +66,9 @@ export default
 
 	route:
 	{
-		canActivate (transition)
+		canActivate ()
 		{
-			if (settings.site.help === 'none')
-			{
-				transition.abort();
-			}
+			return settings.site.help !== 'none'
 		}
 	}
 }

@@ -8,14 +8,15 @@
 	<li>you may extend from Laravel Controllers if you need that functionality</li>
 </ul>
 
-<p>To work with existing or new controllers, add their <strong>root-relative</strong> paths to the settings page:</p>
+<p>To work with existing or new controllers, add their <strong>root-relative</strong> paths to the settings page.</p>
+<p>These are the currently-loaded controller folders:</p>
 
 {!! tb($paths, 'cols:150,500') !!}
 
 
-<p>The list is fully-configurable, allowing you to rename, reorder, add or remove folders, with changes immediately reflected in the UI.</p>
+<p>The list is fully-configurable, allowing you to rename, reorder, add, remove, enable and disable folders, with changes immediately reflected in the UI.</p>
 
-<p>Note that the following controllers will be ignored:</p>
+<p>Note that the following controllers will be <strong>not</strong> be added:</p>
 <ul>
 	<li>abstract controllers</li>
 	<li>methodless controllers</li>
