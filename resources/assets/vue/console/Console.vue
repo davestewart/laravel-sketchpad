@@ -13,7 +13,8 @@
 
 // utils
 import _            from 'underscore'
-import {clone}      from '../../js/functions/utils.js';
+import {clone,
+		scrollTo}   from '../../js/functions/utils.js';
 import Helpers      from '../../js/functions/helpers.js';
 
 // objects
@@ -149,7 +150,7 @@ export default
 					}
 					if (settings.ui.scrollTop)
 					{
-						$('html,body').stop().animate({scrollTop:0}, 450, 'easeInOutQuad');
+						scrollTo(0)
 					}
 				}
 				this.params = method

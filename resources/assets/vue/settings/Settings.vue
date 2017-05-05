@@ -249,6 +249,12 @@ export default
 		this.$watch('settings.livereload.preset', this.onWatchPresetChange);
 		this.$watch('settings.livereload.host', _.debounce(this.onWatchHostChange), 400);
 		this.$watch('settings.livereload', _.debounce(this.onWatchSettingsChange, 400), {deep: true});
+		// scroll
+		if (location.hash)
+		{
+			const fieldset = 'fieldset[name="' +location.hash.substr(1)+ '"]';
+			scrollTo(fieldset, -100, 250);
+		}
 	},
 
 	methods:
