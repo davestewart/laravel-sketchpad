@@ -66,12 +66,9 @@ export default
 
 	route:
 	{
-		canActivate (transition)
+		canActivate ()
 		{
-			if (settings.site.help === 'none')
-			{
-				transition.abort();
-			}
+			return settings.site.help !== 'none'
 		}
 	}
 }
