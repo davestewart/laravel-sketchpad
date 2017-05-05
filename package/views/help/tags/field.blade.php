@@ -27,6 +27,11 @@
 @field  datalist    $select     options:foo,bar,baz
 </pre>
 
+<p>The values are converted directly into HTML attributes:</p>
+<pre>
+&lt;input type="number" value="" min="0" max="100" step="5"&gt;
+</pre>
+
 <h3>Supported input types</h3>
 <p>The following element / input <code>types</code> are supported:</p>
 
@@ -87,10 +92,7 @@
 <h3>Attributes syntax</h3>
 <p>The attribute syntax is similar to the Laravel validation syntax, converting values to HTML attributes or options:</p>
 <pre>
-@field  number    $value      min:0|max:100|step:5
-</pre>
-<pre>
-&lt;input type="number" value="" min="0" max="100" step="5"&gt;
+@field  type     $varname      value:0|values:1,2,3|options:One=1,Two=2,Three=3
 </pre>
 
 <p>Note the order of splitting / grouping operators for attributes:</p>
