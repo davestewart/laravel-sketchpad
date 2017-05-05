@@ -4,7 +4,7 @@
 		<div class="container-fluid">
 
 			<div class="navbar-header">
-				<a v-link="'/'" class="navbar-brand">Sketchpad</a>
+				<a v-link="'/'" class="navbar-brand">{{ settings.site.name }}</a>
 				<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
 					<i class="fa fa-bars" aria-hidden="true"></i>
 				</button>
@@ -13,7 +13,7 @@
 			<div class="navbar-collapse collapse" id="navbar-main">
 				<ul class="nav navbar-nav navbar-right">
 					<li v-if="admin.settings"><a v-link="'/settings'" title="Settings">Settings</a></li>
-					<li><a v-link="'/help'" title="Help">Help</a></li>
+					<li v-if="settings.site.help !== 'none'"><a v-link="'/help'" title="Help">Help</a></li>
 				</ul>
 			</div>
 

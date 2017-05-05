@@ -83,9 +83,9 @@ if( ! function_exists('json') )
 
 if( ! function_exists('md') )
 {
-	function md($path)
+	function md($path, $data = null)
 	{
-		return \davestewart\sketchpad\utils\Html::md($path);
+		return \davestewart\sketchpad\utils\Html::md($path, $data);
 	}
 }
 

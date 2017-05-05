@@ -6,6 +6,7 @@ import              '../vue/directives/field-attrs';
 // state
 import admin        from './state/admin'
 import store        from './state/store'
+import settings     from './state/settings'
 import config       from './functions/config'
 config();
 
@@ -26,9 +27,18 @@ window.store = store
 
 Vue.use(VueRouter);
 window.router = new VueRouter({
-	root: $('meta[name="route"]').attr('content'),
+	root: settings.route,
 	history: true,
 	saveScrollPosition: true
+});
+
+const Redirect = Vue.component('redirect', {
+	route: {
+		canActivate: function (transition) {
+			window.location.href = settings.route + transition.to.path.substr(1);
+			return false;
+		}
+	}
 });
 
 const routes = {
@@ -46,6 +56,12 @@ const routes = {
 	'/search' : {
 		component: Search
 	},
+	'/settings' : {
+		component: Settings
+	},
+	'/setup' : {
+		component: Redirect,
+	},
 	'/help': {
 		component: Help
 	},
@@ -53,13 +69,6 @@ const routes = {
 		component: Home
 	}
 };
-
-if (admin.settings)
-{
-	routes['/settings'] = {
-		component: Settings
-	}
-}
 
 router.map(routes);
 

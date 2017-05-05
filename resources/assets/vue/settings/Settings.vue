@@ -6,7 +6,13 @@
 		</header>
 		<section class="content">
 
-			<form class="form-horizontal">
+			<div v-if="!enabled">
+				<h3 class="text-danger">Settings are disabled</h3>
+				<p>If you think this is a mistake, contact your System Administrator.</p>
+				<p>If you are the System Administrator see the <a href="https://github.com/davestewart/laravel-sketchpad/wiki/Admin" target="_blank">wiki</a> on how to enable setup.</p>
+
+			</div>
+			<form v-else class="form-horizontal">
 
 				<fieldset name="paths">
 
@@ -54,7 +60,7 @@
 						<label class="control-label col-sm-3">Name</label>
 						<div class="col-sm-9">
 							<span class="field">
-								<input v-model="settings.site.title" type="text" class="form-control" placeholder="Sketchpad">
+								<input v-model="settings.site.name" type="text" class="form-control" placeholder="Sketchpad">
 								<span class="icons">
 									<i class="validate-path" aria-hidden="true"></i>
 								</span>
@@ -64,15 +70,27 @@
 					</div>
 
 					<div class="form-group form-group-sm">
-						<label class="control-label col-sm-3">Homepage</label>
+						<label class="control-label col-sm-3">Home page</label>
 						<div class="col-sm-9">
-							<select class="form-control custom" v-model="settings.site.homepage">
+							<select class="form-control custom" v-model="settings.site.home">
 								<option value="welcome">Welcome</option>
 								<option value="search">Search</option>
 								<option value="favourites">Favourites</option>
 								<option value="custom">Custom</option>
 							</select>
 							<p class="help-block prompt">Home page that will show when you load Sketchpad</p>
+						</div>
+					</div>
+
+					<div class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Help page</label>
+						<div class="col-sm-9">
+							<select class="form-control custom" v-model="settings.site.help">
+								<option value="default">Default</option>
+								<option value="custom">Custom</option>
+								<option value="none">None</option>
+							</select>
+							<p class="help-block prompt">Help page to provide basic information to get users started</p>
 						</div>
 					</div>
 
@@ -86,7 +104,7 @@
 
 				</fieldset>
 
-				<fieldset name="watch">
+				<fieldset name="livereload">
 					<legend>Live Reload</legend>
 
 					<div v-if="watchError" class="col-sm-offset-3 warning show">
@@ -136,7 +154,7 @@
 				</fieldset>
 
 				<fieldset name="ui">
-					<legend id="ui">UI</legend>
+					<legend>UI</legend>
 
 					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Navigation</label>
@@ -169,10 +187,13 @@
 <script>
 
 import _                from 'underscore';
-import {clone, trim}    from '../../js/functions/utils';
+import {clone,
+		trim,
+		scrollTo}       from '../../js/functions/utils';
 import Helpers          from '../../js/functions/helpers';
 import server           from '../../js/services/server';
 
+import admin            from '../../js/state/admin';
 import settings         from '../../js/state/settings';
 import store            from '../../js/state/store';
 
@@ -196,6 +217,7 @@ export default
 
 		// return
 		return {
+			enabled: admin.settings,
 			watchHostChanged: false,
 			watchError: false,
 			settings: data
@@ -212,6 +234,11 @@ export default
 
 	ready ()
 	{
+		if (!this.enabled)
+		{
+			return;
+		}
+
 		// error
 		this.watchError = watcher.error;
 
@@ -219,34 +246,47 @@ export default
 		this.$refs.controllers.$on('update', this.onControllersUpdate)
 
 		// debounce
-		this.watch([
+		this.watchField([
 			'settings.paths.assets',
 			'settings.paths.views',
 			'settings.site.assets'
-		], true);
+		], {debounce: true});
 
 		// deep
-		this.watch([
-			'settings.site.homepage',
+		this.watchField([
 			'settings.watcher',
 			'settings.ui'
-		], false, true);
+		], {deep:true});
 
-		// manual
-		this.$watch('settings.site.title', this.onSiteTitleChange);
-		this.$watch('settings.livereload.preset', this.onWatchPresetChange);
-		this.$watch('settings.livereload.host', _.debounce(this.onWatchHostChange), 400);
-		this.$watch('settings.livereload', _.debounce(this.onWatchSettingsChange, 400), {deep: true});
+		// shallow
+		this.watchField([
+			'settings.site.home',
+			'settings.site.help'
+		]);
+
+		// custom
+		this.watchField('settings.site.name', {debounce:true}, this.onSiteNameChange);
+		this.watchField('settings.livereload.preset', null, this.onWatchPresetChange);
+		this.watchField('settings.livereload.host', {debounce:true}, this.onWatchHostChange);
+		this.watchField('settings.livereload', {debounce: true, deep: true}, this.onWatchSettingsChange);
+
+		// scroll
+		if (location.hash)
+		{
+			const fieldset = 'fieldset[name="' +location.hash.substr(1)+ '"]';
+			scrollTo(fieldset, -100, 250);
+		}
 	},
 
 	methods:
 	{
-		onChange (value, old)
+		onControllersUpdate (items)
 		{
-			this.save()
+			this.settings.paths.controllers = items
+			this.save().then(data => store.loadAll())
 		},
 
-		onSiteTitleChange (value)
+		onSiteNameChange (value)
 		{
 			Helpers.setTitle('settings', value);
 			this.save();
@@ -275,19 +315,13 @@ export default
 		{
 			this.watchHostChanged = true
 			setTimeout(function () {
-				$('fieldset[name="watch"] .warning').addClass('show')
+				$('fieldset[name="livereload"] .warning').addClass('show')
 			}, 100)
 		},
 
 		onWatchSettingsChange (value)
 		{
 			this.save()
-		},
-
-		onControllersUpdate (items)
-		{
-			this.settings.paths.controllers = items
-			this.save().then(data => store.loadAll())
 		},
 
 		save ()
@@ -301,14 +335,24 @@ export default
 			return promise
 		},
 
-		watch (fields, debounce = false, deep = false)
+		watchField (fields, options, handler = false)
 		{
-			let handler = this.onChange
-			if (debounce)
+			// defaults
+			options = Object.assign({debounce: false, deep: false}, options);
+			handler = handler || this.save;
+
+			// params
+			if (options.debounce)
 			{
 				handler = _.debounce(handler, 400)
 			}
-			fields.forEach(field => this.$watch(field, handler, {deep:deep}))
+			if (typeof fields === 'string')
+			{
+				fields = [fields];
+			}
+
+			// watch
+			fields.forEach(field => this.$watch(field, handler, {deep:options.deep}))
 		}
 
 	}

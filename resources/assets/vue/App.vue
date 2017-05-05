@@ -102,32 +102,37 @@
 		{
 			onLinkClick (event)
 			{
-				// variables
-				const root      = location.origin + this.settings.route;
-				const target    = event.currentTarget;
-				let path
-
-				// handle sketchpad: links
-				if (target.href.indexOf('sketchpad:') === 0)
+				const target = event.currentTarget;
+				const href = target.href;
+				if (href && !target.target)
 				{
-					path = '/run/' + target.href.replace(/sketchpad:\/?/, '');
+					// variables
+					const root  = location.origin + this.settings.route;
+					let path
+
+					// handle sketchpad: links
+					if (href.indexOf('sketchpad:') === 0)
+					{
+						path = '/run/' + href.replace(/sketchpad:\/?/, '');
+					}
+
+					// handle normal links
+					if(href.indexOf(root) === 0) //  && href.indexOf('#') !== 0
+					{
+						path = href.substr(root.length - 1);
+					}
+
+					// navigate to route
+					if (path)
+					{
+						event.preventDefault();
+						path = path.replace(/^\/api\/run\//, '/run/');
+						getRoute(path) === getRoute(this.$route.path)
+							? router.replace(decodeURI(path))
+							: router.go(decodeURI(path))
+					}
 				}
 
-				// handle normal links
-				if(target.href && target.href.indexOf(root) === 0 && target.href.indexOf('#') === -1)
-				{
-					path = target.href.substr(root.length - 1);
-				}
-
-				// navigate to route
-				if (path)
-				{
-					event.preventDefault();
-					path = path.replace(/^\/api\/run\//, '/run/');
-					getRoute(path) === getRoute(this.$route.path)
-						? router.replace(decodeURI(path))
-						: router.go(decodeURI(path))
-				}
 			},
 
 			onAssetsChange (value, oldValue)

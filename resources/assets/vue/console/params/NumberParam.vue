@@ -23,12 +23,27 @@ export default
 {
 	name: 'NumberParam',
 
-	mixins: [param, autosize]
+	mixins: [param, autosize],
+
+	computed:
+	{
+		value:
+		{
+			get ()
+			{
+				return Number(this.param.value);
+			},
+			set (value)
+			{
+				this.val = value;
+				this.update(value);
+			}
+		}
+	}
 
 }
 
 </script>
-
 <style lang="scss">
 
 </style>

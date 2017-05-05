@@ -112,8 +112,9 @@ class Scanner extends AbstractScanner
 					: array_push($files, $el);
 			}
 
-			// files
+			// get all controllers
 			$controllers = [];
+			$ordered = [];
 			foreach ($files as $file)
 			{
 				$abspath = $root . $file;
@@ -122,18 +123,20 @@ class Scanner extends AbstractScanner
 					$controller = $this->addController($abspath, $path);
 					if ($controller)
 					{
-						// bit of a hack, but it works... using order + name to affect order
-						$order = $this->getOrder($controller);
-						$order = str_pad($order === 0 ? '999999' : $order, 6, 0, STR_PAD_LEFT);
-						$name = $controller->classname;
-						$controllers["$order:$name"] = $controller;
+						property_exists($controller, 'order') && $controller->order !== 0
+							? array_push($ordered, $controller)
+							: array_push($controllers, $controller);
 					}
 				}
 
 			}
 
-			// sort controllers
-			ksort($controllers);
+			// re-insert ordered controllers
+			uasort($ordered, function ($a, $b) { return $a->order - $b->order; });
+			foreach($ordered as $c)
+			{
+				array_splice($controllers, $c->order - 1, 0, [$c]);
+			}
 
 			// add controllers
 			$this->controllers = array_merge($this->controllers, array_values($controllers));
@@ -144,8 +147,6 @@ class Scanner extends AbstractScanner
 				$relpath = $path . $folder;
 				$this->scan($relpath . '/');
 			}
-
-			$orders = array_map(function ($c) { return $c->classpath; }, $this->controllers);
 		}
 
 		/**
@@ -207,26 +208,6 @@ class Scanner extends AbstractScanner
 		{
 			//$ref->route = $route;
 			$this->routes[$route] = $ref;
-		}
-
-
-	// -----------------------------------------------------------------------------------------------------------------
-	// HELPERS
-
-		/**
-		 * Helper function to order controllers
-		 *
-		 * @param Controller $controller
-		 * @return int
-		 */
-		protected function getOrder ($controller)
-		{
-			$order = 0;
-			if ($controller instanceof Controller)
-			{
-				$order = (int) $controller->comment->getTag('order');
-			}
-			return $order;
 		}
 
 }

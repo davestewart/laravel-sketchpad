@@ -120,10 +120,18 @@ class Comment implements JsonSerializable
 					}
 					else
 					{
-						$this->tags[$tag->name] = $tag->text ? $tag->text : true;
+						if ($name === 'order')
+						{
+							$this->tags[$tag->name] = (int) $tag->text;
+						}
+						else
+						{
+							$this->tags[$tag->name] = $tag->text ? $tag->text : true;
+						}
 					}
 				}
-				
+				//dump($this->tags);
+
 				// fix favourites
 				if(isset($this->tags['favorite']))
 				{

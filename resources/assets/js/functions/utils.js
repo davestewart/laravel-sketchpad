@@ -111,3 +111,23 @@ export function parseQuery(query)
 			}, {})
 		: {};
 }
+
+/**
+ * Scrolls to an element on the page
+ *
+ * @param   {string|number}     position
+ * @param   {number}            offset
+ * @param   {number}            delay
+ */
+export function scrollTo (position, offset = 0, delay = 0)
+{
+	if (delay)
+	{
+		return setTimeout(() => scrollTo(position, offset), delay);
+	}
+	if (typeof position === 'string')
+	{
+		position = $(position).offset().top + offset;
+	}
+	$('html,body').stop().animate({scrollTop: position}, 450, 'easeInOutQuad');
+}

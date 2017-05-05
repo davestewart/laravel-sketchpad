@@ -70,7 +70,7 @@ export default
 	{
 		enabled ()
 		{
-			return this.method && this.method.name !== 'index';
+			return !!this.method;
 		},
 
 		runLabel ()
@@ -113,11 +113,13 @@ export default
 					return field + '-param'
 
 				}
-				if (/^(text|number|color|date|datetime|month|time|week)$/.test(field))
+				if (/^(number|color)$/.test(field))
 				{
-					return field === 'color'
-						? 'color-param'
-						: 'input-param';
+					return field + '-param';
+				}
+				if (/^(text|date|datetime|month|time|week)$/.test(field))
+				{
+					return 'input-param';
 				}
 			}
 

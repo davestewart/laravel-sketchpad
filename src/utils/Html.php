@@ -1,7 +1,9 @@
 <?php namespace davestewart\sketchpad\utils;
 
+use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Contracts\Support\Arrayable;
 
+\View::addExtension('html', 'html');
 \View::addExtension('vue', 'vue');
 \View::addExtension('md', 'md');
 
@@ -209,15 +211,29 @@ class Html
 		/**
 		 * Loads a Markdown file, and instructs Sketchpad to transform it in the front end
 		 *
-		 * @param   string  $path   An absolute or relative file reference
+		 * @param   string  $path An absolute or relative file reference
+		 * @param   array   $data
 		 * @return  string
 		 */
-		public static function md($path)
+		public static function md($path, $data = [])
 		{
+			// find file
 			$abspath = preg_match('%^(/|[a-z]:)%i', $path) === 1
 				? $path
 				: \View::getFinder()->find($path);
-			echo '<div data-format="markdown">' .file_get_contents($abspath). '</div>';
+
+			// get contents
+			$contents = file_get_contents($abspath);
+
+			// update values
+			$data['route'] = app(SketchpadConfig::class)->route;
+			foreach ($data as $key => $value)
+			{
+				$contents = preg_replace('/\{\{\s*' .$key. '\s*\}\}/', $value, $contents);
+			}
+
+			// echo
+			echo '<div data-format="markdown">' .$contents. '</div>';
 		}
 
 		/**

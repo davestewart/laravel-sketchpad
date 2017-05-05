@@ -1,6 +1,6 @@
 <template>
 
-	<component :is="homepage" keep-alive></component>
+	<component :is="home" type="home" keep-alive></component>
 
 </template>
 
@@ -10,7 +10,7 @@ import settings     from '../../js/state/settings'
 import Favourites   from '../pages/Favourites.vue'
 import Search       from '../pages/Search.vue'
 import Welcome      from './Welcome.vue'
-import Custom       from './CustomHome.vue'
+import Custom       from './Custom.vue'
 
 export default
 {
@@ -18,7 +18,7 @@ export default
 
 	data ()
 	{
-		return {homepage: settings.site.homepage}
+		return {home: settings.site.home}
 	},
 
 	components:
