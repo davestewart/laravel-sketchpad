@@ -62,6 +62,17 @@ export default
 
 	data () {
 		return { settings, admin }
+	},
+
+	route:
+	{
+		canActivate (transition)
+		{
+			if (settings.site.help === 'none')
+			{
+				transition.abort();
+			}
+		}
 	}
 }
 

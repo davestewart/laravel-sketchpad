@@ -86,7 +86,7 @@
 						<label class="control-label col-sm-3">Help page</label>
 						<div class="col-sm-9">
 							<select class="form-control custom" v-model="settings.site.help">
-								<option value="default">Default</option>
+								<option value="help">Help</option>
 								<option value="custom">Custom</option>
 								<option value="none">None</option>
 							</select>
