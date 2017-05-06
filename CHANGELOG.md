@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [1.1.9] - 2017-05-06
+## [1.1.10] - 2017-05-06
 
 ### Added
 
@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Created new Sketchpad docs sections
   - Updated a lot of help to be better-formatted and more consistent
   - Improved example controller and view content
+- Moved custom asset declaration to user view
 - Moved various settings to single "Site" section
 - New Param sub-components for different data types
 - Disabled Settings page now shows a message
