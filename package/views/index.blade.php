@@ -5,13 +5,14 @@
     <!-- meta -->
     <title>Sketchpad</title>
     <meta name="route" content="{{ $route }}">
-    @include('sketchpad::head')
+    @include('sketchpad::head-common')
 
-	@if ($livereload->host)<!-- file watching -->
+	@if ($livereload->host)<!-- live reload -->
     <script src="http://{{ $livereload->host }}:35729/livereload.js"></script>
 	@endif
 
-    <!-- user -->
+	<!-- user assets -->
+{!! $head !!}
 </head>
 <body>
 

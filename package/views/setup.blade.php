@@ -4,7 +4,7 @@
 
 	<!-- meta -->
 	<title>Sketchpad - Setup</title>
-    @include('sketchpad::head')
+    @include('sketchpad::head-common')
 
     <!-- setup -->
     <link  href="{{ $assets }}css/setup.css" rel="stylesheet">

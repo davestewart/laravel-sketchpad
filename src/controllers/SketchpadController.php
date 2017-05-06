@@ -61,12 +61,17 @@ class SketchpadController extends Controller
 
             // settings
 	        $settings   = $config->settings->data;
+
+	        // user content
 	        $home       = $config->views . 'home.blade.php';
 	        $help       = $config->views . 'help.blade.php';
+	        $head       = $config->views . 'head.blade.php';
+			$assets     = $config->route . 'assets/user/';
 
 			// data
 			$data =
 			[
+				'head'          => '',
 				'route'         => $config->route,
 				'assets'        => $config->route . 'assets/',
 				'livereload'    => (object) $settings['livereload'],
@@ -79,6 +84,13 @@ class SketchpadController extends Controller
 					'controllers' => $this->sketchpad->getController(),
 				]
 			];
+
+			// head
+	        if (file_exists(base_path($head)))
+	        {
+	        	$head = view('sketchpad::head', compact('assets'));
+	        	$data['head'] = preg_replace('/^/m', '    ', $head);
+	        }
 
 			// view
 			return view('sketchpad::index', $data);
