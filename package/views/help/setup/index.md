@@ -6,7 +6,7 @@ It covers:
 
 - configuring controller paths
 - where to store and how to load custom views
-- adding and loading custom user assets
+- custom head content and user assets
 - Live Reload and live coding
 - customising the site name and home page
 - preventing access to settings

@@ -1,29 +1,24 @@
-Sketchpad allows you to add custom assets to the app by way of:
+Sketchpad provides a custom folder to load user assets:
 
-- Custom user asset files
-- Loadable asset URLs
+```text
+{{assets}}
+```
 
-During setup, two starter files were copied to your installation's `assets/` folder.
+Two starter files were copied here during installation:
 
 	{{assets}}scripts.js
 	{{assets}}styles.css
 
-These files are set to load automatically, along with any other URLs you add (for example <a href="https://momentjs.com/" target="_blank">Moment.js</a>):
+These are loaded via your custom [view](views) file `head.blade.php`:
 
-```text
-https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.0/moment.js
-$assets/scripts.js
-$assets/styles.css
+```html
+<script src="{{ $assets }}scripts.js"></script>
+<link   href="{{ $assets }}styles.css" rel="stylesheet">
 ```
+Both the assets and head file are yours to do with as you please; for example modifying styles, loading 3rd party libraries, adding meta tags, etc. 
 
-Note the special "user assets" route `$assets/` which loads the static file contents directly – they do not need to be in your app's `/public/` folder!
+You might also want to check out:
 
-You might want to check out:
-
-- the settings [paths]({{route}}settings#paths) section configure asset paths
-- the settings [site]({{route}}settings#site) section configure loaded assets
-- the [formatting](../output/formatting) example to see some of the base styles
+- the settings [paths]({{route}}settings#paths) section to configure your asset path
+- the [formatting](../output/formatting) example to view Sketchpad's default styles
 - the [css tag](../tags/css) which can be used in conjunction with user assets to style the navigation element
-
-
-

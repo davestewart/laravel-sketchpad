@@ -14,7 +14,7 @@
 <p>Note that <code>$route</code> is available in <a href="../output/blade">Blade</a>, <a href="../output/markdown">Markdown</a>, <a href="../output/vue">Vue</a> views.</p>
 
 <h3>Path variables</h3>
-<p>Sketchpad adds your user <code>view</code> folder to the Sketchpad package path variable:</p>
+<p>Sketchpad namespaces your user <code>views/</code> folder using the <code>sketchpad::</code> identifier:</p>
 
 <table class="table">
 	<tbody>
