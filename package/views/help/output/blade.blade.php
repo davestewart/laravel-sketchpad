@@ -1,5 +1,5 @@
-<p>Laravel allows packages to register custom identifiers to load views from custom locations.</p>
-<p>Sketchpad registers your custom <code>views/</code> folder to the <code>sketchpad::</code> identifier so you can silo and load development views separately from your app:</p>
+<p>Laravel allows packages to namespace views in order to load them from custom locations.</p>
+<p>Sketchpad namespaces your <code>views/</code> folder as <code>sketchpad::</code> so you can silo and load development views separately from your app:</p>
 <pre class="code php">
 echo view('sketchpad::some-view'); // loads from "<?php echo $views; ?>"
 </pre>

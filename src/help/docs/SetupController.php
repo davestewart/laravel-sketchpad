@@ -41,7 +41,8 @@ class SetupController
 	public function assets(SketchpadConfig $config)
 	{
 		$assets = $config->settings->get('paths.assets');
-		echo md('sketchpad::help/setup/assets', compact('assets'));
+		$views = $config->settings->get('paths.views');
+		echo md('sketchpad::help/setup/assets', compact('assets', 'views'));
 	}
 
 	/**
@@ -53,7 +54,7 @@ class SetupController
 	{
 		alert('LiveReload enabled', true);
 		alert('LiveReload not running!', false);
-		echo md('sketchpad::help/setup/livereload', ['test' => 'fuck you']);
+		echo md('sketchpad::help/setup/livereload');
 	}
 
 	/**
@@ -61,7 +62,7 @@ class SetupController
 	 */
 	public function customisation()
 	{
-		echo md('sketchpad::help/setup/customisation', ['test' => 'fuck you']);
+		echo md('sketchpad::help/setup/customisation');
 	}
 
 	/**
@@ -69,7 +70,7 @@ class SetupController
 	 */
 	public function permissions()
 	{
-		echo md('sketchpad::help/setup/permissions', ['test' => 'fuck you']);
+		echo md('sketchpad::help/setup/permissions');
 	}
 
 }

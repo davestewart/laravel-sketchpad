@@ -8,20 +8,10 @@
 	<li>you may extend from Laravel Controllers if you need that functionality</li>
 </ul>
 
-<p>To work with existing or new controllers, add their <strong>root-relative</strong> paths to the settings page.</p>
-<p>These are the currently-loaded controller folders:</p>
+<p>You choose which folders to include by specifying them in the <a href="{{$route}}settings#paths">settings</a> page:</p>
 
 {!! tb($paths, 'cols:150,500') !!}
 
-
 <p>The list is fully-configurable, allowing you to rename, reorder, add, remove, enable and disable folders, with changes immediately reflected in the UI.</p>
 
-<p>Note that the following controllers will be <strong>not</strong> be added:</p>
-<ul>
-	<li>abstract controllers</li>
-	<li>methodless controllers</li>
-	<li><a href="../tags/hidden">private</a> controllers</li>
-</ul>
-
-
-<p>To configure your controller paths now, visit the <a href="{{$route}}settings#paths">Settings</a> page.</p>
+<p>Note that abstract, methodless and <a href="../tags/hidden">private</a> controllers will be ignored.</p>

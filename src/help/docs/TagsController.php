@@ -144,13 +144,14 @@ class TagsController
 	}
 
 	/**
-	 * Append (rather than replace) results to the output panel. Re-run or re-save to see it in action...
+	 * Append (rather than replace) results to the output panel
 	 *
 	 * @append
 	 */
 	public function append()
 	{
-		p('Some new value: ' . rand(1, 100));
+		$value = str_pad(rand(1, 100), 3, ' ', STR_PAD_RIGHT);
+		echo "<pre>Some new value: $value     // re-run or re-save to update...</pre>";
 	}
 
 	/**

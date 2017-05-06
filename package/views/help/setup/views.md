@@ -9,8 +9,10 @@ You can place the following Sketchpad-supported view types here:
 - [Markdown](../output/markdown)
 - [Vue](../output/vue)
 
-To reference this folder in your view paths, you can use the [sketchpad::](../methods/variables) package shortcut:
+Load views from this folder using the [sketchpad::](../methods/variables) namespace:
 
 ```
 echo view('sketchpad::somefile')
 ``` 
+
+The views folder is also where your custom [pages](customisation) and [head](assets) view are loaded from.

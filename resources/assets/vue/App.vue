@@ -77,21 +77,22 @@
 			// links
 			$('#main').on('click', 'a[href]', this.onLinkClick);
 
-			// assets
-			this.$watch('settings.site.assets', this.onAssetsChange, {deep: true});
-			this.onAssetsChange()
-
 			// watcher
 			if(this.settings.livereload.host)
 			{
 				watcher.init()
 			}
 
+			// assets
+			watcher.addHandler(this.onHeadChange, file => {
+				return file === settings.paths.views + 'head.blade.php';
+			});
+
 			// error frame
 			window.addEventListener('message', this.onPostMessage)
 
 			// done!
-			console.log('App ready')
+			console.log('Sketchpad loaded OK')
 
 			// ui
 			//$('#nav .sticky').sticky({topSpacing:20, bottomSpacing:20});
@@ -135,38 +136,9 @@
 
 			},
 
-			onAssetsChange (value, oldValue)
+			onHeadChange ()
 			{
-				if (value && _.isEqual(_.sortBy(value), _.sortBy(oldValue)))
-				{
-					return
-				}
-
-				let html = '';
-				const $head = $('head')
-				$head.find('[data-asset]').remove()
-				this.settings.site.assets
-					.forEach(url => {
-						url = url.replace('$assets/', this.settings.route + 'assets/user/')
-						const ext = url.split('.').pop()
-						switch (ext)
-						{
-							case 'js':
-								// run script using jQuery to protect against invalid URLs
-								$.getScript(url)
-									.done(function( script, textStatus ) {
-										// script loaded ok
-									})
-									.fail(function( jqxhr, settings, exception ) {
-										console.log('error running script: ' + url)
-									});
-								break
-							case 'css':
-						        html += '<link data-asset href="' +url+ '" rel="stylesheet">'
-								break
-						}
-					})
-				$head.append(html)
+				window.location.reload();
 			},
 
 			onPostMessage (event)

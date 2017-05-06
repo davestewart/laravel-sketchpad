@@ -94,14 +94,6 @@
 						</div>
 					</div>
 
-					<div class="form-group form-group-sm">
-						<label class="control-label col-sm-3">Assets</label>
-						<div class="col-sm-9">
-							<textarea class="form-control" v-model="settings.site.assets" spellcheck="false" autocomplete="off"></textarea>
-							<p class="help-block prompt">URLs to additional JS and CSS (use the placeholder <code>$assets/*</code> to load from the user assets folder)</p>
-						</div>
-					</div>
-
 				</fieldset>
 
 				<fieldset name="livereload">
@@ -212,7 +204,6 @@ export default
 	{
 		// modify data
 		var data = clone(settings)
-		data.site.assets = data.site.assets.join('\n');
 		data.livereload.paths = data.livereload.paths.join('\n');
 
 		// return
@@ -248,8 +239,7 @@ export default
 		// debounce
 		this.watchField([
 			'settings.paths.assets',
-			'settings.paths.views',
-			'settings.site.assets'
+			'settings.paths.views'
 		], {debounce: true});
 
 		// deep

@@ -3,31 +3,57 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Iframe</title>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald:300,400|Pacifico" rel="stylesheet">
 	<style>
-		@import url(https://fonts.googleapis.com/css?family=Cardo|Lato:700,400,400italic);
-
-		@import url(https://fonts.googleapis.com/css?family=Fira+Sans:700|Lato:300,300italic,700);
-
-		body > * {
-			margin-top: 0;
-		}
-
-		h1,h2,h3,h4,h5,h6 {
-			font-family: "Fira Sans", sans-serif;
-			font-weight: 700;
-		}
-		p,a,li,blockquote {
-			font-family: "Lato", sans-serif;
-			font-weight: 400;
-		}
-
-		.red {
-			color: red;
-		}
 
 		body {
-			padding:20px;
-			line-height: 1.4em;
+			padding:30px;
+			background: #9cb8b3;
+			font-family: 'Oswald', cursive, sans-serif;
+			font-weight: 300;
+			color: #4e5c59;
+		}
+
+		h1 {
+			font: 600 1.5em/1 'Pacifico', sans-serif;
+			margin: 0 0 0 0;
+			padding: 0;
+		}
+
+		h1 span {
+			letter-spacing: .5em;
+		}
+
+		h1 span,
+		h1 span:after {
+			font-weight: 900;
+			color: #efedce;
+			white-space: nowrap;
+			display: inline-block;
+			position: relative;
+			letter-spacing: .1em;
+			padding: .2em 0 .25em 0;
+		}
+
+		h1 span {
+			font-size: 4em;
+			z-index: 100;
+			text-shadow: .04em .04em 0 #9cb8b3;
+		}
+
+		h1 span:after {
+			content: attr(data-shadow-text);
+			color: rgba(0,0,0,.35);
+			text-shadow: none;
+			position: absolute;
+			left: .0875em;
+			top: .0875em;
+			z-index: -1;
+			-webkit-mask-image: url(http://f.cl.ly/items/1t1C0W3y040g1J172r3h/mask.png);
+		}
+
+		p {
+			font-size: 1.1em;
 		}
 
 		pre {
@@ -35,19 +61,23 @@
 			padding: 10px;
 			word-break: break-all;
 			word-wrap: break-word;
-			background-color: #fbfbfb;
+			background: rgba(0, 0, 0, 0.1);
 			border-radius: 4px;
 			font: normal 11px/1.4em Menlo,Monaco,Consolas,Courier New,monospace!important;
 			white-space: pre;
-			color: #000;
+			color: #efedce;
 			margin: 20px;
 		}
 
 	</style>
 </head>
 <body>
-	<h1>Use <strong class="red">@iframe</strong> to separate content</h1>
-	<p>Sketchpad loads content inline by default, but sometimes this is not what you want (in this case, loading a custom font).</p>
+	<main>
+
+		<h1>Use an <span data-shadow-text="@iframe">@iframe</span> to separate content...</h1>
+	</main>
+
+	<p>Sketchpad loads content inline by default, but for pages already with styling or head content, this ain't gonna fly.</p>
 	<p>Consider using iframes when:</p>
 	<ul>
 		<li>running anything that would break Sketchpad's layout or scripting</li>
