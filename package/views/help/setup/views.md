@@ -14,5 +14,3 @@ Load views from this folder using the [sketchpad::](../methods/variables) namesp
 ```
 echo view('sketchpad::somefile')
 ``` 
-
-The views folder is also where your custom [pages](customisation) and [head](assets) view are loaded from.
