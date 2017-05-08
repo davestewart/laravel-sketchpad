@@ -1,6 +1,6 @@
-Sketchpad is best when used with Sketchpad Reload, enabling live-reload and live-coding functionality.
+To live-code and live-reload controllers, views and assets, install and run Sketchpad Reload.
 
-When developing, this allows you to work **almost exclusively** in your IDE, with Sketchpad responding and updating as you save files, rename elements, change add or remove code:
+When developing, this allows you to work **almost exclusively** in your IDE, with Sketchpad responding and updating as you save files, rename elements, change, add or remove code:
 
 
 | Element | Event | Action

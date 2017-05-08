@@ -4,11 +4,10 @@ This section discusses setting up Sketchpad to boost your development productivi
 
 It covers:
 
-- configuring controller paths
-- where to store and how to load custom views
-- custom head content and user assets
+- configuring controllers, views and custom assets
 - Live Reload and live coding
-- customising the site name and home page
+- customising site name and top-level content
+- working with 3rd party libraries
 - preventing access to settings
 
 Most settings can be configured from the [Settings]({{route}}settings) page.

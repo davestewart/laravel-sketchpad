@@ -30,10 +30,10 @@
 				<p>Sketchpad provides a variety of features and functionality to make developing new functionality easier, such as:</p>
 				<ul>
 					<li>Helper functions such as <a href="run/help/docs/helpers/ls">list</a>, <a href="run/help/docs/helpers/table">table</a> and <a href="run/help/docs/helpers/alert">alert</a></li>
-					<li>Support for <a href="run/help/docs/output/json">json</a>, <a href="run/help/docs/output/markdown">markdown</a> and <a href="run/help/docs/output/vue">vue</a></li>
+					<li>Support for <a href="run/help/docs/helpers/json">json</a>, <a href="run/help/docs/output/markdown">markdown</a> and <a href="run/help/docs/output/vue">vue</a></li>
 					<li>Transparent <a href="run/help/docs/output/pagination">pagination</a> and <a href="run/help/docs/output/forms">form submission</a></li>
 					<li>Built-in <a href="run/help/docs/output/formatting">formatting</a> and <a href="run/help/docs/methods/exceptions">exception handling</a></li>
-					<li>Custom <a href="run/help/docs/setup/customisation">home page</a>, <a href="run/help/docs/methods/indexpage">index pages</a> and <a href="run/help/docs/setup/assets">assets</a></li>
+					<li>Custom <a href="run/help/docs/setup/pages">home page</a>, <a href="run/help/docs/methods/contents">contents pages</a> and <a href="run/help/docs/setup/assets">assets</a></li>
 					<li>Custom <a href="run/help/docs/tags">tags</a> to modify presentation and behaviour</li>
 				</ul>
 
