@@ -63,9 +63,9 @@ class SketchpadController extends Controller
 	        $settings   = $config->settings;
 
 	        // user content
-	        $home       = $config->views . 'home.blade.php';
-	        $help       = $config->views . 'help.blade.php';
-	        $head       = $config->views . 'head.blade.php';
+	        $home       = base_path($config->views . 'home.blade.php');
+	        $help       = base_path($config->views . 'help.blade.php');
+	        $head       = base_path($config->views . 'head.blade.php');
 			$assets     = $config->route . 'assets/user/';
 
 			// data
@@ -78,8 +78,8 @@ class SketchpadController extends Controller
 				'livereload'    => (object) $settings->get('livereload'),
 				'settings'      => $settings->data,
 				'admin'         => $config->admin,
-				'home'          => view(file_exists(base_path($home)) ? 'sketchpad::home' : 'sketchpad::no-home', compact('home')),
-				'help'          => view(file_exists(base_path($help)) ? 'sketchpad::help' : 'sketchpad::no-help', compact('help')),
+				'home'          => file_exists($home) ? view()->file($home) : view('sketchpad::no-home'),
+				'help'          => file_exists($help) ? view()->file($help) : view('sketchpad::no-help'),
 				'data'          =>
 				[
 					'controllers' => $this->sketchpad->getController(),
@@ -87,10 +87,9 @@ class SketchpadController extends Controller
 			];
 
 			// head
-	        if (file_exists(base_path($head)))
+	        if (file_exists($head))
 	        {
-	        	$head = view('sketchpad::head', compact('assets'));
-	        	$data['head'] = preg_replace('/^/m', '    ', $head);
+	        	$data['head'] = preg_replace('/^/m', '    ', view()->file($head, compact('assets')));
 	        }
 
 			// view
