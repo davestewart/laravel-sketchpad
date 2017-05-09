@@ -74,8 +74,6 @@
 						<div class="col-sm-9">
 							<select class="form-control custom" v-model="settings.site.home">
 								<option value="welcome">Welcome</option>
-								<option value="search">Search</option>
-								<option value="favourites">Favourites</option>
 								<option value="custom">Custom</option>
 							</select>
 							<p class="help-block prompt">Home page that will show when you load Sketchpad</p>
@@ -92,6 +90,14 @@
 							</select>
 							<p class="help-block prompt">Help page to provide basic information to get users started</p>
 						</div>
+					</div>
+
+					<div class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Discovery</label>
+						<ul class="col-sm-9 control-group">
+							<li><label><input type="checkbox" v-model="settings.site.search"> <span>Search</span></label></li>
+							<li><label><input type="checkbox" v-model="settings.site.favourites"> <span>Favourites</span></label></li>
+						</ul>
 					</div>
 
 				</fieldset>
@@ -249,7 +255,9 @@ export default
 		// shallow
 		this.watchField([
 			'settings.site.home',
-			'settings.site.help'
+			'settings.site.help',
+			'settings.site.search',
+			'settings.site.favourites'
 		]);
 
 		// custom

@@ -7,8 +7,6 @@
 <script>
 
 import settings     from '../../js/state/settings'
-import Favourites   from '../pages/Favourites.vue'
-import Search       from '../pages/Search.vue'
 import Welcome      from './Welcome.vue'
 import Custom       from './Custom.vue'
 
@@ -23,7 +21,7 @@ export default
 
 	components:
 	{
-		Welcome, Favourites, Search, Custom
+		Welcome, Custom
 	}
 }
 

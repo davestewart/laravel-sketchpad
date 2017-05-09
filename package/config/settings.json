@@ -29,7 +29,9 @@
 	"site": {
 		"name": "Sketchpad",
 		"home": "welcome",
-		"help": "help"
+		"help": "help",
+		"search": true,
+		"favourites": true
 	},
 	"livereload": {
 		"preset": "",

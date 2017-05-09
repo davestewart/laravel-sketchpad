@@ -46,7 +46,9 @@ export default
 		{
 			const results = [];
 			store.controllers.forEach(controller => {
-				let methods = controller.methods.filter(this.filterFn)
+				let methods = (controller.methods || [])
+					.filter(method => method.name !== 'index')
+					.filter(this.filterFn)
 				if (!settings.ui.showArchived)
 				{
 					methods = methods.filter(method => !method.tags.archived)
