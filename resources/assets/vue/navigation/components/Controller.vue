@@ -5,6 +5,7 @@
 			:data-name="controller.class"
 			:data-path="controller.path"
 			:data-route="controller.route"
+			:title="getComment()"
 			v-link="'/run/' + controller.route"
 			>
 			{{{ getLabel() }}}
@@ -38,6 +39,11 @@ export default
 		getLabel ()
 		{
 			return Helpers.getControllerLabel(this.controller);
+		},
+
+		getComment ()
+		{
+			return this.controller.comment.intro.replace(/<.+?>/g, '');
 		},
 
 		isActive ()
