@@ -162,10 +162,8 @@
 						<ul class="col-sm-9 control-group" >
 							<li><label><input type="checkbox" v-model="settings.ui.scrollTop"> <span>Scroll to top on load</span></label></li>
 							<li><label><input type="checkbox" v-model="settings.ui.formatCode"> <span>Format code</span></label></li>
-							<li><label><input type="checkbox" v-model="settings.ui.appendOutput"> <span>Append output</span></label></li>
 						</ul>
 					</div>
-
 				</fieldset>
 
 			</form>
