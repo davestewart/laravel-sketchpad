@@ -144,7 +144,7 @@ export default
 							.replace(/\//g, ' ▸ '));
 					this.transitioning = true
 					this.method = method
-					if ((method && method.tags.append) || settings.ui.appendOutput)
+					if (method && method.tags.append)
 					{
 						this.clear()
 					}

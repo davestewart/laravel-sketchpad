@@ -82,7 +82,7 @@ export default
 			}
 
 			// add content
-			(method && method.tags.append) || settings.ui.appendOutput
+			method && method.tags.append
 				? this.$output.prepend($html)
 				: this.$output.html($html);
 		},

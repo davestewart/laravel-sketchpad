@@ -3,7 +3,7 @@
 <head>
 
     <!-- meta -->
-    <title>Sketchpad</title>
+    <title>{{ $title }}</title>
     <meta name="route" content="{{ $route }}">
     @include('sketchpad::head-common')
 
@@ -11,7 +11,6 @@
     <script src="http://{{ $livereload->host }}:35729/livereload.js"></script>
 	@endif
 
-	<!-- user assets -->
 {!! $head !!}
 </head>
 <body>

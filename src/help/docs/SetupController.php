@@ -36,7 +36,7 @@ class SetupController
 	}
 
 	/**
-	 * Customise Sketchpad with user scripts and styles
+	 * Load user scripts and styles to augment your Sketchpad development
 	 */
 	public function assets(SketchpadConfig $config)
 	{
@@ -47,8 +47,6 @@ class SetupController
 
 	/**
 	 * Set up and configure Sketchpad Reload to enable live-reloading and live-coding
-	 *
-	 * @group Admin
 	 */
 	public function liveReload()
 	{
@@ -59,14 +57,37 @@ class SetupController
 
 	/**
 	 * Customise various aspects of Sketchpad to make your setup more relevant to visitors
+	 *
+	 * @group Customisation
 	 */
-	public function customisation()
+	public function settings(SketchpadConfig $config)
 	{
-		echo md('sketchpad::help/setup/customisation');
+		$views = $config->settings->get('paths.views');
+		echo md('sketchpad::help/setup/settings', compact('views'));
+	}
+
+	/**
+	 * Replace top-level Sketchpad pages with your own custom content
+	 */
+	public function pages(SketchpadConfig $config)
+	{
+		$views = $config->settings->get('paths.views');
+		echo md('sketchpad::help/setup/pages', compact('views'));
+	}
+
+	/**
+	 * Add 3rd-party libraries, tracking or other head content
+	 */
+	public function head(SketchpadConfig $config)
+	{
+		$views = $config->settings->get('paths.views');
+		echo md('sketchpad::help/setup/head', compact('views'));
 	}
 
 	/**
 	 * Configure the admin file to provide guest usage and prevent changes to settings
+	 *
+	 * @group Admin
 	 */
 	public function permissions()
 	{

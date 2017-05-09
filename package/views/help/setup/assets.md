@@ -1,21 +1,18 @@
-Sketchpad provides a custom folder to load user assets:
+Sketchpad provides a custom folder from which to load user assets:
 
 ```text
 {{assets}}
 ```
 
-Two starter files were copied here during installation:
+Three starter files were copied here during installation:
 
-	{{assets}}scripts.js
-	{{assets}}styles.css
-
-These are loaded via your custom [view](views) file `head.blade.php`:
-
-```html
-<script src="{{ $assets }}scripts.js"></script>
-<link   href="{{ $assets }}styles.css" rel="stylesheet">
+```text
+scripts.js
+styles.css
+favicon.ico
 ```
-Both the assets and head file are yours to do with as you please; for example modifying styles, loading 3rd party libraries, adding meta tags, etc. 
+
+Feel free to modify, add or remove these files via your custom [head](head) file.
 
 You might also want to check out:
 

@@ -60,7 +60,7 @@ class SketchpadController extends Controller
 			$config     = $this->sketchpad->init(true)->config;
 
             // settings
-	        $settings   = $config->settings->data;
+	        $settings   = $config->settings;
 
 	        // user content
 	        $home       = $config->views . 'home.blade.php';
@@ -74,8 +74,9 @@ class SketchpadController extends Controller
 				'head'          => '',
 				'route'         => $config->route,
 				'assets'        => $config->route . 'assets/',
-				'livereload'    => (object) $settings['livereload'],
-				'settings'      => $settings,
+				'title'         => $settings->get('site.name'),
+				'livereload'    => (object) $settings->get('livereload'),
+				'settings'      => $settings->data,
 				'admin'         => $config->admin,
 				'home'          => view(file_exists(base_path($home)) ? 'sketchpad::home' : 'sketchpad::no-home', compact('home')),
 				'help'          => view(file_exists(base_path($help)) ? 'sketchpad::help' : 'sketchpad::no-help', compact('help')),
@@ -130,6 +131,7 @@ class SketchpadController extends Controller
 				'png'   => 'image/png',
 				'woff'  => 'application/font-woff',
 				'ttf'   => 'application/x-font-ttf',
+				'ico'   => 'image/x-icon',
 			];
 			$mime = isset($mimes[$ext])
 				? $mimes[$ext]

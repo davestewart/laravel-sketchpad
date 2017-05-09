@@ -1,3 +1,4 @@
+Here are a selection of Sketchpad's default styles, all of which are editable or overridable via your user <a href="{{route}}assets/user/styles.css" target="_blank">assets</a> file.
 
 # This is an H1
 ## This is an H2

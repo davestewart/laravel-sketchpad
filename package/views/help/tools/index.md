@@ -14,7 +14,7 @@ The tools contained here are just examples of the types of things you can build 
 - [VueJS](../docs/output/vue) components
 - [Blade](../docs/output/blade) views
 - [Markdown](../docs/output/markdown) formatting
-- Sketchpad [package path](../docs/methods/variables) variable
+- Sketchpad [view namespace](../docs/methods/variables)
 - View [$route](../docs/methods/variables) variable
 - [Contents](../docs/methods/content) page
 - Method [comments](../docs/methods/comments)

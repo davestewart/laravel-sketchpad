@@ -29,7 +29,9 @@
 	"site": {
 		"name": "Sketchpad",
 		"home": "welcome",
-		"help": "help"
+		"help": "help",
+		"search": true,
+		"favourites": true
 	},
 	"livereload": {
 		"preset": "",
@@ -41,7 +43,6 @@
 		"humanizeText": true,
 		"showComments": true,
 		"showArchived": true,
-		"appendOutput": false,
 		"formatCode": true,
 		"scrollTop": true
 	}

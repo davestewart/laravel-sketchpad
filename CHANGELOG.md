@@ -2,27 +2,29 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [1.1.10] - 2017-05-06
+## [1.2.0] - 2017-05-09
 
 ### Added
 
+- Added top-level Search and Favourites 
 - Implemented support for `@field` tags
-- Implemented controller reordering
-- Implemented support for implicit pagination
 - New `text()` and `code()` helper functions
 - Data injection for `md()` function
 - Static `Sketchpad::$form` and `Sketchpad::$data` properties
 - Automatic injection of `$route` variable into views
+- Implemented controller reordering
+- Implemented support for implicit pagination
 - Included app controllers folder in paths
 - Custom page title functionality
 - Added custom Help page
+- Added custom head view
 - Implemented live-reloading for custom pages
-- Added scroll to section functionality for Settings
 - Added index pages for all help controllers
+- Added scroll to section functionality for Settings
 - Bootstrap formatting for Markdown tables
+- Added favicon.ico
 - Added changelog
 
 ### Changed
@@ -31,15 +33,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Created new Sketchpad docs sections
   - Updated a lot of help to be better-formatted and more consistent
   - Improved example controller and view content
-- Moved custom asset declaration to user view
 - Moved various settings to single "Site" section
-- New Param sub-components for different data types
+- Moved custom asset declaration to custom head view
 - Disabled Settings page now shows a message
 - Index pages can be re-run
 - Added formatting classes to `pr()` and `vd()`
 - Updated FontAwesome to latest version
 - Improved submission of form data
 - Improved formatting of tables and forms
+- Removed global appendOutput setting
+- New Param sub-components for different data types
 - Simplified copying of user views in setup
 
 ### Fixed
@@ -63,12 +66,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Upgrade notes
 
-New Settings `site` section:
+The new settings configuration has breaking changes:
 
-- Copy `site` node from `vendor/davestewart/sketchpad/package/config/admin.json`
-- Remove `head` node
-- Remove `ui.homepage` node
-- Copy relevant values if required
+- Back up your existing settings file `storage/sketchpad/settings.json`
+- Reinstall Sketchpad via `http://<yoursite>/sketchpad/setup`
+- Locate updated `settings.json` and update relevant nodes (`paths`, `livereload`, `ui`) from your backed-up file
 
 
 ## [1.1.0] - 2017-04-21
@@ -133,27 +135,18 @@ New Settings `site` section:
 - Various inconsistencies with controller reloading / missing routes
 - Various installer bugs / optmiisations
 
+## Pre-releases
 
-## [1.0.0-beta] - 2017-03-24
+- [1.0.0-beta] - 2017-03-24
+- [0.3.0] - 2016-05-12
+- [0.2.0] - 2016-04-30
+- [0.1.0] - 2016-04-27
+- 0.0.0 - 2016-04-19
 
-- check commit log :)
-
-
-## [0.3.0] - 2016-05-12
-
-- check commit log :)
-
-
-## [0.2.0] - 2016-04-30
-
-- check commit log :)
-
-
-## [0.1.0] - 2016-04-27
-
-- check commit log :)
-
-## [0.0.0] - 2016-04-19
-
-- check commit log :)
-
+[1.2.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.0.0-beta...v1.0.0
+[1.0.0-beta]: https://github.com/davestewart/laravel-sketchpad/compare/v0.3...v1.0.0-beta
+[0.3.0]: https://github.com/davestewart/laravel-sketchpad/compare/v0.2...v0.3
+[0.2.0]: https://github.com/davestewart/laravel-sketchpad/compare/v0.1...v0.2
+[0.1.0]: https://github.com/davestewart/laravel-sketchpad/compare/3b2c4c0efdffaaead8a490132c49bdea3a3aef1c...v0.1

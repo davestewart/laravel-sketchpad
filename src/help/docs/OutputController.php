@@ -31,7 +31,7 @@ class OutputController
 	}
 
 	/**
-	 * Load Sketchpad-specific Blade files using the special `sketchpad::` shortcut
+	 * Load Sketchpad-specific Blade files using the `sketchpad::` view namespace
 	 *
 	 */
 	public function blade(SketchpadConfig $config)

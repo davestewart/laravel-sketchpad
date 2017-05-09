@@ -13,13 +13,22 @@
 
 <script>
 
-import Favourites  from '../navigation/Favourites.vue'
+import settings     from '../../js/state/settings'
+import Favourites   from '../navigation/Favourites.vue'
 
 export default
 {
 	components:
 	{
 		Favourites
+	},
+
+	route:
+	{
+		canActivate()
+		{
+			return !!settings.site.favourites;
+		}
 	}
 }
 
