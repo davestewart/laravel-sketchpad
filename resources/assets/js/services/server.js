@@ -99,9 +99,9 @@ Server.prototype =
 		getData (method)
 		{
 			let data	= method.params.map(param => _.pick(param, 'name', 'type', 'value'));
-			if (method.runIf && method.runState)
+			if (method.runIf)
 			{
-				data.push({name: method.runIf, type:'boolean', value:true})
+				data.push({name: method.runIf, type: 'boolean', value: method.runState})
 				method.runState = false;
 			}
 			return JSON.stringify(data);
