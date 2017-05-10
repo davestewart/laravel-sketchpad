@@ -1,6 +1,6 @@
 <template>
 
-	<component :is="home" type="home" keep-alive></component>
+	<component :is="home" type="home"></component>
 
 </template>
 
