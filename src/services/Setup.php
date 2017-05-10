@@ -48,7 +48,6 @@ class Setup
             $finder->start();
 
             // config
-            $paths  = app(Paths::class);
             $config = app(SketchpadConfig::class);
 
             // base name
@@ -72,8 +71,8 @@ class Setup
 					'basepath'          => $basePath,
 					'basename'          => $baseName,
                     'viewpath'          => $viewPath,
-                    'storagepath'       => $paths->relative($config->settings->src),
-                    'controllerpath'    => trim($paths->relative($finder->path), '/'),
+                    'storagepath'       => Paths::relative($config->settings->src),
+                    'controllerpath'    => trim(Paths::relative($finder->path), '/'),
 					'namespace'         => method_exists($app, 'getNamespace')
                                             ? trim($app->getNamespace(), '\\')
                                             : 'App\\',
