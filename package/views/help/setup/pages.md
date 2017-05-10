@@ -10,4 +10,5 @@ They allow you to present different content depending on the install, so you cou
 - run Sketchpad as a standalone site with a custom home page
 - provide site-specific help regarding your custom content
 
-Enable custom pages in the Site section of the [settings]({{route}}settings#site) page.
+
+You can enable custom pages, or change the default folder, in the Site section of the [settings]({{route}}settings#site) page.

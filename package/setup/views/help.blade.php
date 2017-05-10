@@ -7,6 +7,6 @@
 </header>
 <section>
 	<h3>Hello</h3>
-	<p>This is your custom help page, located at <code>{{ $config->views . 'help.blade.php' }}</code>.</p>
+	<p>This is your custom help page, located at <code>{{ $help }}</code>.</p>
 	<p>Edit it to suit your needs!</p>
 </section>

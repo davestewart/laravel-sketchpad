@@ -7,6 +7,6 @@
 </header>
 <section>
 	<h3>Welcome</h3>
-	<p>This is your custom home page, located at <code>{{ $config->views . 'home.blade.php' }}</code>.</p>
+	<p>This is your custom home page, located at <code>{{ $home }}</code>.</p>
 	<p>Edit it to suit your needs!</p>
 </section>

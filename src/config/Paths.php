@@ -21,7 +21,7 @@ class Paths
 
         public function __construct()
         {
-            $this->_install  = $this->folder(base_path('vendor/davestewart/sketchpad/'));
+            $this->_install  = Paths::folder(base_path('vendor/davestewart/sketchpad/'));
             $this->_storage  = storage_path('sketchpad/');
         }
 
@@ -38,7 +38,7 @@ class Paths
          */
         public function install($path = '', $relative = false)
         {
-            return $this->make($this->_install . $path, $relative);
+            return Paths::make($this->_install . $path, $relative);
         }
 
         /**
@@ -50,7 +50,7 @@ class Paths
          */
         public function package($path = '', $relative = false)
         {
-            return $this->make($this->_install . 'package/' . $path, $relative);
+            return Paths::make($this->_install . 'package/' . $path, $relative);
         }
 
         /**
@@ -62,26 +62,26 @@ class Paths
          */
         public function storage($path = '', $relative = false)
         {
-            return $this->make($this->_storage . $path, $relative);
+            return Paths::make($this->_storage . $path, $relative);
         }
 
 
     // ------------------------------------------------------------------------------------------------
     // utilities
 
-        /**
-         * Utility method to create a path; fixing and optionally makeing relative to the base path
-         *
-         * @param   string  $path       The path to process
-         * @param   bool    $relative   An optional flag to return the path relative to the base path
-         * @return  string              The final path
-         */
-        public function make($path, $relative = false)
-        {
-            return $relative
-                ? $this->relative($path)
-                : $this->fix($path);
-        }
+		/**
+		 * Utility method to create a path; fixing and optionally making relative to the base path
+		 *
+		 * @param   string  $path       The path to process
+		 * @param   bool    $relative   An optional flag to return the path relative to the base path
+		 * @return  string              The final path
+		 */
+		public static function make($path, $relative = false)
+		{
+		    return $relative
+		        ? Paths::relative($path)
+		        : Paths::fix($path);
+		}
 
         /**
          * Utility method to make path relative to the base path
@@ -89,33 +89,38 @@ class Paths
          * @param   string  $path       The path to process
          * @return  string              The final path
          */
-        public function relative($path)
+        public static function relative($path)
         {
-            return $this->fix(str_replace(base_path() . '/', '', $path));
+            return Paths::fix(str_replace(base_path() . '/', '', $path));
         }
 
-        /**
-         * Utility method to return a path with a trailing slash
-         *
-         * @param   string  $path       The path to process
-         * @param   bool    $relative   An optional flag to return the path relative to the base path
-         * @return  string              The final path
-         */
-        public function folder($path, $relative = false)
-        {
-            $path = $this->make($path, $relative);
-            return rtrim($path, '/') . '/';
-        }
+		/**
+		 * Utility method to return a path with a trailing slash
+		 *
+		 * @param   string  $path       The path to process
+		 * @param   bool    $relative   An optional flag to return the path relative to the base path
+		 * @return  string              The final path
+		 */
+		public static function folder($path, $relative = false)
+		{
+		    $path = Paths::make($path, $relative);
+		    return rtrim($path, '/') . '/';
+		}
 
-        /**
-         * Replaces backslashes with forward slashes
-         *
-         * @param   string  $path       The path to process
-         * @return  string              The fixed path
-         */
-        public function fix($path)
-        {
-            return str_replace('\\', '/', $path);
-        }
+		/**
+		 * Fixes-up paths:
+		 *
+		 * - replaces backslashes with forward slashes
+		 * - replaces multiple slashes with a single slash
+		 *
+		 * @param   string  $path       The path to process
+		 * @return  string              The fixed path
+		 */
+		public static function fix($path)
+		{
+		    $path = str_replace('\\', '/', $path);
+		    $path = preg_replace('%/+%', '/', $path);
+		    return $path;
+		}
 
 }

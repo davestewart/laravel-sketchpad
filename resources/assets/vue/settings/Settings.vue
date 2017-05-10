@@ -93,6 +93,19 @@
 					</div>
 
 					<div class="form-group form-group-sm">
+						<label class="control-label col-sm-3">Views subfolder</label>
+						<div class="col-sm-9">
+							<span class="field">
+								<input v-model="settings.site.views" v-validate-path="settings.paths.views" type="text" class="form-control" placeholder="custom">
+								<span class="icons">
+									<i class="validate-path" aria-hidden="true"></i>
+								</span>
+							</span>
+							<p class="help-block prompt">Optional views sub-folder to home, help and head views from</p>
+						</div>
+					</div>
+
+					<div class="form-group form-group-sm">
 						<label class="control-label col-sm-3">Discovery</label>
 						<ul class="col-sm-9 control-group">
 							<li><label><input type="checkbox" v-model="settings.site.search"> <span>Search</span></label></li>
@@ -243,7 +256,8 @@ export default
 		// debounce
 		this.watchField([
 			'settings.paths.assets',
-			'settings.paths.views'
+			'settings.paths.views',
+			'settings.site.views'
 		], {debounce: true});
 
 		// deep

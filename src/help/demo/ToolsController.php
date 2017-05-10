@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\help\demo;
 
+use davestewart\sketchpad\config\SketchpadConfig;
 use davestewart\sketchpad\config\SketchpadSettings;
 
 /**
@@ -146,9 +147,12 @@ class ToolsController
 	/**
 	 * Check your sketchpad settings
 	 */
-	public function sketchpadSettings(SketchpadSettings $settings)
+	public function sketchpadSettings(SketchpadConfig $config)
 	{
-		return $settings;
+		p('Settings:');
+		json($config->settings);
+		p('Admin:');
+		json($config->admin);
 	}
 
     /**

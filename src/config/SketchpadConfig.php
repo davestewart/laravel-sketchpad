@@ -38,7 +38,7 @@ class SketchpadConfig
 		/**
 		 * Root-relative path to the user views folder
 		 *
-		 * @var string[] $path
+		 * @var string $path
 		 */
 		public $views;
 
@@ -65,6 +65,12 @@ class SketchpadConfig
 		    $this->settings = new SketchpadSettings();
 			$this->loadSettings();
 			$this->loadAdmin();
+		}
+
+		public function getView ($name)
+		{
+			$custom = rtrim($this->settings->get('site.views', ''), '/') . '/';
+			return Paths::fix($this->views . "/$custom/$name.blade.php");
 		}
 
 	// -----------------------------------------------------------------------------------------------------------------
