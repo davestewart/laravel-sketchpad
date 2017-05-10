@@ -1,5 +1,6 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
+use davestewart\sketchpad\config\Paths;
 use davestewart\sketchpad\config\SketchpadConfig;
 
 /**
@@ -71,17 +72,19 @@ class SetupController
 	 */
 	public function pages(SketchpadConfig $config)
 	{
-		$views = $config->settings->get('paths.views');
+		$views  = $config->settings->get('paths.views');
 		echo md('sketchpad::help/setup/pages', compact('views'));
 	}
 
 	/**
 	 * Add 3rd-party libraries, tracking or other head content
 	 */
-	public function head(SketchpadConfig $config)
+	public function head(Paths $paths, SketchpadConfig $config)
 	{
-		$views = $config->settings->get('paths.views');
-		echo md('sketchpad::help/setup/head', compact('views'));
+		$head = $config->getView('head');
+		$path = $paths->package('setup/views/head.blade.php');
+		$html = file_get_contents($path);
+		echo md('sketchpad::help/setup/head', compact('head', 'html'));
 	}
 
 	/**
