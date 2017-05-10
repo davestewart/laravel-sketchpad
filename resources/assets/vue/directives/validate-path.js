@@ -21,7 +21,7 @@ Vue.directive('validate-path',
 
 	update (value)
 	{
-
+		this.root = value || '';
 	},
 
 	unbind ()
@@ -50,15 +50,24 @@ Vue.directive('validate-path',
 
 	check (update)
 	{
+		// get path
 		const $el = $(this.el);
-		const path = trim($el.val());
+		let path = trim($el.val());
+
+		// prepend root if it exists
+		if (this.root)
+		{
+			path = this.root.replace(/\/+$/, '') + '/' + path;
+		}
+
+		// test
 		server
 			.validatePath(path)
 			.then(data => {
 				if ($el.is(':focus'))
 				{
 					this.$icon
-						.attr('title', data.exists ? 'Path exists' : 'Path does not exist')
+						.attr('title', data.exists ? 'Path "' +path+ '" exists' : 'Path "' +path+ '" does not exist')
 						.addClass('fa')
 						.toggleClass('fa-check', data.exists)
 						.toggleClass('fa-exclamation-triangle', !data.exists);

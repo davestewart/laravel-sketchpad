@@ -30,6 +30,7 @@
 		"name": "Sketchpad",
 		"home": "welcome",
 		"help": "help",
+		"views": "",
 		"search": true,
 		"favourites": true
 	},
