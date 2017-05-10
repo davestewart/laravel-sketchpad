@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 
+## [1.2.*] - 2017-05-10
+
+### Added
+
+- Added functionality to load custom views from a subfolder 
+
+### Changed
+
+- Made Paths utility functions static
+
+### Fixed
+
+- Modified test mode so it passes `$run` even if false
+- Modified custom views to load directly
+
 
 ## [1.2.0] - 2017-05-09
 
@@ -143,6 +158,8 @@ The new settings configuration has breaking changes:
 - [0.1.0] - 2016-04-27
 - 0.0.0 - 2016-04-19
 
+[1.2.*]: https://github.com/davestewart/laravel-sketchpad/compare/v1.2.0...develop
+[1.2.*]: https://github.com/davestewart/laravel-sketchpad/compare/v1.1.0...v1.2.0
 [1.2.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.0.0-beta...v1.0.0
