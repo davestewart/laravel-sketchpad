@@ -2,17 +2,21 @@ pre,
 .table td.pre,
 .table.pre td,
 .code{
-	font: normal 11px/1.4em Menlo, Monaco, Consolas, "Courier New", monospace !important; // Menlo
+	margin:20px;
+	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+	font-size: 11px;
+	line-height:1.5em !important;
+	font-weight: normal;
 	white-space: pre;
 	color:#555;
-	margin:20px;
+	tab-size: 4;
 }
 
-pre{
+pre {
 	background-color: #FBFBFB;
 }
 
-pre small, pre *{
+pre small, pre * {
 	font-size:1em;
 }
 

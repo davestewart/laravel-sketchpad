@@ -101,7 +101,7 @@
 									<i class="validate-path" aria-hidden="true"></i>
 								</span>
 							</span>
-							<p class="help-block prompt">Optional views sub-folder to home, help and head views from</p>
+							<p class="help-block prompt">Optional views sub-folder to load home, help and head views from</p>
 						</div>
 					</div>
 

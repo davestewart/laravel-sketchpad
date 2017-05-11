@@ -10,7 +10,7 @@
 			<p>Sketchpad is an innovative live-coding, development and admin environment for your existing Laravel site.
 			<p>It's a place to write, test, experiment and execute code, or just a place to group useful tools and functions you want easy access to.</p>
 
-			<iframe style="padding:20px;" width="560" height="333" src="https://www.youtube.com/embed/XZlnDl3Mo2g?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+			<iframe style="padding:20px;" width="560" height="333" src="https://www.youtube.com/embed/oV2zVtio0bY?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
 
 			<h3>Overview</h3>
 			<p>Sketchpad provides an alternative structure of controllers, views, assets and routing that lives alongside your main Laravel installation.</p>
