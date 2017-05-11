@@ -18,9 +18,9 @@ if( ! function_exists('text') )
 
 if( ! function_exists('code') )
 {
-	function code($text, $format = 'php')
+	function code()
 	{
-		\davestewart\sketchpad\utils\Html::code($text, $format);
+		call_user_func_array('\davestewart\sketchpad\utils\Html::code', func_get_args());
 	}
 }
 

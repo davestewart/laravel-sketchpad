@@ -45,13 +45,28 @@ class Html
 		/**
 		 * Output code with optional highlighting
 		 *
-		 * @param   string  $text
-		 * @param   string  $format
+		 * @param   string  $source
 		 */
-		public static function code($text, $format = 'php')
+		public static function code($source)
 		{
-			$text = htmlentities($text);
-			echo "<pre class='code $format'>$text</pre>\n";
+			if (class_exists($source))
+			{
+				@list ($class, $method, $comment) = func_get_args();
+				is_string($method)
+					? Code::method($class, $method, $comment)
+					: Code::classfile($class, $method);
+			}
+			else if (file_exists($source))
+			{
+				@list ($path, $start, $end, $undent) = func_get_args();
+				is_int($start)
+					? Code::section($path, $start, $end, $undent)
+					: Code::file($path, $start);
+			}
+			else
+			{
+				Code::output($source);
+			}
 		}
 
 		/**
