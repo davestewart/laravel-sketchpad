@@ -1,11 +1,10 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
+use davestewart\sketchpad\utils\Code;
 use Illuminate\Translation\Translator;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
-use davestewart\sketchpad\services\Sketchpad;
-use davestewart\sketchpad\config\SketchpadConfig;
 
 /**
  * Use various techniques and helpers to print and format text, html and data
@@ -28,7 +27,7 @@ class HelpersController
 	public function paragraph()
 	{
 		?>
-		<p>The format of the method is:</p>
+		<p>The format of the function is:</p>
 		<pre class="code php">p($text, $class = '');</code></pre>
 		<p>You can print <strong>normal</strong>, <strong>note</strong> and <strong>custom</strong>-classed paragraphs:</p>
 		<div style="margin: 20px 25px 30px;">
@@ -50,7 +49,7 @@ class HelpersController
 	public function text()
 	{
 		?>
-		<p>The format of the method is:</p>
+		<p>The format of the function is:</p>
 		<pre class="code php">text($text);</pre>
 		<p>This is a paragraph...</p>
 		<?php
@@ -59,15 +58,62 @@ class HelpersController
 
 	/**
 	 * Output code with formatting and html entities converted
+	 *
+	 * @field select $arguments options:Raw PHP=php,Raw JavaScript=js,File=file,Section=section,Section (without indent)=sectionu,Class=class,Class (with doc-comment)=classc,Method=method,Method (with doc-comment)=methodc
 	 */
-	public function code()
+	public function code($arguments = 'php')
 	{
-		?>
-		<p>The format of the method is:</p>
-		<pre class="code php">code($text, $format = 'php');</pre>
-		<p>As an example, the contents of this file is:</p>
-		<?php
-		code(file_get_contents(__FILE__));
+		$params =
+		[
+			'php'      => [
+				'desc' => 'raw PHP',
+				'func' => 'output',
+				'args' => ['$a + $b === 100 ? true : false']
+			],
+			'js'       => [
+				'desc' => 'raw JavaScript',
+				'func' => 'output',
+				'args' => ['a + b === 100 ? true : false', 'javascript']
+			],
+			'file'     => [
+				'desc' => 'this file',
+				'func' => 'file',
+				'args' => [__FILE__]
+			],
+			'section'  => [
+				'desc' => 'lines 17 - 44 of this file',
+				'func' => 'section',
+				'args' => [__FILE__, 17, 44]
+			],
+			'sectionu' => [
+				'desc' => 'lines 17 - 44 of this file (without indent)',
+				'func' => 'section',
+				'args' => [__FILE__, 17, 44, true]
+			],
+			'class'    => [
+				'desc' => 'this class',
+				'func' => 'classfile',
+				'args' => [__CLASS__]
+			],
+			'classc'   => [
+				'desc' => 'this class (with doc-comment)',
+				'func' => 'classfile',
+				'args' => [__CLASS__, true]
+			],
+			'method'   => [
+				'desc' => 'this method',
+				'func' => 'method',
+				'args' => [__CLASS__, 'code']
+			],
+			'methodc'  => [
+				'desc' => 'this method (with doc-comment)',
+				'func' => 'method',
+				'args' => [__CLASS__, 'code', true]
+			],
+		];
+		$data = $params[$arguments];
+		$data['signature'] = Code::signature($data['args']);
+		return view('sketchpad::help/helpers/code', $data);
 	}
 
 	/**
@@ -76,7 +122,7 @@ class HelpersController
 	public function alert()
 	{
 		?>
-		<p>The format of the method is:</p>
+		<p>The format of the function is:</p>
 		<pre class="code php">alert($html, $class = 'info', $icon = '');</pre>
 		<?php
 		p('Pass text only to output a basic Bootstrap "info" alert box:');
@@ -144,7 +190,7 @@ class HelpersController
 	public function ls($options = '')
 	{
 		?>
-		<p>The format of the method is:</p>
+		<p>The format of the function is:</p>
 		<pre class="code php">ls($values, $options = '');</pre>
 		<p>The options are the same as the <a href="table">table</a> function.</p>
 		<p>This is the validation config array, formatted as a list:</p>
