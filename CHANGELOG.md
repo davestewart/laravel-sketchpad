@@ -7,11 +7,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 
 ### Added
 
-- Added functionality to load custom views from a subfolder 
+- Added functionality to load custom views from a subfolder
+- Added static `Code` helper class
 
 ### Changed
 
 - Made Paths utility functions static
+- Moved demo tools controller before docs controller
+- `code()` is now a variadic function and calls `Code` class
 
 ### Fixed
 
@@ -159,7 +162,6 @@ The new settings configuration has breaking changes:
 - 0.0.0 - 2016-04-19
 
 [1.2.*]: https://github.com/davestewart/laravel-sketchpad/compare/v1.2.0...develop
-[1.2.*]: https://github.com/davestewart/laravel-sketchpad/compare/v1.1.0...v1.2.0
 [1.2.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/davestewart/laravel-sketchpad/compare/v1.0.0-beta...v1.0.0
