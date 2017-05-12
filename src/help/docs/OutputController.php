@@ -61,7 +61,7 @@ class OutputController
 
 <p>The data is injected into the view as a local variable <code>$data</code>, so just reference it in your view like so:</p>
 		<?php
-		code(file_get_contents(base_path('vendor/davestewart/sketchpad/package/views/help/output/vue.vue')));
+		code(base_path('vendor/davestewart/sketchpad/package/views/help/output/vue.vue'), 'html');
 		echo '<hr>';
 		vue('sketchpad::help/output/vue', ['name' => $name]);
 	}

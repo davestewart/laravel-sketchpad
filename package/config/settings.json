@@ -13,13 +13,13 @@
 				"enabled": true
 			},
 			{
-				"name": "help/docs",
-				"path": "vendor/davestewart/sketchpad/src/help/docs",
+				"name": "help/demo",
+				"path": "vendor/davestewart/sketchpad/src/help/demo",
 				"enabled": true
 			},
 			{
-				"name": "help/demo",
-				"path": "vendor/davestewart/sketchpad/src/help/demo",
+				"name": "help/docs",
+				"path": "vendor/davestewart/sketchpad/src/help/docs",
 				"enabled": true
 			}
 		],

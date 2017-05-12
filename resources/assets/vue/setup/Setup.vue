@@ -135,11 +135,13 @@ function scrollTop(callback)
     const top  = $(window).scrollTop();
     if(top > 0)
     {
-        $('body').animate({scrollTop:0}, function(){
-            setTimeout(function(){
-                callback();
-            }, 250);
-        });
+        $('html,body')
+	        .stop()
+	        .animate({scrollTop:0}, 450, function(){
+	            setTimeout(function(){
+	                callback();
+	            }, 250);
+	        });
     }
     else
     {
@@ -147,7 +149,7 @@ function scrollTop(callback)
     }
 }
 
-var data =
+let data =
 {
     // install settings
     settings:{
