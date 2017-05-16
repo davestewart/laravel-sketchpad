@@ -1,4 +1,4 @@
-<?php namespace user;
+<?php namespace controllers;
 
 use davestewart\sketchpad\config\SketchpadConfig;
 
@@ -12,23 +12,15 @@ class ExampleController
 
     public function index (SketchpadConfig $config)
     {
-    	$data =
-	    [
-	        'controllers' => $config->controllers['sketchpad'],
-	        'views'       => $config->views,
-	        'assets'      => $config->assets,
-	    ];
-        return view('sketchpad::example.index', $data);
+        return view('sketchpad::example/index', compact('config'));
     }
 
     /**
-     * An example method, just to get you started
+     * An example method, just to get you started...
      */
     public function welcome ($name = 'World')
     {
-        return view('sketchpad::example.welcome', compact('name'));
+        echo "Hello $name";
     }
-
-    // your methods here...
 
 }
