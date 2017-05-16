@@ -6,8 +6,8 @@
 <h3>Source</h3>
 <p>Your source files can be found at:</p>
 <pre>
-{{ $controllers }}
-{{ $views }}
-{{ $assets }}
+{{ $config->controllers['sketchpad'] }}
+{{ $config->views }}
+{{ $config->assets }}
 </pre>
 <p>These files are yours to modify, add to, or remove as you like.</p>
