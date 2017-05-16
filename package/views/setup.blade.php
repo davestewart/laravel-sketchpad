@@ -4,11 +4,14 @@
 
 	<!-- meta -->
 	<title>Sketchpad - Setup</title>
-    @include('sketchpad::head-common')
+    @include('sketchpad::sketchpad-head')
+
+	<!-- favicon -->
+	<link rel="shortcut icon" href="{{ $assets }}images/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="{{ $assets }}images/favicon.ico" type="image/x-icon">
 
     <!-- setup -->
     <link  href="{{ $assets }}css/setup.css" rel="stylesheet">
-
 	<script type="application/json" id="settings">{!! json_encode($settings, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}</script>
 
 </head>
