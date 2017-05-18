@@ -125,6 +125,10 @@
 		outline:none !important;
 	}
 
+	i.icon:not([class*="text-"]) {
+	    color: black;
+    }
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // forms
@@ -169,6 +173,11 @@
 		}
 		td {
 			padding:3px 20px 3px 8px;
+		}
+
+		td > .icon {
+			width: 100%;
+			text-align: center;
 		}
 	}
 
