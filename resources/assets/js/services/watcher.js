@@ -61,25 +61,6 @@ class Watcher {
 			this.initialized = true;
 		}
 
-		// currently not implemented
-		if(window.___browserSync___)
-		{
-			// don't redecorate
-			if(___browserSync___.socket.hasListeners('sketchpad:change'))
-			{
-				return false;
-			}
-
-			// add listener
-			___browserSync___.socket.on('sketchpad:change', event =>
-			{
-				return ! this.handle(event.file, event.type);
-			});
-
-			// success
-			this.initialized = true;
-		}
-
 		// debug
 		if (this.initialized)
 		{

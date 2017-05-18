@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 
 - Added functionality to load custom views from a subfolder
 - Added static `Code` helper class
+- Added `icon()` helper function
+- Added icon functionality to `table()`
+- Added text/data `type` functionality to `table()` 
 
 ### Changed
 

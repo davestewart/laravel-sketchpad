@@ -1,26 +1,26 @@
-pre,
-.table td.pre,
-.table.pre td,
-.code{
-	margin:20px;
-	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-	font-size: 11px;
-	line-height:1.5em !important;
-	font-weight: normal;
-	white-space: pre;
-	color:#555;
-	tab-size: 4;
-}
-
-pre {
-	background-color: #FBFBFB;
-}
-
-pre small, pre * {
-	font-size:1em;
-}
-
 #output {
+
+	pre,
+	.table td.pre,
+	.table.pre td,
+	.code{
+		margin:20px;
+		font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+		font-size: 11px;
+		line-height:1.5em !important;
+		font-weight: normal;
+		white-space: pre;
+		color:#555;
+		tab-size: 4;
+	}
+
+	pre {
+		background-color: #FBFBFB;
+	}
+
+	pre small, pre * {
+		font-size:1em;
+	}
 
 	& pre.sf-dump,
 	& .jsonview {

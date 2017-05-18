@@ -32,6 +32,14 @@ if( ! function_exists('alert') )
 	}
 }
 
+if( ! function_exists('icon') )
+{
+	function icon($name, $color = '')
+	{
+		return \davestewart\sketchpad\utils\Html::icon($name, $color);
+	}
+}
+
 if( ! function_exists('pr') )
 {
 	function pr()

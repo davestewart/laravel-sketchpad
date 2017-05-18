@@ -92,6 +92,33 @@ class Html
 		}
 
 		/**
+		 * Return a Font Awesome icon
+		 *
+		 * @param   string|bool     $name       A FontAwesome icon name, or a boolean for colored tick/cross
+		 * @param   string          $color      An optional colour
+		 * @return  string
+		 */
+		public static function icon($name, $color = '')
+		{
+			if (is_bool($name))
+			{
+				$color = $name ? 'success' : 'danger';
+				$name = $name ? 'check' : 'times';
+			}
+			$class = "icon fa fa-$name";
+			$style = '';
+			if (preg_match('/(info|success|warning|danger)/', $color))
+			{
+				$class .= ' text-' . $color;
+			}
+			else if ($color !== '')
+			{
+				$style = ' style="color:' .$color. '"';
+			}
+			return '<i class="' .$class. '" ' .$style. '></i>';
+		}
+
+		/**
 		 * print_r() passed arguments
 		 */
 		public static function pr()
@@ -183,20 +210,30 @@ class Html
 				'label'     => $opts->get('label'),
 				'index'     => $opts->has('index'),
 				'class'     => $opts->get('class', ''),
+				'type'      => $opts->get('type', 'data'),
 				'style'     => $opts->get('style', ''),
 				'width'     => $opts->get('width', ''),
 				'cols'      => (array) $opts->get('cols'),
 				'pre'       => (array) $opts->get('pre'),
 				'html'      => (array) $opts->get('html'),
+				'icon'      => (array) $opts->get('icon'),
 			];
 			if($opts->pre === 1)
 			{
 				$options['class'] .= ' pre';
 				$options['pre'] = [];
 			}
+			if($opts->type !== 'text')
+			{
+				$options['class'] .= ' table-bordered table-striped data';
+			}
 			if($opts->width)
 			{
 				$options['style'] .= ';' . self::getCss($opts->width);
+			}
+			if($opts->wide)
+			{
+				$options['style'] .= ';width:100%;';
 			}
 			$options['cols'] = array_pad(array_map(function($value)
 			{

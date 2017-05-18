@@ -1,5 +1,5 @@
 <?php use \davestewart\sketchpad\utils\Html; ?>
-<table class="table table-bordered table-striped {{ $class }} data" style="{{ $style }}">
+<table class="table {{ $class }}" style="{{ $style }}">
 	@if($label)
 		<caption>{{ $label }}</caption>
 	@endif
@@ -25,8 +25,11 @@
 				$class  = $obj || in_array($key, $pre) ? ' class="pre"' : '';
 				$value  = $obj ? print_r($value, true) : $value;
 				$isHtml = in_array($key, $html);
+				$isIcon = in_array($key, $icon);
 			?>
-			@if($isHtml)
+			@if($isIcon)
+			<td<?php echo $class ?>>{!! Html::icon($value) !!}</td>
+			@elseif($isHtml)
 			<td<?php echo $class ?>>{!! Html::getText($value) !!}</td>
 			@else
 			<td<?php echo $class ?>>{{ Html::getText($value) }}</td>

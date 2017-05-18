@@ -1,6 +1,7 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
 use davestewart\sketchpad\utils\Code;
+use davestewart\sketchpad\utils\Options;
 use Illuminate\Translation\Translator;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -143,6 +144,27 @@ class HelpersController
 	}
 
 	/**
+	 * Create a Font Awesome icon simply and easily
+	 */
+	public function icon()
+	{
+		$input = [
+			[icon('plane'),                  "icon('plane');",               ],
+			[icon('bolt'),                   "icon('bolt');",                ],
+			[icon('bolt', '#FF00FF'),        "icon('bolt', '#FF00FF');",     ],
+			[icon('info', 'info'),           "icon('info', 'info');",        ],
+			[icon(true),                     "icon(true);",                  ],
+			[icon(false),                    "icon(false);",                 ],
+		];
+		$data = array_reduce($input, function ($output, $arr)
+		{
+			$output[] = (object) ['code' => $arr[1], 'icon' => $arr[0]];
+			return $output;
+		}, []);
+		return view('sketchpad::help/helpers/icon', compact('data'));
+	}
+
+	/**
 	 * Use `vd()`, `pr()` and `pd()` to output object structures with HTML `pre` tag and some basic syntax highlighting
 	 *
 	 * @label print_r
@@ -189,14 +211,29 @@ class HelpersController
 	 */
 	public function ls($options = '')
 	{
-		?>
-		<p>The format of the function is:</p>
-		<pre class="code php">ls($values, $options = '');</pre>
-		<p>The options are the same as the <a href="table">table</a> function.</p>
-		<p>This is the validation config array, formatted as a list:</p>
-		<?php
+		$rows =
+		[
+			["option","description","example"],
+			["pre","Preformats the entire table, or selected columns","pre"],
+			["wide","Sets the width of the table to be 100%","wide"],
+			["class","Sets the table class attribute","class:fancy"],
+			["style","Sets the table style attribute","style:color:blue"]
+		];
+
+		$keys   = array_shift($rows);
+		$opts   = array_map(function($values) use ($keys) {
+			return array_combine($keys, $values);
+		}, $rows);
+
+		foreach ($opts as $index => $value)
+		{
+			$example = $opts[$index]['example'];
+			$opts[$index]['example'] = implode(' ', array_map(function($value){ return "<code>$value</code>";}, explode('|', $example)));
+		}
+
 		$data   = \App::make(Translator::class)->get('validation');
-		ls($data, $options);
+
+		return view('sketchpad::help/helpers/list', compact('data', 'opts', 'options'));
 	}
 
 	/**
@@ -211,17 +248,19 @@ class HelpersController
 		[
 			["option","description","example"],
 			["index","Adds a numeric index column to the table","index"],
-			["pre","Preformats the entire table, or selected columns","pre, pre:example"],
+			["icon","Specifies which columns to output as icons","icon:state"],
 			["html","Specifies which columns to output as HTML","html:example|html:description,example"],
+			["type","Sets the table type ","type:text|type:data"],
+			["cols","Sets the width of individual columns","cols:50,400,200|cols:10%,60%,30%"],
+			["pre","Preformats the entire table, or selected columns","pre|pre:example"],
 			["label","Adds a label to the table","label:Formatting options"],
 			["width","Sets the width of the table","width:100%"],
-			["cols","Sets the width of individual columns","cols:50,400,200|cols:10%,60%,30%"],
 			["class","Sets the table class attribute","class:fancy"],
 			["style","Sets the table style attribute","style:border:1px solid red; background:blue"]
 		];
 
 		$keys   = array_shift($rows);
-		$data   = array_map(function($values) use ($keys){
+		$data   = array_map(function($values) use ($keys) {
 			return array_combine($keys, $values);
 		}, $rows);
 
@@ -229,6 +268,15 @@ class HelpersController
 		{
 			$example = $data[$index]['example'];
 			$data[$index]['example'] = implode(' ', array_map(function($value){ return "<code>$value</code>";}, explode('|', $example)));
+		}
+
+		$opts = new Options($options);
+		if ($opts->icon === 'state')
+		{
+			$data = array_map(function($el) {
+				$item = ['state' => random_int(0, 1) === 1];
+				return array_merge($item, $el);
+			}, $data);
 		}
 
 		return view('sketchpad::help/helpers/table', compact('data', 'options'));
