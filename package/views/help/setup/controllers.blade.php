@@ -11,7 +11,7 @@
 
 <p>Sketchpad picks some default folders for you, which are configurable via the <a href="{{$route}}settings#paths">settings</a> page:</p>
 
-{!! tb($paths, 'cols:150,500') !!}
+{!! tb($paths, 'cols:150,500|icon:enabled') !!}
 
 <p>You can rename, reorder, add, remove, enable and disable folders, with changes immediately reflected in the UI.</p>
 
