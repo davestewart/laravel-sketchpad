@@ -40,6 +40,7 @@ class Html
 		 */
 		public static function text($text)
 		{
+			$text = htmlentities($text);
 			echo "<pre>$text</pre>\n";
 		}
 
