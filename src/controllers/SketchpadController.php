@@ -80,7 +80,7 @@ class SketchpadController extends Controller
 				'title'         => $settings->get('site.name'),
 				'livereload'    => (object) $settings->get('livereload'),
 				'settings'      => $settings->data,
-				'admin'         => $config->admin,
+				'admin'         => $config->getAdmin(),
 				'home'          => file_exists($abshome) ? view()->file($abshome, compact('home')) : view('sketchpad::no-home', compact('home')),
 				'help'          => file_exists($abshelp) ? view()->file($abshelp, compact('help')) : view('sketchpad::no-help', compact('help')),
 				'data'          =>
