@@ -13,4 +13,9 @@ To prevent access to [settings]({{route}}settings) or [setup]({{route}}setup), e
 }
 ```
 
-See the [wiki](https://github.com/davestewart/laravel-sketchpad/wiki/Admin) for more information, including setting permissions on a per-user basis.
+To set permissions per user, set values on the `SketchpadServiceProvider` in your `AppServiceProvider::boot()`:
+
+```php
+SketchpadServiceProvider::set('admin.setup', false);
+SketchpadServiceProvider::set('admin.settings', false);
+```

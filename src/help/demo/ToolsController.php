@@ -152,7 +152,7 @@ class ToolsController
 		p('Settings:');
 		json($config->settings);
 		p('Admin:');
-		json($config->admin);
+		json($config->getAdmin());
 	}
 
     /**
