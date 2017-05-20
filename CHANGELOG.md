@@ -3,26 +3,32 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 
-## [1.2.*] - 2017-05-10
+## [1.2.*] - 2017-05-20
 
 ### Added
 
 - Added functionality to load custom views from a subfolder
 - Added static `Code` helper class
 - Added `icon()` helper function
-- Added icon functionality to `table()`
-- Added text/data `type` functionality to `table()` 
+- Added icon functionality to `tb()` helper
+- Added text/data `type` functionality to `tb()`  helper
+- Added column ordering to `tb()` helper
+- Added support to render `Paginator` instances to `tb()` helper
 
 ### Changed
 
 - Made Paths utility functions static
 - Moved demo tools controller before docs controller
 - `code()` is now a variadic function and calls `Code` class
+- Improved handling of no data in `tb()` helper
+- `text()` helper now converts HTML entities
+- `Html` class methods now `return` output, with helpers  `echo`ing it
 
 ### Fixed
 
 - Modified test mode so it passes `$run` even if false
 - Modified custom views to load directly
+- Fixed security hole in setting per-user permissions
 
 
 ## [1.2.0] - 2017-05-09
