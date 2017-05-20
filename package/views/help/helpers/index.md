@@ -22,6 +22,13 @@ Data helpers make it easy to inspect arrays, objects and classes without writing
 | `ls()`    | Output objects or classes as list of name / value pairs
 | `tb()`    | Output an array of objects in table format
 
+
+Note that helper functions `echo` immediately. If you need the raw HTML, call the source `Html` method:
+
+```php
+$html = Html::tb($data);
+```
+
 ### Source
 
 You can view the source for this section at:

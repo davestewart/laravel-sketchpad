@@ -14,6 +14,19 @@ use Route;
 class SketchpadServiceProvider extends ServiceProvider
 {
 
+	public static $settings = [];
+
+	/**
+	 * Custom permissions
+	 *
+	 * @param $name
+	 * @param $value
+	 */
+	public static function set ($name, $value)
+	{
+		array_set(self::$settings, $name, $value);
+	}
+
 	/**
 	 * Register the application services.
 	 *

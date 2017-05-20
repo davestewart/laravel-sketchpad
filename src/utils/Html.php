@@ -2,6 +2,7 @@
 
 use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Pagination\Paginator;
 
 \View::addExtension('html', 'html');
 \View::addExtension('vue', 'vue');
@@ -17,10 +18,11 @@ class Html
 	// output functions
 
 		/**
-		 * Echo a paragraph tag, with optional class
+		 * Return a paragraph tag, with optional class
 		 *
-		 * @param               $text
-		 * @param bool|string   $class
+		 * @param                   $text
+		 * @param   bool|string     $class
+		 * @return  string
 		 */
 		public static function p($text, $class = null)
 		{
@@ -29,52 +31,53 @@ class Html
 				: (is_string($class)
 					? ' class="' .$class. '"'
 					: '');
-			echo "<p{$attr}>$text</p>";
+			return "<p{$attr}>$text</p>";
 		}
 
 		/**
-		 * Output preformatted text
+		 * Return preformatted text
 		 *
 		 * @param   string  $text
+		 * @return  string
 		 */
 		public static function text($text)
 		{
-			echo "<pre>$text</pre>\n";
+			$text = htmlentities($text);
+			return "<pre>$text</pre>\n";
 		}
 
 		/**
-		 * Output code with optional highlighting
+		 * Return code with optional highlighting
 		 *
 		 * @param   string  $source
+		 * @return  string
 		 */
 		public static function code($source)
 		{
 			if (class_exists($source))
 			{
 				@list ($class, $method, $comment) = func_get_args();
-				is_string($method)
+				return is_string($method)
 					? Code::method($class, $method, $comment)
 					: Code::classfile($class, $method);
 			}
 			else if (file_exists($source))
 			{
 				@list ($path, $start, $end, $undent) = func_get_args();
-				is_int($start)
+				return is_int($start)
 					? Code::section($path, $start, $end, $undent)
 					: Code::file($path, $start);
 			}
-			else
-			{
-				Code::output($source);
-			}
+			return Code::output($source);
 		}
 
 		/**
-		 * Output a Bootstrap info / alert div
+		 * Return a Bootstrap info / alert div
 		 *
 		 * @param   string  $html   The HTML or text to display
 		 * @param   string  $class  An optional CSS class, can be info, success, warning, danger
 		 * @param   string  $icon   An optional FontAwesome icon string
+		 * @return  string
 		 */
 		public static function alert($html, $class = 'info', $icon = '')
 		{
@@ -88,7 +91,7 @@ class Html
 			{
 				$html   = '<i class="fa fa-' .$icon. '" aria-hidden="true"></i> ' . $html;
 			}
-			echo '<div class="alert alert-' .$class. '" role="alert">' .$html. '</div>';
+			return '<div class="alert alert-' .$class. '" role="alert">' .$html. '</div>';
 		}
 
 		/**
@@ -120,30 +123,25 @@ class Html
 
 		/**
 		 * print_r() passed arguments
+		 *
+		 * @return  string
 		 */
 		public static function pr()
 		{
-			echo "\n" . '<pre class="code php">' . "\n";
+			$str = "\n" . '<pre class="code php">' . "\n";
 			$args = func_get_args();
-			print_r( count($args) === 1 ? $args[0] : $args);
-			echo "</pre>\n\n";
-		}
-
-		/**
-		 * print_r() and die
-		 */
-		public static function pd()
-		{
-			self::pr(func_get_args());
-			exit;
+			$str .= print_r( count($args) === 1 ? $args[0] : $args, 1);
+			return $str . "</pre>\n\n";
 		}
 
 		/**
 		 * var_dump() passed arguments, with slightly nicer formatting than the default
+		 *
+		 * @return  string
 		 */
 		public static function vd()
 		{
-			echo "\n" . '<pre class="code php">' . "\n";
+			$str = "\n" . '<pre class="code php">' . "\n";
 			$args = func_get_args();
 			ob_start();
 			var_dump(count($args) === 1 ? $args[0] : $args);
@@ -151,16 +149,17 @@ class Html
 			ob_end_clean();
 			$output = preg_replace('/\\]=>[\\r\\n]+\s+/', '] => ', $output);
 			$output = preg_replace('/^(\s+)/m', '$1$1', $output);
-			echo $output;
-			echo "</pre>\n\n";
-
+			$str .= $output;
+			$str .= "</pre>\n\n";
+			return $str;
 		}
 
 		/**
 		 * List an object's properties in a nicely formatted table
 		 *
-		 * @param        $values
-		 * @param string $options
+		 * @param   mixed       $values
+		 * @param   string      $options
+		 * @return  string
 		 */
 		public static function ls($values, $options = '')
 		{
@@ -179,35 +178,54 @@ class Html
 			{
 				$data['style'] .= ';width:100%;';
 			}
-			echo view('sketchpad::html.list', $data);
+			return view('sketchpad::html.list', $data);
 		}
 
 		/**
 		 * List an array of objects in a nicely formatted table
 		 *
-		 * @param      $values
-		 * @param string $params
+		 * @param   mixed   $values
+		 * @param   string  $params
+		 * @return  string
 		 */
 		public static function tb($values, $params = '')
 		{
-			$values = $values instanceof Arrayable
-				? $values->toArray()
-				: (array) $values;
-			if(empty($values))
-			{
-				alert('Warning: tb() $values is empty', false);
-				return;
-			};
+			// source data
+			$values = $values instanceof Paginator
+				? $values->items()
+				: ($values instanceof Arrayable
+					? $values->toArray()
+					: (array) $values);
 
-			$params = urldecode($params);
-			//pr($params);
-			$opts   = new Options($params);
-			$keys   = array_keys( (array) $values[0]);
-			$options =
+			// defend against empty data set
+			$empty  = empty($values);
+
+			// pre-convert data
+			if (!$empty)
+			{
+				$values = array_map(function ($value) {
+					return $value instanceof Arrayable
+						? $value->toArray()
+						: (array) $value;
+				}, $values);
+			}
+			else
+			{
+				$values = [['error' => '...']];
+			}
+
+			// parameters
+			$params         = urldecode($params);
+			$opts           = new Options($params);
+			$keys           = array_keys((array) $values[0]);
+
+			// options
+			$data =
 			[
 				'values'    => array_values($values),
 				'keys'      => $keys,
-				'label'     => $opts->get('label'),
+				'id'        => $opts->get('id', ''),
+				'caption'   => $opts->get('caption'),
 				'index'     => $opts->has('index'),
 				'class'     => $opts->get('class', ''),
 				'type'      => $opts->get('type', 'data'),
@@ -218,29 +236,51 @@ class Html
 				'html'      => (array) $opts->get('html'),
 				'icon'      => (array) $opts->get('icon'),
 			];
+
+			// populate options
 			if($opts->pre === 1)
 			{
-				$options['class'] .= ' pre';
-				$options['pre'] = [];
+				$data['class'] .= ' pre';
+				$data['pre'] = [];
 			}
 			if($opts->type !== 'text')
 			{
-				$options['class'] .= ' table-bordered table-striped data';
+				$data['class'] .= ' table-bordered table-striped data';
 			}
 			if($opts->width)
 			{
-				$options['style'] .= ';' . self::getCss($opts->width);
+				$data['style'] .= ';' . self::getCss($opts->width);
 			}
 			if($opts->wide)
 			{
-				$options['style'] .= ';width:100%;';
+				$data['style'] .= ';width:100%;';
 			}
-			$options['cols'] = array_pad(array_map(function($value)
+			if ($opts->keys)
+			{
+				$keys = array_values(array_filter((array) $opts->keys));
+				if (in_array('*', $keys))
+				{
+					$src    = array_diff($keys, ['*']);
+					$diff   = array_diff($data['keys'], $keys);
+					$keys   = array_merge($src, $diff);
+				}
+				$data['keys'] = $keys;
+			}
+			$data['cols'] = array_pad(array_map(function($value)
 			{
 				return self::getCss($value);
-			}, $options['cols']), count($keys), '');
+			}, $data['cols']), count($data['keys']), '');
 
-			echo view('sketchpad::html.table', $options);
+			// handle empty data set
+			if($empty)
+			{
+				$data['caption']    = 'No data';
+				$data['keys']       = ['error'];
+				$data['class']      .= ' error ';
+			};
+
+			// output table
+			return view('sketchpad::html.table', $data);
 		}
 
 
@@ -257,7 +297,7 @@ class Html
 		 */
 		public static function json($data)
 		{
-			echo '<div data-format="json">' .json_encode($data). '</div>';
+			return '<div data-format="json">' .json_encode($data). '</div>';
 		}
 
 		/**
@@ -284,8 +324,8 @@ class Html
 				$contents = preg_replace('/\{\{\s*' .$key. '\s*\}\}/', $value, $contents);
 			}
 
-			// echo
-			echo '<div data-format="markdown">' .$contents. '</div>';
+			// return
+			return '<div data-format="markdown">' .$contents. '</div>';
 		}
 
 		/**
@@ -307,7 +347,7 @@ class Html
 				$str = str_replace($tag1, $tag1 . "(function () {\n\tvar \$data = $json;", $str);
 				$str = str_replace($tag2, '}())' . $tag2, $str);
 			}
-			echo $str;
+			return $str;
 		}
 
 

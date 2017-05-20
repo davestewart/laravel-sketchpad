@@ -10,7 +10,11 @@ This includes:
 - front-end interaction
 - transparent communication between the front and back-ends
 
-The examples in this section show you how Sketchpad 
+Note that the view helper functions `echo` immediately. If you need the raw HTML, call the source `Html` method:
+
+```php
+$html = Html::md($path, $data);
+```
 
 ### Source
 

@@ -1,29 +1,33 @@
 <?php use \davestewart\sketchpad\utils\Html; ?>
-<table class="table {{ $class }}" style="{{ $style }}">
-	@if($label)
-		<caption>{{ $label }}</caption>
+<table id="{{ $id }}" class="table {{ $class }}" style="{{ $style }}">
+	@if($caption)
+		<caption>{{ $caption }}</caption>
 	@endif
 	<thead>
 		<tr>
 			@if($index)
 			<th style="width:20px">#</th>
 			@endif
-			@foreach($keys as $i => $key)
-			<th style="{{ $cols[$i] }}">{{ $key }}</th>
+			@foreach($keys as $x => $key)
+			<th style="{{ $cols[$x] }}">{{ $key }}</th>
 			@endforeach
 		</tr>
 	</thead>
 	<tbody>
-		@foreach($values as $i => $obj)
+		@foreach($values as $y => $obj)
+		<?php
+			$row = $values[$y];
+		?>
 		<tr>
 			@if($index)
-			<th>{{ $i + 1 }}</th>
+			<th>{{ $y + 1 }}</th>
 			@endif
-			@foreach($obj as $key => $value)
+			@foreach($keys as $x => $key)
 			<?php
+				$value  = array_key_exists($key, $row) ? $row[$key] : null;
 				$obj    = ! is_scalar($value);
-				$class  = $obj || in_array($key, $pre) ? ' class="pre"' : '';
 				$value  = $obj ? print_r($value, true) : $value;
+				$class  = $obj || in_array($key, $pre) ? ' class="pre"' : '';
 				$isHtml = in_array($key, $html);
 				$isIcon = in_array($key, $icon);
 			?>

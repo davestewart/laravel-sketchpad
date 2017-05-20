@@ -2,6 +2,7 @@
 
 use davestewart\sketchpad\objects\install\JSON;
 use davestewart\sketchpad\config\SketchpadSettings;
+use davestewart\sketchpad\SketchpadServiceProvider;
 
 /**
  * Class SketchpadConfig
@@ -54,7 +55,7 @@ class SketchpadConfig
 		 *
 		 * @var object $admin
 		 */
-		public $admin;
+		private $admin;
 
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -72,6 +73,22 @@ class SketchpadConfig
 			$custom = rtrim($this->settings->get('site.views', ''), '/') . '/';
 			return Paths::fix($this->views . "/$custom/$name.blade.php");
 		}
+
+
+	// -----------------------------------------------------------------------------------------------------------------
+	// accessors
+
+		public function __get($name)
+		{
+			switch ($name)
+			{
+				case 'admin':
+					return (object) array_merge([], (array) $this->admin);
+					break;
+			}
+			return $this->$name;
+		}
+
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// methods
@@ -108,11 +125,9 @@ class SketchpadConfig
 			$admin  = new JSON(storage_path('sketchpad/admin.json'));
 			$data   = $admin->data;
 
-			// session
-			if (\Session::has('sketchpad.admin'))
-			{
-				$data = array_merge($data, \Session::get('sketchpad.admin'));
-			}
+			// merge admin settings
+			$admin  = array_get(SketchpadServiceProvider::$settings, 'admin', []);
+			$data   = array_merge($data, $admin);
 
 			// save
 			$this->admin = (object) $data;

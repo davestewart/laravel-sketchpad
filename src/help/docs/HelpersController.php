@@ -84,12 +84,12 @@ class HelpersController
 			'section'  => [
 				'desc' => 'lines 17 - 44 of this file',
 				'func' => 'section',
-				'args' => [__FILE__, 17, 44]
+				'args' => [__FILE__, 18, 45]
 			],
 			'sectionu' => [
 				'desc' => 'lines 17 - 44 of this file (without indent)',
 				'func' => 'section',
-				'args' => [__FILE__, 17, 44, true]
+				'args' => [__FILE__, 18, 45, true]
 			],
 			'class'    => [
 				'desc' => 'this class',
@@ -204,7 +204,7 @@ class HelpersController
 	}
 
 	/**
-	 * Use `ls()` to output any Object or Array in list format (single `foreach` loop)
+	 * Use `ls()` to output any Object or Array in list format
 	 *
 	 * @label list
 	 * @param string $options
@@ -214,7 +214,7 @@ class HelpersController
 		$rows =
 		[
 			["option","description","example"],
-			["pre","Preformats the entire table, or selected columns","pre"],
+			["pre","Preformats the value column","pre"],
 			["wide","Sets the width of the table to be 100%","wide"],
 			["class","Sets the table class attribute","class:fancy"],
 			["style","Sets the table style attribute","style:color:blue"]
@@ -237,49 +237,56 @@ class HelpersController
 	}
 
 	/**
-	 * Use `tb()` to output any Collection or Array of Objects in table format (nested `foreach` loop)
+	 * Use `tb()` to output Collections or Arrays in table format
 	 *
 	 * @param string $options
 	 */
-	public function table($options = 'html:example')
+	public function table($options = 'caption:Example table|icon:state,icon|html:html')
 	{
+		function make($rows)
+		{
+			$keys   = array_shift($rows);
+			$data   = array_map(function($values) use ($keys) {
+				return array_combine($keys, $values);
+			}, $rows);
+			return $data;
+		}
 
-		$rows =
-		[
+		$preview = make([
+			['state','icon','value','text','html'],
+			[true,'plane',1,'one','<strong>I am bold</strong>'],
+			[false,'certificate',2,'two','<em>I am italic</em>'],
+			[true,'bolt',3,'three','<code>true</code>'],
+			[false,'wrench',4,'four','<a href="?options=index">Add an index</a>']
+		]);
+
+		$data = make([
 			["option","description","example"],
 			["index","Adds a numeric index column to the table","index"],
-			["icon","Specifies which columns to output as icons","icon:state"],
-			["html","Specifies which columns to output as HTML","html:example|html:description,example"],
+			["icon","Specifies which columns to output as icons","icon:state|icon:icon"],
+			["html","Specifies which columns to output as HTML","html:html|html:text,html"],
+			["keys","Specify which columns to build","keys:value,text|keys:value,icon,*"],
+			["cols","Sets the width of individual columns","cols:50,100,150,150,400|cols:10%,60%,30%"],
 			["type","Sets the table type ","type:text|type:data"],
-			["cols","Sets the width of individual columns","cols:50,400,200|cols:10%,60%,30%"],
-			["pre","Preformats the entire table, or selected columns","pre|pre:example"],
-			["label","Adds a label to the table","label:Formatting options"],
-			["width","Sets the width of the table","width:100%"],
+			["pre","Preformats the entire table, or selected columns","pre|pre:html"],
+			["caption","Adds a caption to the table","caption:Example table"],
+			["id","Adds an id to the table","id:figures"],
 			["class","Sets the table class attribute","class:fancy"],
-			["style","Sets the table style attribute","style:border:1px solid red; background:blue"]
-		];
-
-		$keys   = array_shift($rows);
-		$data   = array_map(function($values) use ($keys) {
-			return array_combine($keys, $values);
-		}, $rows);
+			["style","Sets the table style attribute","style:transform:rotate(-5deg)"],
+			["width","Sets the width of the table","width:700|width:100%"],
+		]);
 
 		foreach ($data as $index => $value)
 		{
 			$example = $data[$index]['example'];
-			$data[$index]['example'] = implode(' ', array_map(function($value){ return "<code>$value</code>";}, explode('|', $example)));
+			$data[$index]['example'] = implode(' ', array_map(function($value)
+			{
+				$options = str_replace('%', '%25', $value);
+				return "<a href='?options=$options'><code>$value</code></a>";
+			}, explode('|', $example)));
 		}
 
-		$opts = new Options($options);
-		if ($opts->icon === 'state')
-		{
-			$data = array_map(function($el) {
-				$item = ['state' => random_int(0, 1) === 1];
-				return array_merge($item, $el);
-			}, $data);
-		}
-
-		return view('sketchpad::help/helpers/table', compact('data', 'options'));
+		return view('sketchpad::help/helpers/table', compact('data', 'preview', 'options'));
 	}
 
 	protected function data()

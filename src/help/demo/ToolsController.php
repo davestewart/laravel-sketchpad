@@ -37,13 +37,9 @@ class ToolsController
 
 		if($users)
 		{
-			$data = $users->getCollection();
-			if (!empty($data))
-			{
-				tb($data);
-				echo $users;
-				return;
-			}
+			tb($users);
+			echo $users;
+			return;
 		}
 		p('Unable to show users');
 
