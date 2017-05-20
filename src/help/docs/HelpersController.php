@@ -84,12 +84,12 @@ class HelpersController
 			'section'  => [
 				'desc' => 'lines 17 - 44 of this file',
 				'func' => 'section',
-				'args' => [__FILE__, 17, 44]
+				'args' => [__FILE__, 18, 45]
 			],
 			'sectionu' => [
 				'desc' => 'lines 17 - 44 of this file (without indent)',
 				'func' => 'section',
-				'args' => [__FILE__, 17, 44, true]
+				'args' => [__FILE__, 18, 45, true]
 			],
 			'class'    => [
 				'desc' => 'this class',
