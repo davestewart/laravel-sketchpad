@@ -2,6 +2,7 @@
 
 use davestewart\sketchpad\config\SketchpadConfig;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Pagination\Paginator;
 
 \View::addExtension('html', 'html');
 \View::addExtension('vue', 'vue');
@@ -190,9 +191,11 @@ class Html
 		 */
 		public static function tb($values, $params = '')
 		{
-			$values = $values instanceof Arrayable
-				? $values->toArray()
-				: (array) $values;
+			$values = $values instanceof Paginator
+				? $values->items()
+				: ($values instanceof Arrayable
+					? $values->toArray()
+					: (array) $values);
 			if(empty($values))
 			{
 				alert('Warning: tb() $values is empty', false);
