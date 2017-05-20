@@ -18,10 +18,11 @@ class Html
 	// output functions
 
 		/**
-		 * Echo a paragraph tag, with optional class
+		 * Return a paragraph tag, with optional class
 		 *
-		 * @param               $text
-		 * @param bool|string   $class
+		 * @param                   $text
+		 * @param   bool|string     $class
+		 * @return  string
 		 */
 		public static function p($text, $class = null)
 		{
@@ -30,53 +31,58 @@ class Html
 				: (is_string($class)
 					? ' class="' .$class. '"'
 					: '');
-			echo "<p{$attr}>$text</p>";
+			return "<p{$attr}>$text</p>";
 		}
 
 		/**
-		 * Output preformatted text
+		 * Return preformatted text
 		 *
 		 * @param   string  $text
+		 * @return  string
 		 */
 		public static function text($text)
 		{
 			$text = htmlentities($text);
-			echo "<pre>$text</pre>\n";
+			return "<pre>$text</pre>\n";
 		}
 
 		/**
-		 * Output code with optional highlighting
+		 * Return code with optional highlighting
 		 *
 		 * @param   string  $source
+		 * @return  string
 		 */
 		public static function code($source)
 		{
+			$str = '';
 			if (class_exists($source))
 			{
 				@list ($class, $method, $comment) = func_get_args();
-				is_string($method)
+				$str = is_string($method)
 					? Code::method($class, $method, $comment)
 					: Code::classfile($class, $method);
 			}
 			else if (file_exists($source))
 			{
 				@list ($path, $start, $end, $undent) = func_get_args();
-				is_int($start)
+				$str = is_int($start)
 					? Code::section($path, $start, $end, $undent)
 					: Code::file($path, $start);
 			}
 			else
 			{
-				Code::output($source);
+				$str = Code::output($source);
 			}
+			return $str;
 		}
 
 		/**
-		 * Output a Bootstrap info / alert div
+		 * Return a Bootstrap info / alert div
 		 *
 		 * @param   string  $html   The HTML or text to display
 		 * @param   string  $class  An optional CSS class, can be info, success, warning, danger
 		 * @param   string  $icon   An optional FontAwesome icon string
+		 * @return  string
 		 */
 		public static function alert($html, $class = 'info', $icon = '')
 		{
@@ -90,7 +96,7 @@ class Html
 			{
 				$html   = '<i class="fa fa-' .$icon. '" aria-hidden="true"></i> ' . $html;
 			}
-			echo '<div class="alert alert-' .$class. '" role="alert">' .$html. '</div>';
+			return '<div class="alert alert-' .$class. '" role="alert">' .$html. '</div>';
 		}
 
 		/**
@@ -122,30 +128,25 @@ class Html
 
 		/**
 		 * print_r() passed arguments
+		 *
+		 * @return  string
 		 */
 		public static function pr()
 		{
-			echo "\n" . '<pre class="code php">' . "\n";
+			$str = "\n" . '<pre class="code php">' . "\n";
 			$args = func_get_args();
-			print_r( count($args) === 1 ? $args[0] : $args);
-			echo "</pre>\n\n";
-		}
-
-		/**
-		 * print_r() and die
-		 */
-		public static function pd()
-		{
-			self::pr(func_get_args());
-			exit;
+			$str .= print_r( count($args) === 1 ? $args[0] : $args, 1);
+			return $str . "</pre>\n\n";
 		}
 
 		/**
 		 * var_dump() passed arguments, with slightly nicer formatting than the default
+		 *
+		 * @return  string
 		 */
 		public static function vd()
 		{
-			echo "\n" . '<pre class="code php">' . "\n";
+			$str = "\n" . '<pre class="code php">' . "\n";
 			$args = func_get_args();
 			ob_start();
 			var_dump(count($args) === 1 ? $args[0] : $args);
@@ -153,16 +154,17 @@ class Html
 			ob_end_clean();
 			$output = preg_replace('/\\]=>[\\r\\n]+\s+/', '] => ', $output);
 			$output = preg_replace('/^(\s+)/m', '$1$1', $output);
-			echo $output;
-			echo "</pre>\n\n";
-
+			$str .= $output;
+			$str .= "</pre>\n\n";
+			return $str;
 		}
 
 		/**
 		 * List an object's properties in a nicely formatted table
 		 *
-		 * @param        $values
-		 * @param string $options
+		 * @param   mixed       $values
+		 * @param   string      $options
+		 * @return  string
 		 */
 		public static function ls($values, $options = '')
 		{
@@ -181,14 +183,15 @@ class Html
 			{
 				$data['style'] .= ';width:100%;';
 			}
-			echo view('sketchpad::html.list', $data);
+			return view('sketchpad::html.list', $data);
 		}
 
 		/**
 		 * List an array of objects in a nicely formatted table
 		 *
-		 * @param      $values
-		 * @param string $params
+		 * @param   mixed   $values
+		 * @param   string  $params
+		 * @return  string
 		 */
 		public static function tb($values, $params = '')
 		{
@@ -201,7 +204,6 @@ class Html
 
 			// defend against empty data set
 			$empty  = empty($values);
-			$error = 'No data available in table';
 
 			// pre-convert data
 			if (!$empty)
@@ -283,7 +285,7 @@ class Html
 			};
 
 			// output table
-			echo view('sketchpad::html.table', $data);
+			return view('sketchpad::html.table', $data);
 		}
 
 
@@ -300,7 +302,7 @@ class Html
 		 */
 		public static function json($data)
 		{
-			echo '<div data-format="json">' .json_encode($data). '</div>';
+			return '<div data-format="json">' .json_encode($data). '</div>';
 		}
 
 		/**
@@ -327,8 +329,8 @@ class Html
 				$contents = preg_replace('/\{\{\s*' .$key. '\s*\}\}/', $value, $contents);
 			}
 
-			// echo
-			echo '<div data-format="markdown">' .$contents. '</div>';
+			// return
+			return '<div data-format="markdown">' .$contents. '</div>';
 		}
 
 		/**
@@ -350,7 +352,7 @@ class Html
 				$str = str_replace($tag1, $tag1 . "(function () {\n\tvar \$data = $json;", $str);
 				$str = str_replace($tag2, '}())' . $tag2, $str);
 			}
-			echo $str;
+			return $str;
 		}
 
 

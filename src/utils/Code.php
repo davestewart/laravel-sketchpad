@@ -11,11 +11,12 @@ class Code
 	 *
 	 * @param   string  $text
 	 * @param   string  $format
+	 * @return  string
 	 */
 	public static function output($text, $format = 'php')
 	{
 		$text = htmlentities($text);
-		echo "<pre class='code $format'>$text</pre>\n";
+		return "<pre class='code $format'>$text</pre>\n";
 	}
 
 	/**
