@@ -210,7 +210,8 @@ class Html
 			[
 				'values'    => array_values($values),
 				'keys'      => $keys,
-				'label'     => $opts->get('label'),
+				'id'        => $opts->get('id', ''),
+				'caption'   => $opts->get('caption'),
 				'index'     => $opts->has('index'),
 				'class'     => $opts->get('class', ''),
 				'type'      => $opts->get('type', 'data'),

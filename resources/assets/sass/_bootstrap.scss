@@ -168,6 +168,13 @@
 
 	#output table {
 
+		caption {
+			padding: 5px 9px;
+			background: $gray;
+			color: white;
+			letter-spacing: 0.03em;
+		}
+
 		td, th {
 			font-size: 14px;
 		}

@@ -1,7 +1,7 @@
 <?php use \davestewart\sketchpad\utils\Html; ?>
-<table class="table {{ $class }}" style="{{ $style }}">
-	@if($label)
-		<caption>{{ $label }}</caption>
+<table id="{{ $id }}" class="table {{ $class }}" style="{{ $style }}">
+	@if($caption)
+		<caption>{{ $caption }}</caption>
 	@endif
 	<thead>
 		<tr>
