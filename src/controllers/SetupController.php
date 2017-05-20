@@ -49,7 +49,8 @@ class SetupController extends Controller
 			$this->setup        = new Setup();
 
 			// hacky middleware-less 403
-			if (property_exists($config->admin, 'setup') && $config->admin->setup === false)
+			$admin = $config->admin;
+			if (property_exists($admin, 'setup') && $admin->setup === false)
 			{
 				$this->setup->disabled();
 			}

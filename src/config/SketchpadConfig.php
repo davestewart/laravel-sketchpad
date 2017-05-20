@@ -74,10 +74,21 @@ class SketchpadConfig
 			return Paths::fix($this->views . "/$custom/$name.blade.php");
 		}
 
-		public function getAdmin ()
+
+	// -----------------------------------------------------------------------------------------------------------------
+	// accessors
+
+		public function __get($name)
 		{
-			return (object) array_merge([], (array) $this->admin);
+			switch ($name)
+			{
+				case 'admin':
+					return (object) array_merge([], (array) $this->admin);
+					break;
+			}
+			return $this->$name;
 		}
+
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// methods
