@@ -54,26 +54,21 @@ class Html
 		 */
 		public static function code($source)
 		{
-			$str = '';
 			if (class_exists($source))
 			{
 				@list ($class, $method, $comment) = func_get_args();
-				$str = is_string($method)
+				return is_string($method)
 					? Code::method($class, $method, $comment)
 					: Code::classfile($class, $method);
 			}
 			else if (file_exists($source))
 			{
 				@list ($path, $start, $end, $undent) = func_get_args();
-				$str = is_int($start)
+				return is_int($start)
 					? Code::section($path, $start, $end, $undent)
 					: Code::file($path, $start);
 			}
-			else
-			{
-				$str = Code::output($source);
-			}
-			return $str;
+			return Code::output($source);
 		}
 
 		/**

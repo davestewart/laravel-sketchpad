@@ -37,13 +37,9 @@ class ToolsController
 
 		if($users)
 		{
-			$data = $users->getCollection();
-			if (!empty($data))
-			{
-				tb($data);
-				echo $users;
-				return;
-			}
+			tb($users);
+			echo $users;
+			return;
 		}
 		p('Unable to show users');
 
@@ -152,7 +148,7 @@ class ToolsController
 		p('Settings:');
 		json($config->settings);
 		p('Admin:');
-		json($config->getAdmin());
+		json($config->admin);
 	}
 
     /**
