@@ -24,6 +24,7 @@ class Code
 	 *
 	 * @param   string  $path
 	 * @param   string  $format
+	 * @return  string
 	 */
 	public static function file($path, $format = '')
 	{
@@ -32,7 +33,7 @@ class Code
 			$format = self::getExtension($path);
 		}
 		$text = file_get_contents($path);
-		self::output($text, $format);
+		return self::output($text, $format);
 	}
 
 	/**
@@ -42,6 +43,7 @@ class Code
 	 * @param   int     $start
 	 * @param   int     $end
 	 * @param   bool    $undent
+	 * @return  string
 	 */
 	public static function section($path, $start = 0, $end = 0, $undent = false)
 	{
@@ -55,7 +57,7 @@ class Code
 				$text = self::undent($text);
 			}
 		}
-		self::output($text, $format);
+		return self::output($text, $format);
 	}
 
 	/**
@@ -64,6 +66,7 @@ class Code
 	 * @param   string  $class
 	 * @param   string  $method
 	 * @param   bool    $comment
+	 * @return  string
 	 */
 	public static function method($class, $method, $comment = false)
 	{
@@ -77,7 +80,7 @@ class Code
 		{
 			$text = preg_replace('/^\s+\*/m', ' *', $ref->getDocComment()) . PHP_EOL . $text;
 		}
-		self::output($text, 'php');
+		return self::output($text, 'php');
 	}
 
 	/**
@@ -85,6 +88,7 @@ class Code
 	 *
 	 * @param   string  $class
 	 * @param   bool    $comment
+	 * @return  string
 	 */
 	public static function classfile($class, $comment = false)
 	{
@@ -97,7 +101,7 @@ class Code
 		{
 			$text = preg_replace('/^\s+\*/m', ' *', $ref->getDocComment()) . PHP_EOL . $text;
 		}
-		self::output($text, 'php');
+		return self::output($text, 'php');
 	}
 
 	/**
