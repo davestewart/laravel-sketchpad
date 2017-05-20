@@ -15,13 +15,15 @@
 	</thead>
 	<tbody>
 		@foreach($values as $y => $obj)
+		<?php
+			$row = $values[$y];
+		?>
 		<tr>
 			@if($index)
 			<th>{{ $y + 1 }}</th>
 			@endif
 			@foreach($keys as $x => $key)
 			<?php
-				$row    = (array) $values[$y];
 				$value  = array_key_exists($key, $row) ? $row[$key] : null;
 				$obj    = ! is_scalar($value);
 				$value  = $obj ? print_r($value, true) : $value;

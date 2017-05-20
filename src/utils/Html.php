@@ -191,22 +191,38 @@ class Html
 		 */
 		public static function tb($values, $params = '')
 		{
+			// source data
 			$values = $values instanceof Paginator
 				? $values->items()
 				: ($values instanceof Arrayable
 					? $values->toArray()
 					: (array) $values);
-			if(empty($values))
-			{
-				alert('Warning: tb() $values is empty', false);
-				return;
-			};
 
-			$params = urldecode($params);
-			//pr($params);
-			$opts   = new Options($params);
-			$keys   = array_keys( (array) $values[0]);
-			$options =
+			// defend against empty data set
+			$empty  = empty($values);
+			$error = 'No data available in table';
+
+			// pre-convert data
+			if (!$empty)
+			{
+				$values = array_map(function ($value) {
+					return $value instanceof Arrayable
+						? $value->toArray()
+						: (array) $value;
+				}, $values);
+			}
+			else
+			{
+				$values = [['error' => '...']];
+			}
+
+			// parameters
+			$params         = urldecode($params);
+			$opts           = new Options($params);
+			$keys           = array_keys((array) $values[0]);
+
+			// options
+			$data =
 			[
 				'values'    => array_values($values),
 				'keys'      => $keys,
@@ -222,22 +238,24 @@ class Html
 				'html'      => (array) $opts->get('html'),
 				'icon'      => (array) $opts->get('icon'),
 			];
+
+			// populate options
 			if($opts->pre === 1)
 			{
-				$options['class'] .= ' pre';
-				$options['pre'] = [];
+				$data['class'] .= ' pre';
+				$data['pre'] = [];
 			}
 			if($opts->type !== 'text')
 			{
-				$options['class'] .= ' table-bordered table-striped data';
+				$data['class'] .= ' table-bordered table-striped data';
 			}
 			if($opts->width)
 			{
-				$options['style'] .= ';' . self::getCss($opts->width);
+				$data['style'] .= ';' . self::getCss($opts->width);
 			}
 			if($opts->wide)
 			{
-				$options['style'] .= ';width:100%;';
+				$data['style'] .= ';width:100%;';
 			}
 			if ($opts->keys)
 			{
@@ -245,18 +263,26 @@ class Html
 				if (in_array('*', $keys))
 				{
 					$src    = array_diff($keys, ['*']);
-					$diff   = array_diff($options['keys'], $keys);
+					$diff   = array_diff($data['keys'], $keys);
 					$keys   = array_merge($src, $diff);
 				}
-				$options['keys'] = $keys;
+				$data['keys'] = $keys;
 			}
-
-			$options['cols'] = array_pad(array_map(function($value)
+			$data['cols'] = array_pad(array_map(function($value)
 			{
 				return self::getCss($value);
-			}, $options['cols']), count($options['keys']), '');
+			}, $data['cols']), count($data['keys']), '');
 
-			echo view('sketchpad::html.table', $options);
+			// handle empty data set
+			if($empty)
+			{
+				$data['caption']    = 'No data';
+				$data['keys']       = ['error'];
+				$data['class']      .= ' error ';
+			};
+
+			// output table
+			echo view('sketchpad::html.table', $data);
 		}
 
 

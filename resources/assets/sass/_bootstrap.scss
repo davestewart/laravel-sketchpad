@@ -169,10 +169,14 @@
 	#output table {
 
 		caption {
-			padding: 5px 9px;
-			background: $gray;
-			color: white;
-			letter-spacing: 0.03em;
+			border: 1px solid #ecf0f1;
+			border-bottom: none;
+			padding: 6px 9px;
+			background: rgb(249, 249, 249);
+			color: #666666;
+			letter-spacing: 0.04em;
+			font-size: 0.85em;
+			font-weight: bold;
 		}
 
 		td, th {
@@ -215,3 +219,17 @@
 
 	}
 
+	#output table.error {
+		min-width:50%;
+
+		td {
+			background: white;
+		}
+		caption, td{
+			text-align: center;
+		}
+		thead {
+			display: none;
+		}
+
+	}
