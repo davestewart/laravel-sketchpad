@@ -235,10 +235,22 @@ class Html
 			{
 				$options['style'] .= ';width:100%;';
 			}
+			if ($opts->keys)
+			{
+				$keys = array_values(array_filter((array) $opts->keys));
+				if (in_array('*', $keys))
+				{
+					$src    = array_diff($keys, ['*']);
+					$diff   = array_diff($options['keys'], $keys);
+					$keys   = array_merge($src, $diff);
+				}
+				$options['keys'] = $keys;
+			}
+
 			$options['cols'] = array_pad(array_map(function($value)
 			{
 				return self::getCss($value);
-			}, $options['cols']), count($keys), '');
+			}, $options['cols']), count($options['keys']), '');
 
 			echo view('sketchpad::html.table', $options);
 		}
