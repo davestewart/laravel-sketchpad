@@ -124,3 +124,14 @@ class Paths
 		}
 
 }
+
+/**
+ * Utility function to build file paths uniformly across OSes
+ *
+ * @params  string      ...     One or many path segments
+ * @return  string              A concatenated string of segments, with backslashes converted to / and double-slashes removed
+ */
+function path()
+{
+    return Paths::fix(implode('', func_get_args()));
+}

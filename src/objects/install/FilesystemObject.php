@@ -1,4 +1,5 @@
 <?php namespace davestewart\sketchpad\objects\install;
+use davestewart\sketchpad\config\Paths;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -22,9 +23,10 @@ abstract class FilesystemObject
      */
     protected function makePath($path)
     {
-        return $this->fs->isAbsolutePath($path)
+        $path = $this->fs->isAbsolutePath($path)
             ? $path
             : base_path($path);
+        return Paths::fix($path);
     }
 
     protected function isFilename($src)

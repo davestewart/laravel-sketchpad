@@ -43,18 +43,18 @@ class NamespaceResolver
     }
 
     /**
-     * Attempts to get the namespace for a
+     * Attempts to get the namespace for a file
      *
-     * @param $file
-     * @param bool $defaultToPath
-     * @return null|string
-     * @internal param string $default
+     * @param   string      $file               base-relative file path
+     * @param   bool        $defaultToPath      flag to use file path as namespace if namespace cannot be matched
+     * @return  null|string
      */
     public function getNamespace($file, $defaultToPath = false)
     {
         // massage file path into a format compatible with PSR-4 entries
         $file = str_replace('\\', '/', $file);
-        $file = str_replace(base_path() . '/', '', $file);
+        $base = str_replace('\\', '/', base_path()) . '/';
+        $file = str_replace($base, '', $file);
 
         // compare file path against existing entries
         foreach($this->namespaces as $ns => $path)

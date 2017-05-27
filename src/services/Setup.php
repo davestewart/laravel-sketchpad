@@ -44,24 +44,24 @@ class Setup
 		public function view()
 		{
 		    // default variables
-            $finder = new Finder();
+            $finder         = new Finder();
             $finder->start();
 
             // config
-            $config = app(SketchpadConfig::class);
+            $config         = app(SketchpadConfig::class);
 
             // base name
-            $basePath   = base_path() . '/';
-            $temp       = explode('/', base_path());
-            $baseName   = array_pop($temp) . '/';
+            $basePath       = Paths::fix(base_path('/'));
+            $baseSegments   = explode('/', rtrim($basePath, '/'));
+            $baseName       = array_pop($baseSegments) . '/';
 
             // view path
-            $temp       = Config::get('view.paths');
-            $viewPath   = substr($temp[0], strlen(base_path() . '/'));
+            $viewPaths      = Config::get('view.paths');
+            $viewPath       = substr(Paths::fix($viewPaths[0]), strlen($basePath));
 
 			// variables
-			$app    = app();
-			$data   =
+			$app            = app();
+			$data =
 			[
 				'route'     => $config->route,
 				'assets'    => $config->route . 'assets/',
