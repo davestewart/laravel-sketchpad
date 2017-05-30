@@ -33,7 +33,7 @@ class SetupController
 	public function views(SketchpadConfig $config)
 	{
 		$views = $config->settings->get('paths.views');
-		echo md('sketchpad::help/setup/views', ['views' => $views]);
+		md('sketchpad::help/setup/views', ['views' => $views]);
 	}
 
 	/**
@@ -43,7 +43,7 @@ class SetupController
 	{
 		$assets = $config->settings->get('paths.assets');
 		$views = $config->settings->get('paths.views');
-		echo md('sketchpad::help/setup/assets', compact('assets', 'views'));
+		md('sketchpad::help/setup/assets', compact('assets', 'views'));
 	}
 
 	/**
@@ -53,7 +53,7 @@ class SetupController
 	{
 		alert('LiveReload enabled', true);
 		alert('LiveReload not running!', false);
-		echo md('sketchpad::help/setup/livereload');
+		md('sketchpad::help/setup/livereload');
 	}
 
 	/**
@@ -64,7 +64,7 @@ class SetupController
 	public function settings(SketchpadConfig $config)
 	{
 		$views = $config->settings->get('paths.views');
-		echo md('sketchpad::help/setup/settings', compact('views'));
+		md('sketchpad::help/setup/settings', compact('views'));
 	}
 
 	/**
@@ -73,7 +73,7 @@ class SetupController
 	public function pages(SketchpadConfig $config)
 	{
 		$views  = $config->settings->get('paths.views');
-		echo md('sketchpad::help/setup/pages', compact('views'));
+		md('sketchpad::help/setup/pages', compact('views'));
 	}
 
 	/**
@@ -84,17 +84,25 @@ class SetupController
 		$head = $config->getView('head');
 		$path = $paths->package('setup/views/head.blade.php');
 		$html = file_get_contents($path);
-		echo md('sketchpad::help/setup/head', compact('head', 'html'));
+		md('sketchpad::help/setup/head', compact('head', 'html'));
+	}
+
+	/**
+	 * Use middleware with Sketchpad or Sketchpad routes
+	 *
+	 * @group Admin
+	 */
+	public function middleware()
+	{
+		md('sketchpad::help/setup/middleware');
 	}
 
 	/**
 	 * Configure the admin file to provide guest usage and prevent changes to settings
-	 *
-	 * @group Admin
 	 */
 	public function permissions()
 	{
-		echo md('sketchpad::help/setup/permissions');
+		md('sketchpad::help/setup/permissions');
 	}
 
 }
