@@ -16,6 +16,8 @@ class SketchpadServiceProvider extends ServiceProvider
 
 	public static $settings = [];
 
+	protected $middleware = [];
+
 	/**
 	 * Custom permissions
 	 *
@@ -72,13 +74,12 @@ class SketchpadServiceProvider extends ServiceProvider
         // ------------------------------------------------------------------------------------------------
 		// routes
 
-			// middleware
 			$parameters =
 			[
-				'namespace'     => 'davestewart\sketchpad\controllers'
+				'namespace'     => 'davestewart\sketchpad\controllers',
+				'middleware'    => $this->middleware,
 			];
 
-			// routes
 			Route::group($parameters, function ($router) use ($config)
 			{
 				require (__DIR__ . '/routes.php');
