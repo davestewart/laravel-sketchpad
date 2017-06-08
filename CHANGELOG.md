@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 
+Note that like Laravel, Laravel Sketchpad *doesn't* adhere to semver; both use:
+ 
+- major versions for generations
+- minor versions for breaking changes
+- patch versions for features, nightly builds, and patches
+
 ## [1.2.*] - 2017-05-30
 
 ### Added
