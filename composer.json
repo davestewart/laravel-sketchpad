@@ -23,6 +23,13 @@
 		"illuminate/support": "^5.0",
 		"symfony/filesystem": "^3.1"
 	},
+	"extra":{
+		"laravel":{
+			"providers":[
+				"davestewart\\sketchpad\\SketchpadServiceProvider"
+			]
+		}
+	},
 	"autoload": {
 		"psr-4": {
 			"davestewart\\sketchpad\\": "src"
