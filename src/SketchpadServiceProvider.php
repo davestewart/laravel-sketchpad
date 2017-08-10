@@ -16,7 +16,9 @@ class SketchpadServiceProvider extends ServiceProvider
 
 	public static $settings = [];
 
-	protected $middleware = [];
+	protected $middleware = [
+		'web'
+	];
 
 	/**
 	 * Custom permissions
