@@ -3,7 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 
-## [1.2.*] - 2017-05-20
+Note that like Laravel, Laravel Sketchpad *doesn't* adhere to semver; both use:
+ 
+- major versions for generations
+- minor versions for breaking changes
+- patch versions for features, nightly builds, and patches
+
+## [1.2.*] - 2017-05-30
 
 ### Added
 
@@ -14,6 +20,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 - Added text/data `type` functionality to `tb()`  helper
 - Added column ordering to `tb()` helper
 - Added support to render `Paginator` instances to `tb()` helper
+- Added support for middleware
 
 ### Changed
 
@@ -22,13 +29,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 - `code()` is now a variadic function and calls `Code` class
 - Improved handling of no data in `tb()` helper
 - `text()` helper now converts HTML entities
-- `Html` class methods now `return` output, with helpers  `echo`ing it
+- `Html` class methods now `return` output, with helpers `echo`ing it
 
 ### Fixed
 
 - Modified test mode so it passes `$run` even if false
 - Modified custom views to load directly
 - Fixed security hole in setting per-user permissions
+- Fixed bug with windows paths in Setup
 
 
 ## [1.2.0] - 2017-05-09

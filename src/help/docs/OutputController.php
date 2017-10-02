@@ -1,11 +1,11 @@
 <?php namespace davestewart\sketchpad\help\docs;
 
-use Illuminate\Translation\Translator;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Pagination\LengthAwarePaginator;
-use davestewart\sketchpad\services\Sketchpad;
 use davestewart\sketchpad\config\SketchpadConfig;
+use davestewart\sketchpad\services\Sketchpad;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Translation\Translator;
 
 /**
  * Learn how to display richly-formatted views and leverage front-end features
@@ -21,18 +21,50 @@ class OutputController
 	}
 
 	/**
-	 * No need to return data or views; just `echo` directly to the page
+	 * `echo`, `print` or output HTML directly to return text / html
 	 *
-	 * @group Views
+	 * @group Data
 	 */
-	public function noView()
+	public function text()
 	{
 		echo "Hello there! I'm just an <code>echo</code> statement in a method...";
 	}
 
 	/**
+	 * **Return** any value and Sketchpad will attempt to serialize it
+	 *
+	 * @field select $type options:request,class,object,array,string,number,boolean
+	 */
+	public function values($type = 'array')
+	{
+		$data = array(
+			'foo' => 1,
+			'bar' => true,
+			'baz' => array(1, 2, 3),
+		);
+
+		switch ($type) {
+			case 'request':
+				return new \Illuminate\Http\Request(array('type' => $type));
+			case 'class':
+				return new Test($data);
+			case 'object':
+				return (object)$data;
+			case 'array':
+				return $data;
+			case 'string':
+				return 'hello';
+			case 'number':
+				return 123;
+			case 'boolean':
+				return (bool)rand(0, 1);
+		}
+	}
+
+	/**
 	 * Load Sketchpad-specific Blade files using the `sketchpad::` view namespace
 	 *
+	 * @group Views
 	 */
 	public function blade(SketchpadConfig $config)
 	{
@@ -53,13 +85,14 @@ class OutputController
 	public function vue($name = 'World')
 	{
 		?>
-<p>The format of the function is:</p>
-<pre class="code php">vue($path, $data = []);</pre>
+		<p>The format of the function is:</p>
+		<pre class="code php">vue($path, $data = []);</pre>
 
-<p>Pass absolute paths or a <code>sketchpad::</code> path along with any data <code>array</code> like so:</p>
-<pre><code class="php">vue('sketchpad::help/vue/form', ['name' => 'World']);</code></pre>
+		<p>Pass absolute paths or a <code>sketchpad::</code> path along with any data <code>array</code> like so:</p>
+		<pre><code class="php">vue('sketchpad::help/vue/form', ['name' => 'World']);</code></pre>
 
-<p>The data is injected into the view as a local variable <code>$data</code>, so just reference it in your view like so:</p>
+		<p>The data is injected into the view as a local variable <code>$data</code>, so just reference it in your view
+			like so:</p>
 		<?php
 		code(base_path('vendor/davestewart/sketchpad/package/views/help/output/vue.vue'), 'html');
 		echo '<hr>';
@@ -75,6 +108,7 @@ class OutputController
 	{
 		md('sketchpad::help/output/formatting');
 	}
+
 	/**
 	 * Sketchpad intercepts normal HTML page links, so you can link to other methods
 	 */
@@ -100,12 +134,14 @@ class OutputController
 	public function pagination($start = 1, $length = 10)
 	{
 		// manually create paginator
-		$data   = array_map(function ($num) { return ['id' => $num, 'value' => "Item $num"]; }, range(1, 100));
-		$page   = Paginator::resolveCurrentPage('page');
-		$path   = Paginator::resolveCurrentPath();
-		$items  = array_slice($data, abs($start - 1) + (($page - 1) * $length), $length);
-		$paginator  = new LengthAwarePaginator($items, count($data), $length, $page, [
-			'path' => $path,
+		$data = array_map(function ($num) {
+			return ['id' => $num, 'value' => "Item $num"];
+		}, range(1, 100));
+		$page = Paginator::resolveCurrentPage('page');
+		$path = Paginator::resolveCurrentPath();
+		$items = array_slice($data, abs($start - 1) + (($page - 1) * $length), $length);
+		$paginator = new LengthAwarePaginator($items, count($data), $length, $page, [
+			'path'     => $path,
 			'pageName' => 'page',
 		]);
 
@@ -115,6 +151,19 @@ class OutputController
 		// output
 		return view('sketchpad::help/output/pagination', compact('items', 'paginator'));
 
+	}
+
+}
+
+class Test
+{
+	protected $_data;
+	public    $data;
+
+	public function __construct($data)
+	{
+		$this->_data = $data;
+		$this->data  = $data;
 	}
 
 }
