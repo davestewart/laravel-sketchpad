@@ -173,14 +173,20 @@ class Sketchpad
 					return json($response->getData());
 				}
 
-				// handle objects
-				if ($response instanceof Illuminate\Contracts\Support\Jsonable || !is_scalar($response))
+				// handle Arrrayable
+				if ($response instanceof \Illuminate\Contracts\Support\Arrayable)
 				{
-					return json($response);
+					return json($response->toArray());
 				}
 
-				// anything else
-				return $response;
+				// handle Jsonable
+				if ($response instanceof \Illuminate\Contracts\Support\Jsonable)
+				{
+					return json(json_decode($response->toJson()));
+				}
+
+				// anything else send as JSON (classes, objects, arrays, numbers, strings, booleans)
+				return json($response);
 			}
 
 			// if there's not a valid controller or method, it's a 404
