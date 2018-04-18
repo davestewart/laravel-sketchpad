@@ -27,5 +27,12 @@
 		"psr-4": {
 			"davestewart\\sketchpad\\": "src"
 		}
+	},
+	"extra": {
+        	"laravel": {
+         		"providers": [
+                		"davestewart\\sketchpad\\SketchpadServiceProvider"
+            	        ]
+		}
 	}
 }
